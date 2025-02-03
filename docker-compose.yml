@@ -22,12 +22,12 @@ services:
       DJANGO_SECRET_KEY: changeme
       DATABASE_URL: postgres://app_user:changeme@db/app_db
       REDIS_URL: redis://redis
-      DJANGO_SETTINGS_MODULE: bakerydemo.settings.dev
+      DJANGO_SETTINGS_MODULE: delegaciadamulher.settings.dev
     build:
       context: .
       dockerfile: ./Dockerfile
     volumes:
-      - ./bakerydemo:/code/bakerydemo
+      - ./delegaciadamulher:/code/delegaciadamulher
     links:
       - db:db
       - redis:redis

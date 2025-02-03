@@ -1,7 +1,7 @@
 {
-  "name": "bakerydemo",
+  "name": "delegaciadamulher",
   "version": "1.0.0",
-  "repository": "https://github.com/wagtail/bakerydemo",
+  "repository": "https://gitcodata.pb.gov.br/plone/wagtail-demo-site.git",
   "private": true,
   "engines": {
     "node": ">=22"

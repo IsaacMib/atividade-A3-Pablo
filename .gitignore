@@ -11,8 +11,8 @@
 /data
 .~*
 common/CACHE
-bakerydemo/settings/local.py
-bakerydemodb
+/delegaciadamulher/settings/local.py
+db.sqlite3
 node_modules
 venv
 .venv
@@ -21,4 +21,4 @@ __pycache__
 /.vagrant/
 /Vagrantfile.local
 !.gitignore
-bakerydemo/collect_static
+/static

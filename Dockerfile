@@ -46,16 +46,16 @@ ENV PORT 8080
 EXPOSE 8080
 
 # Add custom environment variables needed by Django or your settings file here:
-ENV DJANGO_SETTINGS_MODULE=bakerydemo.settings.production DJANGO_DEBUG=off
+ENV DJANGO_SETTINGS_MODULE=delegaciadamulher.settings.production DJANGO_DEBUG=off
 
 # Call collectstatic with dummy environment variables:
 RUN DATABASE_URL=postgres://none REDIS_URL=none python manage.py collectstatic --noinput
 
 # make sure static files are writable by uWSGI process
-RUN mkdir -p /wagtail/bakerydemo/media/images && mkdir -p /wagtail/bakerydemo/media/original_images && chown -R 1000:2000 /wagtail/bakerydemo/media
+RUN mkdir -p /wagtail/delegaciadamulher/media/images && mkdir -p /wagtail/delegaciadamulher/media/original_images && chown -R 1000:2000 /wagtail/delegaciadamulher/media
 
 # mark the destination for images as a volume
-# VOLUME ["/wagtail/bakerydemo/media/images/"]
+# VOLUME ["/wagtail/delegaciadamulher/media/images/"]
 # VOLUME /data/uploads
 
 ENV DJANGO_STATIC_ROOT=/data/uploads/static
