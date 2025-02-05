@@ -6,6 +6,7 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.images.views.serve import ServeView
+from django.views.generic import RedirectView
 
 from search import views as search_views
 from delegaciadamulher import views as delegacia_views
@@ -22,6 +23,10 @@ urlpatterns = [
     ),
     path("search/", search_views.search, name="search"),
     path("__reload__/", include("django_browser_reload.urls")),
+    path(
+            "favicon.ico",
+            RedirectView.as_view(url=settings.STATIC_URL + "img/bread-favicon.ico"),
+        )
 ]
 
 

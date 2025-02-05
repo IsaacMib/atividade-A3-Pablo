@@ -165,6 +165,7 @@ To set up your database and load initial data, run the following commands:
 ```bash
 ./manage.py migrate
 ./manage.py load_initial_data
+./manage.py tailwind init
 ./manage.py runserver
 ```
 

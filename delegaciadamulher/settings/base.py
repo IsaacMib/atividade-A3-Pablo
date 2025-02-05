@@ -62,7 +62,6 @@ INSTALLED_APPS = [
     'tailwind',
     'theme',
     'django_browser_reload',
-    "compressor",
 ]
 
 MIDDLEWARE = [
@@ -153,7 +152,6 @@ USE_TZ = True
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    'compressor.finders.CompressorFinder',
 ]
 
 STATICFILES_DIRS = [
