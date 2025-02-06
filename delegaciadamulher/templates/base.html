@@ -1,4 +1,5 @@
 {% load static wagtailcore_tags wagtailuserbar tailwind_tags %}
+{% load render_bundle from webpack_loader %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -29,9 +30,17 @@
         {% tailwind_preload_css %}
         {% tailwind_css %}
 
+        
+
+        
+
         {% block extra_css %}
         {# Override this in templates to add extra stylesheets #}
         {% endblock %}
+        
+        <meta name="test" />
+
+        {% render_bundle 'main' 'css' %}
     </head>
 
     <body class="{% block body_class %}{% endblock %}">
@@ -41,6 +50,8 @@
 
         {# Global javascript #}
         <script type="text/javascript" src="{% static 'js/delegaciadamulher.js' %}"></script>
+
+        {% render_bundle 'main' 'js' %}
 
         {% block extra_js %}
         {# Override this in templates to add extra javascript #}

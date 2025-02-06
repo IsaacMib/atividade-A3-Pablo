@@ -22,3 +22,5 @@ __pycache__
 /Vagrantfile.local
 !.gitignore
 /static
+frontend/bundles/
+webpack-stats.json
