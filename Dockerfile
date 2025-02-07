@@ -13,40 +13,52 @@ RUN set -ex \
         postgresql-client \
         procps \
         zlib1g \
+        gnupg \
     " \
     && seq 1 8 | xargs -I{} mkdir -p /usr/share/man/man{} \
     && apt-get update && apt-get install -y --no-install-recommends $RUN_DEPS \
     && rm -rf /var/lib/apt/lists/*
 
 ADD requirements/ /requirements/
-ENV VIRTUAL_ENV=/venv PATH=/venv/bin:$PATH PYTHONPATH=/wagtail/
+ENV VIRTUAL_ENV=/venv
+ENV PATH=/venv/bin:$PATH
+ENV PYTHONPATH=/wagtail/
+ENV BUILD_DEPS=" \
+    build-essential \
+    curl \
+    git \
+    libexpat1-dev \
+    libjpeg62-turbo-dev \
+    libpcre3-dev \
+    libpq-dev \
+    zlib1g-dev "
 
-RUN set -ex \
-    && BUILD_DEPS=" \
-        build-essential \
-        curl \
-        git \
-        libexpat1-dev \
-        libjpeg62-turbo-dev \
-        libpcre3-dev \
-        libpq-dev \
-        zlib1g-dev \
-    " \
-    && apt-get update && apt-get install -y --no-install-recommends $BUILD_DEPS \
+RUN apt-get update && apt-get install -y --no-install-recommends $BUILD_DEPS \
     && python3.12 -m venv ${VIRTUAL_ENV} \
     && python3.12 -m pip install -U pip \
     && python3.12 -m pip install --no-cache-dir -r /requirements/production.txt \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $BUILD_DEPS \
-    && rm -rf /var/lib/apt/lists/*
+    && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y nodejs
 
 RUN mkdir -p /wagtail/
 WORKDIR /wagtail/
 ADD . /wagtail/
-ENV PORT 8080
+ENV PORT=8080
+ENV NODE_ENV=production
 EXPOSE 8080
 
+RUN node --version \
+    && npm install -D webpack-cli terser-webpack-plugin \
+    && npm install \
+    npx webpack build
+
+RUN python manage.py tailwind build \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $BUILD_DEPS \
+    && rm -rf /var/lib/apt/lists/*
+
 # Add custom environment variables needed by Django or your settings file here:
-ENV DJANGO_SETTINGS_MODULE=delegaciadamulher.settings.production DJANGO_DEBUG=off
+ENV DJANGO_SETTINGS_MODULE=delegaciadamulher.settings.production
+ENV DJANGO_DEBUG=off
 
 # Call collectstatic with dummy environment variables:
 RUN DATABASE_URL=postgres://none REDIS_URL=none python manage.py collectstatic --noinput

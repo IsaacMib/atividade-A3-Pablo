@@ -27,12 +27,12 @@ services:
       context: .
       dockerfile: ./Dockerfile
     volumes:
-      - ./delegaciadamulher:/code/delegaciadamulher
+      - ./:/code/delegaciadamulher
     links:
       - db:db
       - redis:redis
     ports:
-      - '8000:8000'
+      - '8080:8080'
     depends_on:
       - db
       - redis
