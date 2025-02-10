@@ -1,6 +1,9 @@
-$primary-color: #9c3a3a;
+$primary-color: #fff;
 
 body {
     background-color: $primary-color;
     font-family: Arial, sans-serif;
 }
+
+
+@import './barraidentidadepb/barraidentidadepb.scss';
