@@ -25,6 +25,7 @@
         {% endif %}
 
         {# Global stylesheets #}
+        <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
         <link rel="stylesheet" type="text/css" href="{% static 'css/delegaciadamulher.css' %}">
 
         {% tailwind_preload_css %}
@@ -49,6 +50,7 @@
         {% block content %}{% endblock %}
 
         {# Global javascript #}
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
         <script type="text/javascript" src="{% static 'js/delegaciadamulher.js' %}"></script>
 
         {% render_bundle 'main' 'js' %}
