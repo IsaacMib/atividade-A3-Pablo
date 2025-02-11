@@ -56,7 +56,7 @@ RUN ./manage.py tailwind build
 RUN node --version \
     && npm install -D webpack-cli terser-webpack-plugin \
     && npm install \
-    npx webpack build
+    && npx webpack build
 
 RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $BUILD_DEPS \
     && rm -rf /var/lib/apt/lists/*
