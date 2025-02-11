@@ -44,7 +44,7 @@ RUN mkdir -p /wagtail/
 WORKDIR /wagtail/
 ADD . /wagtail/
 ENV PORT=8080
-ENV NODE_ENV=production
+# ENV NODE_ENV=production
 EXPOSE 8080
 
 # TODO: ajustar o build do tailwind para versão 4.0.0
