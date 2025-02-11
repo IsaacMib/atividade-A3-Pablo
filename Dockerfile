@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12
 
 # Install packages needed to run your application (not build deps):
 # We need to recreate the /usr/share/man/man{1..8} directories first because
@@ -47,12 +47,15 @@ ENV PORT=8080
 ENV NODE_ENV=production
 EXPOSE 8080
 
+# TODO: ajustar o build do tailwind para versão 4.0.0
+
 RUN node --version \
     && npm install -D webpack-cli terser-webpack-plugin \
     && npm install \
-    npx webpack build
+    npx webpack build 
 
-RUN python manage.py tailwind build \
+RUN ./manage.py tailwind install \
+    && ./manage.py tailwind build \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $BUILD_DEPS \
     && rm -rf /var/lib/apt/lists/*
 
