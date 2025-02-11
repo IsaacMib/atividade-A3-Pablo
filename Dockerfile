@@ -49,14 +49,16 @@ EXPOSE 8080
 
 # TODO: ajustar o build do tailwind para versão 4.0.0
 
+RUN ./manage.py tailwind install 
+
+RUN ./manage.py tailwind build 
+
 RUN node --version \
     && npm install -D webpack-cli terser-webpack-plugin \
     && npm install \
-    npx webpack build 
+    npx webpack build
 
-RUN ./manage.py tailwind install \
-    && ./manage.py tailwind build \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $BUILD_DEPS \
+RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $BUILD_DEPS \
     && rm -rf /var/lib/apt/lists/*
 
 # Add custom environment variables needed by Django or your settings file here:
