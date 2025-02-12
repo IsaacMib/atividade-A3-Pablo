@@ -24,3 +24,4 @@ __pycache__
 /static
 frontend/bundles/
 webpack-stats.json
+theme/static/
