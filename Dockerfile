@@ -58,6 +58,8 @@ RUN node --version \
     && npm install \
     && npx webpack build
 
+RUN ./manage.py collectstatic --no-input
+
 RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $BUILD_DEPS \
     && rm -rf /var/lib/apt/lists/*
 
