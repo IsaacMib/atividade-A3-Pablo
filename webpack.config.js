@@ -1,6 +1,7 @@
 const path = require("path");
 const TerserPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const BundleTracker = require("webpack-bundle-tracker");
 
 module.exports = {
     entry: ["./frontend/js/index.js"], // Arquivo de entrada
@@ -14,7 +15,8 @@ module.exports = {
       minimizer: [new TerserPlugin()], // Minificação do JS
     },
     plugins: [
-      new MiniCssExtractPlugin({ filename: "styles.[contenthash].css" }), // Para arquivos CSS, se necessário
+      new MiniCssExtractPlugin({ filename: "styles.[contenthash].css" }), // Para arquivos CSS, se necessário,
+      new BundleTracker({ path: __dirname, filename: "webpack-stats.json" }),
     ],
     module: {
       rules: [
