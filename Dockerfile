@@ -56,7 +56,7 @@ RUN ./manage.py tailwind build
 RUN node --version \
     && npm install -D webpack-cli terser-webpack-plugin \
     && npm install \
-    && npx webpack build
+    && npm run build
 
 RUN ./manage.py collectstatic --no-input
 
