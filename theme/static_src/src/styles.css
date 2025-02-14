@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 /*Add all folder with class of tailwind*/
 @source '../../../delegaciadamulher/static';
 @source '../../../delegaciadamulher/templates';
