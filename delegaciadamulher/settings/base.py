@@ -40,6 +40,7 @@ INTERNAL_IPS = [
 INSTALLED_APPS = [
     "home",
     "search",
+    "core",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
