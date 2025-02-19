@@ -1,0 +1,43 @@
+{% load static %}
+
+<div class="columns-2">
+  <p>Well, let me tell you something, ...</p>
+  <p class="break-after-column">Sure, go ahead, laugh...</p>
+  <p>Maybe we can live without...</p>
+  <p>Look. If you think this is...</p>
+</div>
+
+<div class="columns-2">
+  <p>2 Well, let me tell you something, ...</p>
+  <p class="break-before-column">2 Sure, go ahead, laugh...</p>
+  <p>2 Maybe we can live without...</p>
+  <p>2 Look. If you think this is...</p>
+</div>
+
+<div class="columns-2">
+  <p>3 Well, let me tell you something, ...</p>
+  <p class="break-inside-avoid-column">3 Sure, go ahead, laugh...</p>
+  <p>3 Maybe we can live without...</p>
+  <p>3 Look. If you think this is...</p>
+</div>
+
+<span class="box-decoration-slice bg-linear-to-r from-indigo-600 to-pink-500 px-2 text-white">
+  1Hello<br />1World
+</span>
+<span class="box-decoration-clone bg-linear-to-r from-indigo-600 to-pink-500 px-2 text-white">
+  2Hello<br />World
+</span>
+
+<div class="box-border size-32 border-4 p-4 ">
+  <span class="bg-red-50">Box</span>
+</div>
+
+<div class="box-content size-32 border-4 p-4">
+  <span class="bg-red-50">Box</span>
+</div>
+
+<div class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6 mx-auto max-w-6xl">
+  {% for i in loop_times %}
+    <img class="aspect-auto" src="{% static 'img/photo_teste.jpg' %}" />
+  {% endfor %}
+</div>
