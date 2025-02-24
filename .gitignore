@@ -11,7 +11,7 @@
 /data
 .~*
 common/CACHE
-/delegaciadamulher/settings/local.py
+/codatasite/settings/local.py
 db.sqlite3
 node_modules
 venv

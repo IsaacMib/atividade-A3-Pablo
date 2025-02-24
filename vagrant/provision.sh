@@ -35,7 +35,7 @@ su - $DEV_USER -c "cd $PROJECT_DIR && $PIP install -r requirements/base.txt"
 chmod a+x $PROJECT_DIR/manage.py
 
 # copy local settings file
-cp $PROJECT_DIR/delegaciadamulher/settings/local.py.example $PROJECT_DIR/delegaciadamulher/settings/local.py
+cp $PROJECT_DIR/codatasite/settings/local.py.example $PROJECT_DIR/codatasite/settings/local.py
 # add .env file for django-dotenv environment variable definitions
 echo DJANGO_SETTINGS_MODULE=$PROJECT_NAME.settings.dev > $PROJECT_DIR/.env
 
@@ -53,7 +53,7 @@ then
         echo Database already exists, skipping...
     fi
     su - $DEV_USER -c "$PIP install \"psycopg2-binary>=2.7,<3\""
-    cat << EOF >> $PROJECT_DIR/delegaciadamulher/settings/local.py
+    cat << EOF >> $PROJECT_DIR/codatasite/settings/local.py
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
