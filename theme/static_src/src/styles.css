@@ -3,8 +3,8 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 /*Add all folder with class of tailwind*/
-@source '../../../codatasite/static';
-@source '../../../codatasite/templates';
+@source '../../../sitepadrao/static';
+@source '../../../sitepadrao/templates';
 @source '../../../frontend/css';
 @source '../../../home/templates';
 @source '../../../home/static';

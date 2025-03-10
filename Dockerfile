@@ -64,17 +64,17 @@ RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
     && rm -rf /var/lib/apt/lists/*
 
 # Add custom environment variables needed by Django or your settings file here:
-ENV DJANGO_SETTINGS_MODULE=codatasite.settings.production
+ENV DJANGO_SETTINGS_MODULE=sitepadrao.settings.production
 ENV DJANGO_DEBUG=off
 
 # Call collectstatic with dummy environment variables:
 RUN DATABASE_URL=postgres://none REDIS_URL=none python manage.py collectstatic --noinput
 
 # make sure static files are writable by uWSGI process
-RUN mkdir -p /wagtail/codatasite/media/images && mkdir -p /wagtail/codatasite/media/original_images && chown -R 1000:2000 /wagtail/codatasite/media
+RUN mkdir -p /wagtail/sitepadrao/media/images && mkdir -p /wagtail/sitepadrao/media/original_images && chown -R 1000:2000 /wagtail/sitepadrao/media
 
 # mark the destination for images as a volume
-# VOLUME ["/wagtail/codatasite/media/images/"]
+# VOLUME ["/wagtail/sitepadrao/media/images/"]
 # VOLUME /data/uploads
 
 ENV DJANGO_STATIC_ROOT=/data/uploads/static

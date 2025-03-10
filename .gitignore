@@ -11,7 +11,7 @@
 /data
 .~*
 common/CACHE
-/codatasite/settings/local.py
+/sitepadrao/settings/local.py
 db.sqlite3
 node_modules
 venv

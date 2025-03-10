@@ -21,12 +21,12 @@ services:
       DJANGO_SECRET_KEY: changeme
       DATABASE_URL: postgres://app_user:changeme@db/app_db
       REDIS_URL: redis://redis
-      DJANGO_SETTINGS_MODULE: codatasite.settings.dev
+      DJANGO_SETTINGS_MODULE: sitepadrao.settings.dev
     build:
       context: .
       dockerfile: ./Dockerfile
     volumes:
-      - ./:/code/codatasite
+      - ./:/code/sitepadrao
     links:
       - db:db
       - redis:redis

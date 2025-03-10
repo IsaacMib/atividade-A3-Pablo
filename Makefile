@@ -7,7 +7,7 @@ help:
 lint-server:
 	black --target-version py38 --check --diff .
 	ruff check .
-	curlylint --parse-only codatasite
+	curlylint --parse-only sitepadrao
 	git ls-files '*.html' | xargs djhtml --check
 
 lint-client:

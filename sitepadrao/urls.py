@@ -9,7 +9,7 @@ from wagtail.images.views.serve import ServeView
 from django.views.generic import RedirectView
 
 from search import views as search_views
-from codatasite import views as delegacia_views
+from sitepadrao import views as delegacia_views
 
 urlpatterns = [
     path("health/", delegacia_views.health_check, name='health_check'),
