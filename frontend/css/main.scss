@@ -1,10 +1,12 @@
-$primary-color: #fff;
+@use  './variables.scss';
+@use  './icon/sprite.scss';
+@use  './barraidentidadepb/barraidentidadepb.scss';
+@use  './home/home.scss';
+@use './home/menu.scss';
+
+
 
 body {
-    background-color: $primary-color;
+    background-color: variables.$primary-color;
     font-family: Arial, sans-serif;
 }
-
-
-@import './barraidentidadepb/barraidentidadepb.scss';
-@import './home/home.scss';

@@ -2,6 +2,7 @@ const path = require("path");
 const TerserPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const BundleTracker = require("webpack-bundle-tracker");
+const SpritesmithPlugin = require('webpack-spritesmith');
 
 module.exports = {
     entry: ["./frontend/js/index.js"], // Arquivo de entrada
@@ -17,6 +18,19 @@ module.exports = {
     plugins: [
       new MiniCssExtractPlugin({ filename: "styles.[contenthash].css" }), // Para arquivos CSS, se necessário,
       new BundleTracker({ path: __dirname, filename: "webpack-stats.json" }),
+      new SpritesmithPlugin({
+        src: {
+            cwd: `./frontend/sprite`,
+            glob: '*.png'
+          },
+          target: {
+            image: `./frontend/bundles/sprite.png`,
+            css: `./frontend/css/icon/sprite.scss`
+          },
+          apiOptions: {
+            cssImageRef: '/frontend/bundles/sprite.png'
+          }
+      })
     ],
     module: {
       rules: [
@@ -37,7 +51,7 @@ module.exports = {
                 "css-loader",
                 "sass-loader",
             ],
-        },
+          },
       ],
   },
 };

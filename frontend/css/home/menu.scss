@@ -1,0 +1,5 @@
+@use  '../icon/sprite';
+
+.icon-constraste {
+  @include sprite.sprite(sprite.$contraste-escuro);
+}
