@@ -1,4 +1,4 @@
-@use  '../icon/sprite';
+@use  '../sprite';
 
 .icon-constraste {
   @include sprite.sprite(sprite.$contraste-escuro);

@@ -20,15 +20,15 @@ module.exports = {
       new BundleTracker({ path: __dirname, filename: "webpack-stats.json" }),
       new SpritesmithPlugin({
         src: {
-            cwd: `./frontend/sprite`,
+            cwd: `./frontend/sprites-img`,
             glob: '*.png'
           },
           target: {
-            image: `./frontend/bundles/sprite.png`,
-            css: `./frontend/css/icon/sprite.scss`
+            image: `./frontend/sprite/sprite.png`,
+            css: `./frontend/css/sprite.scss`
           },
           apiOptions: {
-            cssImageRef: '/frontend/bundles/sprite.png'
+            cssImageRef: '/frontend/sprite/sprite.png'
           }
       })
     ],

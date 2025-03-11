@@ -25,4 +25,5 @@ __pycache__
 frontend/bundles/
 webpack-stats.json
 theme/static/
-frontend/css/icon/sprite.scss
+frontend/sprite/sprite.png
+frontend/css/sprite.scss
