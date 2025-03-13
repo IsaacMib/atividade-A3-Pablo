@@ -47,7 +47,8 @@ module.exports = {
           {
             test: /\.s[ac]ss$/i, // Processa arquivos .scss e .sass
             use: [
-                process.env.NODE_ENV === "production" ? MiniCssExtractPlugin.loader : "style-loader",
+                //process.env.NODE_ENV === "production" ? MiniCssExtractPlugin.loader : "style-loader",
+                MiniCssExtractPlugin.loader,
                 "css-loader",
                 "sass-loader",
             ],
