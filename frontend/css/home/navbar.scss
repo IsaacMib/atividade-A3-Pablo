@@ -1,0 +1,11 @@
+
+.header-navbar--wrapper {
+  display: grid;
+  align-items: center;
+}
+
+.header-navbar-dados--layout {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  justify-items: center;
+}
