@@ -47,12 +47,6 @@ ENV PORT=8080
 # ENV NODE_ENV=production
 EXPOSE 8080
 
-# TODO: ajustar o build do tailwind para versão 4.0.0
-
-RUN ./manage.py tailwind install 
-
-RUN ./manage.py tailwind build 
-
 RUN node --version \
     && npm install -D webpack-cli terser-webpack-plugin \
     && npm install \
