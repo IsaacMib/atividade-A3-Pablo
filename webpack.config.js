@@ -25,7 +25,7 @@ module.exports = {
           },
           target: {
             image: `./frontend/sprite/sprite.png`,
-            css: `./frontend/css/sprite.scss`
+            css: `./frontend/scss/sprite.scss`
           },
           apiOptions: {
             cssImageRef: '/frontend/sprite/sprite.png'

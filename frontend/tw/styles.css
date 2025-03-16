@@ -5,7 +5,7 @@
 /*Add all folder with class of tailwind*/
 @source '../../sitepadrao/static';
 @source '../../sitepadrao/templates';
-@source '../../frontend/css';
+@source '../../frontend/scss';
 @source '../../home/templates';
 @source '../../home/static';
 @source '../../search/templates';

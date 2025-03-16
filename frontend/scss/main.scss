@@ -4,7 +4,10 @@
 @use  './home/home.scss';
 @use './home/header.scss';
 @use './home/navbar.scss';
+@use './customBT';
 // @use './home/header_old.scss';
+
+@import "~bootstrap/scss/bootstrap";
 
 
 

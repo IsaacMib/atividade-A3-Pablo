@@ -46,5 +46,8 @@
     "dev": "webpack serve --mode=development --hot",
     "build": "NODE_ENV=production webpack --progress --bail --mode=production",
     "watch": "webpack --mode=development --watch"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.3"
   }
 }
