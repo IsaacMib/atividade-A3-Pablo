@@ -1,4 +1,5 @@
 import "../css/main.scss";
+import "../tw/styles.css";
 
 import BarraIdentidade from './barraidentidadepb/barraidentidadepb.js';
 
