@@ -156,7 +156,7 @@ STATICFILES_FINDERS = [
 
 STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, "static"),
-    os.path.join(BASE_DIR, 'frontend/bundles'),
+    os.path.join(BASE_DIR, 'frontend'),
 ]
 
 WEBPACK_LOADER = {

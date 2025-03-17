@@ -1,5 +1,5 @@
 import "../scss/main.scss";
-import "../tw/styles.css";
+import "../../tw/styles.css";
 
 import bootstrap from 'bootstrap';
 
