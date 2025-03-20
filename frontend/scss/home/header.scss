@@ -9,7 +9,7 @@ $sp-navbar-light-icon-color: rgb(255, 255, 255);
 
 .header-acessibilidade-social--layout {
   display: grid;
-  grid-template-columns: 1fr auto auto auto;
+  grid-template-columns: auto 1fr auto auto auto auto;
   grid-gap: 8px;
   padding: 8px 0;
   align-items: center;

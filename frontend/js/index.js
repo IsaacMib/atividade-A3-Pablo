@@ -5,6 +5,12 @@ import bootstrap from 'bootstrap';
 
 import BarraIdentidade from './barraidentidadepb/barraidentidadepb.js';
 
+import UIkit from 'uikit';
+import Icons from 'uikit/dist/js/uikit-icons';
+
+// loads the Icon plugin
+UIkit.use(Icons);
+
 window.barraIdentidade = new BarraIdentidade;
 
 document.addEventListener("DOMContentLoaded", function() {

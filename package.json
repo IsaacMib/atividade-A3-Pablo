@@ -49,6 +49,7 @@
     "watch": "webpack --mode=development --watch"
   },
   "dependencies": {
-    "bootstrap": "^5.3.3"
+    "bootstrap": "^5.3.3",
+    "uikit": "^3.23.3"
   }
 }
