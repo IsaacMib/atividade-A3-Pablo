@@ -8,3 +8,4 @@ django-csp==3.7
 dj-database-url==2.1.0
 django-browser-reload==1.17.0
 django-webpack-loader==3.1.1
+wagtail-color-panel==1.6.0
