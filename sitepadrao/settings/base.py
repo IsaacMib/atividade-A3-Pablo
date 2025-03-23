@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     "home",
     "search",
     "core",
+    "blocks",
+
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -60,8 +62,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'django_browser_reload',
-    'webpack_loader',
+    "django_browser_reload",
+    "webpack_loader",
+    "wagtail_color_panel",
 ]
 
 MIDDLEWARE = [
