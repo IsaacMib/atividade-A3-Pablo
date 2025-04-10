@@ -15,6 +15,17 @@ import os
 
 import dj_database_url
 
+from decouple import config
+
+def get_bool(env_var, default=False):
+    return os.environ.get(env_var, str(default)).lower() in ("true", "1", "t", "yes", "y", "on")
+
+def get_int(env_var, default=0):
+    try:
+        return int(os.environ.get(env_var, default))
+    except (TypeError, ValueError):
+        return default
+
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
@@ -26,7 +37,8 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 SECRET_KEY = "django-insecure-se&)zrfyqgaz=ogd4r-ad!73@lw!^h#1ldl8cuwl^#@6@p&ox*"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_SETTINGS_DEBUG', 'True').lower() in ("true", "1", "t", "yes", "y","on")
+DEBUG = os.getenv('DJANGO_SETTINGS_DEBUG', 'True').lower() in (
+    "true", "1", "t", "yes", "y", "on")
 
 ALLOWED_HOSTS = []
 
@@ -65,6 +77,7 @@ INSTALLED_APPS = [
     "django_browser_reload",
     "webpack_loader",
     "wagtail_color_panel",
+    "wagtail.contrib.settings",
 ]
 
 MIDDLEWARE = [
@@ -107,7 +120,18 @@ WSGI_APPLICATION = "sitepadrao.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-if "DATABASE_URL" in os.environ:
+if "DATABASE_HOST" in os.environ and "DATABASE_PORT" in os.environ and "DATABASE_NAME" in os.environ and "DATABASE_USERNAME" in os.environ and "DATABASE_PASSWORD" in os.environ:
+    DATABASES = {
+        "default": {
+            "ENGINE": config('DATABASE_ENGINE', default='django.db.backends.postgresql'),
+            "HOST": config("DATABASE_HOST"),
+            "PORT": config("DATABASE_PORT", default="5432"),
+            "NAME": config("DATABASE_NAME"),
+            "USER": config("DATABASE_USERNAME"),
+            "PASSWORD": config("DATABASE_PASSWORD"),
+        },
+    }
+elif "DATABASE_URL" in os.environ:
     DATABASES = {"default": dj_database_url.config(conn_max_age=500)}
 else:
     DATABASES = {
@@ -140,7 +164,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "pt-BR"
 
 TIME_ZONE = "UTC"
 
@@ -164,7 +188,8 @@ STATICFILES_DIRS = [
 
 WEBPACK_LOADER = {
     'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'bundles/',  # Pasta onde os arquivos compilados serão armazenados
+        # Pasta onde os arquivos compilados serão armazenados
+        'BUNDLE_DIR_NAME': 'bundles/',
         'CACHE': not DEBUG,
         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
         'POLL_INTERVAL': 0.1,
@@ -175,7 +200,7 @@ WEBPACK_LOADER = {
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = "/static/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.getenv('DJANGO_MEDIA_ROOT', os.path.join(PROJECT_DIR, 'media'))
 MEDIA_URL = "/media/"
 
 # Override in local settings or replace with your own key. Please don't use our demo key in production!
@@ -207,6 +232,7 @@ WAGTAIL_CONTENT_LANGUAGES = LANGUAGES = [
     ("en", "English"),
     ("de", "Deutsch"),
     ("ar", "العربيّة"),
+    ('pt', 'Portuguese'),
 ]
 
 WAGTAILIMAGES_AVIF_QUALITY = 60
@@ -230,7 +256,8 @@ WAGTAILADMIN_BASE_URL = "http://example.com"
 # This can be omitted to allow all files, but note that this may present a security risk
 # if untrusted users are allowed to upload files -
 # see https://docs.wagtail.org/en/stable/advanced_topics/deploying.html#user-uploaded-files
-WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
+WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key',
+                          'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
 
 # Content Security policy settings
 # http://django-csp.readthedocs.io/en/latest/configuration.html
@@ -260,3 +287,5 @@ if "CSP_DEFAULT_SRC" in os.environ:
         CSP_BASE_URI = os.environ.get("CSP_BASE_URI").split(",")
     if "CSP_OBJECT_SRC" in os.environ:
         CSP_OBJECT_SRC = os.environ.get("CSP_OBJECT_SRC").split(",")
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

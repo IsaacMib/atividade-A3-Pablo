@@ -2,6 +2,7 @@
 import os
 import random
 import string
+from email.utils import formataddr
 
 from .base import *  # noqa: F403
 
@@ -26,8 +27,6 @@ else:
 # IMPORTANT: Set this to a real hostname when using this in production!
 # See https://docs.djangoproject.com/en/3.2/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
-
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # This is used by Wagtail's email notifications for constructing absolute
 # URLs. Please set to the domain that users will access the admin site.
@@ -290,3 +289,13 @@ if os.environ.get("BASIC_AUTH_ENABLED", "false").lower().strip() == "true":
 # Allow the redirect importer to work in load-balanced / cloud environments.
 # https://docs.wagtail.io/en/v2.13/reference/settings.html#redirects
 WAGTAIL_REDIRECTS_FILE_STORAGE = "cache"
+
+if "EMAIL_BACKEND" in os.environ and "EMAIL_HOST" in os.environ:
+    EMAIL_BACKEND = config("EMAIL_BACKEND")
+    EMAIL_HOST = config("EMAIL_HOST")       # ex: smtp.gmail.com, smtp.sendgrid.net, etc
+    EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)                        # ou 465 se for SSL
+    EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+    EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)                        # ou False se usar SSL (uses port 587 by default)
+    EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=False, cast=bool)                       # True se usar SSL (uses port 465 by default)
+    DEFAULT_FROM_EMAIL = DEFAULT_FROM_EMAIL = formataddr((config("DEFAULT_FROM_NAME"), config("DEFAULT_FROM_EMAIL")))
