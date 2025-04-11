@@ -8,6 +8,8 @@ import BarraIdentidade from './barraidentidadepb/barraidentidadepb.js';
 import UIkit from 'uikit';
 import Icons from 'uikit/dist/js/uikit-icons';
 
+import './header/header.js';
+
 // loads the Icon plugin
 UIkit.use(Icons);
 
