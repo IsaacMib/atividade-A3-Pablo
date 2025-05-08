@@ -1,19 +1,19 @@
 @use  './variables.scss';
 @use  './sprite.scss';
-@use  './barraidentidadepb/barraidentidadepb.scss';
-@use  './home/home.scss';
-@use './home/header.scss';
-@use './home/navbar.scss';
+@use  './barraidentidadepb/index.scss' as barraidentidadepb;
+@use  './home/index.scss' as home;
+
+/*Arquivo para customizar o bootstrap*/
 @use './customBT';
-// @use './home/header_old.scss';
 
 @import "~bootstrap/scss/bootstrap";
+
 // 2. Import default variables and available mixins.
 @import "~uikit/src/scss/variables-theme.scss";
 @import "~uikit/src/scss/mixins-theme.scss";
 @import "./rawline-font.scss";
 
-// 3. Your custom mixin overwrites.
+// 3. Your custom mixin overwrites of ukit.
 @mixin hook-card() { color: #000; }
 
 @import "uikit/src/scss/uikit-theme.scss";
