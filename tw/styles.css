@@ -9,3 +9,10 @@
 @source '../../home/templates';
 @source '../../home/static';
 @source '../../search/templates';
+
+@theme {
+  --color-primary: #305A9C;
+  --color-primary-dark: #305A9C;
+
+  --font-inter: 'Inter', sans-serif;
+}
