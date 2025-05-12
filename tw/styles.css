@@ -10,9 +10,12 @@
 @source '../../home/static';
 @source '../../search/templates';
 
-@theme {
+@theme static {
   --color-primary: #305A9C;
-  --color-primary-dark: #305A9C;
+  --color-primary-escuro: #305A9C;
+
+  --color-gradient-inicio: #396BBB;
+  --color-gradient-fim: #1A3155;
 
   --font-inter: 'Inter', sans-serif;
 }
