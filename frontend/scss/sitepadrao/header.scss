@@ -1,0 +1,10 @@
+.header-wrapper {
+  
+}
+
+.header-layout {
+  display: grid;
+  grid-gap: 8px;
+  grid-template-columns: auto auto 1fr auto auto;
+  text-align: center;
+}
