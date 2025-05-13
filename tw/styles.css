@@ -11,8 +11,8 @@
 @source '../../search/templates';
 
 @theme static {
-  --color-primary: #305A9C;
-  --color-primary-escuro: #305A9C;
+  --color-primary: #30599B;
+  --color-primary-escuro: #30599B;
 
   --color-gradient-inicio: #396BBB;
   --color-gradient-fim: #1A3155;
