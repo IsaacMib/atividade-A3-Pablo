@@ -1,0 +1,44 @@
+// Estilos personalizados para os cards de serviços
+
+// Estilo do cabeçalho com gradiente
+.card-header {
+    background: linear-gradient(302.81deg, #1a3155 -105%, #396bbb 146.81%) !important;
+    
+    // Estilo dos ícones de ação
+    .rounded-circle {
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+        width: 28px;
+        height: 28px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        i {
+            font-size: 0.8rem;
+        }
+    }
+}
+
+// Ajustes para o card
+.card {
+    transition: transform 0.2s ease-in-out;
+    
+    &:hover {
+        transform: translateY(-2px);
+    }
+}
+
+// Estilo do botão de acesso
+.btn-outline-secondary {
+    transition: all 0.2s ease-in-out;
+    
+    &:hover {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+}
