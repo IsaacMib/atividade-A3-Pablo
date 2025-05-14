@@ -1,0 +1,12 @@
+.footer-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 64px 0px;
+}
+
+.footer-icones {
+  display: grid;
+  grid-gap: 32px;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+}
