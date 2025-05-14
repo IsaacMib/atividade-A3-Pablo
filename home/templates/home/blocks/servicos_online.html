@@ -10,15 +10,13 @@
                         <span class="d-flex align-items-center justify-content-center rounded-circle border border-white"
                               style="width: 28px; height: 28px;"
                               data-bs-toggle="tooltip" 
-                              data-bs-placement="top" 
-                              title="Presencial">
+                              data-bs-title="Presencial">
                             <i class="pi pi-user" style="font-size: 0.8rem;"></i>
                         </span>
                         <span class="d-flex align-items-center justify-content-center rounded-circle border border-white"
                               style="width: 28px; height: 28px;"
                               data-bs-toggle="tooltip" 
-                              data-bs-placement="top" 
-                              title="Serviço para tirar habilitação">
+                              data-bs-title="Esse serviço é destinado a motoristas que não conseguem realizar o agendamento online">
                             <i class="pi pi-question" style="font-size: 0.8rem;"></i>
                         </span>
                     </div>
@@ -29,10 +27,9 @@
                     </h5>
                 </div>
                 <div class="card-footer bg-transparent border-top">
-                    <button class="btn btn-outline-secondary w-100 rounded-pill" 
-                            onclick="handleClick('123')">
+                    <a class="btn btn-outline-secondary w-100 rounded-pill text-decoration-none" href="#">
                         Acessar
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -42,8 +39,10 @@
 
 <!-- Initialize Bootstrap tooltips -->
 <script>
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+document.addEventListener('DOMContentLoaded', function() {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function(tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
+});
 </script>
