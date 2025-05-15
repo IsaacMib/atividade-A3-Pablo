@@ -2,6 +2,7 @@
 @use  './sprite.scss';
 @use  './barraidentidadepb/index.scss' as barraidentidadepb;
 @use  './home/index.scss' as home;
+@use  './componentevideo/index.scss' as componentevideo;
 
 /*Arquivo para customizar o bootstrap*/
 @use './customBT';
@@ -17,8 +18,6 @@
 @mixin hook-card() { color: #000; }
 
 @import "uikit/src/scss/uikit-theme.scss";
-
-
 
 body {
     background-color: variables.$primary-color;
