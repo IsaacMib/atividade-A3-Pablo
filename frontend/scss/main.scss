@@ -1,14 +1,21 @@
 @use  './variables.scss';
 @use  './sprite.scss';
+
+@use './sitepadrao/index.scss' as sitepadrao;
+
 @use  './barraidentidadepb/index.scss' as barraidentidadepb;
 @use  './home/index.scss' as home;
 @use  './componentevideo/index.scss' as componentevideo;
 @use  './componentebanner/index.scss' as componentebanner;
 
+
+
 /*Arquivo para customizar o bootstrap*/
 @use './customBT';
 
 @import "~bootstrap/scss/bootstrap";
+
+$global-font-family: 'Inter', sans-serif;
 
 // 2. Import default variables and available mixins.
 @import "~uikit/src/scss/variables-theme.scss";
@@ -20,7 +27,8 @@
 
 @import "uikit/src/scss/uikit-theme.scss";
 
+
 body {
     background-color: variables.$primary-color;
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
 }

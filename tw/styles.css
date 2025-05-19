@@ -9,3 +9,13 @@
 @source '../../home/templates';
 @source '../../home/static';
 @source '../../search/templates';
+
+@theme static {
+  --color-primary: #30599B;
+  --color-primary-escuro: #30599B;
+
+  --color-gradient-inicio: #396BBB;
+  --color-gradient-fim: #1A3155;
+
+  --font-inter: 'Inter', sans-serif;
+}
