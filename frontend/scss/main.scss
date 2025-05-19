@@ -17,6 +17,9 @@
 
 $global-font-family: 'Inter', sans-serif;
 
+$global-link-color: #396BBB !default;
+$global-link-hover-color: #30599B !default;
+
 // 2. Import default variables and available mixins.
 @import "~uikit/src/scss/variables-theme.scss";
 @import "~uikit/src/scss/mixins-theme.scss";

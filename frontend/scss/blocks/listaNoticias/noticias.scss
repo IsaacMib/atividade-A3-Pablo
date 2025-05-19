@@ -11,24 +11,18 @@
   margin-top: 0px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  box-shadow: rgb(153, 153, 153) 0px 0px 0px;
-  background: rgb(255, 255, 255);
   padding: 10px;
   border-width: 1px;
   border-style: solid;
-  border-color: rgb(233, 233, 233) rgb(233, 233, 233) transparent;
   border-image: initial;
   zoom: 1;
   overflow: hidden;
-  border-top: chocolate 2px solid !important;
   position: relative;
   z-index: 2;
   border-radius: 5px;
 }
 
-.noticias-conteudo--data {
-  color: #fff !important;
-  background-color: chocolate !important;
+.noticias-conteudo--data {  
   position: absolute;
   z-index: 2;
   margin: 0 0 20px 10px;
@@ -36,11 +30,7 @@
   margin-top: -10px;
   padding: 10px;
   text-transform: uppercase;
-  color: #fff !important;
   border-radius: 0 0 5px 5px;
-  background: #666;
-  background-color: rgb(102, 102, 102);
-  font-family: 'Montserrat', Arial, cursive;
   font-size: 1rem;
   font-weight: 500;
   line-height: 10px;
