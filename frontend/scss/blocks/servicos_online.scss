@@ -1,6 +1,12 @@
 // Estilos personalizados para os cards de serviços
 
 // Estilo do cabeçalho com gradiente
+.swiperServicosOnline {
+    .swiper-slide {
+        margin-bottom: 3rem;
+    }
+}
+
 .card {
     height: 300px !important;
     max-width: 300px;
@@ -8,6 +14,9 @@
     .card-header {
         background: linear-gradient(302.81deg, var(--tw-color-gradient-fim) -105%, var(--tw-color-gradient-inicio) 146.81%);
     
+        .card-header--title {
+            font-size: 14px;
+        }
         // Estilo dos ícones de ação
         .rounded-circle {
             transition: all 0.2s ease-in-out;
@@ -26,5 +35,9 @@
                 font-size: 0.8rem;
             }
         }
+    }
+
+    .card-body, .card-footer {
+        background-color: var(--tw-card-background);
     }
 }

@@ -1,11 +1,11 @@
 <!-- Serviços Online Card -->
-<div class="swiper swiperServicosOnline">
-    <div class="swiper-wrapper col-9">
+<div class="swiper swiperServicosOnline col-10">
+    <div class="swiper-wrapper">
         {% for i in '12345678' %}
         <div class="swiper-slide">
-            <div class="card border-0 shadow-sm">
+            <div class="card border-0 shadow-sm mx-auto" role="article" aria-label="Serviço de Habilitação DETRAN">
                 <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
-                    <span class="fw-bold">DETRAN - Habilitação</span>
+                    <span class="fw-bold card-header--title">DETRAN - Habilitação</span>
                     <div class="d-flex gap-2">
                         <span class="d-flex align-items-center justify-content-center rounded-circle border border-white"
                               style="width: 28px; height: 28px;"
@@ -22,12 +22,12 @@
                     </div>
                 </div>
                 <div class="card-body d-flex justify-content-center align-items-center">
-                    <h5 class="card-title text-muted fw-semibold text-center mb-0">
+                    <p class="card-title text-muted fw-semibold text-center mb-0 fs-4">
                         Serviço para tirar habilitação
-                    </h5>
+                    </p>
                 </div>
-                <div class="card-footer bg-transparent border-top">
-                    <a class="btn btn-outline-secondary w-100 rounded-pill text-decoration-none" href="#">
+                <div class="card-footer border-top">
+                    <a class="btn btn-outline-secondary w-100 rounded-pill text-decoration-none" href="#" role="button" aria-label="Acessar serviço de habilitação">
                         Acessar
                     </a>
                 </div>
@@ -40,9 +40,36 @@
     <div class="swiper-pagination"></div>
 </div>
 
-<!-- Initialize Bootstrap tooltips -->
 <script>
+
 document.addEventListener('DOMContentLoaded', function() {
+    const swiperServicosOnline = new Swiper('.swiperServicosOnline', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        breakpoints: {
+            1024: {
+                slidesPerView: 2,
+            },
+            1440: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+            },
+            1920: {
+                slidesPerView: 4,
+                spaceBetween: 40,
+            },
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        loop: true,
+    });
+
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(function(tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
