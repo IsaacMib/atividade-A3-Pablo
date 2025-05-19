@@ -10,8 +10,11 @@
 .card {
     height: 300px !important;
     max-width: 300px;
+    box-shadow: 0 0.25rem 0.25rem 0 rgba(0, 0, 0, 0.15);
+    background-color: var(--tw-card-background) !important;
 
     .card-header {
+        border-radius: 0.75rem 0.75rem 0 0 !important;
         background: linear-gradient(302.81deg, var(--tw-color-gradient-fim) -105%, var(--tw-color-gradient-inicio) 146.81%);
     
         .card-header--title {
@@ -39,5 +42,9 @@
 
     .card-body, .card-footer {
         background-color: var(--tw-card-background);
+    }
+
+    .card-footer {
+        border-radius: 0 0 0.75rem 0.75rem !important;
     }
 }

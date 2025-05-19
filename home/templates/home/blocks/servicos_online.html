@@ -3,8 +3,8 @@
     <div class="swiper-wrapper">
         {% for i in '12345678' %}
         <div class="swiper-slide">
-            <div class="card border-0 shadow-sm mx-auto" role="article" aria-label="Serviço de Habilitação DETRAN">
-                <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+            <div class="card border-0 mx-auto" role="article" aria-label="Serviço de Habilitação DETRAN">
+                <div class="card-header text-white d-flex align-items-center justify-content-between">
                     <span class="fw-bold card-header--title">DETRAN - Habilitação</span>
                     <div class="d-flex gap-2">
                         <span class="d-flex align-items-center justify-content-center rounded-circle border border-white"
@@ -26,8 +26,8 @@
                         Serviço para tirar habilitação
                     </p>
                 </div>
-                <div class="card-footer border-top">
-                    <a class="btn btn-outline-secondary w-100 rounded-pill text-decoration-none" href="#" role="button" aria-label="Acessar serviço de habilitação">
+                <div class="card-footer border-top mx-auto">
+                    <a class="btn btn-outline-secondary px-4 my-2 rounded-pill text-decoration-none" href="#" role="button" aria-label="Acessar serviço de habilitação">
                         Acessar
                     </a>
                 </div>
@@ -46,6 +46,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const swiperServicosOnline = new Swiper('.swiperServicosOnline', {
         slidesPerView: 1,
         spaceBetween: 20,
+        autoplay: {
+            delay: 2500,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true
+        },
         breakpoints: {
             1024: {
                 slidesPerView: 2,
