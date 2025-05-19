@@ -6,7 +6,7 @@
     max-width: 300px;
 
     .card-header {
-        background: linear-gradient(302.81deg, #1a3155 -105%, #396bbb 146.81%) !important;
+        background: linear-gradient(302.81deg, var(--tw-color-gradient-fim) -105%, var(--tw-color-gradient-inicio) 146.81%);
     
         // Estilo dos ícones de ação
         .rounded-circle {
@@ -14,27 +14,17 @@
             cursor: pointer;
             width: 28px;
             height: 28px;
-            display: flex !important;
+            display: flex;
             align-items: center;
             justify-content: center;
             
             &:hover {
-                background-color: rgba(255, 255, 255, 0.1) !important;
+                background-color: rgba(255, 255, 255, 0.1);
             }
             
             i {
                 font-size: 0.8rem;
             }
         }
-    }
-}
-
-// Estilo do botão de acesso
-.btn-outline-secondary {
-    transition: all 0.2s ease-in-out;
-    
-    &:hover {
-        background-color: #6c757d;
-        border-color: #6c757d;
     }
 }
