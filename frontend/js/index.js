@@ -14,10 +14,8 @@ import './header/header.js';
 import Swiper from 'swiper/bundle';
 import 'swiper/css/bundle';
 
-// Make Swiper available globally
 window.Swiper = Swiper;
 
-// loads the Icon plugin
 UIkit.use(Icons);
 
 window.barraIdentidade = new BarraIdentidade;
