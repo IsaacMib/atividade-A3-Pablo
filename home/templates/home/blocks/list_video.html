@@ -1,18 +1,9 @@
 {% load static %}
 
 <div class="videos-container">
-  <div class="video-card">
-    <iframe src="https://www.youtube.com/embed/Jbh8Sug4O9Y" allowfullscreen></iframe>
-    <div class="video-title">Consulta Consolidada De Veículos</div>
-  </div>
-  <div class="video-card">
-    <iframe src="https://www.youtube.com/embed/pTzGVtTwrRE" allowfullscreen></iframe>
-    <div class="video-title">A sua vida vale muito!</div>
-  </div>
-  <div class="video-card">
-    <iframe src="https://www.youtube.com/embed/qveAQ_i8p-c" allowfullscreen></iframe>
-    <div class="video-title">Maio Amarelo - No trânsito, escolha</div>
-  </div>
+  {% include "home/blocks/video.html" with titulo="Consulta Consolidada De Veículos" srcIframe="https://www.youtube.com/embed/Jbh8Sug4O9Y" %}
+  {% include "home/blocks/video.html" with titulo="A sua vida vale muito!" srcIframe="https://www.youtube.com/embed/pTzGVtTwrRE" %}
+  {% include "home/blocks/video.html" with titulo="Maio Amarelo - No trânsito, escolha" srcIframe="https://www.youtube.com/embed/qveAQ_i8p-c" %}
 </div>
 
 <div class="text-center">
