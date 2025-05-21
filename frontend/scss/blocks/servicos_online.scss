@@ -1,0 +1,44 @@
+// Estilos personalizados para os cards de serviços
+
+// Estilo do cabeçalho com gradiente
+.swiperServicosOnline {
+    .swiper-slide {
+        margin-bottom: 3rem;
+    }
+}
+
+.card {
+    height: 300px !important;
+    max-width: 300px;
+    box-shadow: 0 0.25rem 0.25rem 0 rgba(0, 0, 0, 0.15);
+
+    .card-header {
+        border-radius: 0.75rem 0.75rem 0 0 !important;
+        background: linear-gradient(302.81deg, var(--tw-color-gradient-fim) -105%, var(--tw-color-gradient-inicio) 146.81%);
+    
+        .card-header--title {
+            font-size: 14px;
+        }
+        .card-header--icon {
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            &:hover {
+                background-color: color-mix(in oklab, var(--tw-color-neutral-100) 10%, transparent);
+            }
+            
+            i {
+                font-size: 0.8rem;
+            }
+        }
+    }
+
+    .card-footer {
+        border-radius: 0 0 0.75rem 0.75rem !important;
+    }
+}
