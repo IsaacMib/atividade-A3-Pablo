@@ -5,8 +5,7 @@
 
 @use  './barraidentidadepb/index.scss' as barraidentidadepb;
 @use  './home/index.scss' as home;
-
-@use './blocks/index.scss' as blocks;
+@use  './blocks/index.scss' as blocks;
 
 /*Arquivo para customizar o bootstrap*/
 @use './customBT';
@@ -14,6 +13,9 @@
 @import "~bootstrap/scss/bootstrap";
 
 $global-font-family: 'Inter', sans-serif;
+
+$global-link-color: #396BBB !default;
+$global-link-hover-color: #30599B !default;
 
 // 2. Import default variables and available mixins.
 @import "~uikit/src/scss/variables-theme.scss";

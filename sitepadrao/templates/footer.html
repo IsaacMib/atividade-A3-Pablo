@@ -2,13 +2,14 @@
 
 <div class="footer-wrapper tw:bg-primary tw:dark:bg-primary-escuro">
   <div class="container">
-    <div class="footer-layout">
-      <div></div>
-      <div class="footer-icones">
-        <div>
+    <div class="footer-layout row">
+      <div class="col-12 col-lg-6"></div>
+      <div class="col-12 col-lg-6">
+        <div class="footer-icones row row-cols-auto">
+        <div class="col">
           <img src="{% static 'img/logo_site_branco.png' %}" alt="{{ settings.core.SiteSettings.title_suffix }}">
         </div>
-        <div>
+        <div class="col">
           <a href="https://codata.pb.gov.br/">
             <svg width="212" height="36" viewBox="0 0 212 36" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clip-path="url(#clip0_4065_3)">
@@ -35,7 +36,7 @@
             </svg>
           </a>         
         </div>
-        <div>
+        <div class="col">
           <a href="https://paraiba.pb.gov.br/">
             <svg width="169" height="50" viewBox="0 0 169 50" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clip-path="url(#clip0_2016_283)">
@@ -198,6 +199,7 @@
               </defs>
             </svg>
           </a>
+        </div>
         </div>
       </div>
     </div>
