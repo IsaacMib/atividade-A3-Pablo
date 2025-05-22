@@ -1,0 +1,54 @@
+{% load static %}
+
+<div class="container">
+  <!-- Slider main container -->
+  <div class="swiper carrossel-banners">
+    <!-- Additional required wrapper -->
+    <div class="swiper-wrapper">
+      <!-- Slides -->
+      <div class="swiper-slide">
+        {% include 'home/blocks/item_carrossel_banner.html' %}
+      </div>
+      <div class="swiper-slide">
+        {% include 'home/blocks/item_carrossel_banner.html' %}
+      </div>
+      <div class="swiper-slide">
+        {% include 'home/blocks/item_carrossel_banner.html' %}
+      </div>
+      <div class="swiper-slide">
+        {% include 'home/blocks/item_carrossel_banner.html' %}
+      </div>
+      <div class="swiper-slide">
+        {% include 'home/blocks/item_carrossel_banner.html' %}
+      </div>
+      <div class="swiper-slide">
+        {% include 'home/blocks/item_carrossel_banner.html' %}
+      </div>
+      <div class="swiper-slide">
+        {% include 'home/blocks/item_carrossel_banner.html' %}
+      </div>
+      <div class="swiper-slide">
+        {% include 'home/blocks/item_carrossel_banner.html' %}
+      </div>
+      <div class="swiper-slide">
+        {% include 'home/blocks/item_carrossel_banner.html' %}
+      </div>
+    </div>
+    <!-- If we need pagination -->
+    <div class="swiper-pagination"></div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const swiperServicosOnline = new Swiper('.carrossel-banners', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        loop: true,
+    });
+});
+</script>
