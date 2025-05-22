@@ -1,0 +1,72 @@
+{% load static %}
+
+<div class="container">
+  <!-- Slider main container -->
+  <div class="swiper carrossel-banners">
+    <!-- Additional required wrapper -->
+    <div class="swiper-wrapper">
+      <!-- Slides -->
+      <div class="swiper-slide">
+        <a href="https://habilitacaosocial.pb.gov.br/index.php" target="_blank">
+          <img class="carrossel-banners--img" src="{% static 'img/banner-principal.png' %}" alt="Banner Habilitação Social">
+        </a>
+      </div>
+      <div class="swiper-slide">
+        <a href="https://habilitacaosocial.pb.gov.br/index.php" target="_blank">
+          <img class="carrossel-banners--img" src="{% static 'img/banner-principal.png' %}" alt="Banner Habilitação Social">
+        </a>
+      </div>
+      <div class="swiper-slide">
+        <a href="https://habilitacaosocial.pb.gov.br/index.php" target="_blank">
+          <img class="carrossel-banners--img" src="{% static 'img/banner-principal.png' %}" alt="Banner Habilitação Social">
+        </a>
+      </div>
+      <div class="swiper-slide">
+        <a href="https://habilitacaosocial.pb.gov.br/index.php" target="_blank">
+          <img class="carrossel-banners--img" src="{% static 'img/banner-principal.png' %}" alt="Banner Habilitação Social">
+        </a>
+      </div>
+      <div class="swiper-slide">
+        <a href="https://habilitacaosocial.pb.gov.br/index.php" target="_blank">
+          <img class="carrossel-banners--img" src="{% static 'img/banner-principal.png' %}" alt="Banner Habilitação Social">
+        </a>
+      </div>
+      <div class="swiper-slide">
+        <a href="https://habilitacaosocial.pb.gov.br/index.php" target="_blank">
+          <img class="carrossel-banners--img" src="{% static 'img/banner-principal.png' %}" alt="Banner Habilitação Social">
+        </a>
+      </div>
+      <div class="swiper-slide">
+        <a href="https://habilitacaosocial.pb.gov.br/index.php" target="_blank">
+          <img class="carrossel-banners--img" src="{% static 'img/banner-principal.png' %}" alt="Banner Habilitação Social">
+        </a>
+      </div>
+      <div class="swiper-slide">
+        <a href="https://habilitacaosocial.pb.gov.br/index.php" target="_blank">
+          <img class="carrossel-banners--img" src="{% static 'img/banner-principal.png' %}" alt="Banner Habilitação Social">
+        </a>
+      </div>
+      <div class="swiper-slide">
+        <a href="https://habilitacaosocial.pb.gov.br/index.php" target="_blank">
+          <img class="carrossel-banners--img" src="{% static 'img/banner-principal.png' %}" alt="Banner Habilitação Social">
+        </a>
+      </div>
+    </div>
+    <!-- If we need pagination -->
+    <div class="swiper-pagination"></div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const swiperServicosOnline = new Swiper('.carrossel-banners', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        loop: true,
+    });
+});
+</script>
