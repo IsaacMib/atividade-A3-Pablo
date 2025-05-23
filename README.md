@@ -1,5 +1,3 @@
-[Figma](https://www.figma.com/design/vn4GGPjxav6O2EymXV1GLf/Portal-Detran--Novo?node-id=14-2&p=f&t=h8u5txcmGBh9ltCx-0)
-
 # Wagtail demo project
 
 This is a demonstration project for the amazing [Wagtail CMS](https://github.com/wagtail/wagtail).
@@ -45,7 +43,7 @@ Developers more familiar with virtualenv and traditional Django app setup instru
 
 Set up a development environment and run this demo website with a single click (requires a Github account):
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/wagtail/sitepadrao/)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/wagtail/bakerydemo/)
 
 Once Gitpod has fully started, and a preview of the bakery website has appeared in the "Simple Browser" panel, click the arrow button to the right of the URL bar to open the website in a new tab.
 Go to `/admin/` and login with `admin / changeme`.
@@ -62,8 +60,8 @@ Go to `/admin/` and login with `admin / changeme`.
 Once you've installed the necessary dependencies run the following commands:
 
 ```bash
-git clone https://github.com/wagtail/sitepadrao.git
-cd sitepadrao
+git clone https://github.com/wagtail/bakerydemo.git
+cd bakerydemo
 vagrant up
 vagrant ssh
 # then, within the SSH session:

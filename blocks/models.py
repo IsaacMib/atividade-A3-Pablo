@@ -5,6 +5,7 @@ from wagtail.blocks import PageChooserBlock, URLBlock, CharBlock, RichTextBlock
 from wagtail.images.blocks import ImageChooserBlock
 
 from django.core.exceptions import ValidationError
+from wagtail import blocks
 
 
 class LinkStructBlock(wagtail_blocks.StructBlock):

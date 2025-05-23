@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load static wagtailcore_tags %}
-
 {% block body_class %}template-homepage{% endblock %}
 
 {% block extra_css %}
@@ -21,5 +20,6 @@ Delete the line below if you're just getting started and want to remove the welc
 {% include 'home/blocks/banner.html' %}
 {% include 'home/blocks/list_video.html' %}
 {% include 'home/blocks/list_noticias.html' %}
+{% include 'home/blocks/titulo.html'%}
 
 {% endblock content %}
