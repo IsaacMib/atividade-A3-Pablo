@@ -1,7 +1,7 @@
 .titulo-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 100%;
+    --titulo-color: #305A9C;
+    padding: 2rem 0;
 }
 
 .titulo-1 {
@@ -9,8 +9,21 @@
     font-weight: 700;
     font-size: 30px;
     line-height: 100%;
-    letter-spacing: 0%;
-    background: #305A9C;
-    text-align: center;
-    margin: 20px 0;
+    color: var(--titulo-color);
+    margin-bottom: 16px;
+}
+
+.titulo-linha {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    
+    svg path {
+        stroke: var(--titulo-color);
+    }
+}
+
+.titulo-bg-azul {
+    background-color: #305A9C;
+    
+    --titulo-color: #FFFFFF;
 }

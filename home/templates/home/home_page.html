@@ -20,6 +20,7 @@ Delete the line below if you're just getting started and want to remove the welc
 {% include 'home/blocks/banner.html' %}
 {% include 'home/blocks/list_video.html' %}
 {% include 'home/blocks/list_noticias.html' %}
-{% include 'home/blocks/titulo.html'%}
+{% include 'home/blocks/titulo.html' with titulo='Central de Monitoramento' %}
+{% include 'home/blocks/titulo.html' with bgAzul=True titulo='Acesso rápido' %}
 
 {% endblock content %}
