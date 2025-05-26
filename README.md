@@ -1,4 +1,4 @@
-[Figma](https://www.figma.com/design/vn4GGPjxav6O2EymXV1GLf/Portal-Detran--Novo?node-id=14-2&p=f&t=h8u5txcmGBh9ltCx-0)
+[Figma](https://www.figma.com/design/0SQo4e8J5pyLR4RATUrzhJ/Portal-Detran--Novo--Copy-?node-id=14-2&t=v0mbP9BVQ3C2ojfx-1)
 
 # Wagtail demo project
 
