@@ -28,5 +28,16 @@ Delete the line below if you're just getting started and want to remove the welc
 {% include 'home/blocks/list_noticias.html' %}
 {% include 'home/blocks/redes.html' %}
 
+<div id="odometer" class="odometer">3252</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  element = document.getElementById("odometer");
+  setTimeout(function () {
+    element.innerHTML = 456
+  }, 1000)
+});
+</script>
+
 
 {% endblock content %}
