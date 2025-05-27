@@ -36,7 +36,7 @@
         </div>
         <div class="swiper-button-next"></div>
         <div class="swiper-button-prev"></div>
-        <div class="swiper-pagination"></div>
+        {% comment %} <div class="swiper-pagination"></div> {% endcomment %}
     </div>
 </div>
 
@@ -68,10 +68,10 @@ document.addEventListener('DOMContentLoaded', function() {
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev',
         },
-        pagination: {
+        {% comment %} pagination: {
             el: '.swiper-pagination',
             clickable: true,
-        },
+        }, {% endcomment %}
         loop: true,
     });
 
