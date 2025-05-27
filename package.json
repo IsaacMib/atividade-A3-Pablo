@@ -50,7 +50,8 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
-    "swiper": "^11.2.6",
+    "bootstrap-icons": "^1.13.1",
+    "swiper": "^11.2.8",
     "uikit": "^3.23.3"
   }
 }
