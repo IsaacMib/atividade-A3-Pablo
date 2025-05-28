@@ -15,9 +15,14 @@ Delete the line below if you're just getting started and want to remove the welc
 {% comment %}
 Delete the line below if you're just getting started and want to remove the welcome screen!
 {% endcomment %}
+
+  
+
 {% include 'home/blocks/carrossel_banner.html' %}
 {% include 'home/blocks/titulo.html' with titulo='Acesso rápido' %}
-{% include 'home/blocks/list_acesso_rapido.html' %}
+{% for block in page.body %}
+    {% include_block block %}
+  {% endfor %}
 {% include 'home/blocks/titulo.html' with titulo='Serviços online' %}
 {% include 'home/blocks/servicos_online.html' %}
 {% include 'home/blocks/banner.html' %}
