@@ -22,22 +22,12 @@ Delete the line below if you're just getting started and want to remove the welc
 {% include 'home/blocks/servicos_online.html' %}
 {% include 'home/blocks/banner.html' %}
 {% include 'home/blocks/titulo.html' with bgAzul=True titulo='Central de Monitoramento' %}
+{% include 'home/blocks/central_monitoramento_detran.html' %}
 {% include 'home/blocks/titulo.html' with titulo='Vídeos' %}
 {% include 'home/blocks/list_video.html' %}
 {% include 'home/blocks/titulo.html' with titulo='Notícias' %}
 {% include 'home/blocks/list_noticias.html' %}
 {% include 'home/blocks/redes.html' %}
-
-<div id="odometer" class="odometer">3252</div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-  element = document.getElementById("odometer");
-  setTimeout(function () {
-    element.innerHTML = 456
-  }, 1000)
-});
-</script>
 
 
 {% endblock content %}

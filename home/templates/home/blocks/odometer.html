@@ -1,0 +1,28 @@
+<div class="dado-monitoramento--wrapper">
+  <span id="odometer-{{odometer_description|slugify}}" class="odometer dado-monitoramento--numero" data-odometer-value="{{ odometer_value }}"  >0</span>
+  <span class="dado-monitoramento--descricao">{{odometer_description}}</span>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var element = document.getElementById("odometer-{{odometer_description|slugify}}");
+    od = new Odometer({
+      el: element,
+      value: 0, // Initial value
+      // Any option (other than auto and selector) can be passed in here
+      format: '(.ddd),dd',
+    });
+    var hasRun = false;
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.8 && !hasRun) {
+          hasRun = true;
+          var value = element.getAttribute('data-odometer-value');
+          element.innerHTML = value;
+          observer.disconnect(); // Desconecta o observer após a primeira execução
+        }
+      });
+    }, { threshold: 0.8 });
+    observer.observe(element);
+  });
+</script>
