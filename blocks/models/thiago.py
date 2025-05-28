@@ -16,4 +16,5 @@ class AcessosRapidosBlock(StructBlock):
     class Meta:
         icon = 'list-ul'
         label = "Bloco de Acessos Rápidos"
-        template = 'home/blocks/acessos_rapidos_block.html'
+        template = 'home/blocks/list_acesso_rapido.html'
+        

@@ -1,114 +1,20 @@
 <div class="container">
   <div class="row g-4">
-
-    <!-- Repetir esta coluna para cada item -->
-    <div class="col-6 col-md-3">
-      <a href="#ouvidoria">
-        <div class="quick-access">
-          <div class="quick-access-icon"></div>
-          <div class="quick-access-title">Ouvidoria</div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <a href="#boleto">
-        <div class="quick-access">
-          <div class="quick-access-icon"></div>
-          <div class="quick-access-title">Boleto Licenciamento</div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <a href="#ipva">
-        <div class="quick-access">
-          <div class="quick-access-icon"></div>
-          <div class="quick-access-title">IPVA</div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <a href="#emplacamento">
-        <div class="quick-access">
-          <div class="quick-access-icon"></div>
-          <div class="quick-access-title">1º Emplacamento<br>on-line (0km)</div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <a href="#atpve">
-        <div class="quick-access">
-          <div class="quick-access-icon"></div>
-          <div class="quick-access-title">ATPV-e</div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <a href="#taxas">
-        <div class="quick-access">
-          <div class="quick-access-icon"></div>
-          <div class="quick-access-title">Taxas de Serviços</div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <a href="#faq">
-        <div class="quick-access">
-          <div class="quick-access-icon"></div>
-          <div class="quick-access-title">Perguntas Frequentes</div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <a href="#consultar-veiculo">
-        <div class="quick-access">
-          <div class="quick-access-icon"></div>
-          <div class="quick-access-title">Consultar Proc. Veículo</div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <a href="#portarias">
-        <div class="quick-access">
-          <div class="quick-access-icon"></div>
-          <div class="quick-access-title">Portarias / Instruções Normativas</div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <a href="#exames">
-        <div class="quick-access">
-          <div class="quick-access-icon"></div>
-          <div class="quick-access-title">Menu de Exames</div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <a href="#telefones">
-        <div class="quick-access">
-          <div class="quick-access-icon"></div>
-          <div class="quick-access-title">Telefones Úteis</div>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-6 col-md-3">
-      <a href="#sgp">
-        <div class="quick-access">
-          <div class="quick-access-icon"></div>
-          <div class="quick-access-title">Consultar Processo SGP</div>
-        </div>
-      </a>
-    </div>
-
+    {% for item in value.itens %}
+      <div class="col-6 col-md-3">
+        <a href="{{ item.link }}">
+          <div class="quick-access">
+            <div class="quick-access-icon">
+              {% if item.icone %}
+                <i class="{{ item.icone }}"></i>
+              {% endif %}
+            </div>
+            <div class="quick-access-title">
+              {{ item.titulo|linebreaksbr }}
+            </div>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
   </div>
 </div>
