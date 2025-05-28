@@ -25,7 +25,7 @@ Delete the line below if you're just getting started and want to remove the welc
   {% endfor %}
 {% include 'home/blocks/titulo.html' with titulo='Serviços online' %}
 {% include 'home/blocks/servicos_online.html' %}
-{% include 'home/blocks/banner.html' %}
+{% include_block page.banner_com_link %}
 {% include 'home/blocks/titulo.html' with bgAzul=True titulo='Central de Monitoramento' %}
 {% include 'home/blocks/titulo.html' with titulo='Vídeos' %}
 {% include 'home/blocks/list_video.html' %}
