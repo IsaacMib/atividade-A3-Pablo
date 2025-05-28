@@ -3,12 +3,13 @@ from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
 
-from blocks.models import HeadingBlock
+# from blocks.models import HeadingBlock
+from blocks.models import AcessosRapidosBlock
 
 class HomePage(Page):
     body = StreamField(
         [
-            ("heading", HeadingBlock()),
+             ("acessos_rapidos", AcessosRapidosBlock()),
         ],
         use_json_field=True,
         default=None,
