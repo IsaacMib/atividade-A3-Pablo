@@ -1,5 +1,6 @@
 import "../scss/main.scss";
 import "../../tw/styles.css";
+import 'odometer/themes/odometer-theme-default.css';
 
 import * as bootstrap from 'bootstrap';
 window.bootstrap = bootstrap;
@@ -14,7 +15,12 @@ import './header/header.js';
 import Swiper from 'swiper/bundle';
 import 'swiper/css/bundle';
 
+import Odometer from "odometer";
+
+
+
 window.Swiper = Swiper;
+window.Odometer = Odometer;
 
 UIkit.use(Icons);
 

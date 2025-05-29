@@ -1,11 +1,10 @@
 .titulo-container {
     width: 100%;
-    --titulo-color: #305A9C;
+    --titulo-color: var(--tw-color-primary);
     padding: 2rem 0;
 }
 
 .titulo-1 {
-    font-family: Inter;
     font-weight: 700;
     font-size: 30px;
     line-height: 100%;
@@ -23,7 +22,7 @@
 }
 
 .titulo-bg-azul {
-    background-color: #305A9C;
+    background-color: var(--tw-color-primary);
     
-    --titulo-color: #FFFFFF;
+    --titulo-color: var(--tw-color-white);
 }
