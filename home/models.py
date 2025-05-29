@@ -4,13 +4,14 @@ from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
 
 # from blocks.models import HeadingBlock
-from blocks.models import AcessosRapidosBlock, BannerComLinkBlock
+from blocks.models import AcessosRapidosBlock, BannerComLinkBlock, ListaVideosBlock
 
 class HomePage(Page):
     body = StreamField(
         [
              ("acessos_rapidos", AcessosRapidosBlock()),
              ('banner_com_link', BannerComLinkBlock()),
+             ('lista_videos', ListaVideosBlock()), 
         ],
         use_json_field=True,
         default=None,

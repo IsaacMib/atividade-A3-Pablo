@@ -21,14 +21,25 @@ Delete the line below if you're just getting started and want to remove the welc
 {% include 'home/blocks/carrossel_banner.html' %}
 {% include 'home/blocks/titulo.html' with titulo='Acesso rápido' %}
 {% for block in page.body %}
+  {% if block.block_type == 'acessos_rapidos' %}
     {% include_block block %}
-  {% endfor %}
+  {% endif %}
+{% endfor %}
 {% include 'home/blocks/titulo.html' with titulo='Serviços online' %}
 {% include 'home/blocks/servicos_online.html' %}
-{% include_block page.banner_com_link %}
+{% for block in page.body %}
+  {% if block.block_type == 'banner_com_link' %}
+    {% include_block block %}
+  {% endif %}
+{% endfor %}
+
 {% include 'home/blocks/titulo.html' with bgAzul=True titulo='Central de Monitoramento' %}
 {% include 'home/blocks/titulo.html' with titulo='Vídeos' %}
-{% include 'home/blocks/list_video.html' %}
+{% for block in page.body %}
+  {% if block.block_type == 'lista_videos' %}
+    {% include_block block %}
+  {% endif %}
+{% endfor %}
 {% include 'home/blocks/titulo.html' with titulo='Notícias' %}
 {% include 'home/blocks/list_noticias.html' %}
 {% include 'home/blocks/redes.html' %}

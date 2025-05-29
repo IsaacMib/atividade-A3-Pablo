@@ -28,3 +28,37 @@ class BannerComLinkBlock(StructBlock):
         icon = 'image'
         label = "Banner com Link"
         template = 'home/blocks/banner.html'
+
+
+class VideoBlock(StructBlock):
+    titulo = CharBlock(required=True, max_length=100)
+    srcIframe = URLBlock(required=True, label="URL do vídeo (iframe YouTube)")
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        url = value.get('srcIframe')
+
+        # Transforma links padrão do YouTube em formato embed
+        if 'watch?v=' in url:
+            url = url.replace('watch?v=', 'embed/')
+        elif 'youtu.be/' in url:
+            url = url.replace('youtu.be/', 'www.youtube.com/embed/')
+
+        context['titulo'] = value.get('titulo')
+        context['src'] = url
+        return context
+
+    class Meta:
+        icon = 'media'
+        label = "Vídeo"
+        template = 'home/blocks/video.html'
+        
+
+
+class ListaVideosBlock(StructBlock):
+    videos = ListBlock(VideoBlock(), label="Vídeos", max_num=3)
+
+    class Meta:
+        icon = 'list-ul'
+        label = "Lista de Vídeos"
+        template = 'home/blocks/list_video.html'

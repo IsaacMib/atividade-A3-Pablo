@@ -1,9 +1,9 @@
-{% load static %}
+{% load wagtailcore_tags %}
 
 <div class="videos-container">
-  {% include "home/blocks/video.html" with titulo="Consulta Consolidada De Veículos" srcIframe="https://www.youtube.com/embed/Jbh8Sug4O9Y" %}
-  {% include "home/blocks/video.html" with titulo="A sua vida vale muito!" srcIframe="https://www.youtube.com/embed/pTzGVtTwrRE" %}
-  {% include "home/blocks/video.html" with titulo="Maio Amarelo - No trânsito, escolha" srcIframe="https://www.youtube.com/embed/qveAQ_i8p-c" %}
+  {% for video in self.videos %}
+    {% include_block video %}
+  {% endfor %}
 </div>
 
 <div class="text-center">
