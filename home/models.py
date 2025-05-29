@@ -4,15 +4,18 @@ from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
 
 # from blocks.models import HeadingBlock
-from blocks.models import AcessosRapidosBlock
+from blocks.models import AcessosRapidosBlock, OdometerListBlock
 
 class HomePage(Page):
     body = StreamField(
         [
              ("acessos_rapidos", AcessosRapidosBlock()),
+             ("central_monitoramento", OdometerListBlock()),
         ],
         use_json_field=True,
+        null=True,
         default=None,
+        blank=True,
     )
 
     def get_context(self, request):
