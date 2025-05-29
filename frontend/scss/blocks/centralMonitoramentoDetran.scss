@@ -23,3 +23,47 @@
   max-width: 65%;
   margin: auto;
 }
+
+.dado-monitoramento--layout {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dado-monitoramento--separator-horizontal {
+  width: 2px;
+}
+
+.dado-odometer {
+  padding: 8px 0px;
+  &:last-child {
+    .dado-monitoramento--separator-horizontal,
+    .dado-monitoramento--separator-vertical {
+      display: none;
+    }
+  }
+  .dado-monitoramento--separator-horizontal {
+    @media (max-width: 992px) {
+      display: none;
+    }
+  }
+  .dado-monitoramento--separator-vertical {
+    margin-top: 12px;
+
+    @media (min-width: 992px) {
+      display: none;
+    }
+
+    svg {
+      margin: auto;
+
+      path {
+        stroke: white;
+      }
+    }
+  }
+}
