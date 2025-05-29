@@ -62,3 +62,22 @@ class ListaVideosBlock(StructBlock):
         icon = 'list-ul'
         label = "Lista de Vídeos"
         template = 'home/blocks/list_video.html'
+
+class RedeSocialItemBlock(StructBlock):
+    nome = CharBlock(required=True)
+    link = URLBlock(required=True)
+    icone = CharBlock(required=True)
+
+    class Meta:
+        icon = "site"
+        label = "Bloco de Redes Sociais"
+        template = "home/blocks/redes_sociais.html"
+
+class ListRedeSocial(StructBlock):
+   titulo = CharBlock(required=False, default="Siga-nos nas redes sociais")
+   redes = ListBlock(RedeSocialItemBlock(), max_num=4)
+
+   class Meta:
+      icon = 'list-ul'
+      label = "Lista de Redes Sociais"
+      template = "home/blocks/redes_sociais.html"
