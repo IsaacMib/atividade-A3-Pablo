@@ -75,6 +75,7 @@ class RedeSocialItemBlock(StructBlock):
 
 class ListRedeSocial(StructBlock):
    titulo = CharBlock(required=False, default="Siga-nos nas redes sociais")
+   imagem = ImageChooserBlock(required=False, help_text="Imagem que será exibida ao lado do texto.")
    redes = ListBlock(RedeSocialItemBlock(), max_num=4)
 
    class Meta:
