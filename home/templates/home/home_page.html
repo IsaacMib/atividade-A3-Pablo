@@ -21,6 +21,7 @@
         {% endif %}
     {% endfor %}
 
+<<<<<<< HEAD
     {# ========================== SERVIÇOS ONLINE ========================== #}
     {% include 'home/blocks/titulo.html' with titulo='Serviços online' %}
     {% include 'home/blocks/servicos_online.html' %}
@@ -29,6 +30,23 @@
             {% include_block block %}
         {% endif %}
     {% endfor %}
+=======
+{% include 'home/blocks/carrossel_banner.html' %}
+{% include 'home/blocks/titulo.html' with titulo='Acesso rápido' %}
+{% for block in page.body %}
+    {% include_block block %}
+  {% endfor %}
+{% include 'home/blocks/titulo.html' with titulo='Serviços online' %}
+{% include 'home/blocks/servicos_online.html' %}
+{% include 'home/blocks/banner.html' %}
+{% include 'home/blocks/titulo.html' with bgAzul=True titulo='Central de Monitoramento' %}
+{% include 'home/blocks/central_monitoramento_detran.html' %}
+{% include 'home/blocks/titulo.html' with titulo='Vídeos' %}
+{% include 'home/blocks/list_video.html' %}
+{% include 'home/blocks/titulo.html' with titulo='Notícias' %}
+{% include 'home/blocks/list_noticias.html' %}
+{% include 'home/blocks/redes.html' %}
+>>>>>>> origin/main
 
     {# ========================== CENTRAL DE MONITORAMENTO ========================== #}
     {% include 'home/blocks/titulo.html' with bgAzul=True titulo='Central de Monitoramento' %}
