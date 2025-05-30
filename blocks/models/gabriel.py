@@ -1,10 +1,8 @@
 from wagtail.blocks import StructBlock, ListBlock, FloatBlock, CharBlock
 import requests
 import json
-import time
+from django.core.cache import cache
 
-# Cache simples em memória
-_metabase_cache = {}
 _CACHE_TIMEOUT = 600  # 10 minutos em segundos
 
 class OdometerBlock(StructBlock):
@@ -21,23 +19,13 @@ class OdometerBlock(StructBlock):
         headers = {
           'x-api-key': settings.METABASE_API_KEY
         }
-        cache_key = f"metabase_{id_card}"
-        now = time.time()
-        # Verifica cache
-        if cache_key in _metabase_cache:
-            cached = _metabase_cache[cache_key]
-            if now - cached['timestamp'] < _CACHE_TIMEOUT:
-                data = cached['data']
-            else:
-                del _metabase_cache[cache_key]
-                data = None
-        else:
-            data = None
+        cache_key = f"metabase_{id_card}"        
+        data = cache.get(cache_key)
         if data is None:
             try:
                 response = requests.get(url, headers=headers)
                 data = response.json() if response.ok else {}
-                _metabase_cache[cache_key] = {'data': data, 'timestamp': now}
+                cache.set(cache_key, data, timeout=_CACHE_TIMEOUT)
             except Exception as e:
                 data = {'error': str(e)}
         context['metabase_data'] = data.get('result_metadata', {})
@@ -46,7 +34,7 @@ class OdometerBlock(StructBlock):
             # Atualiza apenas o valor com os dados da API
             context['self'].metabase_value = result_metadata[0].get('fingerprint', {}).get('type', {}).get('type/Number',{}).get('q1', 0)
         else:
-            context['self'].metabase_value = 0
+            context['self'].metabase_value = value['odometer_value'] # Valor default se não houver dados
         context['id_card'] = id_card
         return context
 
