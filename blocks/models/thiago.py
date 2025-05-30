@@ -1,11 +1,15 @@
 from wagtail.blocks import StructBlock, ListBlock, URLBlock, CharBlock
 from wagtail.images.blocks import ImageChooserBlock
+from blocks.utils import ICONES_REDES, ICONES_ACESSO_RAPIDO
+from django.db import models
+from wagtail import blocks
+
 
 
 class AcessoRapidoItemBlock(StructBlock):
     titulo = CharBlock(required=True, max_length=100)
     link = URLBlock(required=True)
-    icone = CharBlock(required=False, help_text="Classe do ícone (ex: fas fa-car)")
+    icone = blocks.ChoiceBlock(choices=ICONES_ACESSO_RAPIDO, required=True, label="Ícone")
 
     class Meta:
         icon = 'link'
@@ -66,8 +70,7 @@ class ListaVideosBlock(StructBlock):
 class RedeSocialItemBlock(StructBlock):
     nome = CharBlock(required=True)
     link = URLBlock(required=True)
-    icone = CharBlock(required=True)
-
+    icone = blocks.ChoiceBlock(choices=ICONES_REDES, required=True)
     class Meta:
         icon = "site"
         label = "Bloco de Redes Sociais"
