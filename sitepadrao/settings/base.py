@@ -289,3 +289,6 @@ if "CSP_DEFAULT_SRC" in os.environ:
         CSP_OBJECT_SRC = os.environ.get("CSP_OBJECT_SRC").split(",")
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+METABASE_API_KEY = os.environ.get('METABASE_API_KEY', '')  # Busca a chave da API do Metabase via variável de ambiente
+METABASE_API_URL = os.environ.get('METABASE_API_URL', 'https://metabase.codata.pb.gov.br/api/card/')  # URL base da API do Metabase
