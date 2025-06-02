@@ -21,7 +21,7 @@ class AcessosRapidosBlock(StructBlock):
     class Meta:
         icon = 'list-ul'
         label = "Bloco de Acessos Rápidos"
-        template = 'home/blocks/list_acesso_rapido.html'
+        template = 'blocks/list_acesso_rapido.html'
         
 class BannerComLinkBlock(StructBlock):
     imagem = ImageChooserBlock(required=True, label="Imagem do Banner")
@@ -31,7 +31,7 @@ class BannerComLinkBlock(StructBlock):
     class Meta:
         icon = 'image'
         label = "Banner com Link"
-        template = 'home/blocks/banner.html'
+        template = 'blocks/banner.html'
 
 
 class VideoBlock(StructBlock):
@@ -55,7 +55,7 @@ class VideoBlock(StructBlock):
     class Meta:
         icon = 'media'
         label = "Vídeo"
-        template = 'home/blocks/video.html'
+        template = 'blocks/video.html'
         
 
 
@@ -66,7 +66,7 @@ class ListaVideosBlock(StructBlock):
     class Meta:
         icon = 'list-ul'
         label = "Lista de Vídeos"
-        template = 'home/blocks/list_video.html'
+        template = 'blocks/list_video.html'
 
 class RedeSocialItemBlock(StructBlock):
     nome = CharBlock(required=True)
@@ -75,7 +75,7 @@ class RedeSocialItemBlock(StructBlock):
     class Meta:
         icon = "site"
         label = "Bloco de Redes Sociais"
-        template = "home/blocks/redes_sociais.html"
+        template = "blocks/redes_sociais.html"
 
 class ListRedeSocial(StructBlock):
    titulo = CharBlock(required=False, default="Siga-nos nas redes sociais")
@@ -85,4 +85,4 @@ class ListRedeSocial(StructBlock):
    class Meta:
       icon = 'list-ul'
       label = "Lista de Redes Sociais"
-      template = "home/blocks/redes_sociais.html"
+      template = "blocks/redes_sociais.html"
