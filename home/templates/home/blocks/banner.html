@@ -1,7 +1,8 @@
 {% load static %}
+{% load wagtailimages_tags %}
 
 <div class="banner-container">
-  <a href="https://habilitacaosocial.pb.gov.br/index.php" target="_blank">
-    <img src="{% static 'img/banner-habilitacao.png' %}" alt="Banner Habilitação Social">
+  <a href="{{ self.link }}" target="_blank" aria-label="{{self.alt_texto}}">
+    {% image self.imagem original alt=self.alt_texto %}
   </a>
 </div>

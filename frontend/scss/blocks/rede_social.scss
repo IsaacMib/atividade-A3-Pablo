@@ -11,8 +11,11 @@
 .social-icons a {
   font-size: 1.8rem;
   margin: 0 12px;
-  color: #0d6efd; /* Azul padrão Bootstrap */
+  color: #0d6efd;
   transition: transform 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .social-icons a:hover {
