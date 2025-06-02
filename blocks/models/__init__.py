@@ -1,4 +1,4 @@
-from .thiago import AcessosRapidosBlock, AcessoRapidoItemBlock
+from .thiago import AcessosRapidosBlock, AcessoRapidoItemBlock, BannerComLinkBlock, VideoBlock, ListaVideosBlock, RedeSocialItemBlock,ListRedeSocial
 
 # Aqui futuramente você pode importar de outros arquivos também:
 # from .maria import OutroBloco
