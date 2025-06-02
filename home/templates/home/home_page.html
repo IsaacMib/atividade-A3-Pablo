@@ -29,16 +29,11 @@
             {% include_block block %}
         {% endif %}
     {% endfor %}
-    {% include 'home/blocks/titulo.html' with bgAzul=True titulo='Central de Monitoramento' %}
-    {% include 'home/blocks/central_monitoramento_detran.html' %}
-    {% include 'home/blocks/titulo.html' with titulo='Vídeos' %}
-    {% include 'home/blocks/list_video.html' %}
-    {% include 'home/blocks/titulo.html' with titulo='Notícias' %}
-    {% include 'home/blocks/list_noticias.html' %}
-    {% include 'home/blocks/redes.html' %}
 
     {# ========================== CENTRAL DE MONITORAMENTO ========================== #}
     {% include 'home/blocks/titulo.html' with bgAzul=True titulo='Central de Monitoramento' %}
+    {% include 'home/blocks/central_monitoramento_detran.html' %}
+
 
     {# ========================== VÍDEOS ========================== #}
     {% include 'home/blocks/titulo.html' with titulo='Vídeos' %}
@@ -47,6 +42,7 @@
             {% include_block block %}
         {% endif %}
     {% endfor %}
+
 
     {# ========================== NOTÍCIAS ========================== #}
     {% include 'home/blocks/titulo.html' with titulo='Notícias' %}

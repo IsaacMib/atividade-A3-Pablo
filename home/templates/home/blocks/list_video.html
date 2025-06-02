@@ -6,6 +6,9 @@
   {% endfor %}
 </div>
 
+<!-- Link "Ver todos" configurável -->
+{% if self.ver_todos_url %}
 <div class="text-center">
-  <a class="btn-ver-todos" href="https://www.youtube.com" target="_blank">Ver todos</a>
+  <a class="btn-ver-todos" href="{{ self.ver_todos_url }}" target="_blank">Ver todos</a>
 </div>
+{% endif %}

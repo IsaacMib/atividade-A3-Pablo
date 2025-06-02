@@ -61,6 +61,7 @@ class VideoBlock(StructBlock):
 
 class ListaVideosBlock(StructBlock):
     videos = ListBlock(VideoBlock(), label="Vídeos", max_num=3)
+    ver_todos_url = URLBlock(required=False, label="URL do 'Ver todos'")
 
     class Meta:
         icon = 'list-ul'
