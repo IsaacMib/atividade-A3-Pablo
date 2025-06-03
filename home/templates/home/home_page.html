@@ -17,7 +17,11 @@
     {% endcomment %}
 
     {# ========================== CARROSSEL ========================== #}
-    {% include 'home/blocks/carrossel_banner.html' %}
+    {% for block in page.body %}
+        {% if block.block_type == 'carrossel_banners' %}
+            {% include_block block %}
+        {% endif %}
+    {% endfor %}
 
     {# ========================== ACESSOS RÁPIDOS ========================== #}
     {% include 'home/blocks/titulo.html' with titulo='Acesso rápido' %}

@@ -86,3 +86,34 @@ class ListRedeSocial(StructBlock):
       icon = 'list-ul'
       label = "Lista de Redes Sociais"
       template = "blocks/redes_sociais.html"
+
+class ItemCarrosselBannerBlock(StructBlock):
+    imagem = ImageChooserBlock(required=True, label="Imagem do Banner")
+    link = URLBlock(required=False, label="URL do Banner")
+    texto_alternativo = CharBlock(
+        required=False, 
+        label="Texto alternativo", 
+        help_text="Descrição da imagem para acessibilidade (alt text)"
+    )
+    legenda = CharBlock(
+        required=False,
+        label="Legenda do Banner",
+        help_text="Texto que aparece sobre o banner (opcional)"
+    )
+
+    class Meta:
+        icon = 'image'
+        label = "Item do Carrossel"
+        template = 'blocks/item_carrossel_banners.html'
+
+class CarrosselBannersBlock(StructBlock):
+    banners = ListBlock(
+        ItemCarrosselBannerBlock(),
+        label="Banners",
+        help_text="Adicione os banners para o carrossel"
+    )
+
+    class Meta:
+        icon = 'image'
+        label = "Carrossel de Banners"
+        template = 'blocks/carrossel_banners.html'

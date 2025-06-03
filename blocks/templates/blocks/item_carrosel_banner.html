@@ -1,0 +1,13 @@
+{% load wagtailimages_tags %}
+<a href="{{ value.link }}" {% if value.link %}target="_blank" rel="noopener noreferrer"{% endif %}>
+    <img 
+      src="{{ value.imagem.url }}" 
+      alt="{{ value.texto_alternativo|default:'' }}"
+      class="img-fluid"
+    >
+    {% if value.legenda %}
+      <div class="carrossel-legenda">
+        {{ value.legenda }}
+      </div>
+    {% endif %}
+  </a>
