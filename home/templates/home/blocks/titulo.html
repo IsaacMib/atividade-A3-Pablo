@@ -1,19 +1,10 @@
-{% if bgAzul %}
-<div class="titulo-container text-center d-flex flex-column align-items-center titulo-bg-azul">
-    <h1 class="titulo-1">{{ titulo }}</h1>
-    <div class="titulo-linha">
-        <svg width="133" height="3" viewBox="0 0 133 3" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 1.5H133" stroke-width="2"/>
-        </svg>
-    </div>
+<div class="titulo-container {% if self.bgAzul %}titulo-bg-azul{% endif %} text-center">
+   <div class="d-flex flex-column align-items-center">
+       <h1 class="titulo-1">{{self.titulo}}</h1>
+       <div class="titulo-linha">
+           <svg width="133" height="3">
+               <line x1="0" y1="1.5" x2="133" y2="1.5" stroke="{% if self.bgAzul %}#ffffff{% else %}#305A9C{% endif %}" stroke-width="3"/>
+           </svg>
+       </div>
+   </div>
 </div>
-{% else %}
-<div class="titulo-container text-center d-flex flex-column align-items-center">
-    <h1 class="titulo-1">{{ titulo }}</h1>
-    <div class="titulo-linha">
-        <svg width="133" height="3" viewBox="0 0 133 3" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 1.5H133" stroke-width="2"/>
-        </svg>
-    </div>
-</div>
-{% endif %}

@@ -1,28 +1,29 @@
 .titulo-container {
     width: 100%;
-    --titulo-color: var(--tw-color-primary);
+ }
+ 
+ 
+ .titulo-bg-azul {
+    background-color: #305A9C;
     padding: 2rem 0;
-}
-
-.titulo-1 {
+   
+    .titulo-1 {
+        color: #FFFFFF;
+    }
+ }
+ 
+ 
+ .titulo-1 {
+    font-family: Inter;
     font-weight: 700;
     font-size: 30px;
     line-height: 100%;
-    color: var(--titulo-color);
     margin-bottom: 16px;
-}
-
-.titulo-linha {
+ }
+ 
+ 
+ .titulo-linha {
     padding-top: 8px;
     padding-bottom: 8px;
-    
-    svg path {
-        stroke: var(--titulo-color);
-    }
-}
-
-.titulo-bg-azul {
-    background-color: var(--tw-color-primary);
-    
-    --titulo-color: var(--tw-color-white);
-}
+ }
+ 
