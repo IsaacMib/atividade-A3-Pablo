@@ -1,0 +1,37 @@
+<div class="card border-0 mx-auto tw:bg-neutral-100" role="article" aria-label="Serviço {{ value.titulo }}">
+    <div class="card-header text-white d-flex align-items-center justify-content-between">
+        <span class="fw-bold card-header--title">{{ value.titulo }}</span>
+        <div class="d-flex gap-2">
+            <span class="card-header--icon d-flex align-items-center justify-content-center rounded-circle border border-white tw:hover:bg-neutral-100/10"
+                  data-bs-toggle="tooltip" 
+                  data-bs-title="{{ value.modalidade }}">
+                {% if value.icone %}
+                    <i uk-icon="{{ value.icone }}" style="font-size: 0.6rem;"></i>
+                {% else %}
+                    <i uk-icon="icon: world; ratio: 0.75" style="font-size: 0.6rem;"></i>
+                {% endif %}
+            </span>
+            {% if value.observacao %}
+                <span class="card-header--icon d-flex align-items-center justify-content-center rounded-circle border border-white fw-light"
+                      data-bs-toggle="tooltip" 
+                      data-bs-title="{{ value.observacao }}">
+                    ?
+                </span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body d-flex justify-content-center align-items-center tw:bg-neutral-100">
+        <p class="card-title text-muted fw-semibold text-center mb-0 fs-4">
+            {{ value.descricao }}
+        </p>
+    </div>
+    <div class="card-footer border-top mx-auto tw:bg-neutral-100">
+        <a class="btn btn-outline-secondary px-4 my-2 rounded-pill text-decoration-none" 
+           href="{{ value.link }}" 
+           role="button" 
+           aria-label="Acessar serviço {{ value.titulo }}"
+           target="_blank">
+            Acessar
+        </a>
+    </div>
+</div>

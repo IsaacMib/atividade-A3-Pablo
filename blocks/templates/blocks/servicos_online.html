@@ -1,0 +1,45 @@
+{% load static %}
+
+<div class="servicosOnline-wrapper p-4 col-10 mx-auto">
+    <div class="swiper swiperServicosOnline">
+        <div class="swiper-wrapper">
+            {% for servico in value.servicos %}
+                <div class="swiper-slide">
+                    {% include 'blocks/item_servico_online.html' with value=servico %}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const swiperServicosOnline = new Swiper('.swiperServicosOnline', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        autoplay: {
+            delay: 2500,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true
+        },
+        breakpoints: {
+            1024: { slidesPerView: 2 },
+            1440: { slidesPerView: 3, spaceBetween: 30 },
+            1920: { slidesPerView: 4, spaceBetween: 40 }
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        loop: true,
+    });
+
+    // Inicializa tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>

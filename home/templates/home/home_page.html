@@ -33,7 +33,13 @@
 
     {# ========================== SERVIÇOS ONLINE ========================== #}
     {% include 'home/blocks/titulo.html' with titulo='Serviços online' %}
-    {% include 'home/blocks/servicos_online.html' %}
+    {% for block in page.body %}
+        {% if block.block_type == 'servicos_online' %}
+            {% include_block block %}
+        {% endif %}
+    {% endfor %}  
+
+    {# ========================== BANNER ========================== #}
     {% for block in page.body %}
         {% if block.block_type == 'banner_com_link' %}
             {% include_block block %}
