@@ -2,6 +2,8 @@ from .thiago import AcessosRapidosBlock, AcessoRapidoItemBlock, BannerComLinkBlo
 
 from .gabriel import OdometerListBlock, BaseStreamBlock
 
+from .makoby import  TituloBlock
+
 # Aqui futuramente você pode importar de outros arquivos também:
 # from .maria import OutroBloco
 # from .joao import BlocoJoao

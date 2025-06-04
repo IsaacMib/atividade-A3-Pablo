@@ -4,11 +4,13 @@ from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
 
 # from blocks.models import HeadingBlock
-from blocks.models import AcessosRapidosBlock, BannerComLinkBlock, ListaVideosBlock, ListRedeSocial, OdometerListBlock
+from blocks.models import AcessosRapidosBlock, BannerComLinkBlock, ListaVideosBlock, ListRedeSocial, OdometerListBlock, TituloBlock
+
 
 class HomePage(Page):
     body = StreamField(
         [
+             ('titulo', TituloBlock()),
              ("acessos_rapidos", AcessosRapidosBlock()),
              ('banner_com_link', BannerComLinkBlock()),
              ('lista_videos', ListaVideosBlock()),
