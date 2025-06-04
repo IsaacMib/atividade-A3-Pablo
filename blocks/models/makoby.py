@@ -12,13 +12,6 @@ class TituloBlock(blocks.StructBlock):
        default=False,
        help_text='Marque para usar fundo azul com texto branco. Deixe desmarcado para texto azul com fundo branco.'
    )
-   '''
-   visivel = blocks.BooleanBlock(
-       required=False,
-       default=True,
-       help_text='Desmarque para ocultar o título'
-   )
-   '''
    class Meta:
        template = 'blocks/titulo.html'
        icon = 'title'
