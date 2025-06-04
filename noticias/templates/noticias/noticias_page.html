@@ -1,25 +1,77 @@
 {% extends "base.html" %}
-{% load wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
-
-    {% include "include/header-noticia.html" %}
-
     <div class="container">
-        <div class="row">
-            <div class="col-md-8">
-                {{ page.body }}
+        {% if page.image %}
+            <div class="d-flex justify-content-center"> 
+                {% picture page.image format-{avif,webp,jpeg} max-758x272 loading="lazy" sizes="100%" %} 
+            </div>
+        {% endif %}
+        <div class="page-noticias-header tw:mt-12 tw:mb-12">
+            <h1 class="index-header__title index-header__title--blog">{{ page.title }}</h1>
+            {% comment %} {% if page.descricao %}
+                <p>{{ page.descricao }}</p>
+            {% endif %} {% endcomment %}
+            {% comment %} {% if page.data_publicacao and page.latest_revision_created_at %}
+                <div class="blog__published">
+                   Publicação {{ page.data_publicacao|date:"d/m/Y H:i" }}
+                </div>
+                <div>
+                    {% if page.latest_revision_created_at %}
+                        <p>Atualização {{ page.latest_revision_created_at|date:"d/m/Y H:i" }}</p>
+                    {% endif %}
+                </div>
+            {% endif %} {% endcomment %}
+        </div>
+        <div class="tw:text-justify">
+            {{ page.body }}
 
-                {% if page.get_tags %}
-                    <p class="blog__tag-introduction">Find more blog posts with similar tags</p>
-                    <div class="blog-tags blog-tags--condensed">
-                        <span class="u-sr-only">Filter blog posts by tag</span>
-                        {% for tag in page.get_tags %}
-                            <a href="{{ tag.url }}" class="blog-tags__pill">{{ tag }}</a>
-                        {% endfor %}
-                    </div>
-                {% endif %}
+            {% comment %} {% if page.get_tags %}
+            <p class="blog__tag-introduction">Find more blog posts with similar tags</p>
+                <div class="blog-tags blog-tags--condensed">
+                    <span class="u-sr-only">Filter blog posts by tag</span>
+                    {% for tag in page.get_tags %}
+                        <a href="{{ tag.url }}" class="blog-tags__pill">{{ tag }}</a>
+                    {% endfor %}
+                </div>
+            {% endif %} {% endcomment %}
+        </div>
+
+        
+    </div>
+    <div class="container tw:mt-16 tw:mb-0">
+        <div class="titulo-container text-center">
+            <div class="d-flex flex-column align-items-center">
+                <h1 class="titulo-1">Últimas Notícias</h1>
+                <div class="titulo-linha">
+                    <svg width="133" height="3">
+                        <line x1="0" y1="1.5" x2="133" y2="1.5" stroke="{% if self.bgAzul %}#ffffff{% else %}#305A9C{% endif %}" stroke-width="3"/>
+                    </svg>
+                </div>
             </div>
         </div>
+    </div>
+    <div class="lista-noticias--wrapper tw:bg-neutral-100 tw:mt-2 tw:mb-2">
+        <div class="container">
+            <div class="row">
+                <div class="row">
+                    {% if ultimas_noticias %}
+                        {% for noticias in ultimas_noticias %}
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                {% include "include/noticia-list-card.html" %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-md-12">
+                            <p>Ah, droga. Ainda não temos Notícias no site. Desculpe.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center tw:mb-8">
+        <a class="btn-ver-todos" href="{% pageurl page.get_parent.specific %}" target="_blank">Ver todos</a>
     </div>
 {% endblock content %}

@@ -15,6 +15,8 @@ from wagtail.models import Orderable, Page
 from blocks.models import BaseStreamBlock
 from datetime import datetime
 
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+
 
 class NoticiasPageTag(TaggedItemBase):
     """
@@ -44,7 +46,7 @@ class NoticiasPage(Page):
         max_length=255,
         help_text="Breve descrição do conteúdo da página.",
     )
-    data_publicacao = models.DateField("Data de publicação da notícias", default=datetime.now, blank=True, null=True)
+    data_publicacao = models.DateTimeField("Data de publicação da notícias", default=datetime.now, blank=True, null=True)
     tags = ClusterTaggableManager(through=NoticiasPageTag, blank=True)
     body = StreamField(
         BaseStreamBlock(), verbose_name="Page body", blank=True, null=True, use_json_field=True
@@ -90,6 +92,15 @@ class NoticiasPage(Page):
     # Empty list means that no child content types are allowed.
     subpage_types = []
 
+    def get_ultimas_noticias(self, quantidade=6):
+        return NoticiasPage.objects.live().order_by("-data_publicacao")[:quantidade]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        context["ultimas_noticias"] = self.get_ultimas_noticias()
+        
+        return context
+
 class NoticiasIndexPages(RoutablePageMixin, Page):
 
     introduction = models.TextField(help_text="Texto para o topo da notícia", blank=True)
@@ -117,9 +128,20 @@ class NoticiasIndexPages(RoutablePageMixin, Page):
     # https://docs.wagtail.org/en/stable/getting_started/tutorial.html#overriding-context
     def get_context(self, request):
         context = super(NoticiasIndexPages, self).get_context(request)
-        context["posts"] = (
-            NoticiasPage.objects.descendant_of(self).live().order_by("-data_publicacao")
-        )
+        all_posts = NoticiasPage.objects.descendant_of(self).live().order_by("-data_publicacao")
+        paginator = Paginator(all_posts, 1)  # TODO: 12 por página
+        page = request.GET.get("page")
+        try:
+            # If the page exists and the ?page=x is an int
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            # If the ?page=x is not an int; show the first page
+            posts = paginator.page(1)
+        except EmptyPage:
+            # If the ?page=x is out of range (too high most likely)
+            # Then return the last page
+            posts = paginator.page(paginator.num_pages)
+        context["posts"] = posts
         return context
     
      # This defines a Custom view that utilizes Tags. This view will return all

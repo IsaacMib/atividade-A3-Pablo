@@ -10,11 +10,9 @@
 
 {% block content %}
 
-    {% comment %} 
         {% for block in page.body %}
             {% include_block block %}
         {% endfor %} 
-    {% endcomment %}
 
     {# ========================== CARROSSEL ========================== #}
     {% include 'home/blocks/carrossel_banner.html' %}
