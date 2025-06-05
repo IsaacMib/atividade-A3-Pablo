@@ -10,11 +10,15 @@
 
 {% block content %}
 
-    {% for block in page.body %}
-        {% include_block block %}
-    {% endfor %} 
+    {% if page.body %}
+        {% for block in page.body %}
+            {% include_block block %}
+        {% endfor %}
+    {% else %}
+        <h2 class="text-center tw:my-8">Site em construção</h2>
+    {% endif %}
 
-    <h1>FIm!</h1>
+    {% comment %}
 
     {# ========================== CARROSSEL ========================== #}
     {% for block in page.body %}
@@ -69,6 +73,6 @@
       {% if block.block_type == 'redes_sociais' %}
             {% include_block block %}
         {% endif %}
-    {% endfor %}
+    {% endfor %} {% endcomment %}
 
 {% endblock content %}

@@ -57,7 +57,7 @@
     </div>
     {# Only show pagination if there is more than one page to click through #}
   {% if posts.paginator.num_pages > 1 %}
-    <div class="noticias-pagination--wrapper">
+    <div class="noticias-pagination--wrapper tw:mb-16 tw:mt-16">
       <div class="container">
         <div class="noticias-pagination--layout">
           <a class="noticias-pagination-link" href="?page={% if posts.has_previous %}{{ posts.previous_page_number }}{% else %}1{% endif %}">
