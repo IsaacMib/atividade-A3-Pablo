@@ -225,7 +225,7 @@ STORAGES = {
 
 # Wagtail settings
 
-WAGTAIL_SITE_NAME = "Delegacia da Mulher"
+WAGTAIL_SITE_NAME = "Detran PB - Site"
 
 WAGTAIL_I18N_ENABLED = True
 

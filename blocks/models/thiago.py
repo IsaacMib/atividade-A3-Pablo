@@ -1,4 +1,4 @@
-from wagtail.blocks import StructBlock, ListBlock, URLBlock, CharBlock
+from wagtail.blocks import StructBlock, ListBlock, URLBlock, CharBlock,ChoiceBlock
 from wagtail.images.blocks import ImageChooserBlock
 from blocks.utils import ICONES_REDES, ICONES_ACESSO_RAPIDO
 from django.db import models
@@ -86,3 +86,78 @@ class ListRedeSocial(StructBlock):
       icon = 'list-ul'
       label = "Lista de Redes Sociais"
       template = "blocks/redes_sociais.html"
+
+class ItemCarrosselBannerBlock(StructBlock):
+    imagem = ImageChooserBlock(required=True, label="Imagem do Banner")
+    link = URLBlock(required=False, label="URL do Banner")
+    texto_alternativo = CharBlock(
+        required=False, 
+        label="Texto alternativo", 
+        help_text="Descrição da imagem para acessibilidade (alt text)"
+    )
+    legenda = CharBlock(
+        required=False,
+        label="Legenda do Banner",
+        help_text="Texto que aparece sobre o banner (opcional)"
+    )
+
+    class Meta:
+        icon = 'image'
+        label = "Item do Carrossel"
+        template = 'blocks/item_carrossel_banners.html'
+
+class CarrosselBannersBlock(StructBlock):
+    banners = ListBlock(
+        ItemCarrosselBannerBlock(),
+        label="Banners",
+        help_text="Adicione os banners para o carrossel"
+    )
+
+    class Meta:
+        icon = 'image'
+        label = "Carrossel de Banners"
+        template = 'blocks/carrossel_banners.html'
+
+
+class ServicoOnlineItemBlock(StructBlock):
+    titulo = CharBlock(required=True, label="Título do Serviço")
+    descricao = CharBlock(required=True, label="Descrição")
+    link = URLBlock(required=True, label="URL do Serviço")
+    modalidade = ChoiceBlock(
+        choices=[
+            ('presencial', 'Presencial'),
+            ('online', 'Online'),
+            ('ambos', 'Presencial e Online')
+        ],
+        default='online',
+        required=True,
+        label="Modalidade"
+    )
+    observacao = CharBlock(
+        required=False,
+        label="Observação/Tooltip",
+        help_text="Texto explicativo que aparece no tooltip"
+    )
+    icone = CharBlock(
+        required=False,
+        label="Ícone (UIkit)",
+        help_text="Ex: 'icon: user; ratio: 0.75'"
+    )
+
+    class Meta:
+        icon = 'form'
+        label = "Item de Serviço Online"
+        template = 'blocks/item_servico_online.html'
+
+
+class ServicosOnlineBlock(StructBlock):
+    servicos = ListBlock(
+        ServicoOnlineItemBlock(),
+        label="Serviços",
+        help_text="Adicione os serviços para o carrossel"
+    )
+
+    class Meta:
+        icon = 'list-ul'
+        label = "Carrossel de Serviços Online"
+        template = 'blocks/servicos_online.html'
