@@ -10,9 +10,11 @@
 
 {% block content %}
 
-        {% for block in page.body %}
-            {% include_block block %}
-        {% endfor %} 
+    {% for block in page.body %}
+        {% include_block block %}
+    {% endfor %} 
+
+    <h1>FIm!</h1>
 
     {# ========================== CARROSSEL ========================== #}
     {% include 'home/blocks/carrossel_banner.html' %}

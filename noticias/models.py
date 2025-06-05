@@ -184,3 +184,6 @@ class NoticiasIndexPages(RoutablePageMixin, Page):
             tags += post.get_tags
         tags = sorted(set(tags))
         return tags
+    
+    def get_ultimas_noticias(self, quantidade=6):
+        return NoticiasPage.objects.live().descendant_of(self).order_by('-data_publicacao')[:quantidade]

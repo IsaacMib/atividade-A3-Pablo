@@ -4,7 +4,7 @@ from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
 
 # from blocks.models import HeadingBlock
-from blocks.models import AcessosRapidosBlock, BannerComLinkBlock, ListaVideosBlock, ListRedeSocial, OdometerListBlock, TituloBlock
+from blocks.models import AcessosRapidosBlock, BannerComLinkBlock, ListaVideosBlock, ListRedeSocial, OdometerListBlock, TituloBlock, NoticiasListBlock
 
 
 class HomePage(Page):
@@ -15,7 +15,8 @@ class HomePage(Page):
              ('banner_com_link', BannerComLinkBlock()),
              ('lista_videos', ListaVideosBlock()),
              ('redes_sociais',ListRedeSocial()),
-             ("central_monitoramento", OdometerListBlock())
+             ("central_monitoramento", OdometerListBlock()),
+             ('noticias', NoticiasListBlock()),
         ],
         use_json_field=True,
         null=True,

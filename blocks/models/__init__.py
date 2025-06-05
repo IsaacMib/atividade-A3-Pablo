@@ -1,6 +1,6 @@
 from .thiago import AcessosRapidosBlock, AcessoRapidoItemBlock, BannerComLinkBlock, VideoBlock, ListaVideosBlock, RedeSocialItemBlock,ListRedeSocial
 
-from .gabriel import OdometerListBlock, BaseStreamBlock
+from .gabriel import OdometerListBlock, BaseStreamBlock, NoticiasListBlock
 
 from .makoby import  TituloBlock
 

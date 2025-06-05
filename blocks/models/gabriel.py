@@ -13,6 +13,7 @@ from wagtail.blocks import (
     FloatBlock,
     PageChooserBlock, 
     URLBlock,
+    IntegerBlock,
 )
 from wagtail.embeds.blocks import EmbedBlock
 from django.utils.functional import cached_property
@@ -36,22 +37,26 @@ class OdometerBlock(StructBlock):
         headers = {
           'x-api-key': settings.METABASE_API_KEY
         }
-        cache_key = f"metabase_{id_card}"        
+        cache_key = f"metabase_odometer_value_{id_card}"
         data = cache.get(cache_key)
         if data is None:
             try:
                 response = requests.get(url, headers=headers)
-                data = response.json() if response.ok else {}
-                cache.set(cache_key, data, timeout=_CACHE_TIMEOUT)
+                if response.ok:
+                    response_json = response.json()
+                    result_metadata = response_json.get('result_metadata', [])
+                    if result_metadata:
+                        metabase_value = result_metadata[0].get('fingerprint', {}).get('type', {}).get('type/Number',{}).get('q1', 0)
+                    else:
+                        metabase_value = value['odometer_value']
+                else:
+                    metabase_value = value['odometer_value']
+                cache.set(cache_key, metabase_value, timeout=_CACHE_TIMEOUT)
             except Exception as e:
-                data = {'error': str(e)}
-        context['metabase_data'] = data.get('result_metadata', {})
-        result_metadata = data.get('result_metadata', [])
-        if result_metadata:
-            # Atualiza apenas o valor com os dados da API
-            context['self'].metabase_value = result_metadata[0].get('fingerprint', {}).get('type', {}).get('type/Number',{}).get('q1', 0)
+                metabase_value = value['odometer_value']
         else:
-            context['self'].metabase_value = value['odometer_value'] # Valor default se não houver dados
+            metabase_value = data
+        context['self'].metabase_value = metabase_value
         context['id_card'] = id_card
         return context
 
@@ -67,6 +72,44 @@ class OdometerListBlock(StructBlock):
         template = 'blocks/central_monitoramento_detran.html'
         icon = 'list-ul'
         label = 'Central de Monitoramento Detran'
+
+class NoticiasListBlock(StructBlock):
+    noticias_index_page = PageChooserBlock(
+        required=True,
+        target_model='noticias.NoticiasIndexPages',
+        help_text="Selecione a página de índice de notícias"
+    )
+    quantidade = IntegerBlock(
+        required=False,
+        default=6,
+        min_value=1,
+        label="Quantidade de notícias exibidas"
+    )
+    texto_link = CharBlock(
+        required=False,
+        default="Ver todas as notícias",
+        label="Texto do link para todas as notícias"
+    )
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        noticias_index_page = value.get('noticias_index_page')
+        quantidade = value.get('quantidade') or 6
+        texto_link = value.get('texto_link') or "Ver todas as notícias"
+        noticias = []
+        noticias_index_page_url = None
+        if noticias_index_page:
+            noticias = noticias_index_page.get_ultimas_noticias(quantidade=quantidade)
+            noticias_index_page_url = noticias_index_page.url
+        context['noticias'] = noticias
+        context['noticias_index_page_url'] = noticias_index_page_url
+        context['texto_link'] = texto_link
+        return context
+
+    class Meta:
+        template = 'blocks/list_noticias.html'
+        icon = 'list-ul'
+        label = 'Lista de Notícias'
 
 
 class LinkStructBlock(StructBlock):
