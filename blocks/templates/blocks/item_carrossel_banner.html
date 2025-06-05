@@ -1,5 +1,17 @@
-{% load static %}
+{% load wagtailimages_tags %}
 
-<a href="https://habilitacaosocial.pb.gov.br/index.php" target="_blank">
-  <img class="carrossel-banners--img" src="{% static 'img/banner-principal.png' %}" alt="Banner Habilitação Social">
+{% image value.imagem original as banner_img %}
+<a href="{{ value.link|default:'#' }}" 
+   {% if value.link %}target="_blank" rel="noopener noreferrer"{% endif %}
+   class="banner-link">
+  
+  <img src="{{ banner_img.url }}" 
+       alt="{{ value.texto_alternativo|default:'imagem' }}"
+       class="banner-image">
+  
+  {% if value.legenda %}
+    <div class="banner-caption">
+      {{ value.legenda }}
+    </div>
+  {% endif %}
 </a>
