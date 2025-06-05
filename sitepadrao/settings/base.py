@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "search",
     "core",
     "blocks",
+    "noticias",
 
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
