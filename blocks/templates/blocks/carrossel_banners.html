@@ -1,39 +1,44 @@
 {% load static %}
-{% load wagtailimages_tags %}
 
-<div class="container">
-  <!-- Slider main container -->
+<div class="carrossel-banners-container">
   <div class="swiper carrossel-banners">
-    <!-- Additional required wrapper -->
     <div class="swiper-wrapper">
-      <!-- Slides dinâmicos -->
       {% for banner in value.banners %}
         <div class="swiper-slide">
-          {% include 'blocks/item_carrossel_banner.html' with value=banner %}
+          {% include 'blocks/item_carrosel_banner.html' with value=banner %}
         </div>
       {% endfor %}
     </div>
-    <!-- If we need pagination -->
     <div class="swiper-pagination swiper-banners-pagination"></div>
   </div>
 </div>
 
+{% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const swiperServicosOnline = new Swiper('.carrossel-banners', {
-        slidesPerView: 1,
-        spaceBetween: 20,
-        pagination: {
-            el: '.swiper-banners-pagination',
-            clickable: true,
-        },
-        loop: true,
-        {% if value.banners|length > 1 %}
-          autoplay: {
-            delay: 5000,
-            disableOnInteraction: false,
-          },
-        {% endif %}
-    });
+  const bannerSwiper = new Swiper('.carrossel-banners', {
+    slidesPerView: 1,
+    spaceBetween: 20,
+    loop: true,
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: '.swiper-banners-pagination',
+      clickable: true,
+    },
+    breakpoints: {
+      768: {
+        slidesPerView: 1.2,
+        centeredSlides: true
+      },
+      1024: {
+        slidesPerView: 1.5,
+        centeredSlides: true
+      }
+    }
+  });
 });
 </script>
+{% endblock %}

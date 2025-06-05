@@ -1,13 +1,17 @@
 {% load wagtailimages_tags %}
-<a href="{{ value.link }}" {% if value.link %}target="_blank" rel="noopener noreferrer"{% endif %}>
-    <img 
-      src="{{ value.imagem.url }}" 
-      alt="{{ value.texto_alternativo|default:'' }}"
-      class="img-fluid"
-    >
-    {% if value.legenda %}
-      <div class="carrossel-legenda">
-        {{ value.legenda }}
-      </div>
-    {% endif %}
-  </a>
+
+{% image value.imagem original as banner_img %}
+<a href="{{ value.link|default:'#' }}" 
+   {% if value.link %}target="_blank" rel="noopener noreferrer"{% endif %}
+   class="banner-link">
+  
+  <img src="{{ banner_img.url }}" 
+       alt="{{ value.texto_alternativo|default:'' }}"
+       class="banner-image">
+  
+  {% if value.legenda %}
+    <div class="banner-caption">
+      {{ value.legenda }}
+    </div>
+  {% endif %}
+</a>
