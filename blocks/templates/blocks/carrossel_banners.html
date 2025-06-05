@@ -1,24 +1,19 @@
-{% load static %}
-
-<div class="carrossel-banners-container">
-  <div class="swiper carrossel-banners">
-    <div class="swiper-wrapper">
-      {% for banner in value.banners %}
-        <div class="swiper-slide">
-          {% include 'blocks/item_carrossel_banner.html' with value=banner %}
-        </div>
-      {% endfor %}
-    </div>
-    <div class="swiper-pagination swiper-banners-pagination"></div>
+<div class="carrossel-banners">
+  <div class="swiper-wrapper">
+    {% for banner in value.banners %}
+      <div class="swiper-slide">
+        {% include 'blocks/item_carrossel_banner.html' with value=banner %}
+      </div>
+    {% endfor %}
   </div>
+  <div class="swiper-pagination swiper-banners-pagination"></div>
 </div>
 
-{% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const bannerSwiper = new Swiper('.carrossel-banners', {
+  new Swiper('.carrossel-banners', {
     slidesPerView: 1,
-    spaceBetween: 20,
+    centeredSlides: true, // Centraliza o slide ativo
     loop: true,
     autoplay: {
       delay: 5000,
@@ -27,18 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     pagination: {
       el: '.swiper-banners-pagination',
       clickable: true,
-    },
-    breakpoints: {
-      768: {
-        slidesPerView: 1.2,
-        centeredSlides: true
-      },
-      1024: {
-        slidesPerView: 1.5,
-        centeredSlides: true
-      }
     }
   });
 });
 </script>
-{% endblock %}
