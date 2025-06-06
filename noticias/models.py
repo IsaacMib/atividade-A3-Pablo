@@ -6,11 +6,11 @@ from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import Tag, TaggedItemBase
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
-from wagtail.admin.panels import FieldPanel, MultipleChooserPanel
+from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
 from wagtail.search import index
 
-from wagtail.models import Orderable, Page
+from wagtail.models import Page
 
 from blocks.models import BaseStreamBlock
 from datetime import datetime
