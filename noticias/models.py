@@ -21,7 +21,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 class NoticiasPageTag(TaggedItemBase):
     """
     This model allows us to create a many-to-many relationship between
-    the BlogPage object and tags. There's a longer guide on using it at
+    the NoticiasPage object and tags. There's a longer guide on using it at
     https://docs.wagtail.org/en/stable/reference/pages/model_recipes.html#tagging
     """
 
@@ -77,7 +77,7 @@ class NoticiasPage(Page):
         """
         Similar to the authors function above we're returning all the tags that
         are related to the blog post into a list we can access on the template.
-        We're additionally adding a URL to access BlogPage objects with that tag
+        We're additionally adding a URL to access NoticiasPage objects with that tag
         """
         tags = self.tags.all()
         base_url = self.get_parent().url
@@ -115,10 +115,10 @@ class NoticiasIndexPages(RoutablePageMixin, Page):
         "home.HomePage",
     ]
 
-    # Specifies that only BlogPage objects can live under this index page
+    # Specifies that only NoticiasPage objects can live under this index page
     subpage_types = ["NoticiasPage"]
 
-    # Defines a method to access the children of the page (e.g. BlogPage
+    # Defines a method to access the children of the page (e.g. NoticiasPage
     # objects). On the demo site we use this on the HomePage
     def children(self):
         return self.get_children().specific().live()
@@ -145,7 +145,7 @@ class NoticiasIndexPages(RoutablePageMixin, Page):
         return context
     
      # This defines a Custom view that utilizes Tags. This view will return all
-    # related BlogPages for a given Tag or redirect back to the BlogIndexPage.
+    # related NoticiasPage for a given Tag or redirect back to the BlogIndexPage.
     # More information on RoutablePages is at
     # https://docs.wagtail.org/en/stable/reference/contrib/routablepage.html
     @route(r"^tags/$", name="tag_archive")
@@ -168,7 +168,7 @@ class NoticiasIndexPages(RoutablePageMixin, Page):
         # Needed for previews to work
         return self.serve(request)
     
-    # Returns the child BlogPage objects for this BlogPageIndex.
+    # Returns the child NoticiasPage objects for this NoticiasIndexPages.
     # If a tag is used then it will filter the posts by tag.
     def get_posts(self, tag=None):
         posts = NoticiasPage.objects.live().descendant_of(self)
@@ -176,7 +176,7 @@ class NoticiasIndexPages(RoutablePageMixin, Page):
             posts = posts.filter(tags=tag)
         return posts
     
-    # Returns the list of Tags for all child posts of this BlogPage.
+    # Returns the list of Tags for all child posts of this NoticiasPage.
     def get_child_tags(self):
         tags = []
         for post in self.get_posts():
