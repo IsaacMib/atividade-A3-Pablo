@@ -127,7 +127,7 @@ class ItemCarrosselBannerBlock(StructBlock):
     class Meta:
         icon = 'image'
         label = "Item do Carrossel"
-        template = 'blocks/item_carrossel_banners.html'
+        template = 'blocks/item_carrossel_banner.html'
 
 class CarrosselBannersBlock(StructBlock):
     banners = ListBlock(
