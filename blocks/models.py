@@ -1,5 +1,3 @@
-
-
 from blocks.utils import ICONES_REDES, ICONES_ACESSO_RAPIDO
 
 
@@ -23,11 +21,17 @@ from wagtail.blocks import (
 from wagtail.embeds.blocks import EmbedBlock
 from django.utils.functional import cached_property
 from wagtail.images import get_image_model
+from django.conf import settings
 
 
 from django.core.exceptions import ValidationError
 
-
+mappingIconsServicos = {
+            'HIBRIDO': 'icon: link; ratio: 0.75',
+            'PRESENCIAL': 'icon: user; ratio: 0.75',
+            'ONLINE': 'icon: desktop; ratio: 0.75',
+            'PRESENCIAL_AGENDAMENTO': 'icon: calendar; ratio: 0.75',
+        }
 
 class AcessoRapidoItemBlock(StructBlock):
     titulo = CharBlock(required=True, max_length=100)
@@ -143,29 +147,50 @@ class CarrosselBannersBlock(StructBlock):
 
 
 class ServicoOnlineItemBlock(StructBlock):
-    titulo = CharBlock(required=True, label="Título do Serviço")
-    descricao = CharBlock(required=True, label="Descrição")
-    link = URLBlock(required=True, label="URL do Serviço")
-    modalidade = ChoiceBlock(
-        choices=[
-            ('presencial', 'Presencial'),
-            ('online', 'Online'),
-            ('ambos', 'Presencial e Online')
-        ],
-        default='online',
-        required=True,
-        label="Modalidade"
-    )
-    observacao = CharBlock(
-        required=False,
-        label="Observação/Tooltip",
-        help_text="Texto explicativo que aparece no tooltip"
-    )
-    icone = CharBlock(
-        required=False,
-        label="Ícone (UIkit)",
-        help_text="Ex: 'icon: user; ratio: 0.75'"
-    )
+    idServico = CharBlock(required=False, label="ID do Serviço")
+
+    def parserDadosApiServico(self, item):
+        """
+        Função para tratar/parsear um único item retornado pela API de serviços online.
+        Retorna um dicionário com os campos esperados por ServicoOnlineItemBlock.
+        O campo 'modalidades' será um array de objetos com 'iconClass' e 'nome'.
+        """
+        modalidades = []
+        for fp in item.get('formas_prestacao', []):
+            forma = fp.get('forma_prestacao')
+            if forma:
+                modalidades.append({
+                    'iconClass': self.getIconClass(forma),
+                    'nome': forma
+                })
+        return {
+            'sigla': item.get('orgao', {}).get('sigla', ''),
+            'titulo': item.get('categoria', {}),
+            'descricao': item.get('nome', ''),
+            'link': f"{settings.PORTAL_SERVICOS_URL}{item.get('id', '')}",
+            'modalidades': modalidades,
+            'observacao': item.get('o_que_e', ''),
+        }
+
+    def get_context(self, value, parent_context=None):
+        import requests
+        context = super().get_context(value, parent_context=parent_context)
+        api_url = f"{settings.PORTAL_SERVICOS_API_URL}{"digital/servicos/"}{value.get('idServico', '')}"
+        servico = []
+        try:
+            response = requests.get(api_url, timeout=5)
+            if response.ok:
+                servico = self.parserDadosApiServico(response.json())
+        except Exception:
+            servico = []
+        context['servico'] = servico
+        return context
+
+    def getIconClass(self, modalidade):
+        """
+        Retorna a string do ícone correspondente à modalidade.
+        """
+        return mappingIconsServicos.get(str(modalidade).upper(), 'icon: question; ratio: 0.75')
 
     class Meta:
         icon = 'form'
@@ -174,15 +199,81 @@ class ServicoOnlineItemBlock(StructBlock):
 
 
 class ServicosOnlineBlock(StructBlock):
-    servicos = ListBlock(
-        ServicoOnlineItemBlock(),
-        label="Serviços",
-        help_text="Adicione os serviços para o carrossel"
+    orgao_sigla = CharBlock(
+        required=True,
+        label="Órgão (sigla)",
+        help_text="Sigla do órgão para consulta na API.Ex.: detran,sead,codata, etc."
     )
+    limit = IntegerBlock(
+        required=False,
+        default=12,
+        min_value=1,
+        label="Limite de serviços exibidos",
+        help_text="Número máximo de serviços a serem exibidos no carrossel. Padrão é 12."
+    )
+
+    def parserDadosApiServico(self, dados):
+        """
+        Função para tratar/parsear os dados retornados pela API de serviços online.
+        Monta um novo array de dicionários com os campos esperados por ServicoOnlineItemBlock.
+        O campo 'modalidades' será um array de objetos com 'iconClass' e 'nome'.
+        """
+        resultado = []
+        for item in dados:
+            modalidades = []
+            for fp in item.get('formas_prestacao', []):
+                forma = fp.get('forma_prestacao')
+                if forma:
+                    modalidades.append({
+                        'iconClass': self.getIconClass(forma),
+                        'nome': forma
+                    })
+            resultado.append({
+                'sigla': item.get('orgao', {}).get('sigla', ''),
+                'titulo': item.get('categoria', {}).get('nome', ''),
+                'descricao': item.get('nome', ''),
+                'link': f"{settings.PORTAL_SERVICOS_URL}{item.get('id', '')}",
+                'modalidades': modalidades,
+                'observacao': item.get('o_que_e', ''),
+            })
+        return resultado
+
+    def get_context(self, value, parent_context=None):
+        import requests
+        context = super().get_context(value, parent_context=parent_context)
+        orgao_sigla = value.get('orgao_sigla')
+        order_by = '-contador_acesso'
+        limit = value.get('limit') or 12
+        api_url = f"{settings.PORTAL_SERVICOS_API_URL}{"digital/servicos/orgao/"}"
+        servicos = []
+        linkTodos = f"{settings.PORTAL_SERVICOS_URL}"
+        if api_url and orgao_sigla:
+            params = {
+                'orgao_sigla': orgao_sigla,
+                'order_by': order_by,
+                'limit': limit
+            }
+            try:
+                response = requests.get(api_url, params=params, timeout=5)
+                if response.ok:
+                    dados = response.json()
+                    servicos = self.parserDadosApiServico(dados)
+                    linkTodos = f"{settings.PORTAL_SERVICOS_URL}todos?orgao={dados[0].get('orgao', {}).get('id', '')}&page=0"
+            except Exception:
+                servicos = []
+        context['servicos'] = servicos
+        context['linkTodos'] = linkTodos
+        return context
+
+    def getIconClass(self, modalidade):
+        """
+        Retorna a string do ícone correspondente à modalidade.
+        """
+        return mappingIconsServicos.get(str(modalidade).upper(), 'icon: question; ratio: 0.75')
 
     class Meta:
         icon = 'list-ul'
-        label = "Carrossel de Serviços Online"
+        label = 'Carrossel de Serviços Online'
         template = 'blocks/servicos_online.html'
 
 class TituloBlock(StructBlock):
@@ -210,7 +301,6 @@ class OdometerBlock(StructBlock):
     id_card = CharBlock(required=True, label="ID do Card do Metabase")
 
     def get_context(self, value, parent_context=None):
-        from django.conf import settings
         context = super().get_context(value, parent_context=parent_context)
         id_card = value['id_card']
         url = f"{settings.METABASE_API_URL}{id_card}"
