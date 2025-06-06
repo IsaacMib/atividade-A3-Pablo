@@ -1,5 +1,9 @@
+
+
+from blocks.utils import ICONES_REDES, ICONES_ACESSO_RAPIDO
+
+
 import requests
-import json
 from django.core.cache import cache
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.blocks import (
@@ -14,12 +18,188 @@ from wagtail.blocks import (
     PageChooserBlock, 
     URLBlock,
     IntegerBlock,
+    BooleanBlock
 )
 from wagtail.embeds.blocks import EmbedBlock
 from django.utils.functional import cached_property
+from wagtail.images import get_image_model
 
 
 from django.core.exceptions import ValidationError
+
+
+
+class AcessoRapidoItemBlock(StructBlock):
+    titulo = CharBlock(required=True, max_length=100)
+    link = URLBlock(required=True)
+    icone = ChoiceBlock(choices=ICONES_ACESSO_RAPIDO, required=True, label="Ícone")
+
+    class Meta:
+        icon = 'link'
+        label = "Item de Acesso Rápido"
+
+class AcessosRapidosBlock(StructBlock):
+    itens = ListBlock(AcessoRapidoItemBlock(), default=[])
+
+    class Meta:
+        icon = 'list-ul'
+        label = "Bloco de Acessos Rápidos"
+        template = 'blocks/list_acesso_rapido.html'
+        
+class BannerComLinkBlock(StructBlock):
+    imagem = ImageChooserBlock(required=True, label="Imagem do Banner")
+    link = URLBlock(required=True, label="URL do Banner")
+    alt_texto = CharBlock(required=False, label="Texto alternativo", help_text="Descrição da imagem (alt)")
+
+    class Meta:
+        icon = 'image'
+        label = "Banner com Link"
+        template = 'blocks/banner.html'
+
+
+class VideoBlock(StructBlock):
+    titulo = CharBlock(required=True, max_length=100)
+    srcIframe = URLBlock(required=True, label="URL do vídeo (iframe YouTube)")
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        url = value.get('srcIframe')
+
+        # Transforma links padrão do YouTube em formato embed
+        if 'watch?v=' in url:
+            url = url.replace('watch?v=', 'embed/')
+        elif 'youtu.be/' in url:
+            url = url.replace('youtu.be/', 'www.youtube.com/embed/')
+
+        context['titulo'] = value.get('titulo')
+        context['src'] = url
+        return context
+
+    class Meta:
+        icon = 'media'
+        label = "Vídeo"
+        template = 'blocks/video.html'
+        
+
+
+class ListaVideosBlock(StructBlock):
+    videos = ListBlock(VideoBlock(), label="Vídeos", max_num=3)
+    ver_todos_url = URLBlock(required=False, label="URL do 'Ver todos'")
+
+    class Meta:
+        icon = 'list-ul'
+        label = "Lista de Vídeos"
+        template = 'blocks/list_video.html'
+
+class RedeSocialItemBlock(StructBlock):
+    nome = CharBlock(required=True)
+    link = URLBlock(required=True)
+    icone = ChoiceBlock(choices=ICONES_REDES, required=True)
+    class Meta:
+        icon = "site"
+        label = "Bloco de Redes Sociais"
+        template = "blocks/redes_sociais.html"
+
+class ListRedeSocial(StructBlock):
+   titulo = CharBlock(required=False, default="Siga-nos nas redes sociais")
+   imagem = ImageChooserBlock(required=False, help_text="Imagem que será exibida ao lado do texto.")
+   redes = ListBlock(RedeSocialItemBlock(), max_num=4)
+
+   class Meta:
+      icon = 'list-ul'
+      label = "Lista de Redes Sociais"
+      template = "blocks/redes_sociais.html"
+
+class ItemCarrosselBannerBlock(StructBlock):
+    imagem = ImageChooserBlock(required=True, label="Imagem do Banner")
+    link = URLBlock(required=False, label="URL do Banner")
+    texto_alternativo = CharBlock(
+        required=False, 
+        label="Texto alternativo", 
+        help_text="Descrição da imagem para acessibilidade (alt text)"
+    )
+    legenda = CharBlock(
+        required=False,
+        label="Legenda do Banner",
+        help_text="Texto que aparece sobre o banner (opcional)"
+    )
+
+    class Meta:
+        icon = 'image'
+        label = "Item do Carrossel"
+        template = 'blocks/item_carrossel_banners.html'
+
+class CarrosselBannersBlock(StructBlock):
+    banners = ListBlock(
+        ItemCarrosselBannerBlock(),
+        label="Banners",
+        help_text="Adicione os banners para o carrossel"
+    )
+
+    class Meta:
+        icon = 'image'
+        label = "Carrossel de Banners"
+        template = 'blocks/carrossel_banners.html'
+
+
+class ServicoOnlineItemBlock(StructBlock):
+    titulo = CharBlock(required=True, label="Título do Serviço")
+    descricao = CharBlock(required=True, label="Descrição")
+    link = URLBlock(required=True, label="URL do Serviço")
+    modalidade = ChoiceBlock(
+        choices=[
+            ('presencial', 'Presencial'),
+            ('online', 'Online'),
+            ('ambos', 'Presencial e Online')
+        ],
+        default='online',
+        required=True,
+        label="Modalidade"
+    )
+    observacao = CharBlock(
+        required=False,
+        label="Observação/Tooltip",
+        help_text="Texto explicativo que aparece no tooltip"
+    )
+    icone = CharBlock(
+        required=False,
+        label="Ícone (UIkit)",
+        help_text="Ex: 'icon: user; ratio: 0.75'"
+    )
+
+    class Meta:
+        icon = 'form'
+        label = "Item de Serviço Online"
+        template = 'blocks/item_servico_online.html'
+
+
+class ServicosOnlineBlock(StructBlock):
+    servicos = ListBlock(
+        ServicoOnlineItemBlock(),
+        label="Serviços",
+        help_text="Adicione os serviços para o carrossel"
+    )
+
+    class Meta:
+        icon = 'list-ul'
+        label = "Carrossel de Serviços Online"
+        template = 'blocks/servicos_online.html'
+
+class TituloBlock(StructBlock):
+   """Bloco de título com opções de estilo e visibilidade."""
+   titulo = CharBlock(
+       required=True,
+       help_text='Digite o título que será exibido'
+   )
+   bgAzul = BooleanBlock(
+       required=False,
+       default=False,
+       help_text='Marque para usar fundo azul com texto branco. Deixe desmarcado para texto azul com fundo branco.'
+   )
+   class Meta:
+       template = 'blocks/titulo.html'
+       icon = 'title'
+       label = 'Título'
 
 _CACHE_TIMEOUT = 600  # 10 minutos em segundos
 
@@ -261,3 +441,4 @@ class BaseStreamBlock(StreamBlock):
         preview_value="https://www.youtube.com/watch?v=mwrGSfiB1Mg",
         description="An embedded video or other media",
     )
+
