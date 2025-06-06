@@ -129,7 +129,7 @@ class NoticiasIndexPages(RoutablePageMixin, Page):
     def get_context(self, request):
         context = super(NoticiasIndexPages, self).get_context(request)
         all_posts = NoticiasPage.objects.descendant_of(self).live().order_by("-data_publicacao")
-        paginator = Paginator(all_posts, 2)  # TODO: 12 por página
+        paginator = Paginator(all_posts, 12) # Show 12 posts per page
         page = request.GET.get("page")
         try:
             # If the page exists and the ?page=x is an int
