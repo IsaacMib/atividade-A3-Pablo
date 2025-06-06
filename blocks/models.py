@@ -246,6 +246,7 @@ class ServicosOnlineBlock(StructBlock):
         limit = value.get('limit') or 12
         api_url = f"{settings.PORTAL_SERVICOS_API_URL}{"digital/servicos/orgao/"}"
         servicos = []
+        linkTodos = f"{settings.PORTAL_SERVICOS_URL}"
         if api_url and orgao_sigla:
             params = {
                 'orgao_sigla': orgao_sigla,
@@ -255,10 +256,13 @@ class ServicosOnlineBlock(StructBlock):
             try:
                 response = requests.get(api_url, params=params, timeout=5)
                 if response.ok:
-                    servicos = self.parserDadosApiServico(response.json())
+                    dados = response.json()
+                    servicos = self.parserDadosApiServico(dados)
+                    linkTodos = f"{settings.PORTAL_SERVICOS_URL}todos?orgao={dados[0].get('orgao', {}).get('id', '')}&page=0"
             except Exception:
                 servicos = []
         context['servicos'] = servicos
+        context['linkTodos'] = linkTodos
         return context
 
     def getIconClass(self, modalidade):
