@@ -27,6 +27,37 @@ from wagtail.images import get_image_model
 
 from django.core.exceptions import ValidationError
 
+class MenuPrincipalBlock(StructBlock):
+    """Bloco para o menu principal do site."""
+    
+    # Configurações do menu
+    itens_menu = ListBlock(
+        StructBlock([
+            ('texto', CharBlock(required=True, help_text='Texto do item do menu')),
+            ('url', URLBlock(required=True, help_text='URL do item do menu')),
+            ('nova_janela', BooleanBlock(
+                required=False,
+                default=False,
+                help_text='Abrir link em nova janela'
+            ))
+        ]),
+        help_text='Itens do menu principal'
+    )
+    
+    # Configurações de estilo
+    cor_fundo = ChoiceBlock(
+        choices=[
+            ('gradient-inicio', 'Gradiente Início'),
+            ('gradient-fim', 'Gradiente Fim')
+        ],
+        default='gradient-inicio',
+        help_text='Cor de fundo do menu'
+    )
+    
+    class Meta:
+        template = 'blocks/menu_principal.html'
+        icon = 'list-ul'
+        label = 'Menu Principal'
 
 
 class AcessoRapidoItemBlock(StructBlock):
