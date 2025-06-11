@@ -1,4 +1,4 @@
-from blocks.utils import ICONES_REDES, ICONES_ACESSO_RAPIDO
+from blocks.utils import ICONES_REDES, ICONES_ACESSO_RAPIDO, IDS_METABASE_CARDS, get_metabase_card_text_by_id
 
 
 import requests
@@ -295,14 +295,17 @@ class TituloBlock(StructBlock):
 _CACHE_TIMEOUT = 600  # 10 minutos em segundos
 
 class OdometerBlock(StructBlock):
-    # Campos não editáveis pelo usuário
-    odometer_description = CharBlock(required=True, max_length=100, label="Descrição do Dado")
     odometer_value = FloatBlock(required=False, label="Valor do Dado Default", help_text="Preenchido automaticamente pela API", disabled=True)
-    id_card = CharBlock(required=True, label="ID do Card do Metabase")
+    id_card = ChoiceBlock(
+        required=True,
+        label="ID do Card do Metabase",
+        choices=IDS_METABASE_CARDS,
+    )
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
         id_card = value['id_card']
+        id_card_text = get_metabase_card_text_by_id(id_card)
         url = f"{settings.METABASE_API_URL}{id_card}"
         headers = {
           'x-api-key': settings.METABASE_API_KEY
@@ -328,6 +331,7 @@ class OdometerBlock(StructBlock):
             metabase_value = data
         context['self'].metabase_value = metabase_value
         context['id_card'] = id_card
+        context['id_card_text'] = id_card_text
         return context
 
     class Meta:

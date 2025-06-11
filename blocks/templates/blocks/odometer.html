@@ -1,7 +1,7 @@
 <div class="dado-monitoramento--layout">
   <div class="dado-monitoramento--wrapper">
-    <span id="odometer-{{self.id_card|slugify}}-1" class="odometer dado-monitoramento--numero" data-odometer-value="{{ self.metabase_value }}"  >0</span>
-    <span class="dado-monitoramento--descricao">{{self.odometer_description}}</span>
+    <span id="odometer-{{self.id_card|slugify}}" class="odometer dado-monitoramento--numero" data-odometer-value="{{ self.metabase_value }}"  >0</span>
+    <span class="dado-monitoramento--descricao">{{id_card_text}}</span>
   </div>
   <div class="dado-monitoramento--separator-horizontal">
     <svg width="2" height="72" viewBox="0 0 2 72" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -19,7 +19,7 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    var element = document.getElementById("odometer-{{self.id_card|slugify}}-1");
+    var element = document.getElementById("odometer-{{self.id_card|slugify}}");
     od = new Odometer({
       el: element,
       value: 0, // Initial value
