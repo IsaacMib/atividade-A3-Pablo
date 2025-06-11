@@ -22,6 +22,7 @@ from wagtail.embeds.blocks import EmbedBlock
 from django.utils.functional import cached_property
 from wagtail.images import get_image_model
 from django.conf import settings
+import uuid
 
 
 from django.core.exceptions import ValidationError
@@ -332,6 +333,7 @@ class OdometerBlock(StructBlock):
         context['self'].metabase_value = metabase_value
         context['id_card'] = id_card
         context['id_card_text'] = id_card_text
+        context['uuid'] = str(uuid.uuid4())
         return context
 
     class Meta:
