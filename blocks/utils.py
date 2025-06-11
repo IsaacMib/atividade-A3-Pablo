@@ -36,3 +36,21 @@ ICONES_ACESSO_RAPIDO = [
     ('fas fa-tools', 'Serviços Gerais'),
     ('fas fa-user-shield', 'Área do Condutor'),
 ]
+
+IDS_METABASE_CARDS = [
+    (2650, 'Frota de Veículos'),
+    (3447, 'Condutores residentes na Paraíba'),
+    (3755, 'Infrações cometidas no ano atual'),
+    (3756, "CNH's pelo PHS"),
+]
+
+def get_metabase_card_text_by_id(card_id):
+    """
+    Retorna o texto correspondente ao id informado no array IDS_METABASE_CARDS.
+    Se não encontrar, retorna uma string vazia.
+    """
+    for id_opcao, texto in IDS_METABASE_CARDS:
+        if str(id_opcao) == str(card_id):
+            return texto
+    return ""
+
