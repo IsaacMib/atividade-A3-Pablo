@@ -11,3 +11,28 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var elements = document.getElementsByClassName("dado-monitoramento--numero");
+    Array.from(elements).forEach(function(element) {
+      var od = new Odometer({
+        el: element,
+        value: 0, // Initial value
+        format: '(.ddd),dd',
+      });
+      var hasRun = false;
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.8 && !hasRun) {
+            hasRun = true;
+            var value = element.getAttribute('data-odometer-value');
+            element.innerHTML = value;
+            observer.disconnect(); // Desconecta o observer após a primeira execução
+          }
+        });
+      }, { threshold: 0.8 });
+      observer.observe(element);
+    });
+  });
+</script>
