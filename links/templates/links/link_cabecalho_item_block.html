@@ -1,0 +1,12 @@
+{% load wagtailcore_tags %}
+  <div class="container">
+    <ul class="menu-lista d-flex flex-column flex-md-row">
+      {% for link in links_menu %}
+      <li>
+        <a class="tw:text-white" href="{{ link.url }}" target="{{ link.target }}">
+          {{ link.titulo }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
