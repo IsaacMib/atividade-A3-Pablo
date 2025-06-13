@@ -1,36 +1,28 @@
-<div class="card border-0 mx-auto tw:bg-neutral-100" role="article" aria-label="Serviço {{ value.titulo }}">
+<div class="card border-0 mx-auto tw:bg-neutral-100" role="article">
     <div class="card-header text-white d-flex align-items-center justify-content-between">
-        <span class="fw-bold card-header--title">{{ value.titulo }}</span>
+        <span class="fw-bold card-header--title">{{servico.sigla}} - {{servico.titulo}}</span>
         <div class="d-flex gap-2">
-            <span class="card-header--icon d-flex align-items-center justify-content-center rounded-circle border border-white tw:hover:bg-neutral-100/10"
-                  data-bs-toggle="tooltip" 
-                  data-bs-title="{{ value.modalidade }}">
-                {% if value.icone %}
-                    <i uk-icon="{{ value.icone }}" style="font-size: 0.6rem;"></i>
-                {% else %}
-                    <i uk-icon="icon: world; ratio: 0.75" style="font-size: 0.6rem;"></i>
-                {% endif %}
-            </span>
-            {% if value.observacao %}
-                <span class="card-header--icon d-flex align-items-center justify-content-center rounded-circle border border-white fw-light"
-                      data-bs-toggle="tooltip" 
-                      data-bs-title="{{ value.observacao }}">
-                    ?
+            {% for modalidade in servico.modalidades|slice:":2" %}
+                <span class="card-header--icon d-flex align-items-center justify-content-center rounded-circle border border-white tw:hover:bg-neutral-100/10"
+                    data-bs-toggle="tooltip" 
+                    data-bs-title="{{ modalidade.nome|capfirst }}">
+                    <i uk-icon="{{modalidade.iconClass}}" style="font-size: 0.6rem;"></i>
                 </span>
-            {% endif %}
+            {% endfor %}
+            <span class="card-header--icon d-flex align-items-center justify-content-center rounded-circle border border-white fw-light"
+                    data-bs-toggle="tooltip" 
+                    data-bs-title="{{servico.observacao}}">
+                ?
+            </span>
         </div>
     </div>
-    <div class="card-body d-flex justify-content-center align-items-center tw:bg-neutral-100">
-        <p class="card-title text-muted fw-semibold text-center mb-0 fs-4">
-            {{ value.descricao }}
+        <div class="card-body d-flex justify-content-center align-items-center tw:bg-neutral-100">
+        <p class="card-title text-muted fw-semibold text-center mb-0 fs-5">
+            {{servico.descricao}}
         </p>
     </div>
-    <div class="card-footer border-top mx-auto tw:bg-neutral-100">
-        <a class="btn btn-outline-secondary px-4 my-2 rounded-pill text-decoration-none" 
-           href="{{ value.link }}" 
-           role="button" 
-           aria-label="Acessar serviço {{ value.titulo }}"
-           target="_blank">
+        <div class="card-footer border-top mx-auto tw:bg-neutral-100">
+        <a class="btn btn-outline-secondary px-4 my-2 rounded-pill text-decoration-none" href="{{servico.link}}" role="button" aria-label="Acessar serviço de habilitação">
             Acessar
         </a>
     </div>

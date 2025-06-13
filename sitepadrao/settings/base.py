@@ -295,3 +295,5 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 METABASE_API_KEY = os.environ.get('METABASE_API_KEY', '')  # Busca a chave da API do Metabase via variável de ambiente
 METABASE_API_URL = os.environ.get('METABASE_API_URL', 'https://metabase.codata.pb.gov.br/api/card/')  # URL base da API do Metabase
+PORTAL_SERVICOS_API_URL = os.environ.get('PORTAL_SERVICOS_API_URL', 'https://api-portal-carta-de-servicos-gedes.rke.codataprd.pb.gov.br/')
+PORTAL_SERVICOS_URL = os.environ.get('PORTAL_SERVICOS_URL', 'https://paraibadigital.pb.gov.br/')
