@@ -58,6 +58,11 @@ class NoticiasPage(Page):
         blank=True,
     )
     plone_node_id = models.PositiveIntegerField(null=True, blank=True, db_index=True)
+    sensivel_periodo_eleitoral = models.BooleanField(
+        verbose_name="Notícia sensível ao período eleitoral",
+        default=False,
+        help_text="Marque se esta notícia deve ser ocultada ou tratada de forma especial durante o período eleitoral."
+    )
 
     content_panels = Page.content_panels + [
         FieldPanel("subtitle"),
@@ -66,6 +71,10 @@ class NoticiasPage(Page):
         FieldPanel("body"),
         FieldPanel("data_publicacao"),
         FieldPanel("tags"),
+    ]
+
+    settings_panels = Page.settings_panels + [
+        FieldPanel("sensivel_periodo_eleitoral"),
     ]
 
     search_fields = Page.search_fields + [
@@ -104,6 +113,8 @@ class NoticiasPage(Page):
 class NoticiasIndexPages(RoutablePageMixin, Page):
 
     introduction = models.TextField(help_text="Texto para o topo da notícia", blank=True)
+
+    
 
     content_panels = Page.content_panels + [
         FieldPanel("introduction"),

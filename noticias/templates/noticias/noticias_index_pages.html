@@ -42,9 +42,11 @@
                 <div class="row">
                     {% if posts %}
                         {% for noticias in posts %}
-                            <div class="col-lg-6 col-md-12 col-sm-12">
-                                {% include "include/noticia-list-card.html" %}
-                            </div>
+                            {% if not noticias.sensivel_periodo_eleitoral or not settings.core.SiteSettings.is_periodo_eleitoral %}
+                                <div class="col-lg-6 col-md-12 col-sm-12">
+                                    {% include "include/noticia-list-card.html" %}
+                                </div>
+                            {% endif %}
                         {% endfor %}
                     {% else %}
                         <div class="col-md-12">
