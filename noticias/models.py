@@ -57,8 +57,6 @@ class NoticiasPage(Page):
         default=False,
         help_text="Marque se esta notícia deve ser ocultada ou tratada de forma especial durante o período eleitoral."
     )
-<<<<<<< HEAD
-=======
 
     images = StreamField(
         [
@@ -75,7 +73,6 @@ class NoticiasPage(Page):
         default=False,
         help_text="Marque para exibir as imagens como slideshow na página da notícia."
     )
->>>>>>> feat/back_head_menu_principal
 
     content_panels = Page.content_panels + [
         FieldPanel("subtitle"),
