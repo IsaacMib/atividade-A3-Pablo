@@ -6,7 +6,7 @@ from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import Tag, TaggedItemBase
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
-from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import StreamField
 from wagtail.search import index
 
@@ -16,6 +16,8 @@ from blocks.models import BaseStreamBlock
 from datetime import datetime
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from wagtail.images.blocks import ImageChooserBlock
+from wagtail.blocks import ListBlock
 
 
 class NoticiasPageTag(TaggedItemBase):
@@ -32,14 +34,6 @@ class NoticiasPageTag(TaggedItemBase):
 class NoticiasPage(Page):
     
     subtitle = models.CharField(verbose_name="Subtítulo",blank=True, max_length=255)
-    image = models.ForeignKey(
-        "wagtailimages.Image",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="+",
-        help_text="Landscape mode only; horizontal width between 1000px and 3000px.",
-    )
     descricao = models.CharField(
         verbose_name="Descrição",
         blank=True,
@@ -63,11 +57,36 @@ class NoticiasPage(Page):
         default=False,
         help_text="Marque se esta notícia deve ser ocultada ou tratada de forma especial durante o período eleitoral."
     )
+<<<<<<< HEAD
+=======
+
+    images = StreamField(
+        [
+            ('imagem', ImageChooserBlock(required=True, label="Imagem da notícia")),
+        ],
+        verbose_name="Coleção de Imagens",
+        blank=True,
+        null=True,
+        use_json_field=True,
+    )
+
+    slideshow_imagens = models.BooleanField(
+        verbose_name="Ativar slideshow de imagens",
+        default=False,
+        help_text="Marque para exibir as imagens como slideshow na página da notícia."
+    )
+>>>>>>> feat/back_head_menu_principal
 
     content_panels = Page.content_panels + [
         FieldPanel("subtitle"),
         FieldPanel("descricao"),
-        FieldPanel("image"),
+        MultiFieldPanel(
+            [
+                FieldPanel("slideshow_imagens"),
+                FieldPanel("images"),
+            ],
+            heading="Imagens da notícia"
+        ),
         FieldPanel("body"),
         FieldPanel("data_publicacao"),
         FieldPanel("tags"),
@@ -109,6 +128,17 @@ class NoticiasPage(Page):
         context["ultimas_noticias"] = self.get_ultimas_noticias()
         
         return context
+
+    def get_imagem_destaque(self):
+        """
+        Retorna a primeira imagem da coleção de imagens (images) ou None se não houver.
+        """
+        if self.images and len(self.images):
+            # Cada item é um bloco do tipo 'imagem'
+            for bloco in self.images:
+                if bloco.block_type == 'imagem' and bloco.value:
+                    return bloco.value
+        return None
 
 class NoticiasIndexPages(RoutablePageMixin, Page):
 

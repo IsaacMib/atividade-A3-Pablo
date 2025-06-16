@@ -16,9 +16,26 @@
                 </div>
             </div>
         {% else %}
-            {% if page.image %}
+            {% if page.get_imagem_destaque and not page.slideshow_imagens %}
                 <div class="d-flex justify-content-center"> 
-                    {% picture page.image format-{avif,webp,jpeg} max-758x272 loading="lazy" sizes="100%" %} 
+                    {% picture page.get_imagem_destaque format-{avif,webp,jpeg} max-758x426 loading="lazy" sizes="100%" %} 
+                </div>
+            {% else %}
+            <!-- Slider main container -->
+                <div class="swiper carrossel-imagens-noticia">
+                    <!-- Additional required wrapper -->
+                    <div class="swiper-wrapper">
+                        <!-- Slides -->
+                        {% for imagem in page.images %}
+                            {% if imagem.block_type == 'imagem' and imagem.value %}
+                                <div class="swiper-slide">
+                                    {% picture imagem.value original format-{avif,webp,jpeg} max-758x426 loading="lazy" sizes="100%" class="image-noticia-carrossel" %} 
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <!-- If we need pagination -->
+                    <div class="swiper-pagination swiper-banners-pagination"></div>
                 </div>
             {% endif %}
             <div class="page-noticias-header tw:mt-12 tw:mb-12">
@@ -88,4 +105,20 @@
             <a class="btn-ver-todos" href="{% pageurl page.get_parent.specific %}" target="_blank">Ver todos</a>
         </div>
     {% endif %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const swiperServicosOnline = new Swiper('.carrossel-imagens-noticia', {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            autoHeight: true,
+            centeredSlides: true,
+            centeredSlidesBounds: true,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            loop: true,
+        });
+    });
+    </script>
 {% endblock content %}
