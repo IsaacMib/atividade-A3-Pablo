@@ -57,6 +57,8 @@ INSTALLED_APPS = [
     "noticias",
     "links",
 
+    "plone_migration",
+
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
