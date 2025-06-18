@@ -6,7 +6,7 @@
     {% if noticias.get_imagem_destaque %}
         <div class="noticias-conteudo--imagem"> 
           <a href="{% pageurl noticias %}">
-            {% picture noticias.get_imagem_destaque format-{avif,webp,jpeg} fill-322x247-c100 loading="lazy" %}
+            {% picture noticias.get_imagem_destaque format-{avif,webp,jpeg} fill-322x247 loading="lazy" %}
           </a> 
         </div>
     {% endif %}
