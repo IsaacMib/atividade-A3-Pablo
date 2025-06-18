@@ -1,9 +1,11 @@
-{% load static %}
-
+{% load static wagtailcore_tags %}
+{% include_block settings.core.SiteSettings.redes_sociais %}
 <div class="footer-wrapper tw:bg-primary tw:dark:bg-primary-escuro">
   <div class="container">
     <div class="footer-layout row">
-      <div class="col-12 col-lg-6"></div>
+      <div class="col-12 col-lg-6">
+        <span class="tw:text-white">Versão {{ SISTEMA_VERSAO }}</span>
+      </div>
       <div class="col-12 col-lg-6">
         <div class="footer-icones row row-cols-auto">
         <div class="col">
