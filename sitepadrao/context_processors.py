@@ -7,4 +7,7 @@ def conteudo_site(request):
     }
 
 def versao_context(request):
-    return {"SISTEMA_VERSAO": settings.SISTEMA_VERSAO}
+    return {
+        "SISTEMA_VERSAO": settings.SISTEMA_VERSAO,
+        "AMBIENTE": settings.AMBIENTE,
+    }
