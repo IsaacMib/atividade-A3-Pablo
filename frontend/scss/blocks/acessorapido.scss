@@ -1,5 +1,5 @@
 .quick-access {
-    border: 2px solid #a3d5ff; 
+    border: 1px solid rgba(48, 89, 155, 1); 
     border-radius: 8px;
     padding: 20px;
     text-align: center;
@@ -12,16 +12,21 @@
     background-color: #f8f9fa;
     box-shadow: 0 0 10px rgba(0,0,0,0.08);
     transform: scale(1.02);
-    border-color: #66ccff;
+    border-color: rgba(48, 89, 155, 1);
   }
   
   .quick-access-icon {
-    width: 40px;
-    height: 40px;
+    width: 52px;
+    height: 52px;
+    font-size: 20px;
     margin-bottom: 10px;
-    background-color: #ccc;
+    background-color: rgba(217, 217, 217, 1);
     border-radius: 50%;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
   }
   
   a {
