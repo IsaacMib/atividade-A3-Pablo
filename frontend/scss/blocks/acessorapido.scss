@@ -1,5 +1,9 @@
 @use '../variables';
 
+.acesso-rapido a, .acesso-rapido a:hover {
+  text-decoration: none !important;
+}
+
 .quick-access {
     border: 1px solid variables.$quick-access-color; 
     border-radius: 8px;
@@ -29,11 +33,6 @@
     justify-content: center;
     margin-left: auto;
     margin-right: auto;
-  }
-  
-  a {
-    text-decoration: none;
-    color: #000;
   }
   
   .quick-access-title {
