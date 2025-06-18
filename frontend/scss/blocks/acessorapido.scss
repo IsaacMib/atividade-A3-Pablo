@@ -1,5 +1,7 @@
+@use '../variables';
+
 .quick-access {
-    border: 1px solid rgba(48, 89, 155, 1); 
+    border: 1px solid variables.$quick-access-color; 
     border-radius: 8px;
     padding: 20px;
     text-align: center;
@@ -12,7 +14,7 @@
     background-color: #f8f9fa;
     box-shadow: 0 0 10px rgba(0,0,0,0.08);
     transform: scale(1.02);
-    border-color: rgba(48, 89, 155, 1);
+    border-color: variables.$quick-access-color;
   }
   
   .quick-access-icon {
