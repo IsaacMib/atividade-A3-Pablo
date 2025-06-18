@@ -10,6 +10,9 @@ from wagtail.admin.panels import (
     FieldPanel,
     MultiFieldPanel,
 )
+from wagtail.fields import StreamField
+
+from blocks.models import ListRedeSocial
 
 # Create your models here.
 
@@ -43,6 +46,13 @@ class SiteSettings(BaseSiteSetting):
         default="Em respeito a legislação eleitoral, Lei 9.504/97, as notícias deste site/portal está temporariamente suspensa."
     )
 
+    redes_sociais = StreamField(
+        [("lista_redes", ListRedeSocial())],
+        verbose_name="Redes Sociais",
+        blank=True,
+        use_json_field=True,
+    )
+
     panels = [
         FieldPanel("title_suffix"),
         MultiFieldPanel(
@@ -53,6 +63,12 @@ class SiteSettings(BaseSiteSetting):
                 FieldPanel("texto_informativo_periodo_eleitoral"),
             ],
             heading="Período Eleitoral"
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("redes_sociais"),
+            ],
+            heading="Redes Sociais"
         ),
     ]
 

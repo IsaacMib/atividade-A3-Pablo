@@ -89,7 +89,7 @@
                         {% if ultimas_noticias %}
                             {% for noticias in ultimas_noticias %}
                                 <div class="col-lg-6 col-md-12 col-sm-12">
-                                    {% include "include/noticia-list-card.html" %}
+                                    {% include 'blocks/noticias.html' with noticias=noticias %}
                                 </div>
                             {% endfor %}
                         {% else %}

@@ -3,10 +3,10 @@
 <div class="noticias-wrap">
   <div class="noticias-conteudo tw:shadow-neutral-400 tw:ring-0 tw:bg-white tw:border-l-neutral-200 tw:border-t-primary-light tw:border-r-neutral-200 tw:border-b-white/100 tw:border-2" >
     <p class="noticias-conteudo--data tw:text-white tw:bg-primary-light">{{ noticias.data_publicacao|date:"d/m/Y" }}</p>
-    {% if noticias.image %}
+    {% if noticias.get_imagem_destaque %}
         <div class="noticias-conteudo--imagem"> 
           <a href="{% pageurl noticias %}">
-            {% picture noticias.image format-{avif,webp,jpeg} fill-322x247-c100 loading="lazy" %}
+            {% picture noticias.get_imagem_destaque format-{avif,webp,jpeg} fill-322x247-c100 loading="lazy" %}
           </a> 
         </div>
     {% endif %}

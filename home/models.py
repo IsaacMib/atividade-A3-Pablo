@@ -3,7 +3,7 @@ from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
 
-from blocks.models import AcessosRapidosBlock, BannerComLinkBlock, ListaVideosBlock, ListRedeSocial, OdometerListBlock, CarrosselBannersBlock, ServicosOnlineBlock, TituloBlock, NoticiasListBlock
+from blocks.models import AcessosRapidosBlock, BannerComLinkBlock, ListaVideosBlock, OdometerListBlock, CarrosselBannersBlock, ServicosOnlineBlock, TituloBlock, NoticiasListBlock
 
 class HomePage(Page):
     body = StreamField(
@@ -12,7 +12,6 @@ class HomePage(Page):
             ("acessos_rapidos", AcessosRapidosBlock()),
             ('banner_com_link', BannerComLinkBlock()),
             ('lista_videos', ListaVideosBlock()),
-            ('redes_sociais',ListRedeSocial()),
             ("central_monitoramento", OdometerListBlock()),
             ('noticias', NoticiasListBlock()),
             ("carrossel_banners", CarrosselBannersBlock()),
