@@ -5,7 +5,7 @@ ICONES_REDES = [
     ('fa-brands fa-instagram', 'Instagram'),
     ('fa-brands fa-youtube', 'YouTube'),
     ('fa-brands fa-spotify', 'Spotify'),
-    ('fa-brands fa-twitter', 'Twitter'),
+    ('fa-brands fa-square-x-twitter', 'X'),
     ('fa-brands fa-tiktok', 'TikTok'),
     ('fa-brands fa-linkedin', 'LinkedIn'),
     ('fa-brands fa-whatsapp', 'WhatsApp'),
