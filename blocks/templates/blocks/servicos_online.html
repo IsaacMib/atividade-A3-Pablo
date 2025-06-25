@@ -16,9 +16,7 @@
             <div class="swiper-button-prev d-none d-lg-block"></div>
         </div>
     </div>
-    <div class="text-center">
-        <a class="btn-ver-todos" href="{{ linkTodos }}" target="_blank">Ver todos</a>
-    </div>
+    {% include "include/ver_todos_btn.html" with ver_todos_url=linkTodos target='_blank' %}
 </div>
 
 <script>
