@@ -112,7 +112,7 @@
             </div>
         </div>
         <div class="text-center tw:mb-8">
-            <a class="btn-ver-todos" href="{% pageurl page.get_parent.specific %}">Ver todos</a>
+            {% include "include/ver_todos_btn.html" with ver_todos_url=page.get_parent.specific.url texto_link="Ver todos" %}
         </div>
     {% endif %}
     <script>
