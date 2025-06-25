@@ -52,6 +52,39 @@
     }
 }
 
+.swiper-button-next,
+.swiper-button-prev {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 70px !important;
+}
+
+.swiper-button-prev {
+    background-image: url("../img/prev.svg");
+}
+
+.swiper-button-next {
+    background-image: url("../img/next.svg");
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+    content: "" !important;
+}
+
+.swiper-wrapper img{
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+}
+
+.swiper-wrapper a{
+    min-width: 100%;
+}
+
+
 // Card Styles
 .card {
     min-height: 300px !important;
