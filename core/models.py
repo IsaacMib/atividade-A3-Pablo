@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date
+from django.core.exceptions import ValidationError
 
 from wagtail.contrib.settings.models import (
     BaseSiteSetting,
@@ -82,3 +83,25 @@ class SiteSettings(BaseSiteSetting):
         if self.periodo_eleitoral_inicio and self.periodo_eleitoral_fim:
             return self.periodo_eleitoral_inicio <= hoje <= self.periodo_eleitoral_fim
         return False
+
+    def clean(self):
+        super().clean()
+        if self.periodo_eleitoral_habilitado:
+            if not self.periodo_eleitoral_inicio and not self.periodo_eleitoral_fim:
+                raise ValidationError({
+                    "periodo_eleitoral_inicio": "Obrigatório quando o período eleitoral está habilitado.",
+                    "periodo_eleitoral_fim": "Obrigatório quando o período eleitoral está habilitado.",
+                })
+            if not self.periodo_eleitoral_inicio:
+                raise ValidationError({
+                    "periodo_eleitoral_inicio": "Obrigatório quando o período eleitoral está habilitado."
+                })
+            if not self.periodo_eleitoral_fim:
+                raise ValidationError({
+                    "periodo_eleitoral_fim": "Obrigatório quando o período eleitoral está habilitado."
+                }) 
+            if self.periodo_eleitoral_inicio > self.periodo_eleitoral_fim:
+                raise ValidationError({
+                    "periodo_eleitoral_inicio": "A data de início não pode ser posterior à data de fim.",
+                    "periodo_eleitoral_fim": "A data de fim não pode ser anterior à data de início."
+                })
