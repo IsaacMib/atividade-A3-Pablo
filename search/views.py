@@ -1,34 +1,34 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.template.response import TemplateResponse
-
 from wagtail.models import Page
-
-# To enable logging of search queries for use with the "Promoted search results" module
-# <https://docs.wagtail.org/en/stable/reference/contrib/searchpromotions.html>
-# uncomment the following line and the lines indicated in the search function
-# (after adding wagtail.contrib.search_promotions to INSTALLED_APPS):
-
-# from wagtail.contrib.search_promotions.models import Query
-
+from wagtail.contrib.search_promotions.models import Query
+from home.models import HomePage  # Importe outros models conforme necessário
 
 def search(request):
     search_query = request.GET.get("query", None)
     page = request.GET.get("page", 1)
+    content_type = request.GET.get("type", None)  # Novo parâmetro para filtrar por tipo
 
     # Search
     if search_query:
+        # Pesquisa em todas as páginas publicadas
         search_results = Page.objects.live().search(search_query)
-
-        # To log this query for use with the "Promoted search results" module:
-
-        # query = Query.get(search_query)
-        # query.add_hit()
-
+        
+        # Registrar a query para search promotions
+        query = Query.get(search_query)
+        query.add_hit()
+        
+        # Filtrar por tipo de conteúdo se especificado
+        if content_type:
+            if content_type == 'home':
+                search_results = search_results.type(HomePage)
+            # Adicione outros tipos conforme necessário
+            
     else:
         search_results = Page.objects.none()
 
     # Pagination
-    paginator = Paginator(search_results, 10)
+    paginator = Paginator(search_results, 12)  # 12 itens por página
     try:
         search_results = paginator.page(page)
     except PageNotAnInteger:
@@ -42,5 +42,6 @@ def search(request):
         {
             "search_query": search_query,
             "search_results": search_results,
+            "content_type": content_type,
         },
     )

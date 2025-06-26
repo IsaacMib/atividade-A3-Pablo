@@ -1,32 +1,31 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags %}
-
-{% block body_class %}template-searchresults{% endblock %}
-
-{% block title %}Search{% endblock %}
 
 {% block content %}
-<h1>Search</h1>
+    <h1>Busca</h1>
+    
+    <form action="{% url 'search' %}" method="get">
+        <input type="text" name="query" value="{{ search_query }}" placeholder="Digite sua busca...">
+        <button type="submit">Buscar</button>
+    </form>
 
-<form action="{% url 'search' %}" method="get">
-    <input type="text" name="query"{% if search_query %} value="{{ search_query }}"{% endif %}>
-    <input type="submit" value="Search" class="button">
-</form>
-
-{% if search_results %}
-<ul>
-    {% for result in search_results %}
-    <li>
-        <h4><a href="{% pageurl result %}">{{ result }}</a></h4>
-        {% if result.search_description %}
-        {{ result.search_description }}
-        {% endif %}
-    </li>
-    {% endfor %}
-</ul>
-
-{% include "include/paginator.html" with posts=search_results %}
-{% elif search_query %}
-No results found
-{% endif %}
+    {% if search_results %}
+        <p>{{ search_results.paginator.count }} resultados encontrados</p>
+        
+        <div class="search-results">
+            {% for result in search_results %}
+                <article class="search-result">
+                    <h3><a href="{{ result.url }}">{{ result.title }}</a></h3>
+                    {% if result.search_description %}
+                        <p>{{ result.search_description|safe }}</p>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </div>
+        
+        {% include "wagtailadmin/shared/pagination_nav.html" with items=search_results %}
+    {% elif search_query %}
+        <p>Nenhum resultado encontrado para "{{ search_query }}"</p>
+    {% else %}
+        <p>Digite um termo para buscar no site</p>
+    {% endif %}
 {% endblock %}

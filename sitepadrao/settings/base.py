@@ -83,6 +83,7 @@ INSTALLED_APPS = [
     "webpack_loader",
     "wagtail_color_panel",
     "wagtail.contrib.settings",
+    'wagtail.contrib.search_promotions',
 ]
 
 MIDDLEWARE = [
