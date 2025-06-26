@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
   <div class="container">
-    <ul class="menu-lista d-flex flex-column flex-md-row">
+    <ul class="menu-lista d-flex flex-column flex-md-row justify-content-evenly">
       {% for link in links_menu %}
       <li>
         <a class="tw:text-white" href="{{ link.url }}" target="{{ link.target }}">

@@ -1,19 +1,22 @@
 <!-- Serviços Online Card -->
-<div class="servicosOnline-wrapper p-4 col-10 mx-auto">
-    <div class="swiper swiperServicosOnline">
-        <div class="swiper-wrapper">
-            {% for serv in servicos %}
-            <div class="swiper-slide">
-                {% include 'blocks/item_servico_online.html' with servico=serv %}
+<div class="servicosOnline-wrapper">
+    <div class="container">
+        <div class="swiper-container">
+            <div class="swiper swiperServicosOnline">
+                <div class="swiper-wrapper">
+                    {% for serv in servicos %}
+                    <div class="swiper-slide">
+                        {% include 'blocks/item_servico_online.html' with servico=serv %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="swiper-pagination"></div>
             </div>
-            {% endfor %}
+            <div class="swiper-button-next d-none d-lg-block"></div>
+            <div class="swiper-button-prev d-none d-lg-block"></div>
         </div>
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
     </div>
-    <div class="text-center">
-        <a class="btn-ver-todos" href="{{ linkTodos }}" target="_blank">Ver todos</a>
-    </div>
+    {% include "include/ver_todos_btn.html" with ver_todos_url=linkTodos target='_blank' %}
 </div>
 
 <script>
@@ -28,26 +31,25 @@ document.addEventListener('DOMContentLoaded', function() {
             pauseOnMouseEnter: true
         },
         breakpoints: {
-            1024: {
+            768: {
                 slidesPerView: 2,
             },
-            1440: {
+            1200: {
                 slidesPerView: 3,
-                spaceBetween: 30,
             },
-            1920: {
+            1440: {
                 slidesPerView: 4,
-                spaceBetween: 40,
+                spaceBetween: 30,
             },
         },
         navigation: {
             nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
+            prevEl: '.swiper-button-prev'
         },
-        {% comment %} pagination: {
+        pagination: {
             el: '.swiper-pagination',
             clickable: true,
-        }, {% endcomment %}
+        },
         loop: true,
     });
 

@@ -1,12 +1,91 @@
-// Estilos personalizados para os cards de serviços
+// Serviços Online Component Styles
 
-// Estilo do cabeçalho com gradiente
+// Swiper Container Styles
 .swiperServicosOnline {
-    .swiper-slide {
-        margin-bottom: 3rem;
+    .container {
+        padding-right: -1rem;
+    }
+
+    .swiper-wrapper {
+        .swiper-slide {
+            margin-bottom: 3rem;
+        }
     }
 }
 
+.swiper-container {
+    position: relative;
+    overflow: visible;
+
+    .swiper-button-next,
+    .swiper-button-prev {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
+    }
+
+    .swiper-button-next {
+        right: -1rem;
+    }
+
+    .swiper-button-prev {
+        left: -1rem;
+    }
+
+    @media screen and (min-width: 1200px) {
+        .swiper-button-next {
+            right: -3rem;
+        }
+        .swiper-button-prev {
+            left: -3rem;
+        }
+    }
+
+    @media screen and (min-width: 1920px) {
+        .swiper-button-next {
+            right: -6rem;
+        }
+        .swiper-button-prev {
+            left: -6rem;
+        }
+    }
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 70px !important;
+}
+
+.swiper-button-prev {
+    background-image: url("../img/prev.svg");
+}
+
+.swiper-button-next {
+    background-image: url("../img/next.svg");
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+    content: "" !important;
+}
+
+.swiper-wrapper img{
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+}
+
+.swiper-wrapper a{
+    min-width: 100%;
+}
+
+
+// Card Styles
 .card {
     min-height: 300px !important;
     max-width: 350px;
@@ -15,10 +94,11 @@
     .card-header {
         border-radius: 0.75rem 0.75rem 0 0 !important;
         background: linear-gradient(302.81deg, var(--tw-color-gradient-fim) -105%, var(--tw-color-gradient-inicio) 146.81%);
-    
+
         .card-header--title {
             font-size: 12px;
         }
+
         .card-header--icon {
             transition: all 0.2s ease-in-out;
             cursor: pointer;
@@ -27,11 +107,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            
+
             &:hover {
                 background-color: color-mix(in oklab, var(--tw-color-neutral-100) 10%, transparent);
             }
-            
+
             i {
                 font-size: 0.8rem;
             }

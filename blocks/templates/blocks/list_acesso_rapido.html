@@ -1,16 +1,18 @@
-<div class="container">
+<div class="container acesso-rapido">
   <div class="row g-4">
     {% for item in value.itens %}
-      <div class="col-6 col-md-3">
+      <div class="col-6 col-sm-4 col-md-3">
         <a href="{{ item.link }}">
           <div class="quick-access">
-            <div class="quick-access-icon">
-              {% if item.icone %}
-                <i class="{{ item.icone }}"></i>
-              {% endif %}
-            </div>
-            <div class="quick-access-title">
-              {{ item.titulo|linebreaksbr }}
+            <div class="quick-access-wrapper">
+              <div class="quick-access-icon">
+                {% if item.icone %}
+                  <i class="{{ item.icone }}"></i>
+                {% endif %}
+              </div>
+              <div class="quick-access-title">
+                {{ item.titulo|linebreaksbr }}
+              </div>
             </div>
           </div>
         </a>

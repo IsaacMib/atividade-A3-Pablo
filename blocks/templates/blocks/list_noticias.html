@@ -9,6 +9,6 @@
     </div>
   </div>
 </div>
-<div class="text-center tw:mt-0 tw:mb-8">
-    <a class="btn-ver-todos" href="{{noticias_index_page_url}}" target="_blank">{{texto_link}}</a>
+<div class="tw:mt-0 tw:mb-8">
+    {% include "include/ver_todos_btn.html" with ver_todos_url=noticias_index_page_url ver_todos_texto_link=texto_link %}
 </div>

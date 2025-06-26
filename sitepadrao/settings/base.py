@@ -25,6 +25,9 @@ def get_int(env_var, default=0):
         return int(os.environ.get(env_var, default))
     except (TypeError, ValueError):
         return default
+    
+SISTEMA_VERSAO = os.environ.get("APP_VERSION", "0.0.1")
+AMBIENTE = os.environ.get("AMBIENTE", "tst").lower()
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
@@ -114,6 +117,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "wagtail.contrib.settings.context_processors.settings",
                 "sitepadrao.context_processors.conteudo_site",
+                "sitepadrao.context_processors.versao_context",
             ],
         },
     },
