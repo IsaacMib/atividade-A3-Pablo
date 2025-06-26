@@ -44,7 +44,7 @@ class SiteSettings(BaseSiteSetting):
     texto_informativo_periodo_eleitoral = models.TextField(
         verbose_name="Texto informativo do período eleitoral",
         blank=True,
-        default="Em respeito a legislação eleitoral, Lei 9.504/97, as notícias deste site/portal está temporariamente suspensa."
+        default="Em respeito a legislação eleitoral, Lei 9.504/97, as notícias deste site/portal estão temporariamente suspensa."
     )
 
     redes_sociais = StreamField(
