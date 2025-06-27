@@ -6,7 +6,13 @@ def GetToken(url, login, password):
     # Extrai a base da URL usando urllib
     parsed = urlparse(url)
     url_base = urlunparse((parsed.scheme, parsed.netloc, '', '', '', ''))
-    url_login = url_base + "/@login"
+
+    # Ajuste para ambiente .rke.codataprd
+    if ".rke.codataprd" in parsed.netloc and parsed.path.strip("/"):
+        first_path = "/" + parsed.path.strip("/").split("/")[0]
+        url_login = url_base + first_path + "/@login"
+    else:
+        url_login = url_base + "/@login"
 
     payload = json.dumps({
         "login": login,

@@ -51,7 +51,9 @@ class NoticiasPage(Page):
         null=True,
         blank=True,
     )
-    plone_node_id = models.PositiveIntegerField(null=True, blank=True, db_index=True)
+    plone_node_id = models.PositiveIntegerField(null=True, blank=True, db_index=True,unique=True,
+        help_text="ID do nó no Plone, usado para identificar a página migrada."
+    )
     sensivel_periodo_eleitoral = models.BooleanField(
         verbose_name="Notícia sensível ao período eleitoral",
         default=False,

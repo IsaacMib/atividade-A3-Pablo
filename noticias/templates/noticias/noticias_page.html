@@ -74,8 +74,7 @@
                         {% for arquivo in page.arquivos %}
                             <li class="lista-arquivos__item">
                                 <a href="{{ arquivo.value.url }}" target="_blank" rel="noopener noreferrer" class="lista-arquivos__link">
-                                    <i class="fa-regular {{ arquivo.value|arquivo_icon }} tw-mr-2"></i>
-                                    {{ arquivo.value.title }}
+                                    <i class="fa-regular {{ arquivo.value|arquivo_icon }} tw:mr-2"></i>{{ arquivo.value.title }}<i class="fa-solid fa-download tw:ml-0"></i>
                                 </a>
                             </li>
                         {% endfor %}

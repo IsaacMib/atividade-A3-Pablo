@@ -15,6 +15,9 @@ from wagtail.fields import StreamField
 
 from blocks.models import ListRedeSocial
 
+from wagtail.documents.models import Document
+from wagtail.images.models import Image
+
 # Create your models here.
 
 @register_setting(icon="site")
@@ -105,3 +108,23 @@ class SiteSettings(BaseSiteSetting):
                     "periodo_eleitoral_inicio": "A data de início não pode ser posterior à data de fim.",
                     "periodo_eleitoral_fim": "A data de fim não pode ser anterior à data de início."
                 })
+
+class PloneImportedImage(Image):
+    """
+    Extensão do modelo base de imagem do Wagtail para importar imagens do Plone.
+    """
+    plone_node_id = models.PositiveIntegerField(unique=True, db_index=True, help_text="ID do nó da imagem no Plone.")
+
+    admin_form_fields = Image.admin_form_fields + (
+        'plone_node_id',
+    )
+
+class PloneImportedFile(Document):
+    """
+    Extensão do modelo base de arquivo do Wagtail para importar arquivos do Plone.
+    """
+    plone_node_id = models.PositiveIntegerField(unique=True, db_index=True, help_text="ID do nó do arquivo no Plone.")
+
+    admin_form_fields = Document.admin_form_fields + (
+        'plone_node_id',
+    )
