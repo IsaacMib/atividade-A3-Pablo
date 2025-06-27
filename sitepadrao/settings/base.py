@@ -252,7 +252,7 @@ WAGTAILIMAGES_AVIF_QUALITY = 60
 WAGTAILSEARCH_BACKENDS = {
     "default": {
         "BACKEND": "wagtail.search.backends.database",
-        "INDEX": "sitepadrao",
+        
     }
 }
 

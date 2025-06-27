@@ -1,34 +1,63 @@
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from datetime import datetime, timedelta
+from django.utils import timezone
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.response import TemplateResponse
 from wagtail.models import Page
 from wagtail.contrib.search_promotions.models import Query
-from home.models import HomePage  # Importe outros models conforme necessário
 
 def search(request):
-    search_query = request.GET.get("query", None)
+    # Obter parâmetros da requisição
+    search_query = request.GET.get("query", "")
     page = request.GET.get("page", 1)
-    content_type = request.GET.get("type", None)  # Novo parâmetro para filtrar por tipo
+    selected_types = request.GET.getlist("type")  # Para múltiplos checkboxes
+    date_filter = request.GET.get("date", "sempre")
 
-    # Search
+    # Converter para lista de tipos (remover 'all' se outros tipos estiverem selecionados)
+    if "all" in selected_types and len(selected_types) > 1:
+        selected_types.remove("all")
+    elif not selected_types or "all" in selected_types:
+        selected_types = []  # Mostrar todos os tipos
+
+    # Definir filtros de data
+    now = timezone.now()
+    date_filters = {
+        'ontem': now - timedelta(days=1),
+        'semana': now - timedelta(weeks=1),
+        'mes': now - timedelta(days=30),
+        'sempre': None,
+        'intervalo': None  # Implementar lógica específica para intervalo se necessário
+    }
+    date_cutoff = date_filters.get(date_filter)
+
+    # Executar busca
     if search_query:
-        # Pesquisa em todas as páginas publicadas
-        search_results = Page.objects.live().search(search_query)
+        # Primeiro obtemos todos os resultados da busca
+        search_results = list(Page.objects.live().search(search_query))
+        
+        # Aplicar filtros
+        filtered_results = []
+        for result in search_results:
+            # Filtro por tipo
+            type_match = not selected_types or result.content_type.model in selected_types
+            
+            # Filtro por data
+            date_match = not date_cutoff or (
+                result.last_published_at and 
+                result.last_published_at >= date_cutoff
+            )
+            
+            if type_match and date_match:
+                filtered_results.append(result)
+        
+        search_results = filtered_results
         
         # Registrar a query para search promotions
-        query = Query.get(search_query)
-        query.add_hit()
-        
-        # Filtrar por tipo de conteúdo se especificado
-        if content_type:
-            if content_type == 'home':
-                search_results = search_results.type(HomePage)
-            # Adicione outros tipos conforme necessário
-            
+        Query.get(search_query).add_hit()
     else:
-        search_results = Page.objects.none()
+        search_results = []
 
-    # Pagination
-    paginator = Paginator(search_results, 12)  # 12 itens por página
+    # Paginação
+    paginator = Paginator(search_results, 10)
     try:
         search_results = paginator.page(page)
     except PageNotAnInteger:
@@ -42,6 +71,8 @@ def search(request):
         {
             "search_query": search_query,
             "search_results": search_results,
-            "content_type": content_type,
+            "selected_types": selected_types,
+            "selected_date": date_filter,
+            "breadcrumbs": True  # Para mostrar a navegação no template
         },
     )
