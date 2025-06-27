@@ -8,7 +8,5 @@
 
 <!-- Link "Ver todos" configurável -->
 {% if self.ver_todos_url %}
-<div class="text-center">
-  <a class="btn-ver-todos" href="{{ self.ver_todos_url }}" target="_blank">Ver todos</a>
-</div>
+  {% include "include/ver_todos_btn.html" with ver_todos_url=self.ver_todos_url target='_blank' %}
 {% endif %}

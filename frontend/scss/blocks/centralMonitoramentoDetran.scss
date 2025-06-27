@@ -26,7 +26,7 @@
 
 .dado-monitoramento--layout {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 1fr auto;
   align-items: center;
 
   @media (max-width: 992px) {
@@ -39,7 +39,7 @@
 }
 
 .dado-odometer {
-  padding: 8px 0px;
+  padding: 8px 0px !important;
   &:last-child {
     .dado-monitoramento--separator-horizontal,
     .dado-monitoramento--separator-vertical {
