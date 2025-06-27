@@ -1,8 +1,17 @@
+.page-noticias__published {
+  color: #00000080;
+  font-weight: 400;
+}
+
 .noticias-pagination--layout {
   list-style: none;
   display: flex;
   align-self: center;
   justify-self: center;
+}
+
+.lista-arquivos__list {
+  padding-left: 0px;
 }
 
 .noticias-pagination-item {

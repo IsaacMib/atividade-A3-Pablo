@@ -12,12 +12,12 @@ from wagtail.search import index
 
 from wagtail.models import Page
 
-from blocks.models import BaseStreamBlock
+from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
 from datetime import datetime
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from wagtail.images.blocks import ImageChooserBlock
-from wagtail.blocks import ListBlock
+from core.utils import get_file_type, get_fontawesome_file_icon
 
 
 class NoticiasPageTag(TaggedItemBase):
@@ -74,6 +74,22 @@ class NoticiasPage(Page):
         help_text="Marque para exibir as imagens como slideshow na página da notícia."
     )
 
+    arquivos = StreamField(
+        [
+            ('arquivo', EspecificDocumentChooserBlock(required=True, label="Arquivos")),
+        ],
+        verbose_name="Arquivos da notícia",
+        blank=True,
+        null=True,
+        use_json_field=True,
+    )
+
+    nao_exibir_lista_de_arquivos = models.BooleanField(
+        verbose_name="Não exibir lista de arquivos",
+        default=False,
+        help_text="Marque para não exibir a lista de arquivos na página da notícia."
+    )
+
     content_panels = Page.content_panels + [
         FieldPanel("subtitle"),
         FieldPanel("descricao"),
@@ -83,6 +99,13 @@ class NoticiasPage(Page):
                 FieldPanel("images"),
             ],
             heading="Imagens da notícia"
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("nao_exibir_lista_de_arquivos"),
+                FieldPanel("arquivos"),
+            ],
+            heading="Arquivos da notícia"
         ),
         FieldPanel("body"),
         FieldPanel("data_publicacao"),
@@ -136,6 +159,14 @@ class NoticiasPage(Page):
                 if bloco.block_type == 'imagem' and bloco.value:
                     return bloco.value
         return None
+
+    @staticmethod
+    def get_arquivo_icon(arquivo):
+        """
+        Retorna a classe do ícone FontAwesome de acordo com a extensão ou mimetype do arquivo.
+        """
+        file_info = get_file_type(arquivo)
+        return get_fontawesome_file_icon(file_info)
 
 class NoticiasIndexPages(RoutablePageMixin, Page):
 

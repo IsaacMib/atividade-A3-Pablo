@@ -1,36 +1,26 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags static %}
+{% load wagtailcore_tags wagtailimages_tags static file_extras %}
 
 {% block content %}
     <div class="container">
         {% if settings.core.SiteSettings.is_periodo_eleitoral and page.sensivel_periodo_eleitoral %}
-            <h2 class="text-center tw:mt-24 tw:mb-12 tw:text-red-700 tw:font-bold tw:text-6xl">
-                {{settings.core.SiteSettings.texto_informativo_periodo_eleitoral}}
-            </h2>
-            <div class="row">
-                <div class="col-6">
-                    <img width="250px" src="{% static 'img/tribunal_superior_eleitoral.png' %}" alt="Tribunal Superior Eleitoral" class="img-fluid" />
-                </div>
-                <div class="col-6 d-flex justify-content-end">
-                    <img width="170px" src="{% static 'img/tribunal_regional_eleitoral_pb.png' %}" alt="Tribunal Regional Eleitoral da Paraíba" class="img-fluid" style="display: block;position: relative;top: -20px;"/>
-                </div>
-            </div>
+            {% include 'include/periodo-eleitoral.html' %}
         {% else %}
             <div class="page-noticias-header tw:mt-12 tw:mb-12">
                 <h1 class="index-header__title index-header__title--blog tw:font-bold">{{ page.title }}</h1>
                 {% comment %} {% if page.descricao %}
                     <p>{{ page.descricao }}</p>
                 {% endif %} {% endcomment %}
-                {% comment %} {% if page.data_publicacao and page.latest_revision_created_at %}
-                    <div class="blog__published">
-                       Publicação {{ page.data_publicacao|date:"d/m/Y H:i" }}
+                {% if page.data_publicacao and page.latest_revision_created_at %}
+                    <div class="page-noticias__published">
+                        <p>
+                            Publicação {{ page.data_publicacao|date:"d/m/Y H:i" }},
+                            {% if page.latest_revision_created_at %}
+                                Atualização {{ page.latest_revision_created_at|date:"d/m/Y H:i" }}
+                            {% endif %}
+                        </p>
                     </div>
-                    <div>
-                        {% if page.latest_revision_created_at %}
-                            <p>Atualização {{ page.latest_revision_created_at|date:"d/m/Y H:i" }}</p>
-                        {% endif %}
-                    </div>
-                {% endif %} {% endcomment %}
+                {% endif %}
             </div>
             <div class="noticias-img-destaque tw:mb-12">
                 {% if page.get_imagem_destaque and not page.slideshow_imagens %}
@@ -77,6 +67,21 @@
                     </div>
                 {% endif %} {% endcomment %}
             </div>
+            {% if page.arquivos and not page.nao_exibir_lista_de_arquivos %}
+                <div id="lista-arquivos" class="lista-arquivos tw:mt-8">
+                    <h2 class="titulo-2">Arquivos</h2>
+                    <ul class="lista-arquivos__list">
+                        {% for arquivo in page.arquivos %}
+                            <li class="lista-arquivos__item">
+                                <a href="{{ arquivo.value.url }}" target="_blank" rel="noopener noreferrer" class="lista-arquivos__link">
+                                    <i class="fa-regular {{ arquivo.value|arquivo_icon }} tw-mr-2"></i>
+                                    {{ arquivo.value.title }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
         {% endif %}
     </div>
     {% if not settings.core.SiteSettings.is_periodo_eleitoral and not page.sensivel_periodo_eleitoral %}

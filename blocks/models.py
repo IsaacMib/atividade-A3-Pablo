@@ -4,6 +4,7 @@ from blocks.utils import ICONES_REDES, ICONES_ACESSO_RAPIDO, IDS_METABASE_CARDS,
 import requests
 from django.core.cache import cache
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.blocks import (
     CharBlock,
     ChoiceBlock,
@@ -24,6 +25,7 @@ from wagtail.images import get_image_model
 from django.conf import settings
 import uuid
 
+import magic
 
 from django.core.exceptions import ValidationError
 
@@ -538,3 +540,39 @@ class BaseStreamBlock(StreamBlock):
         description="An embedded video or other media",
     )
 
+class EspecificDocumentChooserBlock(DocumentChooserBlock):
+    allowed_extensions = ['.pdf', '.txt', '.doc', '.docx', '.ods', '.xls', '.xlsx']
+    allowed_mimetypes = [
+        'application/pdf',
+        'text/plain',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.oasis.opendocument.spreadsheet',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    ]
+
+    def __init__(self, *args, allowed_extensions=None, allowed_mimetypes=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if allowed_extensions is not None:
+            self.allowed_extensions = allowed_extensions
+        if allowed_mimetypes is not None:
+            self.allowed_mimetypes = allowed_mimetypes
+
+    def clean(self, value):
+        value = super().clean(value)
+        if value and value.file:
+            # Validação por extensão
+            if not any(value.file.name.lower().endswith(ext) for ext in self.allowed_extensions):
+                raise ValidationError(
+                    f"Apenas arquivos permitidos: {', '.join(self.allowed_extensions).upper()}."
+                )
+            # Validação por mimetype usando libmagic
+            mime = magic.Magic(mime=True)
+            mimetype = mime.from_buffer(value.file.read(2048))
+            value.file.seek(0)  # volta o ponteiro do arquivo
+            if mimetype not in self.allowed_mimetypes:
+                raise ValidationError(
+                    f"Tipo de arquivo não permitido ({mimetype}). Permitidos: {', '.join(self.allowed_extensions).upper()}."
+                )
+        return value
