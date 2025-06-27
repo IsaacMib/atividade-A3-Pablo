@@ -2,10 +2,17 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.response import TemplateResponse
+from django.shortcuts import redirect
 from wagtail.models import Page
 from wagtail.contrib.search_promotions.models import Query
 
 def search(request):
+    # Redirecionamento para padronizar parâmetros (q -> query)
+    if 'q' in request.GET and 'query' not in request.GET:
+        params = request.GET.copy()
+        params['query'] = params.pop('q')[0]  # Move o parâmetro 'q' para 'query'
+        return redirect(f"{request.path}?{params.urlencode()}")
+    
     # Obter parâmetros da requisição
     search_query = request.GET.get("query", "")
     page = request.GET.get("page", 1)
@@ -32,24 +39,21 @@ def search(request):
     # Executar busca
     if search_query:
         # Primeiro obtemos todos os resultados da busca
-        search_results = list(Page.objects.live().search(search_query))
+        search_results = Page.objects.live().search(search_query)
         
-        # Aplicar filtros
-        filtered_results = []
-        for result in search_results:
-            # Filtro por tipo
-            type_match = not selected_types or result.content_type.model in selected_types
-            
-            # Filtro por data
-            date_match = not date_cutoff or (
-                result.last_published_at and 
-                result.last_published_at >= date_cutoff
-            )
-            
-            if type_match and date_match:
-                filtered_results.append(result)
+        # Aplicar filtros de tipo
+        if selected_types:
+            search_results = [r for r in search_results if r.content_type.model in selected_types]
         
-        search_results = filtered_results
+        # Converter para lista para filtro de data
+        search_results = list(search_results)
+        
+        # Aplicar filtro de data
+        if date_cutoff:
+            search_results = [
+                r for r in search_results 
+                if r.last_published_at and r.last_published_at >= date_cutoff
+            ]
         
         # Registrar a query para search promotions
         Query.get(search_query).add_hit()
@@ -73,6 +77,8 @@ def search(request):
             "search_results": search_results,
             "selected_types": selected_types,
             "selected_date": date_filter,
-            "breadcrumbs": True  # Para mostrar a navegação no template
+            "breadcrumbs": True,
+            # Adiciona todos os parâmetros para manter os filtros
+            "query_params": request.GET.urlencode()
         },
     )

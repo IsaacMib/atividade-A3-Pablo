@@ -5,7 +5,7 @@
     <div class="search-content">
         <!-- Sidebar de Filtros -->
         <aside class="search-filters">
-            <form action="{% url 'search' %}" method="get">
+            <form id="search-form" action="{% url 'search' %}" method="get">
                 <div class="search-header">
                     <h1>Busca</h1>
                 </div>
@@ -16,7 +16,8 @@
                            name="query" 
                            value="{{ search_query }}" 
                            placeholder="Digite sua busca..." 
-                           class="search-input" />
+                           class="search-input" 
+                           id="search-input" />
 
                     <div class="search-actions">
                         <button type="submit" class="search-submit">Pesquisar</button>
@@ -30,7 +31,7 @@
                     <li>
                         <label>
                             <input type="checkbox" name="type" value="all"
-                                   {% if selected_type == "all" %}checked{% endif %}>
+                                   {% if not selected_types or "all" in selected_types %}checked{% endif %}>
                             Todos/Nenhum
                         </label>
                     </li>
@@ -48,12 +49,14 @@
 
                 <h3>Notícias desde</h3>
                 <ul class="filter-list">
-                    <li><label><input type="checkbox" name="date" value="ontem" {% if selected_date == "ontem" %}checked{% endif %}> Ontem</label></li>
-                    <li><label><input type="checkbox" name="date" value="semana" {% if selected_date == "semana" %}checked{% endif %}> Última semana</label></li>
-                    <li><label><input type="checkbox" name="date" value="mes" {% if selected_date == "mes" %}checked{% endif %}> Último mês</label></li>
-                    <li><label><input type="checkbox" name="date" value="sempre" {% if selected_date == "sempre" %}checked{% endif %}> Sempre</label></li>
-                    <li><label><input type="checkbox" name="date" value="intervalo" {% if selected_date == "intervalo" %}checked{% endif %}> Intervalo</label></li>
+                    <li><label><input type="radio" name="date" value="ontem" {% if selected_date == "ontem" %}checked{% endif %}> Ontem</label></li>
+                    <li><label><input type="radio" name="date" value="semana" {% if selected_date == "semana" %}checked{% endif %}> Última semana</label></li>
+                    <li><label><input type="radio" name="date" value="mes" {% if selected_date == "mes" %}checked{% endif %}> Último mês</label></li>
+                    <li><label><input type="radio" name="date" value="sempre" {% if selected_date == "sempre" %}checked{% endif %}> Sempre</label></li>
                 </ul>
+                
+                <!-- Campos ocultos para manter outros parâmetros -->
+                <input type="hidden" name="page" value="1">
             </form>
         </aside>
 
@@ -75,11 +78,11 @@
                     </div>
                     <div class="page-nav">
                         {% if search_results.has_previous %}
-                            <a href="?page={{ search_results.previous_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">&laquo;</a>
+                            <a href="?page={{ search_results.previous_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">&laquo;</a>
                         {% endif %}
                         
                         {% if search_results.has_next %}
-                            <a href="?page={{ search_results.next_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">&raquo;</a>
+                            <a href="?page={{ search_results.next_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">&raquo;</a>
                         {% endif %}
                     </div>
                 </div>
@@ -115,19 +118,98 @@
                                 {% if page_num == search_results.number %}
                                     <li class="active">{{ page_num }}</li>
                                 {% elif page_num >= search_results.number|add:-2 and page_num <= search_results.number|add:2 %}
-                                    <li><a href="?page={{ page_num }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">{{ page_num }}</a></li>
+                                    <li><a href="?page={{ page_num }}{% if query_params %}&{{ query_params }}{% endif %}">{{ page_num }}</a></li>
                                 {% endif %}
                             {% endfor %}
                             {% if search_results.has_next %}
-                                <li><a href="?page={{ search_results.next_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">Próximo &raquo;</a></li>
+                                <li><a href="?page={{ search_results.next_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">Próximo &raquo;</a></li>
                             {% endif %}
                         </ul>
                     </nav>
                 {% endif %}
             {% else %}
-                <p>Nenhum resultado encontrado para "{{ search_query }}".</p>
+                <div class="no-results">
+                    <p>Nenhum resultado encontrado para "{{ search_query }}".</p>
+                    {% if selected_types or selected_date != 'sempre' %}
+                        <p>Tente remover alguns filtros para ampliar sua busca.</p>
+                    {% endif %}
+                </div>
             {% endif %}
         </section>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Atualiza o campo de busca do header com a query atual
+    const headerSearch = document.querySelector('.header-input-search');
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchQuery = urlParams.get('query');
+    
+    if (headerSearch && searchQuery) {
+        headerSearch.value = searchQuery;
+    }
+    
+    // Configura o formulário de busca
+    const searchForm = document.getElementById('search-form');
+    const searchInput = document.getElementById('search-input');
+    
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(searchForm);
+            const params = new URLSearchParams();
+            
+            // Adiciona todos os parâmetros do formulário
+            for (const [key, value] of formData.entries()) {
+                if (key === 'type' && value === 'all') continue;
+                if (value) params.append(key, value);
+            }
+            
+            // Mantém outros parâmetros da URL (exceto page)
+            const urlParams = new URLSearchParams(window.location.search);
+            for (const [key, value] of urlParams.entries()) {
+                if (key !== 'page' && !params.has(key)) {
+                    params.append(key, value);
+                }
+            }
+            
+            window.location = '{% url 'search' %}' + '?' + params.toString();
+        });
+    }
+    
+    // Atualiza o formulário quando checkboxes são alterados
+    const checkboxes = document.querySelectorAll('input[type="checkbox"], input[type="radio"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.name === 'type' && this.value === 'all' && this.checked) {
+                // Desmarca outros tipos quando "Todos" é selecionado
+                document.querySelectorAll('input[name="type"]:not([value="all"])').forEach(cb => {
+                    cb.checked = false;
+                });
+            } else if (this.name === 'type' && this.value !== 'all' && this.checked) {
+                // Desmarca "Todos" quando outro tipo é selecionado
+                document.querySelector('input[name="type"][value="all"]').checked = false;
+            }
+            
+            // Se for um radio button de data, submete o formulário
+            if (this.type === 'radio') {
+                searchForm.submit();
+            }
+        });
+    });
+    
+    // Botão "Limpar filtros"
+    const clearFilters = document.querySelector('.clear-filters');
+    if (clearFilters) {
+        clearFilters.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location = '{% url 'search' %}?query={{ search_query|urlencode }}';
+        });
+    }
+});
+</script>
 {% endblock %}
