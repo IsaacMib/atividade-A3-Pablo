@@ -11,7 +11,6 @@
                 </div>
 
                 <!-- Campo de busca -->
-               
                 <div class="search-bar">
                     <input type="text" 
                            name="query" 
@@ -25,13 +24,7 @@
                     </div>
                 </div>
 
-                {% if search_query %}
-                <div class="search-results-count">
-                    <p>{{ search_results.paginator.count }} itens encontrados</p>
-                    <p class="search-query-label">Resultados para: "{{ search_query }}"</p>
-                </div>
-                {% endif %}
-
+                <!-- Filtros -->
                 <h3>Tipo de item</h3>
                 <ul class="filter-list">
                     <li>
@@ -61,19 +54,39 @@
                     <li><label><input type="checkbox" name="date" value="sempre" {% if selected_date == "sempre" %}checked{% endif %}> Sempre</label></li>
                     <li><label><input type="checkbox" name="date" value="intervalo" {% if selected_date == "intervalo" %}checked{% endif %}> Intervalo</label></li>
                 </ul>
-
-                <!-- Nome da pesquisa (agora abaixo dos filtros!) -->
-                {% if search_query %}
-                <p class="search-query-label">
-                    Pesquisa: "{{ search_query }}"
-                </p>
-                {% endif %}
-
             </form>
         </aside>
 
         <!-- Resultados da Busca -->
         <section class="search-results">
+            <!-- Cabeçalho com contador e paginação superior -->
+            {% if search_results %}
+            <div class="results-header">
+                <div class="results-count">
+                    <strong>{{ search_results.paginator.count }}</strong> itens encontrados
+                    {% if search_query %}
+                    <span class="search-query-label">para "{{ search_query }}"</span>
+                    {% endif %}
+                </div>
+                
+                <div class="pagination-top">
+                    <div class="page-info">
+                        Página {{ search_results.number }} de {{ search_results.paginator.num_pages }}
+                    </div>
+                    <div class="page-nav">
+                        {% if search_results.has_previous %}
+                            <a href="?page={{ search_results.previous_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">&laquo;</a>
+                        {% endif %}
+                        
+                        {% if search_results.has_next %}
+                            <a href="?page={{ search_results.next_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">&raquo;</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Lista de resultados -->
             {% if search_results %}
                 {% for result in search_results %}
                     <div class="search-result-item">
@@ -94,7 +107,7 @@
                     </div>
                 {% endfor %}
 
-                <!-- Paginação Numérica -->
+                <!-- Paginação Numérica inferior -->
                 {% if search_results.paginator.num_pages > 1 %}
                     <nav class="pagination">
                         <ul>
@@ -115,8 +128,6 @@
                 <p>Nenhum resultado encontrado para "{{ search_query }}".</p>
             {% endif %}
         </section>
-
     </div>
-
 </div>
 {% endblock %}
