@@ -42,3 +42,16 @@ def GetDataObject(token,obj):
 
   return response
 
+def GetFile(url, token):
+    payload = {}
+    headers = {
+    'Authorization': 'Bearer '+token,
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+    }
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+
+    return response
+
+
