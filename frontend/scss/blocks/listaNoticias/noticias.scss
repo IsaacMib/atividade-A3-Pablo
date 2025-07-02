@@ -46,13 +46,16 @@
   padding-right: 10px;
   float: left;
   width: 150px;
-  padding-top: 5px;
+  padding-top: 10px;
   height: 150px;
 
   img {
     margin: 20px 0px;
     display: block;
     height: 130px;
+  }
+  &.semImagem {
+    margin-bottom: 8px;
   }
 }
 
@@ -73,7 +76,7 @@
 }
 
 .noticias-conteudo--heading {
-  margin-top: 0;
+  margin-top: 16px;
   margin-bottom: 5px;
   font-size: 1rem;
 }

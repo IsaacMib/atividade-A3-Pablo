@@ -22,14 +22,28 @@
                     </div>
                 {% endif %}
             </div>
-            <div class="noticias-img-destaque tw:mb-12">
-                {% if page.get_imagem_destaque and not page.slideshow_imagens %}
-                    <div class="d-flex justify-content-center"> 
-                        {% picture page.get_imagem_destaque format-{avif,webp,jpeg} height-380 loading="lazy" sizes="100%" %} 
+            {% if page.get_imagem_destaque %}
+                <div class="noticias-img-destaque tw:mb-12">
+                    {% if page.get_imagem_destaque and not page.slideshow_imagens %}
+                        <div class="d-flex justify-content-center"> 
+                            {% picture page.get_imagem_destaque format-{avif,webp,jpeg} height-380 loading="lazy" sizes="100%" %} 
+                        </div>
+                    {% else %}
+                    <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="swiper noticias-mySwiper2">
+                        <div class="swiper-wrapper">
+                            {% for imagem in page.images %}
+                                {% if imagem.block_type == 'imagem' and imagem.value %}
+                                    <div class="swiper-slide swiper-slide-noticias">
+                                        {% picture imagem.value original format-{avif,webp,jpeg} height-380 loading="lazy" sizes="100%" class="image-noticia-carrossel" %} 
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
                     </div>
-                {% else %}
-                <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="swiper noticias-mySwiper2">
-                    <div class="swiper-wrapper">
+                    <div thumbsSlider="" class="swiper noticias-mySwiper">
+                        <div class="swiper-wrapper">
                         {% for imagem in page.images %}
                             {% if imagem.block_type == 'imagem' and imagem.value %}
                                 <div class="swiper-slide swiper-slide-noticias">
@@ -37,23 +51,11 @@
                                 </div>
                             {% endif %}
                         {% endfor %}
+                        </div>
                     </div>
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
+                    {% endif %}
                 </div>
-                <div thumbsSlider="" class="swiper noticias-mySwiper">
-                    <div class="swiper-wrapper">
-                    {% for imagem in page.images %}
-                        {% if imagem.block_type == 'imagem' and imagem.value %}
-                            <div class="swiper-slide swiper-slide-noticias">
-                                {% picture imagem.value original format-{avif,webp,jpeg} height-380 loading="lazy" sizes="100%" class="image-noticia-carrossel" %} 
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
-            </div>
+            {% endif %}
             <div class="tw:text-justify">
                 {% if page.body %}
                     {{ page.body }}

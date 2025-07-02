@@ -13,6 +13,7 @@ import traceback
 from django.utils import timezone
 from PIL import Image as PilImage
 from io import BytesIO
+from wagtail.blocks import StreamValue
 
 logger = logging.getLogger("plone_import")
 
@@ -109,15 +110,13 @@ def ImportNoticias(token, item, noticias_index_page=None):
         return
 
     try:
-        # print(json.dumps(object, ensure_ascii=False, indent=2))  # Loga o JSON de forma legível e válida
-
         arquivos = object.get("items", [])
         imagens_para_adicionar = []
         arquivos_para_adicionar = []
 
         for arq in arquivos:
             try:
-                print("process arq %s" % (arq["@type"]))
+                print("process arq %s, %s" % (arq["@type"],arq["@id"]))
                 objs_criados = ImportNoticiasArquivos(token, arq["@id"],noticia_import=True)
                 for obj in objs_criados:
                     from plone_migration.models import PloneImportedImage, PloneImportedFile
@@ -213,16 +212,16 @@ def ListDataRaiz(token, url, noticias_index_page=None, qtd=1, limit=100):
     if noticias_index_page is None:
         noticias_index_page = NoticiasIndexPages.objects.first()
         if not noticias_index_page:
-            # Busca a HomePage para ser pai
             site = Site.objects.get(is_default_site=True)
             homepage = site.root_page.specific
             noticias_index_page = NoticiasIndexPages(
                 title="Notícias",
                 slug="noticias",
-                introduction="Página de notícias importadas do Plone"
+                introduction="Todas as notícias"
             )
             homepage.add_child(instance=noticias_index_page)
-            noticias_index_page.save_revision().publish()
+            noticias_index_page.save_revision().publish()  # <-- importante!
+            noticias_index_page.refresh_from_db()  # <-- importante!
 
     itens = object["items"]
 
@@ -233,13 +232,10 @@ def ListDataRaiz(token, url, noticias_index_page=None, qtd=1, limit=100):
         print("%d process %s,%s" % (qtd, item["@type"], item["@id"]))
         qtd = qtd + 1
         if item["@type"] in ["Collection"]:
-            #   print("continue %s,%s, %s" % (item["@id"],item["title"],item["@type"]))
             continue
         if item["@type"] in ["Image"]:
-            #print("process IMG %s,%s, %s" % (item["@id"],item["title"],item["@type"]))
             ImportNoticiasArquivos(token, item["@id"])
             continue
-        # print("process %s,%s, %s" % (item["@id"],item["title"],item["@type"]))
         # Aqui você pode criar as páginas filhas do tipo NoticiasPage usando noticias_index_page como pai
         ImportNoticias(token, item["@id"], noticias_index_page=noticias_index_page)
     if 'next' not in object['batching']:
