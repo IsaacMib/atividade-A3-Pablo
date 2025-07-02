@@ -10,6 +10,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RemoveField(
+            model_name='noticiaspage',
+            name='plone_node_id',
+        ),
         migrations.AddField(
             model_name='noticiaspage',
             name='plone_node_id',
