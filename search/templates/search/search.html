@@ -1,141 +1,147 @@
 {% extends "base.html" %}
+{% load search_extras %}
 
 {% block content %}
-<div class="search-page">
-    <div class="search-content">
-        <!-- Sidebar de Filtros -->
-        <aside class="search-filters">
-            <form id="search-form" action="{% url 'search' %}" method="get">
-                <div class="search-header">
-                    <h1>Busca</h1>
-                </div>
-
-                <!-- Campo de busca -->
-                <div class="search-bar">
-                    <input type="text" 
-                           name="query" 
-                           value="{{ search_query }}" 
-                           placeholder="Digite sua busca..." 
-                           class="search-input" 
-                           id="search-input" />
-
-                    <div class="search-actions">
-                        <button type="submit" class="search-submit">Pesquisar</button>
-                        <a href="{% url 'search' %}" class="clear-filters">Limpar filtros</a>
+<div class="container">
+    <div class="search-page">
+        <div class="search-content">
+            <!-- Sidebar de Filtros -->
+            <aside class="search-filters">
+                <form id="search-form" action="{% url 'search' %}" method="get">
+                    <div class="search-header">
+                        <h1>Busca</h1>
                     </div>
-                </div>
 
-                <!-- Filtros -->
-                <h3>Tipo de item</h3>
-                <ul class="filter-list">
-                    <li>
-                        <label>
-                            <input type="checkbox" name="type" value="all"
-                                   {% if not selected_types or "all" in selected_types %}checked{% endif %}>
-                            Todos/Nenhum
-                        </label>
-                    </li>
-                    <li><label><input type="checkbox" name="type" value="agenda" {% if "agenda" in selected_types %}checked{% endif %}> Agenda Diária</label></li>
-                    <li><label><input type="checkbox" name="type" value="audio" {% if "audio" in selected_types %}checked{% endif %}> Áudio</label></li>
-                    <li><label><input type="checkbox" name="type" value="servicos" {% if "servicos" in selected_types %}checked{% endif %}> Serviços</label></li>
-                    <li><label><input type="checkbox" name="type" value="evento" {% if "evento" in selected_types %}checked{% endif %}> Evento</label></li>
-                    <li><label><input type="checkbox" name="type" value="externo" {% if "externo" in selected_types %}checked{% endif %}> Conteúdo Externo</label></li>
-                    <li><label><input type="checkbox" name="type" value="arquivo" {% if "arquivo" in selected_types %}checked{% endif %}> Arquivo</label></li>
-                    <li><label><input type="checkbox" name="type" value="imagem" {% if "imagem" in selected_types %}checked{% endif %}> Imagem</label></li>
-                    <li><label><input type="checkbox" name="type" value="link" {% if "link" in selected_types %}checked{% endif %}> Link</label></li>
-                    <li><label><input type="checkbox" name="type" value="noticias" {% if "noticias" in selected_types %}checked{% endif %}> Notícias</label></li>
-                    <li><label><input type="checkbox" name="type" value="multimidia" {% if "multimidia" in selected_types %}checked{% endif %}> Multimídia</label></li>
-                </ul>
+                    <!-- Campo de busca -->
+                    <div class="search-bar">
+                        <input type="text" 
+                            name="query" 
+                            value="{{ search_query }}" 
+                            placeholder="Digite sua busca..." 
+                            class="search-input" 
+                            id="search-input" />
 
-                <h3>Notícias desde</h3>
-                <ul class="filter-list">
-                    <li><label><input type="radio" name="date" value="ontem" {% if selected_date == "ontem" %}checked{% endif %}> Ontem</label></li>
-                    <li><label><input type="radio" name="date" value="semana" {% if selected_date == "semana" %}checked{% endif %}> Última semana</label></li>
-                    <li><label><input type="radio" name="date" value="mes" {% if selected_date == "mes" %}checked{% endif %}> Último mês</label></li>
-                    <li><label><input type="radio" name="date" value="sempre" {% if selected_date == "sempre" %}checked{% endif %}> Sempre</label></li>
-                </ul>
-                
-                <!-- Campos ocultos para manter outros parâmetros -->
-                <input type="hidden" name="page" value="1">
-            </form>
-        </aside>
-
-        <!-- Resultados da Busca -->
-        <section class="search-results">
-            <!-- Cabeçalho com contador e paginação superior -->
-            {% if search_results %}
-            <div class="results-header">
-                <div class="results-count">
-                    <strong>{{ search_results.paginator.count }}</strong> itens encontrados
-                    {% if search_query %}
-                    <span class="search-query-label">para "{{ search_query }}"</span>
-                    {% endif %}
-                </div>
-                
-                <div class="pagination-top">
-                    <div class="page-info">
-                        Página {{ search_results.number }} de {{ search_results.paginator.num_pages }}
-                    </div>
-                    <div class="page-nav">
-                        {% if search_results.has_previous %}
-                            <a href="?page={{ search_results.previous_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">&laquo;</a>
-                        {% endif %}
-                        
-                        {% if search_results.has_next %}
-                            <a href="?page={{ search_results.next_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">&raquo;</a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            <!-- Lista de resultados -->
-            {% if search_results %}
-                {% for result in search_results %}
-                    <div class="search-result-item">
-                        <h3>
-                            <a href="{{ result.url }}">
-                                {{ result.title|safe }}
-                            </a>
-                        </h3>
-                        {% if result.search_description %}
-                            <p>{{ result.search_description|safe }}</p>
-                        {% endif %}
-                        <div class="result-meta">
-                            Publicado em {{ result.last_published_at|date:"d/m/Y" }} em:
-                            {% for breadcrumb in result.breadcrumbs %}
-                                <a href="{{ breadcrumb.url }}">{{ breadcrumb.title }}</a>{% if not forloop.last %}, {% endif %}
-                            {% endfor %}
+                        <div class="search-actions">
+                            <button type="submit" class="search-submit">Pesquisar</button>
+                            <a href="{% url 'search' %}" class="clear-filters">Limpar filtros</a>
                         </div>
                     </div>
-                {% endfor %}
 
-                <!-- Paginação Numérica inferior -->
-                {% if search_results.paginator.num_pages > 1 %}
-                    <nav class="pagination">
-                        <ul>
-                            {% for page_num in search_results.paginator.page_range %}
-                                {% if page_num == search_results.number %}
-                                    <li class="active">{{ page_num }}</li>
-                                {% elif page_num >= search_results.number|add:-2 and page_num <= search_results.number|add:2 %}
-                                    <li><a href="?page={{ page_num }}{% if query_params %}&{{ query_params }}{% endif %}">{{ page_num }}</a></li>
-                                {% endif %}
-                            {% endfor %}
-                            {% if search_results.has_next %}
-                                <li><a href="?page={{ search_results.next_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">Próximo &raquo;</a></li>
+                    <!-- Filtros -->
+                    <h3>Tipo de item</h3>
+                    <ul class="filter-list">
+                        <li>
+                            <label>
+                                <input type="checkbox" name="type" value="all"
+                                    {% if not selected_types or "all" in selected_types %}checked{% endif %}>
+                                Todos/Nenhum
+                            </label>
+                        </li>
+                        <li><label><input type="checkbox" name="type" value="agenda" {% if "agenda" in selected_types %}checked{% endif %}> Agenda Diária</label></li>
+                        <li><label><input type="checkbox" name="type" value="audio" {% if "audio" in selected_types %}checked{% endif %}> Áudio</label></li>
+                        <li><label><input type="checkbox" name="type" value="servicos" {% if "servicos" in selected_types %}checked{% endif %}> Serviços</label></li>
+                        <li><label><input type="checkbox" name="type" value="evento" {% if "evento" in selected_types %}checked{% endif %}> Evento</label></li>
+                        <li><label><input type="checkbox" name="type" value="externo" {% if "externo" in selected_types %}checked{% endif %}> Conteúdo Externo</label></li>
+                        <li><label><input type="checkbox" name="type" value="arquivo" {% if "arquivo" in selected_types %}checked{% endif %}> Arquivo</label></li>
+                        <li><label><input type="checkbox" name="type" value="imagem" {% if "imagem" in selected_types %}checked{% endif %}> Imagem</label></li>
+                        <li><label><input type="checkbox" name="type" value="link" {% if "link" in selected_types %}checked{% endif %}> Link</label></li>
+                        <li><label><input type="checkbox" name="type" value="noticias" {% if "noticias" in selected_types %}checked{% endif %}> Notícias</label></li>
+                        <li><label><input type="checkbox" name="type" value="multimidia" {% if "multimidia" in selected_types %}checked{% endif %}> Multimídia</label></li>
+                    </ul>
+
+                    <h3>Notícias desde</h3>
+                    <ul class="filter-list">
+                        <li><label><input type="radio" name="date" value="ontem" {% if selected_date == "ontem" %}checked{% endif %}> Ontem</label></li>
+                        <li><label><input type="radio" name="date" value="semana" {% if selected_date == "semana" %}checked{% endif %}> Última semana</label></li>
+                        <li><label><input type="radio" name="date" value="mes" {% if selected_date == "mes" %}checked{% endif %}> Último mês</label></li>
+                        <li><label><input type="radio" name="date" value="sempre" {% if selected_date == "sempre" %}checked{% endif %}> Sempre</label></li>
+                    </ul>
+                    
+                    <!-- Campos ocultos para manter outros parâmetros -->
+                    <input type="hidden" name="page" value="1">
+                </form>
+            </aside>
+
+            <!-- Resultados da Busca -->
+            <section class="search-results">
+                <!-- Cabeçalho com contador e paginação superior -->
+                {% if search_results %}
+                <div class="results-header">
+                    <div class="results-count">
+                        <strong>{{ search_results.paginator.count }}</strong> itens encontrados
+                        {% if search_query %}
+                        <span class="search-query-label">para "{{ search_query }}"</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="pagination-top">
+                        <div class="page-info">
+                            Página {{ search_results.number }} de {{ search_results.paginator.num_pages }}
+                        </div>
+                        <div class="page-nav">
+                            {% if search_results.has_previous %}
+                                <a href="?page={{ search_results.previous_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">&laquo;</a>
                             {% endif %}
-                        </ul>
-                    </nav>
-                {% endif %}
-            {% else %}
-                <div class="no-results">
-                    <p>Nenhum resultado encontrado para "{{ search_query }}".</p>
-                    {% if selected_types or selected_date != 'sempre' %}
-                        <p>Tente remover alguns filtros para ampliar sua busca.</p>
-                    {% endif %}
+                            
+                            {% if search_results.has_next %}
+                                <a href="?page={{ search_results.next_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">&raquo;</a>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-            {% endif %}
-        </section>
+                {% endif %}
+
+                <!-- Lista de resultados -->
+                {% if search_results %}
+                    {% for result in search_results %}
+                        <div class="search-result-item">
+                            <h3>
+                                <a href="{{ result.url }}">
+                                    {{ result.title|safe }}
+                                </a>
+                            </h3>
+                            {% if result.search_description %}
+                                <p>{{ result.search_description|safe }}</p>
+                            {% endif %}
+                            {% comment %} <span class="result-type">
+                                > {{ result|result_type }}
+                            </span> {% endcomment %}
+                            <div class="result-meta">
+                                Publicado em {{ result.last_published_at|date:"d/m/Y" }}
+                                {% for breadcrumb in result.breadcrumbs %}
+                                   em: <a href="{{ breadcrumb.url }}">{{ breadcrumb.title }}</a>{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <!-- Paginação Numérica inferior -->
+                    {% if search_results.paginator.num_pages > 1 %}
+                        <nav class="pagination">
+                            <ul>
+                                {% for page_num in search_results.paginator.page_range %}
+                                    {% if page_num == search_results.number %}
+                                        <li class="active">{{ page_num }}</li>
+                                    {% elif page_num >= search_results.number|add:-2 and page_num <= search_results.number|add:2 %}
+                                        <li><a href="?page={{ page_num }}{% if query_params %}&{{ query_params }}{% endif %}">{{ page_num }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if search_results.has_next %}
+                                    <li><a href="?page={{ search_results.next_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">Próximo &raquo;</a></li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                {% else %}
+                    <div class="no-results">
+                        <p>Nenhum resultado encontrado para "{{ search_query }}".</p>
+                        {% if selected_types or selected_date != 'sempre' %}
+                            <p>Tente remover alguns filtros para ampliar sua busca.</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </section>
+        </div>
     </div>
 </div>
 {% endblock %}

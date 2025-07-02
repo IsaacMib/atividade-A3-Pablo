@@ -6,7 +6,13 @@ def GetToken(url, login, password):
     # Extrai a base da URL usando urllib
     parsed = urlparse(url)
     url_base = urlunparse((parsed.scheme, parsed.netloc, '', '', '', ''))
-    url_login = url_base + "/@login"
+
+    # Ajuste para ambiente .rke.codataprd
+    if ".rke.codataprd" in parsed.netloc and parsed.path.strip("/"):
+        first_path = "/" + parsed.path.strip("/").split("/")[0]
+        url_login = url_base + first_path + "/@login"
+    else:
+        url_login = url_base + "/@login"
 
     payload = json.dumps({
         "login": login,
@@ -35,4 +41,17 @@ def GetDataObject(token,obj):
   response = requests.request("GET", obj, headers=headers, data=payload)
 
   return response
+
+def GetFile(url, token):
+    payload = {}
+    headers = {
+    'Authorization': 'Bearer '+token,
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+    }
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+
+    return response
+
 

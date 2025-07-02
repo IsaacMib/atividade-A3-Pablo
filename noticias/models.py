@@ -34,10 +34,9 @@ class NoticiasPageTag(TaggedItemBase):
 class NoticiasPage(Page):
     
     subtitle = models.CharField(verbose_name="Subtítulo",blank=True, max_length=255)
-    descricao = models.CharField(
+    descricao = models.TextField(
         verbose_name="Descrição",
         blank=True,
-        max_length=255,
         help_text="Breve descrição do conteúdo da página.",
     )
     data_publicacao = models.DateTimeField("Data de publicação da notícias", default=datetime.now, blank=True, null=True)
@@ -51,7 +50,13 @@ class NoticiasPage(Page):
         null=True,
         blank=True,
     )
-    plone_node_id = models.PositiveIntegerField(null=True, blank=True, db_index=True)
+    plone_node_id = models.UUIDField(
+        null=True,
+        blank=True,
+        db_index=True,
+        unique=True,
+        help_text="ID do nó no Plone, usado para identificar a página migrada."
+    )
     sensivel_periodo_eleitoral = models.BooleanField(
         verbose_name="Notícia sensível ao período eleitoral",
         default=False,
