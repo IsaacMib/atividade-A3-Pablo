@@ -10,9 +10,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
+        migrations.AddField(
             model_name='noticiaspage',
             name='plone_node_id',
-            field=models.UUIDField(blank=True, db_index=True, help_text='ID do nó no Plone, usado para identificar a página migrada.', null=True, unique=True),
-        ),
+            field=models.TextField(blank=True, db_index=True, help_text='ID do nó no Plone, usado para identificar a página migrada.', null=True, unique=True),
+        )
     ]
