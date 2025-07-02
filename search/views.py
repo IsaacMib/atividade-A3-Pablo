@@ -6,6 +6,12 @@ from django.shortcuts import redirect
 from wagtail.models import Page
 from wagtail.contrib.search_promotions.models import Query
 
+def get_result_type(result):
+    """
+    Retorna o tipo do objeto resultante da busca, baseado no model do content_type.
+    """
+    return result.content_type.model.replace('_', ' ').title()
+
 def search(request):
     # Redirecionamento para padronizar parâmetros (q -> query)
     if 'q' in request.GET and 'query' not in request.GET:
@@ -78,7 +84,7 @@ def search(request):
             "selected_types": selected_types,
             "selected_date": date_filter,
             "breadcrumbs": True,
-            # Adiciona todos os parâmetros para manter os filtros
-            "query_params": request.GET.urlencode()
+            "query_params": request.GET.urlencode(),
+            "get_result_type": get_result_type,  # Adiciona a função ao contexto
         },
     )
