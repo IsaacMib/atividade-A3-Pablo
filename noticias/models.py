@@ -50,7 +50,7 @@ class NoticiasPage(Page):
         null=True,
         blank=True,
     )
-    plone_node_id = models.UUIDField(
+    plone_node_id = models.TextField(
         null=True,
         blank=True,
         db_index=True,
