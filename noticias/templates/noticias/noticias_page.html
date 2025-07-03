@@ -57,11 +57,12 @@
                 </div>
             {% endif %}
             <div class="tw:text-justify">
-                {% if page.body %}
+                {{ page.body }}
+                {% comment %} {% if page.body %}
                     {{ page.body }}
                 {% elif page.body_migrated %}
                     {{ page.body_migrated|safe }}
-                {% endif %}
+                {% endif %} {% endcomment %}
 
                 {% comment %} {% if page.get_tags %}
                 <p class="blog__tag-introduction">Find more blog posts with similar tags</p>
