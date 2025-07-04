@@ -26,9 +26,9 @@ def search(request):
     date_filter = request.GET.get("date", "sempre")
 
     # Converter para lista de tipos (remover 'all' se outros tipos estiverem selecionados)
-    if "all" in selected_types and len(selected_types) > 1:
-        selected_types.remove("all")
-    elif not selected_types or "all" in selected_types:
+    if "all" in selected_types:
+         selected_types = [] 
+    elif not selected_types:
         selected_types = []  # Mostrar todos os tipos
 
     # Definir filtros de data

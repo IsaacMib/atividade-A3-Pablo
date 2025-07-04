@@ -34,7 +34,7 @@
                             <label>
                                 <input type="checkbox" name="type" value="all"
                                     {% if not selected_types or "all" in selected_types %}checked{% endif %}>
-                                Todos/Nenhum
+                                Todos
                             </label>
                         </li>
                         <li><label><input type="checkbox" name="type" value="agenda" {% if "agenda" in selected_types %}checked{% endif %}> Agenda Diária</label></li>
@@ -162,49 +162,63 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchForm = document.getElementById('search-form');
     const searchInput = document.getElementById('search-input');
     
+    // Função para submeter o formulário
+    function submitSearchForm() {
+        const currentQuery = searchInput.value.trim();
+        const params = new URLSearchParams();
+        
+        // Adiciona a query se existir
+        if (currentQuery) {
+            params.append('query', currentQuery);
+        }
+        
+        // Adiciona tipos selecionados (exceto 'all')
+        document.querySelectorAll('input[name="type"]:checked:not([value="all"])').forEach(checkbox => {
+            params.append('type', checkbox.value);
+        });
+        
+        // Adiciona filtro de data (se não for 'sempre')
+        const selectedDate = document.querySelector('input[name="date"]:checked');
+        if (selectedDate && selectedDate.value !== 'sempre') {
+            params.append('date', selectedDate.value);
+        }
+        
+        // Redireciona mantendo apenas os parâmetros relevantes
+        window.location = '{% url 'search' %}' + (params.toString() ? '?' + params.toString() : '');
+    }
+    
+    // Configura o submit do formulário
     if (searchForm) {
         searchForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            const formData = new FormData(searchForm);
-            const params = new URLSearchParams();
-            
-            // Adiciona todos os parâmetros do formulário
-            for (const [key, value] of formData.entries()) {
-                if (key === 'type' && value === 'all') continue;
-                if (value) params.append(key, value);
-            }
-            
-            // Mantém outros parâmetros da URL (exceto page)
-            const urlParams = new URLSearchParams(window.location.search);
-            for (const [key, value] of urlParams.entries()) {
-                if (key !== 'page' && !params.has(key)) {
-                    params.append(key, value);
-                }
-            }
-            
-            window.location = '{% url 'search' %}' + '?' + params.toString();
+            submitSearchForm();
         });
     }
     
-    // Atualiza o formulário quando checkboxes são alterados
-    const checkboxes = document.querySelectorAll('input[type="checkbox"], input[type="radio"]');
-    checkboxes.forEach(checkbox => {
+    // Manipulação dos checkboxes de tipo
+    const typeCheckboxes = document.querySelectorAll('input[name="type"]');
+    typeCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function() {
-            if (this.name === 'type' && this.value === 'all' && this.checked) {
-                // Desmarca outros tipos quando "Todos" é selecionado
+            if (this.value === 'all' && this.checked) {
+                // Desmarca todos os outros checkboxes
                 document.querySelectorAll('input[name="type"]:not([value="all"])').forEach(cb => {
                     cb.checked = false;
                 });
-            } else if (this.name === 'type' && this.value !== 'all' && this.checked) {
+            } else if (this.value !== 'all' && this.checked) {
                 // Desmarca "Todos" quando outro tipo é selecionado
                 document.querySelector('input[name="type"][value="all"]').checked = false;
             }
             
-            // Se for um radio button de data, submete o formulário
-            if (this.type === 'radio') {
-                searchForm.submit();
-            }
+            // Submete o formulário após mudança
+            submitSearchForm();
+        });
+    });
+    
+    // Manipulação dos radios de data
+    const dateRadios = document.querySelectorAll('input[name="date"]');
+    dateRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            submitSearchForm();
         });
     });
     
@@ -213,7 +227,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (clearFilters) {
         clearFilters.addEventListener('click', function(e) {
             e.preventDefault();
-            window.location = '{% url 'search' %}?query={{ search_query|urlencode }}';
+            // Redireciona mantendo apenas a query se existir
+            const currentQuery = searchInput.value.trim();
+            if (currentQuery) {
+                window.location = '{% url 'search' %}?query=' + encodeURIComponent(currentQuery);
+            } else {
+                window.location = '{% url 'search' %}';
+            }
         });
     }
 });
