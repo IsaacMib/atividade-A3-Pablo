@@ -112,14 +112,22 @@
                             {% if result.search_description %}
                                 <p>{{ result.search_description|safe }}</p>
                             {% endif %}
-                            {% comment %} <span class="result-type">
-                                > {{ result|result_type }}
-                            </span> {% endcomment %}
+                            <span class="result-type">
+                                {{ result|result_type }}
+                            </span>
                             <div class="result-meta">
-                                Publicado em {{ result.last_published_at|date:"d/m/Y" }}
-                                {% for breadcrumb in result.breadcrumbs %}
-                                   em: <a href="{{ breadcrumb.url }}">{{ breadcrumb.title }}</a>{% if not forloop.last %}, {% endif %}
-                                {% endfor %}
+                                {% with tipo=result|result_type %}
+                                    {% if tipo == "Arquivo" or tipo == "Imagem" %}
+                                        Publicado em {{ result.created_at|date:"d/m/Y" }}
+                                    {% else %}
+                                        Publicado em {{ result.last_published_at|date:"d/m/Y" }}
+                                    {% endif %}
+                                {% endwith %}
+                                {% if result.breadcrumbs %}
+                                    {% for breadcrumb in result.breadcrumbs %}
+                                       em: <a href="{{ breadcrumb.url }}">{{ breadcrumb.title }}</a>{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                         </div>
                     {% endfor %}

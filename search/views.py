@@ -10,17 +10,9 @@ from noticias.models import NoticiasPage  # ajuste conforme o nome do seu app/mo
 from plone_migration.models import PloneImportedFile, PloneImportedImage
 
 def get_result_type(result):
-    """
-    Retorna o tipo do objeto resultante da busca, baseado no model do content_type.
-    """
     return result.content_type.model.replace('_', ' ').title()
 
 def formatar_wagtail_types(wagtail_types):
-    """
-    Recebe uma lista de nomes de modelos e retorna uma lista de dicionários
-    apenas para tipos conhecidos, com 'titulo' (nome amigável) e 'filtro' (nome original).
-    Engloba tipos de arquivo e imagem.
-    """
     tipos_conhecidos = {
         "noticiaspage": "Notícias",
         "document": "Arquivo",
