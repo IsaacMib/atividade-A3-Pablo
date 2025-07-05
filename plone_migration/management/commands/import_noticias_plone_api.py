@@ -23,79 +23,20 @@ def ImportNoticiasArquivos(token, item, noticia_import=False, urlBase=None):
     object = response.json()
 
     created_objs = []
-    img_file = None
 
     # Importa imagem
     if object.get("@type") == "Image" and "image" in object and "download" in object["image"]:
-        image_url = object["image"]["download"]
-        image_filename = object.get("id") or object["image"].get("filename") or object.get("title") or "imagem_plone.jpg"
-        plone_node_id = object.get("UID")
-        image_slug = object.get("id") or ""
-
-        img_qs = PloneImportedImage.objects.filter(plone_node_id=plone_node_id)
-        if img_qs.exists():
-            logger.info(f"Imagem já importada: plone_node_id={plone_node_id}")
-            if noticia_import:
-                created_objs.append(img_qs.first())
-        else:
-            img_response = GetFile(image_url,token)
-            logger.info(f"Resposta da requisição da imagem ({image_url}): status={img_response.status_code}, headers={img_response.headers}")
-            logger.debug(f"Conteúdo da resposta da imagem ({image_url}): {img_response.content[:200]}")  # Loga os primeiros 200 bytes
-
-            content_type = img_response.headers.get("Content-Type", "")
-            if img_response.status_code == 200:
-                # Ignora SVGs e arquivos não suportados
-                if "svg" in content_type or str(image_filename).lower().endswith(".svg"):
-                    logger.warning(f"Arquivo SVG ignorado: {image_filename} ({image_url})")
-                    return created_objs
-                try:
-                    pil_image = PilImage.open(BytesIO(img_response.content))
-                    pil_image.verify()  # Verifica se é uma imagem válida
-                    pil_image = PilImage.open(BytesIO(img_response.content))  # Reabra para processar
-                    img_io = BytesIO()
-                    pil_image.save(img_io, format=pil_image.format, optimize=True, quality=70)
-                    img_file = ContentFile(img_io.getvalue(), name=str(image_filename))
-                except Exception as e:
-                    logger.error(f"Erro ao processar imagem com Pillow: {e} ({image_filename})")
-                    logger.error(f"URL da imagem: {image_url}")
-                    # logger.error(f"Primeiros bytes do arquivo: {img_response.content}")
-                    return created_objs  # Não tente salvar imagem inválida
-
-                if img_file:
-                    img_obj = PloneImportedImage.objects.create(
-                        plone_node_id=plone_node_id,
-                        file=img_file,
-                        title=image_filename,
-                        slug_plone=image_slug,
-                    )
-                    created_objs.append(img_obj)
+        img_obj = baixar_e_criar_imagem(token, object)
+        if img_obj and noticia_import:
+            created_objs.append(img_obj)
 
     # Importa arquivo (PDF, DOC, etc)
     if object.get("@type") == "File" and "file" in object and "download" in object["file"]:
-        file_url = object["file"]["download"]
-        file_filename = object["file"].get("filename", object.get("title", "arquivo_plone"))
-        plone_node_id = object.get("UID")
-        file_slug = object.get("id", None)
-
-        file_qs = PloneImportedFile.objects.filter(plone_node_id=plone_node_id)
-        if file_qs.exists():
-            logger.info(f"Arquivo já importado: plone_node_id={plone_node_id}")
-            if noticia_import:
-                created_objs.append(file_qs.first())
-        else:
-            file_response = GetFile(file_url,token)
-            if file_response.status_code == 200:
-                file_content = ContentFile(file_response.content, name=file_filename)
-                file_obj = PloneImportedFile.objects.create(
-                    plone_node_id=plone_node_id,
-                    file=file_content,
-                    title=file_filename,
-                    slug_plone=file_slug,
-                )
-                created_objs.append(file_obj)
+        file_obj = baixar_e_criar_arquivo(token, object)
+        if file_obj and noticia_import:
+            created_objs.append(file_obj)
 
     return created_objs
-
 
 def ImportNoticias(token, item, noticias_index_page=None, urlBase=None):
     response = GetDataObject(token, item)
@@ -182,12 +123,16 @@ def ImportNoticias(token, item, noticias_index_page=None, urlBase=None):
                 # Substitui os links das imagens no body_migrated pelos links das imagens importadas
                 body_migrated_atualizado, imagens_encontradas = substituir_links_imagens(token, body_migrated, imagens_para_adicionar, urlBase)
                 # Atualiza também o campo body (StreamField) com o HTML atualizado
-                nova_noticia.body = gerar_blocks_body(body_migrated_atualizado)
+                nova_noticia.body, arquivos_encontrados = gerar_blocks_body(body_migrated_atualizado,token=token, urlBase=urlBase)
 
                 # Adiciona imagens encontradas pelo UID, se ainda não estiverem em imagens_para_adicionar
                 for img in imagens_encontradas:
                     if img not in imagens_para_adicionar:
                         imagens_para_adicionar.append(img)
+                
+                for arquivo in arquivos_encontrados:
+                    if arquivo not in arquivos_para_adicionar:
+                        arquivos_para_adicionar.append(arquivo)
 
                 images_stream = [
                     ('imagem', img) for img in imagens_para_adicionar
@@ -336,15 +281,14 @@ def substituir_links_imagens(token, body_migrated, imagens_para_adicionar, urlBa
             plone_uid = obj.get("UID")
             img_obj = None
 
-            widthImgOriginal = None
-            heightImgOriginal = None
-            img_file = None
+            # widthImgOriginal = None
+            # heightImgOriginal = None
 
-            # O tamanho vai ser sempre da imagem original.
-            resp = requests.get(img_src, timeout=30)
-            if resp.status_code == 200:
-                with PilImage.open(BytesIO(resp.content)) as pil_img:
-                    widthImgOriginal, heightImgOriginal = pil_img.size
+            # # O tamanho vai ser sempre da imagem original.
+            # resp = requests.get(img_src, timeout=30)
+            # if resp.status_code == 200:
+            #     with PilImage.open(BytesIO(resp.content)) as pil_img:
+            #         widthImgOriginal, heightImgOriginal = pil_img.size
 
             # Verifica se já existe na base pelo UID
             if plone_uid:
@@ -362,52 +306,9 @@ def substituir_links_imagens(token, body_migrated, imagens_para_adicionar, urlBa
                         break
 
             if not img_obj:
-                image_url = obj["image"]["download"]
-                image_filename = obj.get("id") or obj["image"].get("filename") or obj.get("title") or "imagem_plone.jpg"
-                plone_node_id = obj.get("UID")
-                image_slug = obj.get("id") or ""
-
-                img_qs = PloneImportedImage.objects.filter(plone_node_id=plone_node_id)
-                if img_qs.exists():
-                    logger.info(f"Imagem já importada: plone_node_id={plone_node_id}")
-                    imagens_encontradas.append(img_qs.first())
-                else:
-                    img_response = GetFile(image_url, token)
-                    logger.info(f"Resposta da requisição da imagem ({image_url}): status={img_response.status_code}, headers={img_response.headers}")
-                    logger.debug(f"Conteúdo da resposta da imagem ({image_url}): {img_response.content[:200]}")  # Loga os primeiros 200 bytes
-
-                    content_type = img_response.headers.get("Content-Type", "")
-                    if img_response.status_code == 200:
-                        # Ignora SVGs e arquivos não suportados
-                        if "svg" in content_type or str(image_filename).lower().endswith(".svg"):
-                            logger.warning(f"Arquivo SVG ignorado: {image_filename} ({image_url})")
-                            # return imagens_encontradas
-                        try:
-                            pil_image = PilImage.open(BytesIO(img_response.content))
-                            pil_image.verify()  # Verifica se é uma imagem válida
-                            pil_image = PilImage.open(BytesIO(img_response.content))  # Reabra para processar
-
-                            # Redimensiona a imagem para o tamanho original widthImgOriginal x heightImgOriginal
-                            # if widthImgOriginal and heightImgOriginal:
-                            #     pil_image = pil_image.resize((widthImgOriginal, heightImgOriginal), PilImage.LANCZOS)
-
-                            img_io = BytesIO()
-                            pil_image.save(img_io, format=pil_image.format, optimize=True, quality=70)
-                            img_file = ContentFile(img_io.getvalue(), name=str(image_filename))
-                        except Exception as e:
-                            logger.error(f"Erro ao processar imagem com Pillow: {e} ({image_filename})")
-                            logger.error(f"URL da imagem: {image_url}")
-                            # logger.error(f"Primeiros bytes do arquivo: {img_response.content}")
-                            # return imagens_encontradas  # Não tente salvar imagem inválida
-
-                        img_obj = PloneImportedImage.objects.create(
-                            plone_node_id=plone_node_id,
-                            file=img_file,
-                            title=image_filename,
-                            slug_plone=image_slug,
-                        )
-                        imagens_encontradas.append(img_obj)
-                
+                img_obj = baixar_e_criar_imagem(token, obj)
+                if img_obj:
+                    imagens_encontradas.append(img_obj)
 
             # Substitui o src pelo novo e adiciona width/height se disponíveis
             if img_obj:
@@ -439,15 +340,18 @@ def substituir_links_imagens(token, body_migrated, imagens_para_adicionar, urlBa
 
     return str(soup), imagens_encontradas
 
-def gerar_blocks_body(html):
+def gerar_blocks_body(html, token=None, urlBase=None):
     """
     Recebe o HTML processado pelo substituir_links_imagens e retorna uma lista de blocks
     para ser usada no campo body do NoticiasPage.
     Agrupa todos os <p> (ou <div>) em paragraph_block, mantendo a ordem do HTML.
     Quando encontrar um <iframe> (direto ou dentro de <p>), cria um bloco separado do tipo iframe_block,
     adiciona o que estava no buffer como paragraph_block e continua o processo.
+    Também processa links para arquivos, baixando e substituindo o href pelo novo arquivo.
+    Retorna (blocks, arquivos_encontrados)
     """
     blocks = []
+    arquivos_encontrados = []
     soup = BeautifulSoup(html, "html.parser")
     buffer = []
 
@@ -457,16 +361,42 @@ def gerar_blocks_body(html):
             blocks.append(('paragraph_block', content))
         buffer.clear()
 
+    def process_link_tag(a_tag):
+        href = a_tag.get("href", "")
+        if not href or not urlBase or not href.startswith(urlBase):
+            return None
+        # Verifica se é um arquivo (extensão comum)
+        if any(href.lower().endswith(ext) for ext in [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".zip", ".rar", ".csv", ".txt"]):
+            try:
+                # Busca metadados do arquivo no Plone
+                getdata_url = href
+                response = GetDataObject(token, getdata_url)
+                obj = response.json()
+                if obj.get("@type") == "NotFound":
+                    logger.warning(f"Arquivo não encontrado para URL: {getdata_url}")
+                    return None
+                file_obj = baixar_e_criar_arquivo(token, obj)
+                if file_obj:
+                    arquivos_encontrados.append(file_obj)
+                    # Atualiza o href para o novo arquivo (ajuste conforme sua lógica de URL)
+                    a_tag['href'] = file_obj.file.url if hasattr(file_obj.file, 'url') else ""
+                    return file_obj
+            except Exception as e:
+                logger.warning(f"Não foi possível processar arquivo {href}: {e}")
+                logger.error(traceback.format_exc())
+        return None
+
     # Percorre todos os elementos do body (ou do soup se não houver body)
     elements = soup.body.contents if soup.body else soup.contents
     for elem in elements:
         # Se for uma tag <p> ou <div>
         if getattr(elem, 'name', None) in ['p', 'div']:
+            # Processa todos os <a> filhos desse parágrafo/div
+            for a_tag in elem.find_all("a"):
+                process_link_tag(a_tag)
             # Verifica se há <iframe> dentro do <p> ou <div>
             iframe = elem.find('iframe')
             if iframe:
-                # Antes do iframe, adiciona o conteúdo anterior (se houver)
-                # Remove o iframe do conteúdo para não duplicar
                 iframe_html = str(iframe)
                 elem_iframe_removed = elem.decode_contents().replace(iframe_html, "")
                 if elem_iframe_removed.strip():
@@ -483,10 +413,12 @@ def gerar_blocks_body(html):
                         'allowfullscreen': iframe_attrs.get('allowfullscreen', True),
                     }
                 ))
-                # Se houver conteúdo depois do iframe, adiciona ao buffer (não é comum, mas pode acontecer)
-                # (No HTML padrão, geralmente só há um iframe por <p>)
             else:
                 buffer.append(str(elem))
+        # Se for uma tag <a> fora de <p> ou <div>
+        elif getattr(elem, 'name', None) == 'a':
+            process_link_tag(elem)
+            buffer.append(str(elem))
         # Se for uma tag <iframe> fora de <p> ou <div>
         elif getattr(elem, 'name', None) == 'iframe':
             flush_paragraph()
@@ -506,8 +438,90 @@ def gerar_blocks_body(html):
                 buffer.append(elem)
         # Outras tags (ex: <embed>), também podem ser incluídas no buffer
         elif getattr(elem, 'name', None):
+            # Se for <a> aninhado em outro tipo de tag, processa também
+            if elem.name == 'a':
+                process_link_tag(elem)
             buffer.append(str(elem))
 
     # Adiciona o que restou no buffer como paragraph_block
     flush_paragraph()
-    return blocks
+    return blocks, arquivos_encontrados
+
+def baixar_e_criar_imagem(token, obj, image_url=None, image_filename=None, plone_node_id=None, image_slug=None, width=None, height=None):
+    """
+    Faz o download da imagem, processa com Pillow e cria um PloneImportedImage.
+    Retorna o objeto criado ou None.
+    """
+    if not image_url:
+        image_url = obj.get("image", {}).get("download")
+    if not image_filename:
+        image_filename = obj.get("id") or obj.get("title") or "imagem_plone.jpg"
+    if not plone_node_id:
+        plone_node_id = obj.get("UID")
+    if not image_slug:
+        image_slug = obj.get("id") or ""
+
+    img_qs = PloneImportedImage.objects.filter(plone_node_id=plone_node_id)
+    if img_qs.exists():
+        return img_qs.first()
+
+    img_response = GetFile(image_url, token)
+    logger.info(f"Resposta da requisição da imagem ({image_url}): status={img_response.status_code}, headers={img_response.headers}")
+    logger.debug(f"Conteúdo da resposta da imagem ({image_url}): {img_response.content[:200]}")
+
+    content_type = img_response.headers.get("Content-Type", "")
+    if img_response.status_code == 200:
+        if "svg" in content_type or str(image_filename).lower().endswith(".svg"):
+            logger.warning(f"Arquivo SVG ignorado: {image_filename} ({image_url})")
+            return None
+        try:
+            pil_image = PilImage.open(BytesIO(img_response.content))
+            pil_image.verify()
+            pil_image = PilImage.open(BytesIO(img_response.content))
+            # Redimensiona se width/height forem passados
+            # if width and height:
+            #     pil_image = pil_image.resize((width, height), PilImage.LANCZOS)
+            img_io = BytesIO()
+            pil_image.save(img_io, format=pil_image.format, optimize=True, quality=70)
+            img_file = ContentFile(img_io.getvalue(), name=str(image_filename))
+        except Exception as e:
+            logger.error(f"Erro ao processar imagem com Pillow: {e} ({image_filename})")
+            logger.error(f"URL da imagem: {image_url}")
+            return None
+
+        return PloneImportedImage.objects.create(
+            plone_node_id=plone_node_id,
+            file=img_file,
+            title=image_filename,
+            slug_plone=image_slug,
+        )
+    return None
+
+def baixar_e_criar_arquivo(token, obj, file_url=None, file_filename=None, plone_node_id=None, file_slug=None):
+    """
+    Faz o download do arquivo e cria um PloneImportedFile.
+    Retorna o objeto criado ou None.
+    """
+    if not file_url:
+        file_url = obj.get("file", {}).get("download")
+    if not file_filename:
+        file_filename = obj.get("file", {}).get("filename") or obj.get("title", "arquivo_plone")
+    if not plone_node_id:
+        plone_node_id = obj.get("UID")
+    if not file_slug:
+        file_slug = obj.get("id", None)
+
+    file_qs = PloneImportedFile.objects.filter(plone_node_id=plone_node_id)
+    if file_qs.exists():
+        return file_qs.first()
+
+    file_response = GetFile(file_url, token)
+    if file_response.status_code == 200:
+        file_content = ContentFile(file_response.content, name=file_filename)
+        return PloneImportedFile.objects.create(
+            plone_node_id=plone_node_id,
+            file=file_content,
+            title=file_filename,
+            slug_plone=file_slug,
+        )
+    return None
