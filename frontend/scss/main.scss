@@ -38,14 +38,26 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
+.richtext-image.left,
+.image-left,
+.richtext-image.right,
+.image-right,
+.richtext-image.full-width,
+.image-inline {
+    max-width: 370px;
+    max-height: 370px;
+    margin: 24px;
+}
+.richtext-image.left,
 .image-left {
     float: left;
-    margin: 0.5em 1em 0.5em 0;
 }
+.richtext-image.right,
 .image-right {
     float: right;
-    margin: 0.5em;
 }
+
+.richtext-image.fullwidth,
 .image-inline {
     float: none;
 }

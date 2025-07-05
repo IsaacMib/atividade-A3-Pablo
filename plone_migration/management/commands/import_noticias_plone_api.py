@@ -23,6 +23,7 @@ def ImportNoticiasArquivos(token, item, noticia_import=False, urlBase=None):
     object = response.json()
 
     created_objs = []
+    img_file = None
 
     # Importa imagem
     if object.get("@type") == "Image" and "image" in object and "download" in object["image"]:
@@ -57,16 +58,17 @@ def ImportNoticiasArquivos(token, item, noticia_import=False, urlBase=None):
                 except Exception as e:
                     logger.error(f"Erro ao processar imagem com Pillow: {e} ({image_filename})")
                     logger.error(f"URL da imagem: {image_url}")
-                    logger.error(f"Primeiros bytes do arquivo: {img_response.content}")
+                    # logger.error(f"Primeiros bytes do arquivo: {img_response.content}")
                     return created_objs  # Não tente salvar imagem inválida
 
-                img_obj = PloneImportedImage.objects.create(
-                    plone_node_id=plone_node_id,
-                    file=img_file,
-                    title=image_filename,
-                    slug_plone=image_slug,
-                )
-                created_objs.append(img_obj)
+                if img_file:
+                    img_obj = PloneImportedImage.objects.create(
+                        plone_node_id=plone_node_id,
+                        file=img_file,
+                        title=image_filename,
+                        slug_plone=image_slug,
+                    )
+                    created_objs.append(img_obj)
 
     # Importa arquivo (PDF, DOC, etc)
     if object.get("@type") == "File" and "file" in object and "download" in object["file"]:
@@ -179,9 +181,8 @@ def ImportNoticias(token, item, noticias_index_page=None, urlBase=None):
 
                 # Substitui os links das imagens no body_migrated pelos links das imagens importadas
                 body_migrated_atualizado, imagens_encontradas = substituir_links_imagens(token, body_migrated, imagens_para_adicionar, urlBase)
-                nova_noticia.body_migrated = body_migrated_atualizado
                 # Atualiza também o campo body (StreamField) com o HTML atualizado
-                nova_noticia.body = [('paragraph_block', body_migrated_atualizado)]
+                nova_noticia.body = gerar_blocks_body(body_migrated_atualizado)
 
                 # Adiciona imagens encontradas pelo UID, se ainda não estiverem em imagens_para_adicionar
                 for img in imagens_encontradas:
@@ -335,6 +336,16 @@ def substituir_links_imagens(token, body_migrated, imagens_para_adicionar, urlBa
             plone_uid = obj.get("UID")
             img_obj = None
 
+            widthImgOriginal = None
+            heightImgOriginal = None
+            img_file = None
+
+            # O tamanho vai ser sempre da imagem original.
+            resp = requests.get(img_src, timeout=30)
+            if resp.status_code == 200:
+                with PilImage.open(BytesIO(resp.content)) as pil_img:
+                    widthImgOriginal, heightImgOriginal = pil_img.size
+
             # Verifica se já existe na base pelo UID
             if plone_uid:
                 img_qs = PloneImportedImage.objects.filter(plone_node_id=plone_uid)
@@ -361,7 +372,7 @@ def substituir_links_imagens(token, body_migrated, imagens_para_adicionar, urlBa
                     logger.info(f"Imagem já importada: plone_node_id={plone_node_id}")
                     imagens_encontradas.append(img_qs.first())
                 else:
-                    img_response = GetFile(image_url,token)
+                    img_response = GetFile(image_url, token)
                     logger.info(f"Resposta da requisição da imagem ({image_url}): status={img_response.status_code}, headers={img_response.headers}")
                     logger.debug(f"Conteúdo da resposta da imagem ({image_url}): {img_response.content[:200]}")  # Loga os primeiros 200 bytes
 
@@ -375,13 +386,18 @@ def substituir_links_imagens(token, body_migrated, imagens_para_adicionar, urlBa
                             pil_image = PilImage.open(BytesIO(img_response.content))
                             pil_image.verify()  # Verifica se é uma imagem válida
                             pil_image = PilImage.open(BytesIO(img_response.content))  # Reabra para processar
+
+                            # Redimensiona a imagem para o tamanho original widthImgOriginal x heightImgOriginal
+                            # if widthImgOriginal and heightImgOriginal:
+                            #     pil_image = pil_image.resize((widthImgOriginal, heightImgOriginal), PilImage.LANCZOS)
+
                             img_io = BytesIO()
                             pil_image.save(img_io, format=pil_image.format, optimize=True, quality=70)
                             img_file = ContentFile(img_io.getvalue(), name=str(image_filename))
                         except Exception as e:
                             logger.error(f"Erro ao processar imagem com Pillow: {e} ({image_filename})")
                             logger.error(f"URL da imagem: {image_url}")
-                            logger.error(f"Primeiros bytes do arquivo: {img_response.content}")
+                            # logger.error(f"Primeiros bytes do arquivo: {img_response.content}")
                             # return imagens_encontradas  # Não tente salvar imagem inválida
 
                         img_obj = PloneImportedImage.objects.create(
@@ -393,25 +409,105 @@ def substituir_links_imagens(token, body_migrated, imagens_para_adicionar, urlBa
                         imagens_encontradas.append(img_obj)
                 
 
-            width = None
-            height = None
-
-            # O tamanho vai ser sempre da imagem original.
-            resp = requests.get(img_src, timeout=5)
-            if resp.status_code == 200:
-                with PilImage.open(BytesIO(resp.content)) as pil_img:
-                    width, height = pil_img.size
-                
-
             # Substitui o src pelo novo e adiciona width/height se disponíveis
             if img_obj:
-                img_tag["src"] = img_obj.file.url
-                if width and height:
-                    img_tag["width"] = str(width)
-                    img_tag["height"] = str(height)
+                # Determina o formato pela classe
+                img_class = img_tag.get("class", [])
+                if isinstance(img_class, str):
+                    img_class = img_class.split()
+                img_class_str = " ".join(img_class).lower()
+                if "right" in img_class_str:
+                    img_format = "right"
+                elif "left" in img_class_str:
+                    img_format = "left"
+                else:
+                    img_format = "fullwidth"
+                # Monta o <embed ... /> no padrão Wagtail
+                embed_tag = soup.new_tag(
+                    "embed",
+                    embedtype="image",
+                    format=img_format,
+                    id=str(img_obj.id),
+                    alt=img_tag.get("alt", "")
+                )
+                # Substitui o <img> pelo <embed>
+                img_tag.replace_with(embed_tag)
 
         except Exception as e:
             logger.warning(f"Não foi possível processar imagem {getdata_url}: {e}")
             logger.error(traceback.format_exc())
 
     return str(soup), imagens_encontradas
+
+def gerar_blocks_body(html):
+    """
+    Recebe o HTML processado pelo substituir_links_imagens e retorna uma lista de blocks
+    para ser usada no campo body do NoticiasPage.
+    Agrupa todos os <p> (ou <div>) em paragraph_block, mantendo a ordem do HTML.
+    Quando encontrar um <iframe> (direto ou dentro de <p>), cria um bloco separado do tipo iframe_block,
+    adiciona o que estava no buffer como paragraph_block e continua o processo.
+    """
+    blocks = []
+    soup = BeautifulSoup(html, "html.parser")
+    buffer = []
+
+    def flush_paragraph():
+        content = "".join(buffer).strip()
+        if content:
+            blocks.append(('paragraph_block', content))
+        buffer.clear()
+
+    # Percorre todos os elementos do body (ou do soup se não houver body)
+    elements = soup.body.contents if soup.body else soup.contents
+    for elem in elements:
+        # Se for uma tag <p> ou <div>
+        if getattr(elem, 'name', None) in ['p', 'div']:
+            # Verifica se há <iframe> dentro do <p> ou <div>
+            iframe = elem.find('iframe')
+            if iframe:
+                # Antes do iframe, adiciona o conteúdo anterior (se houver)
+                # Remove o iframe do conteúdo para não duplicar
+                iframe_html = str(iframe)
+                elem_iframe_removed = elem.decode_contents().replace(iframe_html, "")
+                if elem_iframe_removed.strip():
+                    buffer.append(f"<{elem.name}>{elem_iframe_removed}</{elem.name}>")
+                flush_paragraph()
+                # Cria bloco do tipo iframe_block
+                iframe_attrs = iframe.attrs
+                blocks.append((
+                    'iframe_block',
+                    {
+                        'url': iframe_attrs.get('src', ''),
+                        'width': iframe_attrs.get('width', '100%'),
+                        'height': iframe_attrs.get('height', '400'),
+                        'allowfullscreen': iframe_attrs.get('allowfullscreen', True),
+                    }
+                ))
+                # Se houver conteúdo depois do iframe, adiciona ao buffer (não é comum, mas pode acontecer)
+                # (No HTML padrão, geralmente só há um iframe por <p>)
+            else:
+                buffer.append(str(elem))
+        # Se for uma tag <iframe> fora de <p> ou <div>
+        elif getattr(elem, 'name', None) == 'iframe':
+            flush_paragraph()
+            iframe_attrs = elem.attrs
+            blocks.append((
+                'iframe_block',
+                {
+                    'url': iframe_attrs.get('src', ''),
+                    'width': iframe_attrs.get('width', '100%'),
+                    'height': iframe_attrs.get('height', '400'),
+                    'allowfullscreen': iframe_attrs.get('allowfullscreen', True),
+                }
+            ))
+        # Se for apenas texto fora de <p> ou <div>
+        elif isinstance(elem, str):
+            if elem.strip():
+                buffer.append(elem)
+        # Outras tags (ex: <embed>), também podem ser incluídas no buffer
+        elif getattr(elem, 'name', None):
+            buffer.append(str(elem))
+
+    # Adiciona o que restou no buffer como paragraph_block
+    flush_paragraph()
+    return blocks

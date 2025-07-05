@@ -6,7 +6,7 @@ from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import Tag, TaggedItemBase
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.admin.panels import ObjectList, FieldPanel, MultiFieldPanel, TabbedInterface
 from wagtail.fields import StreamField
 from wagtail.search import index
 
@@ -48,7 +48,7 @@ class NoticiasPage(Page):
     body_migrated = models.TextField(
         help_text="Usado apenas para conteúdo do antigo site Plone.",
         null=True,
-        blank=True,
+        blank=True
     )
     plone_node_id = models.TextField(
         null=True,
@@ -95,6 +95,7 @@ class NoticiasPage(Page):
         help_text="Marque para não exibir a lista de arquivos na página da notícia."
     )
 
+    # Painéis padrão
     content_panels = Page.content_panels + [
         FieldPanel("subtitle"),
         FieldPanel("descricao"),
@@ -117,13 +118,21 @@ class NoticiasPage(Page):
         FieldPanel("tags"),
     ]
 
+    # Painel para campos migrados
+    migracao_panels = [
+        FieldPanel("body_migrated"),
+    ]
+
     settings_panels = Page.settings_panels + [
         FieldPanel("sensivel_periodo_eleitoral"),
     ]
 
-    search_fields = Page.search_fields + [
-        index.SearchField("body"),
-    ]
+    edit_handler = TabbedInterface([
+        ObjectList(content_panels, heading='Conteúdo'),
+        ObjectList(settings_panels, heading='Configurações'),
+        # Só mostra o painel de migração para superusuário ou quem tem permissão
+        ObjectList(migracao_panels, heading='Migração', classname="migracao-only"),
+    ])
 
     @property
     def get_tags(self):
@@ -172,6 +181,25 @@ class NoticiasPage(Page):
         """
         file_info = get_file_type(arquivo)
         return get_fontawesome_file_icon(file_info)
+
+    class Meta:
+        permissions = [
+            ("view_conteudo_migrado", "Pode ver conteúdo migrado (body_migrated)"),
+        ]
+        default_permissions = []
+
+    def get_admin_tabs(self, request):
+        """
+        Retorna os painéis de edição, mostrando o painel de migração apenas para quem tem permissão.
+        """
+        tabs = [
+            ObjectList(self.content_panels, heading='Conteúdo'),
+            ObjectList(self.settings_panels, heading='Configurações'),
+        ]
+        user = getattr(request, 'user', None)
+        if user and (user.is_superuser or user.has_perm('core.view_conteudo_migrado')):
+            tabs.append(ObjectList(self.migracao_panels, heading='Migração'))
+        return TabbedInterface(tabs)
 
 class NoticiasIndexPages(RoutablePageMixin, Page):
 
