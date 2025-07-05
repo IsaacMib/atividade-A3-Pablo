@@ -4,7 +4,7 @@
     <div class="container">
       <div class="noticias-pagination--layout">
         {# Botão anterior #}
-        <a class="noticias-pagination-link" href="?page={% if posts.has_previous %}{{ posts.previous_page_number }}{% else %}1{% endif %}">
+        <a class="noticias-pagination-link" href="?{% if query_params %}{{ query_params }}&{% endif %}page={% if posts.has_previous %}{{ posts.previous_page_number }}{% else %}1{% endif %}">
           <li class="noticias-pagination-item {% if not posts.has_previous %}disabled{% endif %} with-border">
             <span>
               <svg width="8" height="12" viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -15,7 +15,7 @@
         </a>
 
         {# Primeira página #}
-        <a class="noticias-pagination-link" href="?page=1">
+        <a class="noticias-pagination-link" href="?{% if query_params %}{{ query_params }}&{% endif %}page=1">
           <li class="noticias-pagination-item {% if posts.number == 1 %}active{% endif %}">1</li>
         </a>
 
@@ -26,7 +26,7 @@
 
         {# Página anterior à atual #}
         {% if posts.number|add:'-1' > 1 %}
-          <a class="noticias-pagination-link" href="?page={{ posts.number|add:'-1' }}">
+          <a class="noticias-pagination-link" href="?{% if query_params %}{{ query_params }}&{% endif %}page={{ posts.number|add:'-1' }}">
             <li class="noticias-pagination-item">{{ posts.number|add:'-1' }}</li>
           </a>
         {% endif %}
@@ -38,7 +38,7 @@
 
         {# Página posterior à atual #}
         {% if posts.number|add:'1' < posts.paginator.num_pages %}
-          <a class="noticias-pagination-link" href="?page={{ posts.number|add:'1' }}">
+          <a class="noticias-pagination-link" href="?{% if query_params %}{{ query_params }}&{% endif %}page={{ posts.number|add:'1' }}">
             <li class="noticias-pagination-item">{{ posts.number|add:'1' }}</li>
           </a>
         {% endif %}
@@ -50,13 +50,13 @@
 
         {# Última página #}
         {% if posts.paginator.num_pages > 1 %}
-          <a class="noticias-pagination-link" href="?page={{ posts.paginator.num_pages }}">
+          <a class="noticias-pagination-link" href="?{% if query_params %}{{ query_params }}&{% endif %}page={{ posts.paginator.num_pages }}">
             <li class="noticias-pagination-item {% if posts.number == posts.paginator.num_pages %}active{% endif %}">{{ posts.paginator.num_pages }}</li>
           </a>
         {% endif %}
 
         {# Botão próximo #}
-        <a class="noticias-pagination-link" href="?page={% if posts.has_next %}{{ posts.next_page_number }}{% else %}{{ posts.paginator.num_pages }}{% endif %}">
+        <a class="noticias-pagination-link" href="?{% if query_params %}{{ query_params }}&{% endif %}page={% if posts.has_next %}{{ posts.next_page_number }}{% else %}{{ posts.paginator.num_pages }}{% endif %}">
           <li class="noticias-pagination-item{% if not posts.has_next %} disabled{% endif %} with-border">
             <span>
               <svg width="8" height="12" viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
