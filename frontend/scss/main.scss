@@ -37,3 +37,27 @@ body {
     background-color: variables.$color-white;
     font-family: 'Inter', sans-serif;
 }
+
+.richtext-image.left,
+.image-left,
+.richtext-image.right,
+.image-right,
+.richtext-image.full-width,
+.image-inline {
+    max-width: 370px;
+    max-height: 370px;
+    margin: 24px;
+}
+.richtext-image.left,
+.image-left {
+    float: left;
+}
+.richtext-image.right,
+.image-right {
+    float: right;
+}
+
+.richtext-image.fullwidth,
+.image-inline {
+    float: none;
+}

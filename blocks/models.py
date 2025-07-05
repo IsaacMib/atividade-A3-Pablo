@@ -19,6 +19,7 @@ from wagtail.blocks import (
     IntegerBlock,
     BooleanBlock
 )
+from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.embeds.blocks import EmbedBlock
 from django.utils.functional import cached_property
 from wagtail.images import get_image_model
@@ -507,38 +508,19 @@ class BlockQuote(StructBlock):
         }
         description = "A quote with an optional attribution"
 
-# StreamBlocks
-class BaseStreamBlock(StreamBlock):
+class IframeBlock(StructBlock):
     """
-    Define the custom blocks that `StreamField` will utilize
+    Bloco para incorporar um iframe customizado.
     """
+    url = URLBlock(required=True, label="URL do iframe")
+    width = CharBlock(required=False, default="100%", label="Largura", help_text="Exemplo: 100% ou 600")
+    height = CharBlock(required=False, default="400", label="Altura", help_text="Exemplo: 400")
+    allowfullscreen = BooleanBlock(required=False, default=True, label="Permitir tela cheia")
 
-    heading_block = HeadingBlock()
-    paragraph_block = RichTextBlock(
-        icon="pilcrow",
-        template="blocks/paragraph_block.html",
-        preview_value=(
-            """
-            <h2>Our bread pledge</h2>
-            <p>As a bakery, <b>breads</b> have <i>always</i> been in our hearts.
-            <a href="https://en.wikipedia.org/wiki/Staple_food">Staple foods</a>
-            are essential for society, and – bread is the tastiest of all.
-            We love to transform batters and doughs into baked goods with a firm
-            dry crust and fluffy center.</p>
-            """
-        ),
-        description="A rich text paragraph",
-    )
-    image_block = CaptionedImageBlock()
-    block_quote = BlockQuote()
-    embed_block = EmbedBlock(
-        help_text="Insert an embed URL e.g https://www.youtube.com/watch?v=SGJFWirQ3ks",
-        icon="media",
-        template="blocks/embed_block.html",
-        preview_template="blocks/preview/static_embed_block.html",
-        preview_value="https://www.youtube.com/watch?v=mwrGSfiB1Mg",
-        description="An embedded video or other media",
-    )
+    class Meta:
+        icon = "site"
+        label = "Iframe"
+        template = "blocks/iframe_block.html"
 
 class EspecificDocumentChooserBlock(DocumentChooserBlock):
     allowed_extensions = ['.pdf', '.txt', '.doc', '.docx', '.ods', '.xls', '.xlsx']
@@ -576,3 +558,52 @@ class EspecificDocumentChooserBlock(DocumentChooserBlock):
                     f"Tipo de arquivo não permitido ({mimetype}). Permitidos: {', '.join(self.allowed_extensions).upper()}."
                 )
         return value
+
+# StreamBlocks
+class BaseStreamBlock(StreamBlock):
+    """
+    Define the custom blocks that `StreamField` will utilize
+    """
+
+    heading_block = HeadingBlock()
+    paragraph_block = RichTextBlock(
+        icon="pilcrow",
+        template="blocks/paragraph_block.html",
+        preview_value=(
+            """
+            <h2>Our bread pledge</h2>
+            <p>As a bakery, <b>breads</b> have <i>always</i> been in our hearts.
+            <a href="https://en.wikipedia.org/wiki/Staple_food">Staple foods</a>
+            are essential for society, and – bread is the tastiest of all.
+            We love to transform batters and doughs into baked goods with a firm
+            dry crust and fluffy center.</p>
+            """
+        ),
+        description="A rich text paragraph",
+    )
+    image_block = CaptionedImageBlock()
+    block_quote = BlockQuote()
+    embed_block = EmbedBlock(
+        help_text="Insert an embed URL e.g https://www.youtube.com/watch?v=SGJFWirQ3ks",
+        icon="media",
+        template="blocks/embed_block.html",
+        preview_template="blocks/preview/static_embed_block.html",
+        preview_value="https://www.youtube.com/watch?v=mwrGSfiB1Mg",
+        description="An embedded video or other media",
+    )
+    iframe_block = IframeBlock(
+        help_text="Insert an iframe URL e.g https://example.com",
+        icon="site",
+        template="blocks/iframe_block.html",
+        # preview_template="blocks/preview/static_iframe_block.html",
+        # preview_value="https://example.com",
+        description="An embedded iframe",
+    )
+    table_block = TableBlock(
+        help_text="Insira os dados da tabela",
+        icon="table",
+        # template="blocks/table_block.html",
+        # preview_template="blocks/preview/static_table_block.html",
+        description="Uma tabela de dados",
+    )
+

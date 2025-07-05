@@ -1,6 +1,7 @@
 import requests
 import json
 from urllib.parse import urlparse, urlunparse
+import time
 
 def GetToken(url, login, password):
     # Extrai a base da URL usando urllib
@@ -23,7 +24,7 @@ def GetToken(url, login, password):
         'Content-Type': 'application/json'
     }
 
-    response = requests.request("POST", url_login, headers=headers, data=payload)
+    response = requests.request("POST", url_login, headers=headers, data=payload,timeout=60)
 
     print(response.text)
 
@@ -31,27 +32,37 @@ def GetToken(url, login, password):
 
     return data['token']
 
-def GetDataObject(token,obj):
-  payload = ""
-  headers = {
-    'Authorization': 'Bearer '+token,
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  }
-  response = requests.request("GET", obj, headers=headers, data=payload)
-
-  return response
+def GetDataObject(token, obj):
+    payload = ""
+    headers = {
+        'Authorization': 'Bearer ' + token,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+    for tentativa in range(3):  # 1 tentativa + 2 retries
+        try:
+            response = requests.request("GET", obj, headers=headers, data=payload, timeout=60)
+            return response
+        except Exception as e:
+            if tentativa < 2:
+                time.sleep(2)
+                continue
+            else:
+                raise
 
 def GetFile(url, token):
     payload = {}
     headers = {
-    'Authorization': 'Bearer '+token,
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
+        'Authorization': 'Bearer ' + token,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
     }
-
-    response = requests.request("GET", url, headers=headers, data=payload)
-
-    return response
+    for tentativa in range(3):  # 1 tentativa + 2 retries
+        try:
+            response = requests.request("GET", url, headers=headers, data=payload, timeout=60)
+            return response
+        except Exception as e:
+            if tentativa < 2:
+                time.sleep(2)
 
 
