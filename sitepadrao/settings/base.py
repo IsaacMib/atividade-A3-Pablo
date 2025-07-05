@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     "wagtail_color_panel",
     "wagtail.contrib.settings",
     'wagtail.contrib.search_promotions',
+    "wagtail.contrib.table_block",
 ]
 
 MIDDLEWARE = [

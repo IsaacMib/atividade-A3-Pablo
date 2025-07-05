@@ -19,6 +19,7 @@ from wagtail.blocks import (
     IntegerBlock,
     BooleanBlock
 )
+from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.embeds.blocks import EmbedBlock
 from django.utils.functional import cached_property
 from wagtail.images import get_image_model
@@ -597,5 +598,12 @@ class BaseStreamBlock(StreamBlock):
         # preview_template="blocks/preview/static_iframe_block.html",
         # preview_value="https://example.com",
         description="An embedded iframe",
+    )
+    table_block = TableBlock(
+        help_text="Insira os dados da tabela",
+        icon="table",
+        # template="blocks/table_block.html",
+        # preview_template="blocks/preview/static_table_block.html",
+        description="Uma tabela de dados",
     )
 
