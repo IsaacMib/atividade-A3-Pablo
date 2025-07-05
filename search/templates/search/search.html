@@ -37,7 +37,16 @@
                                 Todos
                             </label>
                         </li>
-                        <li><label><input type="checkbox" name="type" value="agenda" {% if "agenda" in selected_types %}checked{% endif %}> Agenda Diária</label></li>
+                        {% for type in wagtail_types %}
+                        <li>
+                            <label>
+                                <input type="checkbox" name="type" value="{{ type.filtro }}"
+                                    {% if type.filtro in selected_types %}checked{% endif %}>
+                                {{ type.titulo|capfirst }}
+                            </label>
+                        </li>
+                        {% endfor %}
+                        {% comment %} <li><label><input type="checkbox" name="type" value="agenda" {% if "agenda" in selected_types %}checked{% endif %}> Agenda Diária</label></li>
                         <li><label><input type="checkbox" name="type" value="audio" {% if "audio" in selected_types %}checked{% endif %}> Áudio</label></li>
                         <li><label><input type="checkbox" name="type" value="servicos" {% if "servicos" in selected_types %}checked{% endif %}> Serviços</label></li>
                         <li><label><input type="checkbox" name="type" value="evento" {% if "evento" in selected_types %}checked{% endif %}> Evento</label></li>
@@ -46,7 +55,7 @@
                         <li><label><input type="checkbox" name="type" value="imagem" {% if "imagem" in selected_types %}checked{% endif %}> Imagem</label></li>
                         <li><label><input type="checkbox" name="type" value="link" {% if "link" in selected_types %}checked{% endif %}> Link</label></li>
                         <li><label><input type="checkbox" name="type" value="noticias" {% if "noticias" in selected_types %}checked{% endif %}> Notícias</label></li>
-                        <li><label><input type="checkbox" name="type" value="multimidia" {% if "multimidia" in selected_types %}checked{% endif %}> Multimídia</label></li>
+                        <li><label><input type="checkbox" name="type" value="multimidia" {% if "multimidia" in selected_types %}checked{% endif %}> Multimídia</label></li> {% endcomment %}
                     </ul>
 
                     <h3>Notícias desde</h3>
@@ -116,7 +125,7 @@
                     {% endfor %}
 
                     <!-- Paginação Numérica inferior -->
-                    {% if search_results.paginator.num_pages > 1 %}
+                    {% comment %} {% if search_results.paginator.num_pages > 1 %}
                         <nav class="pagination">
                             <ul>
                                 {% for page_num in search_results.paginator.page_range %}
@@ -131,7 +140,8 @@
                                 {% endif %}
                             </ul>
                         </nav>
-                    {% endif %}
+                    {% endif %} {% endcomment %}
+                    {% include "include/paginator.html" with posts=search_results query_params=query_params %}
                 {% else %}
                     <div class="no-results">
                         <p>Nenhum resultado encontrado para "{{ search_query }}".</p>
