@@ -8,6 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from wagtail.contrib.search_promotions.models import Query
 from noticias.models import NoticiasPage  # ajuste conforme o nome do seu app/modelo
 from plone_migration.models import PloneImportedFile, PloneImportedImage
+from django.db import models
 
 def get_result_type(result):
     return result.content_type.model.replace('_', ' ').title()
@@ -77,13 +78,18 @@ def search(request):
         arquivos_resultados = []
         if not selected_types or "document" in selected_types:
             arquivos_resultados = list(
-                PloneImportedFile.objects.filter(title__icontains=search_query)
+                PloneImportedFile.objects.filter(
+                    models.Q(title__icontains=search_query) |
+                    models.Q(file__icontains=search_query)
+                )
             )
         # Buscar nos títulos das imagens (usando o tipo primitivo do Wagtail: 'image')
         imagens_resultados = []
         if not selected_types or "image" in selected_types:
             imagens_resultados = list(
-                PloneImportedImage.objects.filter(title__icontains=search_query)
+                PloneImportedImage.objects.filter(
+                    models.Q(title__icontains=search_query)
+                )
             )
 
         # Junta todos os resultados em uma única lista

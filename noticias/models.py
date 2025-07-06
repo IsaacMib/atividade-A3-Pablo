@@ -201,6 +201,12 @@ class NoticiasPage(Page):
             tabs.append(ObjectList(self.migracao_panels, heading='Migração'))
         return TabbedInterface(tabs)
 
+    search_fields = Page.search_fields + [
+        index.SearchField('body'),
+        index.SearchField('subtitle'),
+        index.SearchField('descricao'),
+    ]
+
 class NoticiasIndexPages(RoutablePageMixin, Page):
 
     introduction = models.TextField(help_text="Texto para o topo da notícia", blank=True)
