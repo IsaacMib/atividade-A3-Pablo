@@ -1,0 +1,25 @@
+.menu-lista {
+  display: flex;
+  justify-content: center;
+
+  li {
+    padding: 24px 12px;
+
+    @media (max-width: 575.98px) {
+      text-align: center;
+    }
+
+    &:first-child {
+      padding-left: 0px;
+      @media (max-width: 575.98px) {
+        padding-left: 12px; // ou o valor que desejar
+      }
+    }
+    &:last-child {
+      padding-right: 0px;
+      @media (max-width: 575.98px) {
+        padding-right: 12px; // ou o valor que desejar
+      }
+    }
+  }
+}

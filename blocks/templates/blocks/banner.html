@@ -1,0 +1,8 @@
+{% load static %}
+{% load wagtailimages_tags %}
+
+<div class="banner-container">
+  <a href="{{ self.link }}" target="_blank" aria-label="{{self.imagem.title}}">
+    {% image self.imagem original alt=self.alt_texto %}
+  </a>
+</div>

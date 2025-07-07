@@ -7,14 +7,14 @@ function toggleTheme() {
   const currentTheme = document.documentElement.getAttribute('data-theme');
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
   applyTheme(newTheme);
-  document.getElementById('theme-toggle').textContent = newTheme === 'dark' ? '☀️ Alternar Tema' : '🌙 Alternar Tema';
+  //document.getElementById('theme-toggle').textContent = newTheme === 'dark' ? '☀️ Alternar Tema' : '🌙 Alternar Tema';
 }
 
 // Aplica o tema salvo no localStorage ao carregar a página
 document.addEventListener("DOMContentLoaded", function () {
   const savedTheme = localStorage.getItem('theme') || 'light';
   applyTheme(savedTheme);
-  document.getElementById('theme-toggle').textContent = savedTheme === 'dark' ? '☀️ Alternar Tema' : '🌙 Alternar Tema';
+  //document.getElementById('theme-toggle').textContent = savedTheme === 'dark' ? '☀️ Alternar Tema' : '🌙 Alternar Tema';
 });
 
 // Adiciona o evento de clique à tag <a>

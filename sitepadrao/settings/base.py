@@ -25,6 +25,9 @@ def get_int(env_var, default=0):
         return int(os.environ.get(env_var, default))
     except (TypeError, ValueError):
         return default
+    
+SISTEMA_VERSAO = os.environ.get("APP_VERSION", "0.0.1")
+AMBIENTE = os.environ.get("AMBIENTE", "tst").lower()
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
@@ -54,6 +57,10 @@ INSTALLED_APPS = [
     "search",
     "core",
     "blocks",
+    "noticias",
+    "links",
+
+    "plone_migration",
 
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
@@ -78,6 +85,8 @@ INSTALLED_APPS = [
     "webpack_loader",
     "wagtail_color_panel",
     "wagtail.contrib.settings",
+    'wagtail.contrib.search_promotions',
+    "wagtail.contrib.table_block",
 ]
 
 MIDDLEWARE = [
@@ -109,6 +118,8 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "wagtail.contrib.settings.context_processors.settings",
+                "sitepadrao.context_processors.conteudo_site",
+                "sitepadrao.context_processors.versao_context",
             ],
         },
     },
@@ -224,7 +235,7 @@ STORAGES = {
 
 # Wagtail settings
 
-WAGTAIL_SITE_NAME = "Delegacia da Mulher"
+WAGTAIL_SITE_NAME = "Detran PB - Site"
 
 WAGTAIL_I18N_ENABLED = True
 
@@ -244,7 +255,7 @@ WAGTAILIMAGES_AVIF_QUALITY = 60
 WAGTAILSEARCH_BACKENDS = {
     "default": {
         "BACKEND": "wagtail.search.backends.database",
-        "INDEX": "sitepadrao",
+        
     }
 }
 
@@ -289,3 +300,8 @@ if "CSP_DEFAULT_SRC" in os.environ:
         CSP_OBJECT_SRC = os.environ.get("CSP_OBJECT_SRC").split(",")
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+METABASE_API_KEY = os.environ.get('METABASE_API_KEY', '')  # Busca a chave da API do Metabase via variável de ambiente
+METABASE_API_URL = os.environ.get('METABASE_API_URL', 'https://metabase.codata.pb.gov.br/api/card/')  # URL base da API do Metabase
+PORTAL_SERVICOS_API_URL = os.environ.get('PORTAL_SERVICOS_API_URL', 'https://api-portal-carta-de-servicos-gedes.rke.codataprd.pb.gov.br/')
+PORTAL_SERVICOS_URL = os.environ.get('PORTAL_SERVICOS_URL', 'https://paraibadigital.pb.gov.br/')

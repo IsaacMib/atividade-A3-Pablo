@@ -1,0 +1,22 @@
+<div class="lista-noticias--wrapper tw:mb-2 tw:bg-neutral-100">
+  <div class="container">
+    <div class="row">
+      {% if noticias %}
+        {% for noticia in noticias %}
+          <div class="col-lg-6 col-md-12 col-sm-12">
+            {% include 'blocks/noticias.html' with noticias=noticia %}
+          </div>
+        {% endfor %}
+      {% else %}
+          <div class="col-md-12 tw:text-center">
+              <p>Ainda não temos Notícias no site. Desculpe.</p>
+          </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<div class="tw:mt-0 tw:mb-8">
+    {% if noticias_index_page_url %}
+        {% include "include/ver_todos_btn.html" with ver_todos_url=noticias_index_page_url ver_todos_texto_link=texto_link %}
+    {% endif %}
+</div>

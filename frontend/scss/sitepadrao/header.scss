@@ -1,0 +1,116 @@
+@use  '../sprite';
+
+.header-layout {
+  // display: grid;
+  // grid-gap: 32px;
+  // grid-template-columns: auto auto 1fr auto auto;
+  // text-align: center;
+  // align-items: center;
+
+  padding: 32px 0px; 
+}
+
+$border-radius-search: 36px;
+
+.header-input-search,
+.header-btn-search {
+  min-height: 61px;
+}
+
+.header-input-search {
+  border-top-left-radius: 36px;
+  border-bottom-left-radius: 36px;
+  border: 1px solid var(--tw-color-primary);
+  padding: 8px 32px;
+  
+  min-width: 325px;
+
+  // @media (max-width: 960px) {
+  //   min-width: 0px;
+  // }
+
+  // @media (max-width: 540px) {
+  //   grid-template-columns: 1fr 1fr 1fr;
+  // }
+}
+
+.header-btn-search {
+  border-top-right-radius: $border-radius-search;
+  border-bottom-right-radius: $border-radius-search;
+  border: 1px solid var(--tw-color-primary);
+  padding: 8px 0px 8px 12px;
+  min-width: 170px;
+
+  // display: grid;
+  // grid-template-columns: auto auto;
+  // align-items: center;
+  // grid-gap: 8px;
+}
+
+.header-acessibilidade {
+  // display: grid;
+  // grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  // justify-self: end;
+  // grid-gap: 8px;
+
+  // @media (max-width: 960px) {
+  //   justify-self: center;
+  // }
+
+  // @media (max-width: 540px) {
+  //   grid-template-columns: 1fr 1fr 1fr;
+  // }
+}
+
+.header-acessibilidade {
+  // display: grid;
+  // grid-template-columns: auto auto;
+  // grid-gap: 8px;
+
+  font-size: 14px;
+  line-height: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.header-acessibilidade--vlibras {
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0 10px 0 20px;
+  position: relative;
+  // display: grid;
+  // align-items: center;
+  &:before {
+    content: "";
+    left: 0px;
+    top: 1px;
+    position: absolute;
+    @include sprite.sprite(sprite.$vlibras-escuro);
+    // filter: variables.$top-icons;
+  }
+}
+
+.header-acessibilidade--contraste {
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0 10px 0 20px;
+  position: relative;
+  // display: grid;
+  // align-items: center;
+  border-right: 1px solid rgba(0, 0, 0, .2);
+  &:before {
+    content: "";
+    left: -5px;
+    top: 0px;
+    position: absolute;
+    @include sprite.sprite(sprite.$contraste-escuro);
+    // filter: variables.$top-icons;
+  }
+}
+
+.header-tools {
+  // display: grid;
+  // grid-template-columns: auto auto auto;
+  // grid-gap: 12px;
+  border-left: 1px solid rgba(0, 0, 0, .2);
+}

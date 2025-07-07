@@ -1,12 +1,26 @@
 @use  './variables.scss';
 @use  './sprite.scss';
+
+@use './sitepadrao/index.scss' as sitepadrao;
+
 @use  './barraidentidadepb/index.scss' as barraidentidadepb;
 @use  './home/index.scss' as home;
+@use  './blocks/index.scss' as blocks;
+@use  './noticias/index.scss' as noticias;
+@use './search/search.scss' as search;
 
 /*Arquivo para customizar o bootstrap*/
 @use './customBT';
 
+$bootstrap-icons-font-dir: "bootstrap-icons/font/fonts";
+
 @import "~bootstrap/scss/bootstrap";
+@import "~bootstrap-icons/font/bootstrap-icons";
+
+$global-font-family: 'Inter', sans-serif;
+
+$global-link-color: #396BBB !default;
+$global-link-hover-color: #30599B !default;
 
 // 2. Import default variables and available mixins.
 @import "~uikit/src/scss/variables-theme.scss";
@@ -19,8 +33,31 @@
 @import "uikit/src/scss/uikit-theme.scss";
 
 
-
 body {
-    background-color: variables.$primary-color;
-    font-family: Arial, sans-serif;
+    background-color: variables.$color-white;
+    font-family: 'Inter', sans-serif;
+}
+
+.richtext-image.left,
+.image-left,
+.richtext-image.right,
+.image-right,
+.richtext-image.full-width,
+.image-inline {
+    max-width: 370px;
+    max-height: 370px;
+    margin: 24px;
+}
+.richtext-image.left,
+.image-left {
+    float: left;
+}
+.richtext-image.right,
+.image-right {
+    float: right;
+}
+
+.richtext-image.fullwidth,
+.image-inline {
+    float: none;
 }
