@@ -1,0 +1,17 @@
+{% load wagtailimages_tags %}
+
+{% image value.imagem original as banner_img %}
+<a href="{{ value.link|default:'#' }}" 
+   {% if value.link %}target="_blank" rel="noopener noreferrer"{% endif %}
+   class="banner-link">
+  
+  <img src="{{ banner_img.url }}" 
+       alt="{{ value.texto_alternativo|default:'imagem' }}"
+       class="banner-image">
+  
+  {% if value.legenda %}
+    <div class="banner-caption">
+      {{ value.legenda }}
+    </div>
+  {% endif %}
+</a>

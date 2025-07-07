@@ -4,19 +4,18 @@
 {% block body_class %}template-homepage{% endblock %}
 
 {% block extra_css %}
-
-{% comment %}
-Delete the line below if you're just getting started and want to remove the welcome screen!
-{% endcomment %}
-{% comment %} <link rel="stylesheet" href="{% static 'css/welcome_page.css' %}"> {% endcomment %}
+    {# CSS adicional pode ser incluído aqui #}
+    
 {% endblock extra_css %}
 
 {% block content %}
 
-{% comment %}
-Delete the line below if you're just getting started and want to remove the welcome screen!
-{% endcomment %}
-{% include 'home/header.html' %}
-{% include 'home/body.html' %}
+    {% if page.body %}
+        {% for block in page.body %}
+            {% include_block block %}
+        {% endfor %}
+    {% else %}
+        <h2 class="text-center tw:my-8">Site em construção</h2>
+    {% endif %}
 
 {% endblock content %}

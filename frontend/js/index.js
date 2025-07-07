@@ -1,7 +1,9 @@
 import "../scss/main.scss";
 import "../../tw/styles.css";
+import 'odometer/themes/odometer-theme-default.css';
 
-import bootstrap from 'bootstrap';
+import * as bootstrap from 'bootstrap';
+window.bootstrap = bootstrap;
 
 import BarraIdentidade from './barraidentidadepb/barraidentidadepb.js';
 
@@ -10,7 +12,16 @@ import Icons from 'uikit/dist/js/uikit-icons';
 
 import './header/header.js';
 
-// loads the Icon plugin
+import Swiper from 'swiper/bundle';
+import 'swiper/css/bundle';
+
+import Odometer from "odometer";
+
+
+
+window.Swiper = Swiper;
+window.Odometer = Odometer;
+
 UIkit.use(Icons);
 
 window.barraIdentidade = new BarraIdentidade;

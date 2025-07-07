@@ -1,38 +1,259 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags %}
-
-{% block body_class %}template-searchresults{% endblock %}
-
-{% block title %}Search{% endblock %}
+{% load search_extras %}
 
 {% block content %}
-<h1>Search</h1>
+<div class="container">
+    <div class="search-page">
+        <div class="search-content">
+            <!-- Sidebar de Filtros -->
+            <aside class="search-filters">
+                <form id="search-form" action="{% url 'search' %}" method="get">
+                    <div class="search-header">
+                        <h1>Busca</h1>
+                    </div>
 
-<form action="{% url 'search' %}" method="get">
-    <input type="text" name="query"{% if search_query %} value="{{ search_query }}"{% endif %}>
-    <input type="submit" value="Search" class="button">
-</form>
+                    <!-- Campo de busca -->
+                    <div class="search-bar">
+                        <input type="text" 
+                            name="query" 
+                            value="{{ search_query }}" 
+                            placeholder="Digite sua busca..." 
+                            class="search-input" 
+                            id="search-input" />
 
-{% if search_results %}
-<ul>
-    {% for result in search_results %}
-    <li>
-        <h4><a href="{% pageurl result %}">{{ result }}</a></h4>
-        {% if result.search_description %}
-        {{ result.search_description }}
-        {% endif %}
-    </li>
-    {% endfor %}
-</ul>
+                        <div class="search-actions">
+                            <button type="submit" class="search-submit">Pesquisar</button>
+                            <a href="{% url 'search' %}" class="clear-filters">Limpar filtros</a>
+                        </div>
+                    </div>
 
-{% if search_results.has_previous %}
-<a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}">Previous</a>
-{% endif %}
+                    <!-- Filtros -->
+                    <h3>Tipo de item</h3>
+                    <ul class="filter-list">
+                        <li>
+                            <label>
+                                <input type="checkbox" name="type" value="all"
+                                    {% if not selected_types or "all" in selected_types %}checked{% endif %}>
+                                Todos
+                            </label>
+                        </li>
+                        {% for type in wagtail_types %}
+                        <li>
+                            <label>
+                                <input type="checkbox" name="type" value="{{ type.filtro }}"
+                                    {% if type.filtro in selected_types %}checked{% endif %}>
+                                {{ type.titulo|capfirst }}
+                            </label>
+                        </li>
+                        {% endfor %}
+                        {% comment %} <li><label><input type="checkbox" name="type" value="agenda" {% if "agenda" in selected_types %}checked{% endif %}> Agenda Diária</label></li>
+                        <li><label><input type="checkbox" name="type" value="audio" {% if "audio" in selected_types %}checked{% endif %}> Áudio</label></li>
+                        <li><label><input type="checkbox" name="type" value="servicos" {% if "servicos" in selected_types %}checked{% endif %}> Serviços</label></li>
+                        <li><label><input type="checkbox" name="type" value="evento" {% if "evento" in selected_types %}checked{% endif %}> Evento</label></li>
+                        <li><label><input type="checkbox" name="type" value="externo" {% if "externo" in selected_types %}checked{% endif %}> Conteúdo Externo</label></li>
+                        <li><label><input type="checkbox" name="type" value="arquivo" {% if "arquivo" in selected_types %}checked{% endif %}> Arquivo</label></li>
+                        <li><label><input type="checkbox" name="type" value="imagem" {% if "imagem" in selected_types %}checked{% endif %}> Imagem</label></li>
+                        <li><label><input type="checkbox" name="type" value="link" {% if "link" in selected_types %}checked{% endif %}> Link</label></li>
+                        <li><label><input type="checkbox" name="type" value="noticias" {% if "noticias" in selected_types %}checked{% endif %}> Notícias</label></li>
+                        <li><label><input type="checkbox" name="type" value="multimidia" {% if "multimidia" in selected_types %}checked{% endif %}> Multimídia</label></li> {% endcomment %}
+                    </ul>
 
-{% if search_results.has_next %}
-<a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}">Next</a>
-{% endif %}
-{% elif search_query %}
-No results found
-{% endif %}
+                    <h3>Notícias desde</h3>
+                    <ul class="filter-list">
+                        <li><label><input type="radio" name="date" value="ontem" {% if selected_date == "ontem" %}checked{% endif %}> Ontem</label></li>
+                        <li><label><input type="radio" name="date" value="semana" {% if selected_date == "semana" %}checked{% endif %}> Última semana</label></li>
+                        <li><label><input type="radio" name="date" value="mes" {% if selected_date == "mes" %}checked{% endif %}> Último mês</label></li>
+                        <li><label><input type="radio" name="date" value="sempre" {% if selected_date == "sempre" %}checked{% endif %}> Sempre</label></li>
+                    </ul>
+                    
+                    <!-- Campos ocultos para manter outros parâmetros -->
+                    <input type="hidden" name="page" value="1">
+                </form>
+            </aside>
+
+            <!-- Resultados da Busca -->
+            <section class="search-results">
+                <!-- Cabeçalho com contador e paginação superior -->
+                {% if search_results %}
+                <div class="results-header">
+                    <div class="results-count">
+                        <strong>{{ search_results.paginator.count }}</strong> itens encontrados
+                        {% if search_query %}
+                        <span class="search-query-label">para "{{ search_query }}"</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="pagination-top">
+                        <div class="page-info">
+                            Página {{ search_results.number }} de {{ search_results.paginator.num_pages }}
+                        </div>
+                        <div class="page-nav">
+                            {% if search_results.has_previous %}
+                                <a href="?page={{ search_results.previous_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">&laquo;</a>
+                            {% endif %}
+                            
+                            {% if search_results.has_next %}
+                                <a href="?page={{ search_results.next_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">&raquo;</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Lista de resultados -->
+                {% if search_results %}
+                    {% for result in search_results %}
+                        <div class="search-result-item">
+                            <h3>
+                                <a href="{{ result.url }}">
+                                    {{ result.title|safe }}
+                                </a>
+                            </h3>
+                            {% if result.search_description %}
+                                <p>{{ result.search_description|safe }}</p>
+                            {% endif %}
+                            <span class="result-type">
+                                {{ result|result_type }}
+                            </span>
+                            <div class="result-meta">
+                                {% with tipo=result|result_type %}
+                                    {% if tipo == "Arquivo" or tipo == "Imagem" %}
+                                        Publicado em {{ result.created_at|date:"d/m/Y" }}
+                                    {% else %}
+                                        Publicado em {{ result.last_published_at|date:"d/m/Y" }}
+                                    {% endif %}
+                                {% endwith %}
+                                {% if result.breadcrumbs %}
+                                    {% for breadcrumb in result.breadcrumbs %}
+                                       em: <a href="{{ breadcrumb.url }}">{{ breadcrumb.title }}</a>{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <!-- Paginação Numérica inferior -->
+                    {% comment %} {% if search_results.paginator.num_pages > 1 %}
+                        <nav class="pagination">
+                            <ul>
+                                {% for page_num in search_results.paginator.page_range %}
+                                    {% if page_num == search_results.number %}
+                                        <li class="active">{{ page_num }}</li>
+                                    {% elif page_num >= search_results.number|add:-2 and page_num <= search_results.number|add:2 %}
+                                        <li><a href="?page={{ page_num }}{% if query_params %}&{{ query_params }}{% endif %}">{{ page_num }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if search_results.has_next %}
+                                    <li><a href="?page={{ search_results.next_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">Próximo &raquo;</a></li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %} {% endcomment %}
+                    {% include "include/paginator.html" with posts=search_results query_params=query_params %}
+                {% else %}
+                    <div class="no-results">
+                        <p>Nenhum resultado encontrado para "{{ search_query }}".</p>
+                        {% if selected_types or selected_date != 'sempre' %}
+                            <p>Tente remover alguns filtros para ampliar sua busca.</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Atualiza o campo de busca do header com a query atual
+    const headerSearch = document.querySelector('.header-input-search');
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchQuery = urlParams.get('query');
+    
+    if (headerSearch && searchQuery) {
+        headerSearch.value = searchQuery;
+    }
+    
+    // Configura o formulário de busca
+    const searchForm = document.getElementById('search-form');
+    const searchInput = document.getElementById('search-input');
+    
+    // Função para submeter o formulário
+    function submitSearchForm() {
+        const currentQuery = searchInput.value.trim();
+        const params = new URLSearchParams();
+        
+        // Adiciona a query se existir
+        if (currentQuery) {
+            params.append('query', currentQuery);
+        }
+        
+        // Adiciona tipos selecionados (exceto 'all')
+        document.querySelectorAll('input[name="type"]:checked:not([value="all"])').forEach(checkbox => {
+            params.append('type', checkbox.value);
+        });
+        
+        // Adiciona filtro de data (se não for 'sempre')
+        const selectedDate = document.querySelector('input[name="date"]:checked');
+        if (selectedDate && selectedDate.value !== 'sempre') {
+            params.append('date', selectedDate.value);
+        }
+        
+        // Redireciona mantendo apenas os parâmetros relevantes
+        window.location = '{% url 'search' %}' + (params.toString() ? '?' + params.toString() : '');
+    }
+    
+    // Configura o submit do formulário
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitSearchForm();
+        });
+    }
+    
+    // Manipulação dos checkboxes de tipo
+    const typeCheckboxes = document.querySelectorAll('input[name="type"]');
+    typeCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.value === 'all' && this.checked) {
+                // Desmarca todos os outros checkboxes
+                document.querySelectorAll('input[name="type"]:not([value="all"])').forEach(cb => {
+                    cb.checked = false;
+                });
+            } else if (this.value !== 'all' && this.checked) {
+                // Desmarca "Todos" quando outro tipo é selecionado
+                document.querySelector('input[name="type"][value="all"]').checked = false;
+            }
+            
+            // Submete o formulário após mudança
+            submitSearchForm();
+        });
+    });
+    
+    // Manipulação dos radios de data
+    const dateRadios = document.querySelectorAll('input[name="date"]');
+    dateRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            submitSearchForm();
+        });
+    });
+    
+    // Botão "Limpar filtros"
+    const clearFilters = document.querySelector('.clear-filters');
+    if (clearFilters) {
+        clearFilters.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Redireciona mantendo apenas a query se existir
+            const currentQuery = searchInput.value.trim();
+            if (currentQuery) {
+                window.location = '{% url 'search' %}?query=' + encodeURIComponent(currentQuery);
+            } else {
+                window.location = '{% url 'search' %}';
+            }
+        });
+    }
+});
+</script>
 {% endblock %}
