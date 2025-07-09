@@ -14,7 +14,7 @@ TARGET_CHOICES = [
 
 class LinkCabecalhoItemBlock(models.Model):
     titulo = models.CharField(max_length=255, verbose_name="Título do Link")
-    url = models.URLField(max_length=255, verbose_name="URL", help_text="O link no padrão ex.: https://www.detran.pb.gov.br/")
+    url = models.URLField(max_length=255, verbose_name="URL", help_text="O link no padrão ex.: https://www.codata.pb.gov.br/")
     target = models.CharField(
         max_length=10,
         choices=TARGET_CHOICES,
@@ -46,7 +46,7 @@ TARGET_CHOICES = [
 
 class LinkCabecalhoItemBlock(StructBlock):
     titulo = CharBlock(max_length=255, verbose_name="Título do Link")
-    url = URLBlock(max_length=255, verbose_name="URL", help_text="O link no padrão ex.: https://www.detran.pb.gov.br/")
+    url = URLBlock(max_length=255, verbose_name="URL", help_text="O link no padrão ex.: https://www.codata.pb.gov.br/")
     target = ChoiceBlock(
         choices=TARGET_CHOICES,
         default='_self',

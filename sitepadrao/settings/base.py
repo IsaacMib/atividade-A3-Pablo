@@ -235,7 +235,7 @@ STORAGES = {
 
 # Wagtail settings
 
-WAGTAIL_SITE_NAME = "Detran PB - Site"
+WAGTAIL_SITE_NAME = "Codata - Site"
 
 WAGTAIL_I18N_ENABLED = True
 
