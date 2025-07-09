@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "blocks",
     "noticias",
     "links",
+    "institucional",
 
     "plone_migration",
 
