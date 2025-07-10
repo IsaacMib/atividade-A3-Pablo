@@ -1,4 +1,3 @@
-
 services:
   db:
     environment:
@@ -22,11 +21,13 @@ services:
       DATABASE_URL: postgres://app_user:changeme@db/app_db
       REDIS_URL: redis://redis
       DJANGO_SETTINGS_MODULE: sitepadrao.settings.dev
+      NPM_WATCH: 'on'
+      DJANGO_SETTINGS_DEBUG: 'true'
     build:
       context: .
       dockerfile: ./Dockerfile
     volumes:
-      - ./:/code/sitepadrao
+      - ./:/wagtail/:rw
     links:
       - db:db
       - redis:redis
