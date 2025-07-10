@@ -253,7 +253,7 @@ class ServicosOnlineBlock(StructBlock):
         linkTodos = f"{settings.PORTAL_SERVICOS_URL}"
         if api_url and orgao_sigla:
             params = {
-                'orgao_sigla': orgao_sigla,
+                'orgao_sigla': orgao_sigla.lower(),
                 'order_by': order_by,
                 'limit': limit
             }

@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('titulo', models.CharField(max_length=255, verbose_name='Título do Link')),
-                ('url', models.URLField(help_text='O link no padrão ex.: https://www.detran.pb.gov.br/', max_length=255, verbose_name='URL')),
+                ('url', models.URLField(help_text='O link no padrão ex.: https://www.codata.pb.gov.br/', max_length=255, verbose_name='URL')),
                 ('target', models.CharField(choices=[('_self', 'Mesma Aba'), ('_blank', 'Nova Aba')], default='_self', max_length=10, verbose_name='Abrir Link em')),
             ],
             options={
