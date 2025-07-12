@@ -88,6 +88,10 @@ INSTALLED_APPS = [
     "wagtail.contrib.settings",
     'wagtail.contrib.search_promotions',
     "wagtail.contrib.table_block",
+     'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    "allauth.socialaccount.providers.openid_connect",
 ]
 
 MIDDLEWARE = [
@@ -100,6 +104,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
     "django_browser_reload.middleware.BrowserReloadMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
@@ -306,3 +311,45 @@ METABASE_API_KEY = os.environ.get('METABASE_API_KEY', '')  # Busca a chave da AP
 METABASE_API_URL = os.environ.get('METABASE_API_URL', 'https://metabase.codata.pb.gov.br/api/card/')  # URL base da API do Metabase
 PORTAL_SERVICOS_API_URL = os.environ.get('PORTAL_SERVICOS_API_URL', 'https://api-portal-carta-de-servicos-gedes.rke.codataprd.pb.gov.br/')
 PORTAL_SERVICOS_URL = os.environ.get('PORTAL_SERVICOS_URL', 'https://paraibadigital.pb.gov.br/')
+
+# Configurando os backends de autenticação
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Configurações do django-allauth para Keycloak
+SOCIALACCOUNT_PROVIDERS = {
+    "openid_connect": {
+        "APPS": [
+            {
+                "provider_id": os.getenv("SOCIALACCOUNT_PROVIDER_ID", "codata-sso-dev-server"),
+                "name": os.getenv("SOCIALACCOUNT_NAME", "Codata dev SSO Server"),
+                "client_id": os.getenv("KEYCLOAK_CLIENT_ID", "dev-client-secret"),
+                "secret": os.getenv("KEYCLOAK_SECRET", ""),
+                "settings": {
+                    "server_url": os.getenv("KEYCLOAK_SERVER_URL", "https://homolog.sso.codata.pb.gov.br/auth/realms/desenvolvimento/.well-known/openid-configuration"),
+                },
+            },
+        ]
+    }
+}
+
+# URL para redirecionar após login bem-sucedido
+LOGIN_REDIRECT_URL = "/"
+
+LOGIN_URL = '/login/'
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*']
+#ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
+ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'
+ACCOUNT_PRESERVE_USERNAME_CASING = False
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_USERNAME_BLACKLIST = ["admin", "god"]
+ACCOUNT_USERNAME_MIN_LENGTH = 2
+
+SITE_ID = 1

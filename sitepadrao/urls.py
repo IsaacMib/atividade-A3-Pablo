@@ -14,6 +14,7 @@ from sitepadrao import views as delegacia_views
 urlpatterns = [
     path("health/", delegacia_views.health_check, name='health_check'),
     path("django-admin/", admin.site.urls),
+    path("accounts/", include("allauth.urls")),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     re_path(
