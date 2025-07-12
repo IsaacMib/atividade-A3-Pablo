@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "institucional",
 
     "plone_migration",
+    "auth_keycloak",
 
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
@@ -324,7 +325,7 @@ SOCIALACCOUNT_PROVIDERS = {
         "APPS": [
             {
                 "provider_id": os.getenv("SOCIALACCOUNT_PROVIDER_ID", "codata-sso-dev-server"),
-                "name": os.getenv("SOCIALACCOUNT_NAME", "Codata dev SSO Server"),
+                "name": os.getenv("SOCIALACCOUNT_NAME", "CODATA SSO Server"),
                 "client_id": os.getenv("KEYCLOAK_CLIENT_ID", "dev-client-secret"),
                 "secret": os.getenv("KEYCLOAK_SECRET", ""),
                 "settings": {
@@ -335,10 +336,12 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+HABILITAR_SSO_LOGIN = get_bool("HABILITAR_SSO_LOGIN", True)
+
 # URL para redirecionar após login bem-sucedido
 LOGIN_REDIRECT_URL = "/"
 
-LOGIN_URL = '/login/'
+LOGIN_URL = '/admin/login/'
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*']
@@ -346,7 +349,7 @@ ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*']
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
-ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/admin/login/'
 ACCOUNT_PRESERVE_USERNAME_CASING = False
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_USERNAME_BLACKLIST = ["admin", "god"]

@@ -1,0 +1,112 @@
+{% extends "wagtailadmin/admin_base.html" %}
+{% load i18n wagtailadmin_tags allauth account %}
+{% block titletag %}{% trans "Sign in" %}{% endblock %}
+{% block bodyclass %}login{% endblock %}
+
+{% block furniture %}
+    <main class="content-wrapper" id="main">
+        <h1>{% block branding_login %}{% trans "Sign in to Wagtail" %}{% endblock %}</h1>
+
+        <div class="messages" role="status">
+            {# Always show messages div so it can be appended to by JS #}
+            {% if messages or form.errors %}
+                <ul>
+                    {% if form.errors %}
+                        {% for error in form.non_field_errors %}
+                            <li class="error">{{ error }}</li>
+                        {% endfor %}
+                    {% endif %}
+                    {% for message in messages %}
+                        <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        {% block above_login %}{% endblock %}
+
+        {% if not SOCIALACCOUNT_ONLY %}
+            {% setvar link %}
+                <a href="{{ signup_url }}">
+                {% endsetvar %}
+                {% setvar end_link %}
+                </a>
+            {% endsetvar %}
+            {% url 'account_login' as login_url %}
+            {% element form form=form method="post" action=login_url tags="entrance,login" %}
+                {% slot body %}
+                    {% csrf_token %}
+                    {% comment %} {% element fields form=form unlabeled=True %}
+                    {% endelement %} {% endcomment %}
+                    {% formattedfield form.login %}
+                    {% formattedfield form.password %}
+                    {{ redirect_field }}
+                {% endslot %}
+                {% slot actions %}
+                    <button
+                        type="submit"
+                        class="button button-longrunning"
+                        data-controller="w-progress"
+                        data-action="w-progress#activate"
+                        data-w-progress-active-value="{% trans 'Signing in…' %}"
+                    >
+                        {% icon name="spinner" %}
+                        <em data-w-progress-target="label">{% trans 'Sign in' %}</em>
+                    </button>
+                {% endslot %}
+            {% endelement %}
+        {% endif %}
+        
+        {% comment %} <form class="login-form" action="{% url 'wagtailadmin_login' %}" method="post" autocomplete="off" novalidate>
+            {% block login_form %}
+                {% csrf_token %}
+
+                {% url 'wagtailadmin_home' as home_url %}
+                <input type="hidden" name="next" value="{{ next|default:home_url }}" />
+
+                {% block fields %}
+                    {% formattedfield form.username %}
+                    {% formattedfield form.password %}
+
+                    {% if show_password_reset %}
+                        <a class="reset-password" href="{% url 'wagtailadmin_password_reset' %}">{% trans "Forgotten password?" %}</a>
+                    {% endif %}
+
+                    {% block extra_fields %}
+                        {% for field_name, field in form.extra_fields %}
+                            {% formattedfield field %}
+                        {% endfor %}
+                    {% endblock extra_fields %}
+
+                    {% include "wagtailadmin/shared/forms/single_checkbox.html" with label_classname="remember-me" name="remember" text=_("Remember me") %}
+                {% endblock %}
+            {% endblock %}
+            <footer class="form-actions">
+                {% block submit_buttons %}
+                    <button
+                        type="submit"
+                        class="button button-longrunning"
+                        data-controller="w-progress"
+                        data-action="w-progress#activate"
+                        data-w-progress-active-value="{% trans 'Signing in…' %}"
+                    >
+                        {% icon name="spinner" %}
+                        <em data-w-progress-target="label">{% trans 'Sign in' %}</em>
+                    </button>
+                {% endblock %}
+            </footer>
+        </form> {% endcomment %}
+
+        {% block below_login %}{% endblock %}
+
+        {% if SOCIALACCOUNT_ENABLED %}
+          {% include "auth_keycloak/snippets/login.html" with page_layout="entrance" %}
+        {% endif %}
+
+        {% block branding_logo %}
+            <div class="login-logo">
+                {% include "wagtailadmin/logo.html" with wordmark="True" %}
+            </div>
+        {% endblock %}
+    </main>
+{% endblock %}

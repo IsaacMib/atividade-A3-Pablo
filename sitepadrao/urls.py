@@ -14,8 +14,6 @@ from sitepadrao import views as delegacia_views
 urlpatterns = [
     path("health/", delegacia_views.health_check, name='health_check'),
     path("django-admin/", admin.site.urls),
-    path("accounts/", include("allauth.urls")),
-    path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     re_path(
         r"^images/([^/]*)/(\d*)/([^/]*)/[^/]*$",
@@ -29,6 +27,19 @@ urlpatterns = [
             RedirectView.as_view(url=settings.STATIC_URL + "img/favicon.ico"),
         )
 ]
+
+if settings.HABILITAR_SSO_LOGIN:
+    from wagtail.admin.views import account
+    urlpatterns += [
+        # Sobrescreve a URL de logout
+        path('manager/login/', RedirectView.as_view(url='/admin/', permanent=True)),
+        path("admin/", include("allauth.urls")),
+        path("manager/", include(wagtailadmin_urls)),
+    ]
+else:
+    urlpatterns += [
+        path("admin/", include(wagtailadmin_urls)),
+    ]
 
 
 if settings.DEBUG:
