@@ -236,7 +236,7 @@ STORAGES = {
 
 # Wagtail settings
 
-WAGTAIL_SITE_NAME = "Detran PB - Site"
+WAGTAIL_SITE_NAME = "CODATA - Companhia de Processamento de Dados da Paraíba"
 
 WAGTAIL_I18N_ENABLED = True
 
