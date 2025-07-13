@@ -9,10 +9,10 @@ from wagtail.images.views.serve import ServeView
 from django.views.generic import RedirectView
 
 from search import views as search_views
-from sitepadrao import views as delegacia_views
+from sitepadrao import views as sitepadrao_views
 
 urlpatterns = [
-    path("health/", delegacia_views.health_check, name='health_check'),
+    path("health/", sitepadrao_views.health_check, name='health_check'),
     path("django-admin/", admin.site.urls),
     path("documents/", include(wagtaildocs_urls)),
     re_path(
@@ -29,11 +29,11 @@ urlpatterns = [
 ]
 
 if settings.HABILITAR_SSO_LOGIN:
-    from wagtail.admin.views import account
     urlpatterns += [
         # Sobrescreve a URL de logout
-        path('manager/login/', RedirectView.as_view(url='/admin/', permanent=True)),
+        # path("admin/email/", login_required(sitepadrao_views.redirect_if_in_group), name="admin_email_redirect"),
         path("admin/", include("allauth.urls")),
+        path('manager/login/', RedirectView.as_view(url='/admin/', permanent=True)),
         path("manager/", include(wagtailadmin_urls)),
     ]
 else:
