@@ -51,6 +51,8 @@
   "dependencies": {
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.13.1",
+    "css-minimizer-webpack-plugin": "^7.0.2",
+    "cssnano": "^7.0.7",
     "odometer": "^0.4.8",
     "swiper": "^11.2.8",
     "uikit": "^3.23.3"

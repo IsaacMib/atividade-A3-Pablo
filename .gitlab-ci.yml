@@ -1,6 +1,6 @@
-variables:
-  BUILD_MODE: buildah
-  BUILD_EXTRA_ARGS: "--env NODE_ENV=production"
+# variables:
+#   BUILD_MODE: buildah
+#   BUILD_EXTRA_ARGS: "--env NODE_ENV=production"
   
 include:
   - component: $CI_SERVER_FQDN/cicd/components/pipeline@1
