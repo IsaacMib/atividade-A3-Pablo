@@ -57,7 +57,7 @@
             {% endslot %}
             {% slot actions %}
                 {% if user.is_superuser or user.groups.exists %}
-                    <a href="/manager/" class="button" style="text-align:center;margin-bottom:10px;"> Acessar o Administrador do site </a>
+                    <a href="/admin/manager/" class="button" style="text-align:center;margin-bottom:10px;"> Acessar o Administrador do site </a>
                     <a href="/" class="button" style="text-align:center; margin-left:0px;"> Acessar o Site </a>
                 {% endif %}
             {% endslot %}

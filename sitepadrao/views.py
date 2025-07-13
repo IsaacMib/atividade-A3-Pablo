@@ -6,5 +6,5 @@ def health_check(request):
 
 def redirect_if_in_group(request):
     if request.user.is_authenticated and (request.user.is_superuser or request.user.groups.exists()):
-        return redirect('/manager/')
+        return redirect('/admin/manager/')
     return redirect('/')

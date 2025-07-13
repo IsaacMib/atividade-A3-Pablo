@@ -32,9 +32,10 @@ if settings.HABILITAR_SSO_LOGIN:
     urlpatterns += [
         # Sobrescreve a URL de logout
         # path("admin/email/", login_required(sitepadrao_views.redirect_if_in_group), name="admin_email_redirect"),
+        path('admin/manager/login/', RedirectView.as_view(url='/admin/', permanent=True)),
+        path("admin/manager/", include(wagtailadmin_urls)),
         path("admin/", include("allauth.urls")),
-        path('manager/login/', RedirectView.as_view(url='/admin/', permanent=True)),
-        path("manager/", include(wagtailadmin_urls)),
+        
     ]
 else:
     urlpatterns += [
