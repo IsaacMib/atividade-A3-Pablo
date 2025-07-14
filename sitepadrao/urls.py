@@ -9,12 +9,11 @@ from wagtail.images.views.serve import ServeView
 from django.views.generic import RedirectView
 
 from search import views as search_views
-from sitepadrao import views as delegacia_views
+from sitepadrao import views as sitepadrao_views
 
 urlpatterns = [
-    path("health/", delegacia_views.health_check, name='health_check'),
+    path("health/", sitepadrao_views.health_check, name='health_check'),
     path("django-admin/", admin.site.urls),
-    path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     re_path(
         r"^images/([^/]*)/(\d*)/([^/]*)/[^/]*$",
@@ -28,6 +27,20 @@ urlpatterns = [
             RedirectView.as_view(url=settings.STATIC_URL + "img/favicon.ico"),
         )
 ]
+
+if settings.HABILITAR_SSO_LOGIN:
+    urlpatterns += [
+        # Sobrescreve a URL de logout
+        # path("admin/email/", login_required(sitepadrao_views.redirect_if_in_group), name="admin_email_redirect"),
+        path('admin/manager/login/', RedirectView.as_view(url='/admin/', permanent=True)),
+        path("admin/manager/", include(wagtailadmin_urls)),
+        path("admin/", include("allauth.urls")),
+        
+    ]
+else:
+    urlpatterns += [
+        path("admin/", include(wagtailadmin_urls)),
+    ]
 
 
 if settings.DEBUG:
