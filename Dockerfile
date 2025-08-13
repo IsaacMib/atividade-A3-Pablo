@@ -7,9 +7,9 @@ RUN set -ex \
     && RUN_DEPS=" \
         libexpat1 \
         libjpeg62-turbo \
-        libpcre3 \
+        libpcre2-32-0 \
         libpq5 \
-        mime-support \
+        media-types \
         postgresql-client \
         procps \
         zlib1g \
@@ -29,7 +29,7 @@ ENV BUILD_DEPS=" \
     git \
     libexpat1-dev \
     libjpeg62-turbo-dev \
-    libpcre3-dev \
+    libpcre2-dev \
     libpq-dev \
     zlib1g-dev "
 
