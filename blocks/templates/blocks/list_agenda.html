@@ -1,0 +1,216 @@
+<div class="list-agenda-block">
+  <div class="list-agenda-wraper container">
+    <div class="list-agenda-header">
+      <h2>{{ agenda_page_title }}</h2>
+    </div>
+    <div class="list-agenda-mes">
+      <h3 id="current-month">Junho 2025</h3>
+    </div>
+    <div class="agenda-carrossel">
+      <div class="daypicker-wrapper">
+        <ul class="daypicker">
+          <!-- Os dias serão adicionados dinamicamente pelo JavaScript -->
+        </ul>
+      </div>
+    </div>
+    <div class="agenda-content swiper-container">
+      <div class="swiper swiper-agenda-compromissos">
+        <div class="swiper-wrapper"></div>
+      </div>
+      <div class="swiper-button-next swiper-agenda-compromissos-next"></div>
+      <div class="swiper-button-prev swiper-agenda-compromissos-prev"></div>
+    </div>
+    {% include "include/ver_todos_btn.html" with ver_todos_url=agenda_page_url %}
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Inicialização do Swiper
+    const swiperAgenda = new Swiper(".swiper-agenda-compromissos", {
+        centeredSlides: true,
+        spaceBetween: 1,
+        navigation: {
+            nextEl: '.swiper-agenda-compromissos-next',
+            prevEl: '.swiper-agenda-compromissos-prev'
+        },
+        breakpoints: {
+            320: {
+                slidesPerView: 1,
+                spaceBetween: 0,
+                centeredSlides: true,
+            },
+            768: {
+                slidesPerView: 2,
+                spaceBetween: 100,
+                centeredSlides: true,
+            },
+            1000: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+                centeredSlides: true,
+            },
+            1300: {
+                slidesPerView: 3,
+                spaceBetween: 20,
+                centeredSlides: true,
+            },
+        },
+      });
+
+    const daypicker = document.querySelector(".daypicker");
+    const currentMonthElement = document.getElementById("current-month");
+    const visibleRange = 3;
+    const baseUrl = "{{ agenda_page_url }}";
+    const swiperWrapper = document.querySelector('.swiper-agenda-compromissos .swiper-wrapper');
+
+    function formatDate(date) {
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const dd = String(date.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function generateDays(baseDate) {
+      const days = [];
+      for (let i = -visibleRange; i <= visibleRange; i++) {
+        const date = new Date(baseDate);
+        date.setDate(baseDate.getDate() + i);
+        const day = date.getDate();
+        const weekday = date.toLocaleDateString("pt-BR", { weekday: "short" });
+        days.push({ day, weekday, date });
+      }
+      return days;
+    }
+
+    function renderDays(days, selectedIndex = visibleRange) {
+      daypicker.innerHTML = "";
+      days.forEach((dayObj, index) => {
+        const li = document.createElement("li");
+        li.className = "day";
+        if (index === selectedIndex) li.classList.add("is-selected");
+        li.innerHTML = `
+          <a>
+            <div class="daypicker-day">${dayObj.day}</div>
+            <div class="daypicker-weekday">${dayObj.weekday}</div>
+          </a>
+        `;
+        li.addEventListener("click", () => {
+          updateDaypicker(dayObj.date);
+          const dataStr = formatDate(dayObj.date);
+          fetch(`${baseUrl}dia/${dataStr}/`)
+            .then(response => response.json())
+            .then(data => {
+              montarCarrosselCompromissos(data.compromissos, dayObj.date);
+            })
+            .catch(error => {
+              console.error("Erro ao buscar compromissos:", error);
+              montarCarrosselCompromissos([], dayObj.date);
+            });
+        });
+        daypicker.appendChild(li);
+      });
+    }
+
+    function formatHoraMinuto(horario) {
+      if (!horario) return "";
+      // Aceita formatos "HH:MM:SS" ou "HH:MM"
+      const partes = horario.split(":");
+      if (partes.length >= 2) {
+        return `${partes[0]}:${partes[1]}`;
+      }
+      return horario;
+    }
+
+    function montarCarrosselCompromissos(compromissos, selectedDate = new Date()) {
+      if (!swiperAgenda) return;
+      swiperAgenda.removeAllSlides();
+
+      if (!compromissos || !Array.isArray(compromissos) || compromissos.length === 0) {
+        swiperAgenda.appendSlide(`
+          <div class="swiper-slide">
+            <div class="agenda-item no-compromissos">
+              <div class="agenda-item--title">Nenhum compromisso encontrado.</div>
+            </div>
+          </div>
+        `);
+        return;
+      }
+
+      // Formata a data para o padrão YYYY-MM-DD
+      let dataStr = "";
+      if (selectedDate instanceof Date) {
+        const yyyy = selectedDate.getFullYear();
+        const mm = String(selectedDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(selectedDate.getDate()).padStart(2, '0');
+        dataStr = `${yyyy}-${mm}-${dd}`;
+      } else if (typeof selectedDate === "string") {
+        dataStr = selectedDate; // Assume que já está formatado
+      }
+
+      compromissos.forEach(compromisso => {
+        swiperAgenda.appendSlide(`
+          <div class="swiper-slide">
+            <div class="agenda-item">
+              <div class="agenda-item--title">
+                <a href="${baseUrl}?data=${dataStr}" target="_self">${compromisso.title || ""}</a>
+              </div>
+              <div class="agenda-item--divider"></div>
+              <div class="agenda-item--descricao">${compromisso.pauta || ""}</div>
+              <div class="agenda-item--horario-local">
+                <div class="agenda-item--local">
+                  <i class="agenda-item--icon fa-solid fa-location-dot"></i>
+                  <span>${compromisso.local || ""}</span>
+                </div>
+                <div class="agenda-item--horario">
+                  <i class="agenda-item--icon fa-solid fa-clock"></i>
+                  <span>
+                    ${
+                      compromisso.inicio === compromisso.termino
+                        ? formatHoraMinuto(compromisso.inicio)
+                        : `${formatHoraMinuto(compromisso.inicio)} - ${formatHoraMinuto(compromisso.termino)}`
+                    }
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `);
+      });
+      // Atualiza o swiper (caso necessário)
+      if (swiperAgenda && typeof swiperAgenda.update === "function") {
+        swiperAgenda.update();
+      }
+    }
+
+    function updateDaypicker(selectedDate) {
+      const days = generateDays(selectedDate);
+      renderDays(days);
+
+      const month = selectedDate.toLocaleDateString("pt-BR", { month: "long" });
+      const year = selectedDate.getFullYear();
+      currentMonthElement.textContent = `${month.charAt(0).toUpperCase() + month.slice(1)} ${year}`;
+
+      // Buscar compromissos do dia inicial
+      const dataStr = formatDate(selectedDate);
+      fetch(`${baseUrl}dia/${dataStr}/`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.compromissos && !!data.compromissos) {
+            montarCarrosselCompromissos(data.compromissos, selectedDate);
+          } else {
+            montarCarrosselCompromissos([], selectedDate);
+          }
+        })
+        .catch(error => {
+          console.error("Erro ao buscar compromissos:", error);
+          montarCarrosselCompromissos([], selectedDate);
+        });
+    }
+
+    // Inicializar com a data atual
+    const today = new Date();
+    const days = generateDays(today);
+    renderDays(days);
+    updateDaypicker(today);
+});
+</script>

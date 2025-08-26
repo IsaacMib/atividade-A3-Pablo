@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-aviso-page{% endblock %}
+
+{% block content %}
+
+<div class="container d-flex flex-column align-items-center justify-content-center">
+    <h2>{{ page.title }}</h2>
+
+    {% if page.data_publicacao %}
+    <h5 class="meta align-self-start">Publicado em {{ page.data_publicacao|date:"d/m/Y H:i" }}</h5>
+    {% endif %}
+
+
+    <div class="intro align-self-start">
+        {{ page.descricao|richtext }}
+    </div>
+
+    <hr>
+
+    <div class="body-content">
+        {% for block in page.body %}
+        {% include_block block %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

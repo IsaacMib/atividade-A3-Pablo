@@ -10,10 +10,10 @@
                     </div>
                     {% endfor %}
                 </div>
-                <div class="swiper-pagination"></div>
+                <div class="swiper-pagination swiper-servico-pagination"></div>
             </div>
-            <div class="swiper-button-next d-none d-lg-block"></div>
-            <div class="swiper-button-prev d-none d-lg-block"></div>
+            <div class="swiper-button-next swiper-servicos-button-next d-none d-lg-block"></div>
+            <div class="swiper-button-prev swiper-servicos-button-prev d-none d-lg-block"></div>
         </div>
     </div>
     {% include "include/ver_todos_btn.html" with ver_todos_url=linkTodos target='_blank' %}
@@ -43,11 +43,11 @@ document.addEventListener('DOMContentLoaded', function() {
             },
         },
         navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev'
+            nextEl: '.swiper-servicos-button-next',
+            prevEl: '.swiper-servicos-button-prev'
         },
         pagination: {
-            el: '.swiper-pagination',
+            el: '.swiper-servico-pagination',
             clickable: true,
         },
         loop: true,

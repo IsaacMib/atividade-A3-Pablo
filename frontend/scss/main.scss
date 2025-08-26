@@ -1,5 +1,6 @@
 @use  './variables.scss';
 @use  './sprite.scss';
+@use  './swiper.scss';
 
 @use './sitepadrao/index.scss' as sitepadrao;
 
@@ -7,7 +8,11 @@
 @use  './home/index.scss' as home;
 @use  './blocks/index.scss' as blocks;
 @use  './noticias/index.scss' as noticias;
+@use  './institucional/index.scss' as institucional;
 @use './search/search.scss' as search;
+@use  './agenda/index.scss' as agenda;
+@use './navbar.scss';
+@use './breadcrumb.scss';
 
 /*Arquivo para customizar o bootstrap*/
 @use './customBT';

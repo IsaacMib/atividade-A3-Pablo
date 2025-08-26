@@ -1,7 +1,9 @@
 // Material Design Color System - Core Palette
 
 // Primary
-$color-primary: #30599B;
+$color-primary: #30599b;
+$color-primary-70: #30599bb3;
+$color-primary-50: #30599b80;
 $color-primary-light: #9d46ff;
 $color-primary-dark: #0a00b6;
 $color-on-primary: #ffffff;
@@ -37,7 +39,7 @@ $global-link-color: #DA7D02;
 
 // Optional: Greys (Material Design)
 $color-grey-50:  #F9F9F9;
-$color-grey-100: #f5f5f5;
+$color-grey-100: #f6f6f6;
 $color-grey-200: #eeeeee;
 $color-grey-300: #e0e0e0;
 $color-grey-400: #bdbdbd;
@@ -47,8 +49,22 @@ $color-grey-700: #616161;
 $color-grey-800: #424242;
 $color-grey-900: #212121;
 
+
 $color-white: #ffffff;
 $color-black: #000000;
+
+$color-link-navbar: #b7c5dc;
+$color-link-navbar-hover: $color-white;
+$color-link-navbar-hover-mobile: $color-grey-700;
+$color-link-navbar-mobile: $color-grey-700;
+
+
+$font-size-itens-menu: 20px;
+$font-size-itens-sub-menu: 20px;
+
+// Footer
+$footer-color: #30599B;
+
 
 
 

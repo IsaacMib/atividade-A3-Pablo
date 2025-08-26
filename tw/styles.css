@@ -9,6 +9,7 @@
 @source '../../home/templates';
 @source '../../home/static';
 @source '../../search/templates';
+@source '../../blocks/templates';
 
 @theme static {
   --color-primary: #30599B;

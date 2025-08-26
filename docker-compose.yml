@@ -22,7 +22,7 @@ services:
       REDIS_URL: redis://redis
       DJANGO_SETTINGS_MODULE: sitepadrao.settings.dev
       NPM_WATCH: 'on'
-      DJANGO_SETTINGS_DEBUG: 'true'
+      DJANGO_SETTINGS_DEBUG: 'false'
     build:
       context: .
       dockerfile: ./Dockerfile

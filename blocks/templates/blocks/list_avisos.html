@@ -1,0 +1,43 @@
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+<section class="mural-avisos">
+  <div class="container text-center">
+    {% include 'include/titulo.html' with titulo='Mural de Avisos' bgClass='' bgColor='#305A9C' %}
+
+    <div class="avisos-wrapper row justify-content-center">
+      {% for aviso in avisos|slice:":6" %}
+        <a class="col-12 col-lg-4 col-md-6" href="{% pageurl aviso %}" style="text-decoration: none; color: inherit;">
+          <div class="aviso-card">
+            <h5 class="aviso-title">
+              {{ aviso.title }}
+            </h5>
+
+            <div class="aviso-desc-row">
+              <div class="icon-col">
+                <i class="bi bi-calendar3"></i>
+              </div>
+              <div class="desc-col">
+                <p class="aviso-descricao">
+                  {{ aviso.descricao|striptags|truncatechars:120}}
+                </p>
+                {% if aviso.data_publicacao %}
+                  <p class="aviso-data">Data: {{ aviso.data_publicacao|date:"d/m/Y" }}</p>
+                {% endif %}
+              </div>
+            </div>
+
+            {% if aviso.data_publicacao %}
+              <p class="aviso-data"></p>
+            {% endif %}
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+
+    {% if avisos_index_page_url %}
+      <div class="ver-todos-btn">
+        <a href="{{ avisos_index_page_url }}">{{ texto_link|default:"Ver todos" }}</a>
+      </div>
+    {% endif %}
+  </div>
+</section>

@@ -11,37 +11,68 @@ ICONES_REDES = [
     ('fa-brands fa-whatsapp', 'WhatsApp'),
     ('fa-brands fa-telegram', 'Telegram'),
 ]
-ICONES_ACESSO_RAPIDO = [
-    ('fas fa-comments', 'Ouvidoria'),
-    ('fas fa-file-invoice', 'Boleto Licenciamento'),
-    ('fas fa-money-bill-wave', 'IPVA'),
-    ('fas fa-car', '1º Emplacamento on-line (0km)'),
-    
-    ('fas fa-id-card', 'ATPVe'),
-    ('fas fa-receipt', 'Taxas de Serviços'),
-    ('fas fa-question-circle', 'Perguntas Frequentes'),
-    ('fas fa-search', 'Consultar Proc. Veículo'),
-    
-    ('fas fa-file-alt', 'Portaria/Instruções Normativas'),
-    ('fas fa-clipboard-check', 'Menu de Exames'),
-    ('fas fa-phone-alt', 'Telefones Úteis'),
-    ('fas fa-folder-open', 'Consultar Processo SGP'),
 
-    # Ícones adicionais
-    ('fas fa-calendar-check', 'Agendamento de Serviços'),
-    ('fas fa-id-badge', 'CNH Digital'),
-    ('fas fa-exclamation-triangle', 'Segurança no Trânsito'),
-    ('fas fa-car-crash', 'Consulta de Multas'),
-    ('fas fa-map-marked-alt', 'Localização de Postos'),
-    ('fas fa-tools', 'Serviços Gerais'),
-    ('fas fa-user-shield', 'Área do Condutor'),
+ICONES_ACESSO_RAPIDO_GERAL = [
+    ('fas fa-headset', 'Atendimentos'),
+    ('fas fa-video', 'PB Meet'),
+    ('fas fa-envelope', 'WebMail'),
+    ('fas fa-file-contract', 'Contracheque'),
+    ('fas fa-globe', 'PB.GOV.BR'),
+    ('fas fa-building', 'Lotações'),
+    ('fas fa-server', 'CABSI'),
+    ('fas fa-chart-bar', 'Transparência'),
+    ('fas fa-lock', 'LGPD'),
+    ('fas fa-file-alt', 'PBDoc'),
+    ('fas fa-calculator', 'SIAF'),
+    ('fas fa-hand-holding-usd', 'PBConsig'),
+    ('fas fa-gavel', 'Licitações'),
+    ('fas fa-database', 'Sistemas Internos'),
+    ('fas fa-book', 'Manuais e Documentos'),
+    ('fas fa-cloud-upload-alt', 'Upload de Arquivos'),
+    ('fas fa-network-wired', 'Infraestrutura'),
+    ('fas fa-calendar-alt', 'Agenda Corporativa'),
+    ('fas fa-mobile-alt', 'Aplicativos Móveis'),
+    ('fas fa-shield-alt', 'Segurança da Informação'),
+    ('fas fa-tools', 'Ferramentas Administrativas'),
 ]
 
+ICONES_ACESSO_RAPIDO_EDUCACAO = [
+    ('fas fa-file-contract', 'Licitações, contratos'),
+    ('fas fa-file-alt', 'Editais'),
+    ('fas fa-search', 'Consultas'),
+    ('fas fa-project-diagram', 'Programas'),
+    
+    ('fas fa-school', 'Escolas'),
+    ('fas fa-building', 'Gerências'),
+    ('fas fa-concierge-bell', 'Serviços'),
+    ('fas fa-user-tie', 'Portal do Servidor'),
+    
+    ('fas fa-comments', 'Ouvidoria'),
+    ('fas fa-phone-alt', 'Contatos'),
+    ('fas fa-ellipsis-h', 'Outros'),
+]
+
+ICONES_ACESSO_RAPIDO = ICONES_ACESSO_RAPIDO_GERAL
+
+
 IDS_METABASE_CARDS = [
-    (2650, 'Frota de Veículos'),
-    (3447, 'Condutores residentes na Paraíba'),
-    (3755, 'Infrações cometidas no ano atual'),
-    (3756, "CNH's pelo PHS"),
+    (2650, 'Total de Unicades Escolares(UE)'),
+    (3447, 'Total de Matrículas na Educação Básica'),
+    (3755, 'Total de Turmas na Educação Básica'),
+    (3756, "Total de Vagas na Educação Básica"),
+]
+
+
+CLASS_TITULO_BG_COLOR_BLOCK = [
+    ('titulo-bg-default' , 'Background Padrão'),
+    ('titulo-bg-azul' , 'Background Azul'),
+    ('titulo-bg-branco' , 'Background Branco')
+]
+
+COLOR_TITULO_BG_COLOR_BLOCK = [
+    ('#305A9C' , 'titulo-bg-default'),
+    ('#FFFFFF' , 'titulo-bg-azul'),
+    ('#305A9C' , 'titulo-bg-branco'),
 ]
 
 def get_metabase_card_text_by_id(card_id):
@@ -53,4 +84,16 @@ def get_metabase_card_text_by_id(card_id):
         if str(id_opcao) == str(card_id):
             return texto
     return ""
+
+def get_color_by_class_titulo_bg(class_name):
+    """
+    Retorna a cor correspondente ao class_name presente em CLASS_TITULO_BG_COLOR_BLOCK,
+    buscando o valor correspondente em COLOR_TITULO_BG_COLOR_BLOCK.
+    Se não encontrar, retorna #305A9C.
+    """
+    # Busca o nome da cor correspondente ao class_name
+    for color, class_option in COLOR_TITULO_BG_COLOR_BLOCK:
+        if class_option == class_name:
+            return color
+    return '#305A9C'
 

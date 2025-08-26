@@ -1,0 +1,29 @@
+@use './../variables.scss';
+
+.btn-ver-todos-container {
+  padding: 1.6rem 0px;
+}
+
+.btn-ver-todos-bg-cinza {
+  background-color: variables.$color-grey-100;
+}
+
+.btn-ver-todos {
+  margin-top: 20px;
+  display: inline-block;
+  padding: 12px 42px;
+  border: 1px solid #396BBB;
+  background-color: #fff;
+  color: #396BBB;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 10px;
+  text-decoration: none;
+
+  
+  &:hover {
+    background-color: #052F4A;
+    color: #fff;
+    text-decoration: none;
+  }
+}

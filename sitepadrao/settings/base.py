@@ -60,6 +60,8 @@ INSTALLED_APPS = [
     "noticias",
     "links",
     "institucional",
+    "agenda",
+    "avisos",
 
     "plone_migration",
     "auth_keycloak",
@@ -336,7 +338,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-HABILITAR_SSO_LOGIN = get_bool("HABILITAR_SSO_LOGIN", True)
+HABILITAR_SSO_LOGIN = get_bool("HABILITAR_SSO_LOGIN", False)
 
 # URL para redirecionar após login bem-sucedido
 LOGIN_REDIRECT_URL = "/admin/"

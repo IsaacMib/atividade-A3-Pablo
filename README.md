@@ -1,4 +1,4 @@
-[Figma](https://www.figma.com/design/c60oueiDHpCm8G1ZgyOwsy/Portal-CODATA?node-id=0-1&p=f&t=IV5Mw59nQioNbi65-0)
+[Figma](https://www.figma.com/design/vn4GGPjxav6O2EymXV1GLf/Portal-Edu?node-id=14-2&t=JLNz6Ic3FyZ1IXyQ-1)
 
 # Wagtail demo project
 

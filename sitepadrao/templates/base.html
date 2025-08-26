@@ -55,9 +55,11 @@
 
         {% include 'barra_identidade.html' %}
         {% include 'header.html' %}
-        {% include 'include/breadcrumb.html' %}
 
-        {% block content %}{% endblock %}
+        <div id="site-conteudo-main">
+            {% include 'include/breadcrumb.html' %}
+            {% block content %}{% endblock %}
+        </div>
 
         {% include 'footer.html' %}
 
@@ -81,4 +83,15 @@
         new window.VLibras.Widget('https://vlibras.gov.br/app');
         </script>
     </body>
+    <style>
+        html, body {
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .site-conteudo-main {
+            flex: 1;
+        }
+    </style>
 </html>

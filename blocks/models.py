@@ -1,5 +1,11 @@
-from blocks.utils import ICONES_REDES, ICONES_ACESSO_RAPIDO, IDS_METABASE_CARDS, get_metabase_card_text_by_id
-
+from blocks.utils import (
+    ICONES_REDES, 
+    ICONES_ACESSO_RAPIDO, 
+    IDS_METABASE_CARDS, 
+    CLASS_TITULO_BG_COLOR_BLOCK,
+    get_metabase_card_text_by_id,
+    get_color_by_class_titulo_bg
+)
 
 import requests
 from django.core.cache import cache
@@ -179,7 +185,7 @@ class ServicoOnlineItemBlock(StructBlock):
     def get_context(self, value, parent_context=None):
         import requests
         context = super().get_context(value, parent_context=parent_context)
-        api_url = f"{settings.PORTAL_SERVICOS_API_URL}{"digital/servicos/"}{value.get('idServico', '')}"
+        api_url = f"{settings.PORTAL_SERVICOS_API_URL}digital/servicos/{value.get('idServico', '')}"
         servico = []
         try:
             response = requests.get(api_url, timeout=5)
@@ -248,7 +254,7 @@ class ServicosOnlineBlock(StructBlock):
         orgao_sigla = value.get('orgao_sigla')
         order_by = '-contador_acesso'
         limit = value.get('limit') or 12
-        api_url = f"{settings.PORTAL_SERVICOS_API_URL}{"digital/servicos/orgao/"}"
+        api_url = f"{settings.PORTAL_SERVICOS_API_URL}digital/servicos/orgao/"
         servicos = []
         linkTodos = f"{settings.PORTAL_SERVICOS_URL}"
         if api_url and orgao_sigla:
@@ -281,20 +287,29 @@ class ServicosOnlineBlock(StructBlock):
         template = 'blocks/servicos_online.html'
 
 class TituloBlock(StructBlock):
-   """Bloco de título com opções de estilo e visibilidade."""
-   titulo = CharBlock(
-       required=True,
-       help_text='Digite o título que será exibido'
-   )
-   bgAzul = BooleanBlock(
-       required=False,
-       default=False,
-       help_text='Marque para usar fundo azul com texto branco. Deixe desmarcado para texto azul com fundo branco.'
-   )
-   class Meta:
-       template = 'blocks/titulo.html'
-       icon = 'title'
-       label = 'Título'
+    """Bloco de título com opções de estilo e visibilidade."""
+    titulo = CharBlock(
+        required=True,
+        help_text='Digite o título que será exibido'
+    )
+
+    corBackground = ChoiceBlock(
+        choices=CLASS_TITULO_BG_COLOR_BLOCK, 
+        required=False, 
+        label="Cor de Fundo",
+        default='titulo-bg-default'
+    )
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        class_name = value.get('corBackground') or 'titulo-bg-default'
+        context['linhaSvgColor'] = get_color_by_class_titulo_bg(class_name)
+        return context
+
+    class Meta:
+        template = 'blocks/titulo.html'
+        icon = 'title'
+        label = 'Título'
 
 _CACHE_TIMEOUT = 600  # 10 minutos em segundos
 
@@ -345,18 +360,30 @@ class OdometerBlock(StructBlock):
         label = 'Odometer'
 
 class OdometerListBlock(StructBlock):
-    odometers = ListBlock(OdometerBlock(), label="Central de Monitoramento Detran")
+    odometers = ListBlock(OdometerBlock(), label="Central de Monitoramento GEDRA")
 
     class Meta:
         template = 'blocks/central_monitoramento_detran.html'
         icon = 'list-ul'
-        label = 'Central de Monitoramento Detran'
+        label = 'Central de Monitoramento GEDRA '
 
 class NoticiasListBlock(StructBlock):
     noticias_index_page = PageChooserBlock(
         required=True,
         target_model='noticias.NoticiasIndexPages',
         help_text="Selecione a página de índice de notícias"
+    )
+    
+    titulo = CharBlock(
+        required=False,
+        default="Últimas Notícias",
+        help_text="Título que aparecerá acima da lista de notícias"
+    )
+    
+    bg_azul = BooleanBlock(
+        required=False,
+        default=False,
+        help_text="Marque para usar fundo azul com texto branco"
     )
     quantidade = IntegerBlock(
         required=False,
@@ -390,6 +417,43 @@ class NoticiasListBlock(StructBlock):
         icon = 'list-ul'
         label = 'Lista de Notícias'
 
+class AvisosListBlock(StructBlock):
+    avisos_index_page = PageChooserBlock(
+        required=True,
+        target_model='avisos.AvisosIndexPage',
+        help_text="Selecione a página de index de avisos"
+    )
+    quantidade = IntegerBlock(
+        required=False,
+        default=6,
+        min_value=1,
+        label="Quantidade de avisos exibidos"
+    )
+    texto_link = CharBlock(
+        required=False,
+        default="Ver todos os avisos",
+        label="Texto do link para todos os avisos"
+    )
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        avisos_index_page = value.get('avisos_index_page')
+        quantidade = value.get('quantidade') or 6
+        texto_link = value.get('texto_link') or "Ver todos os avisos"
+        avisos = []
+        avisos_index_page_url = None
+        if avisos_index_page:
+            avisos = avisos_index_page.get_ultimos_avisos(quantidade=quantidade)
+            avisos_index_page_url = avisos_index_page.url
+        context['avisos'] = avisos
+        context['avisos_index_page_url'] = avisos_index_page_url
+        context['texto_link'] = texto_link
+        return context
+
+    class Meta:
+        template = 'blocks/list_avisos.html'
+        icon = 'warning'
+        label = 'Lista de Avisos'
 
 class LinkStructBlock(StructBlock):
     link_text = CharBlock(required=True, help_text="Texto")
@@ -607,3 +671,46 @@ class BaseStreamBlock(StreamBlock):
         description="Uma tabela de dados",
     )
 
+class SolucaoItemBlock(StructBlock):
+    imagem = ImageChooserBlock(required=True, label="Imagem do Solução")
+    link = URLBlock(required=True, label="URL do Solução")
+    texto_alternativo = CharBlock(
+        required=False, 
+        label="Texto alternativo", 
+        help_text="Descrição da imagem para acessibilidade (alt text)"
+    )
+
+    class Meta:
+        icon = 'image'
+        label = "Item de Solução"
+        template = 'blocks/item_solucao.html'
+
+class CarrosselSolucoesBlock(StructBlock):
+    solucoes = ListBlock(
+        SolucaoItemBlock(),
+        label="Soluções",
+        help_text="Adicione as soluções para o carrossel"
+    )
+
+    class Meta:
+        icon = 'image'
+        label = "Carrossel de Soluções"
+        template = 'blocks/carrossel_solucoes.html'
+
+class ProgramaItemBlock(StructBlock):
+    titulo = CharBlock(required=True , max_length=100, label="Título do Programa")
+    link = URLBlock(required=True, label="Link do Programa")
+    imagem = ImageChooserBlock(required=True, label="Imagem do Programa")
+
+    class Meta:
+        icon = 'imagem'
+        label =  'Item do Programa'
+
+class ProgramaBlock(StructBlock):
+    itens = ListBlock(ProgramaItemBlock, default=[], min_num=1, max_num=12)
+    link_ver_todos = URLBlock(required=False, label="Link do botão 'Ver todos'")
+
+    class Meta:
+        icon = 'list-ul'
+        label = "Bloco de Programas"
+        template = 'blocks/list_programas.html'

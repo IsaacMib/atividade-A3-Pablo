@@ -24,6 +24,8 @@ if [ "$DJANGO_SETTINGS_DEBUG" = "true" ]; then
     # Ambiente de desenvolvimento: roda runserver com browser-reload
     if [ "$NPM_WATCH" = "on" ]; then
       echo "[Entrypoint] Iniciando npm run watch em background"
+      npm install
+      npm run build:dev
       npm run watch &
     fi
     echo "[Entrypoint] Iniciando Django runserver em modo debug"
@@ -44,4 +46,9 @@ else
     fi
     echo "[Entrypoint] Executando comando: $@"
     exec "$@"
+fi
+
+if [ "$DJANGO_RUN_MIGRATE" = "1" ]
+then
+  python manage.py migrate --no-input
 fi

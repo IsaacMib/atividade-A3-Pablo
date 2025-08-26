@@ -2,9 +2,14 @@
 @use './listvideo.scss';
 @use './banner.scss';
 @use './listaNoticias/index.scss' as listaNoticias;
+@use './listaAvisos/index.scss' as ListaAvisos;
 @use './servicos_online.scss';
 @use './carrossel_banner.scss';
 @use './titulo.scss';
 @use './acessorapido.scss';
 @use './rede_social.scss';
 @use './centralMonitoramentoDetran.scss';
+@use './carrosselsolucao.scss' as carrossel;
+@use './agenda.scss';
+@use './solucao.scss';
+@use './btnVerTodos.scss';

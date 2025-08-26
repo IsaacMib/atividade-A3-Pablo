@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags static file_extras %}
-
 {% block content %}
     <div class="container">
         {% if settings.core.SiteSettings.is_periodo_eleitoral and page.sensivel_periodo_eleitoral %}
@@ -90,20 +89,9 @@
         {% endif %}
     </div>
     {% if not settings.core.SiteSettings.is_periodo_eleitoral and not page.sensivel_periodo_eleitoral %}
-        <div class="container tw:mt-16 tw:mb-0">
-            <div class="titulo-container text-center">
-                <div class="d-flex flex-column align-items-center">
-                    <h1 class="titulo-1">Últimas Notícias</h1>
-                    <div class="titulo-linha">
-                        <svg width="133" height="3">
-                            <line x1="0" y1="1.5" x2="133" y2="1.5" stroke="{% if self.bgAzul %}#ffffff{% else %}#305A9C{% endif %}" stroke-width="3"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="lista-noticias--wrapper tw:bg-neutral-100 tw:mt-2 tw:mb-2">
             <div class="container">
+                {% include 'include/titulo.html' with titulo='Últimas Notícias' bgClass='' bgColor='#305A9C' %}
                 <div class="row">
                     <div class="row">
                         {% if ultimas_noticias %}
@@ -121,6 +109,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="text-center tw:mb-8">
             {% include "include/ver_todos_btn.html" with ver_todos_url=page.get_parent.specific.url texto_link="Ver todos" %}
         </div>

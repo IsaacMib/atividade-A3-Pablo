@@ -4,16 +4,7 @@
 {% block content %}
     <div class="container">
         {% if not tag %}
-            <div class="titulo-container text-center">
-                <div class="d-flex flex-column align-items-center">
-                    <h1 class="titulo-1">{{self.introduction}}</h1>
-                    <div class="titulo-linha">
-                        <svg width="133" height="3">
-                            <line x1="0" y1="1.5" x2="133" y2="1.5" stroke="{% if self.bgAzul %}#ffffff{% else %}#305A9C{% endif %}" stroke-width="3"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
+            {% include 'include/titulo.html' with titulo=self.introduction|default:'Todas as Notícias' bgClass='' bgColor='#305A9C' %}
         {% endif %} 
 
         {% if tag %}

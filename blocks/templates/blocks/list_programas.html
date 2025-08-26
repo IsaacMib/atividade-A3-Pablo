@@ -1,0 +1,21 @@
+{% load wagtailimages_tags %}
+
+<div class="container programas">
+  <div class="row g-2">
+    {% for item in value.itens %}
+      <div class="col-8 col-md-3">
+        <a href="{{ item.link }}" target="_blank" aria-label="{{ item.titulo }}">
+          {% image item.imagem fill-350x200 alt=item.titulo %}
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if value.link_ver_todos %}
+    <div class="text-center mt-3">
+      <a class="btn btn-outline-primary" href="{{ value.link_ver_todos }}">
+        ver todos
+      </a>
+    </div>
+  {% endif %}
+</div>
