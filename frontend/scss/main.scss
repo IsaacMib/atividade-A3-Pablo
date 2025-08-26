@@ -43,6 +43,16 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
+html, body {
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+.site-conteudo-main {
+    flex: 1;
+}
+
 .richtext-image.left,
 .image-left,
 .richtext-image.right,
