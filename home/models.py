@@ -4,12 +4,28 @@ from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
 
-from blocks.models import AcessosRapidosBlock, BannerComLinkBlock, ListaVideosBlock, OdometerListBlock, CarrosselBannersBlock, ServicosOnlineBlock, TituloBlock, NoticiasListBlock
+from blocks.models import (
+  AcessosRapidosBlock,
+  BannerComLinkBlock,
+  ListaVideosBlock,
+  OdometerListBlock,
+  CarrosselBannersBlock,
+  ServicosOnlineBlock,
+  TituloBlock,
+  NoticiasListBlock,
+  CarrosselSolucoesBlock,
+  AvisosListBlock,
+  ProgramaBlock
+)
+
+
+from blocks.agenda import ListAgendaBlock
 
 class HomePage(Page):
     body = StreamField(
         [
             ('titulo', TituloBlock()),
+            ('lista_avisos', AvisosListBlock()),
             ("acessos_rapidos", AcessosRapidosBlock()),
             ('banner_com_link', BannerComLinkBlock()),
             ('lista_videos', ListaVideosBlock()),
@@ -17,6 +33,9 @@ class HomePage(Page):
             ('noticias', NoticiasListBlock()),
             ("carrossel_banners", CarrosselBannersBlock()),
             ("servicos_online", ServicosOnlineBlock()),
+            ("list_agenda", ListAgendaBlock()),
+            ("carrossel_solucoes", CarrosselSolucoesBlock()),
+            ("programa", ProgramaBlock()),
         ],
         use_json_field=True,
         null=True,

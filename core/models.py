@@ -54,6 +54,13 @@ class SiteSettings(BaseSiteSetting):
         use_json_field=True,
     )
 
+    # Novo campo para controlar o nível máximo do menu
+    menu_max_levels = models.PositiveIntegerField(
+        verbose_name="Níveis máximos do menu",
+        default=1,
+        help_text="Define até quantos níveis de páginas o menu principal irá exibir. (Máximo: 3)"
+    )
+
     panels = [
         FieldPanel("title_suffix"),
         MultiFieldPanel(
@@ -71,6 +78,12 @@ class SiteSettings(BaseSiteSetting):
             ],
             heading="Redes Sociais"
         ),
+        MultiFieldPanel(
+            [
+                FieldPanel("menu_max_levels"),
+            ],
+            heading="Menu do Site"
+        ),
     ]
 
     def is_periodo_eleitoral(self):
@@ -86,6 +99,10 @@ class SiteSettings(BaseSiteSetting):
 
     def clean(self):
         super().clean()
+        if self.menu_max_levels > 3:
+            raise ValidationError({
+                "menu_max_levels": "O número máximo de níveis permitido para o menu é 3."
+            })
         if self.periodo_eleitoral_habilitado:
             if not self.periodo_eleitoral_inicio and not self.periodo_eleitoral_fim:
                 raise ValidationError({

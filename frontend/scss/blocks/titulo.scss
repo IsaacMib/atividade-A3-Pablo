@@ -1,16 +1,24 @@
+@use '../variables.scss';
+
 .titulo-container {
-    width: 100%;
-        padding-bottom: 16px;
+   width: 100%;
  }
  
  
  .titulo-bg-azul {
-    background-color: #305A9C;
-    padding: 2rem 0;
+   background-color: #3700b3;
    
-    .titulo-1 {
-        color: #FFFFFF;
-    }
+   .titulo-1 {
+      color: #FFFFFF;
+   }
+ }
+
+ .titulo-bg-default {
+   background-color: variables.$color-grey-100;
+ }
+
+.titulo-bg-branco {
+   background-color: variables.$color-white;
  }
  
  

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+<h2>Lista de agendas</h2>
+
+{% block content %}
+    <div class="container">
+      {% if agendas %}
+        <div class="row">
+          {% for agenda in agendas %}
+            <div class="col-md-3 mb-4">
+              <div class="agenda-item h-100">
+                <div class="agenda-item--title">{{ agenda.title }}</div>
+                <div class="agenda-item--divider"></div>
+                <div class="agenda-item--descricao">Acompanhe todos os compromissos</div>
+                <div class="agenda-item--vertodos">
+                  {% include "include/ver_todos_btn.html" with ver_todos_url=agenda.url %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="col-md-12 tw:text-center">
+          <p>Ainda não temos Agendas no site. Desculpe.</p>
+        </div>
+      {% endif %}
+      {% include "include/paginator.html" with posts=agendas %}
+    </div>
+{% endblock content %}

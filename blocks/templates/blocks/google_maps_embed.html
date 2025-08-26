@@ -1,0 +1,15 @@
+{% if maps_src %}
+<div class="google-maps-embed">
+    <iframe
+        src="{{ maps_src }}"
+        width="{{ maps_width }}"
+        height="{{ maps_height }}"
+        style="border:0;"
+        allowfullscreen
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+</div>
+{% else %}
+<p>Mapa não incorporado: verifique o HTML do iframe.</p>
+{% endif %}

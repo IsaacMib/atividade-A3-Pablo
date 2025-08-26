@@ -16,6 +16,7 @@ def get_result_type(result):
 def formatar_wagtail_types(wagtail_types):
     tipos_conhecidos = {
         "noticiaspage": "Notícias",
+        "avisospage": "Avisos",
         "document": "Arquivo",
         "image": "Imagem",
         # Adicione outros tipos conhecidos aqui se desejar

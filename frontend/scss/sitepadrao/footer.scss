@@ -1,7 +1,22 @@
-.footer-layout {
-  padding: 64px 0px;
+@use '../variables.scss';
+
+.app-versao {
+  align-content: center;
+}
+.app-versao p {
+  margin: 0
 }
 
 .footer-icones {  
   align-items: center;
+}
+
+.footer-wrapper {
+  background-color: variables.$footer-color;
+}
+
+@media screen and (max-width: 767px) {
+  .footer-layout {
+    flex-direction: column;
+  }
 }

@@ -6,7 +6,7 @@ from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import Tag, TaggedItemBase
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
-from wagtail.admin.panels import ObjectList, FieldPanel, MultiFieldPanel, TabbedInterface
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList, TabbedInterface, PageChooserPanel
 from wagtail.fields import StreamField
 from wagtail.search import index
 
@@ -16,6 +16,7 @@ from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
 from datetime import datetime
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.validators import MaxLengthValidator
 from wagtail.images.blocks import ImageChooserBlock
 from core.utils import get_file_type, get_fontawesome_file_icon
 
@@ -32,14 +33,19 @@ class NoticiasPageTag(TaggedItemBase):
     )
 
 class NoticiasPage(Page):
-    
-    subtitle = models.CharField(verbose_name="Subtítulo",blank=True, max_length=255)
+    """
+    Página que representa uma notícia.
+    """
+    subtitle = models.CharField(verbose_name="Subtítulo", blank=True, max_length=255)
     descricao = models.TextField(
         verbose_name="Descrição",
         blank=True,
         help_text="Breve descrição do conteúdo da página.",
+        validators=[MaxLengthValidator(230)],
     )
-    data_publicacao = models.DateTimeField("Data de publicação da notícias", default=datetime.now, blank=True, null=True)
+    data_publicacao = models.DateTimeField(
+        "Data de publicação da notícia", default=datetime.now, blank=True, null=True
+    )
     tags = ClusterTaggableManager(through=NoticiasPageTag, blank=True)
     body = StreamField(
         BaseStreamBlock(), verbose_name="Page body", blank=True, null=True, use_json_field=True
@@ -65,9 +71,19 @@ class NoticiasPage(Page):
 
     images = StreamField(
         [
-            ('imagem', ImageChooserBlock(required=True, label="Imagem da notícia")),
+            ("imagem", ImageChooserBlock(required=True, label="Imagem da notícia")),
         ],
         verbose_name="Coleção de Imagens",
+        blank=True,
+        null=True,
+        use_json_field=True,
+    )
+
+    arquivos = StreamField(
+        [
+            ("arquivo", EspecificDocumentChooserBlock(required=True, label="Arquivos")),
+        ],
+        verbose_name="Arquivos da notícia",
         blank=True,
         null=True,
         use_json_field=True,
@@ -76,23 +92,13 @@ class NoticiasPage(Page):
     slideshow_imagens = models.BooleanField(
         verbose_name="Ativar slideshow de imagens",
         default=False,
-        help_text="Marque para exibir as imagens como slideshow na página da notícia."
-    )
-
-    arquivos = StreamField(
-        [
-            ('arquivo', EspecificDocumentChooserBlock(required=True, label="Arquivos")),
-        ],
-        verbose_name="Arquivos da notícia",
-        blank=True,
-        null=True,
-        use_json_field=True,
+        help_text="Marque para exibir as imagens como slideshow na página da notícia.",
     )
 
     nao_exibir_lista_de_arquivos = models.BooleanField(
         verbose_name="Não exibir lista de arquivos",
         default=False,
-        help_text="Marque para não exibir a lista de arquivos na página da notícia."
+        help_text="Marque para não exibir a lista de arquivos na página da notícia.",
     )
 
     # Painéis padrão
@@ -104,19 +110,22 @@ class NoticiasPage(Page):
                 FieldPanel("slideshow_imagens"),
                 FieldPanel("images"),
             ],
-            heading="Imagens da notícia"
+            heading="Imagens da notícia",
         ),
         MultiFieldPanel(
             [
                 FieldPanel("nao_exibir_lista_de_arquivos"),
                 FieldPanel("arquivos"),
             ],
-            heading="Arquivos da notícia"
+            heading="Arquivos da notícia",
         ),
         FieldPanel("body"),
         FieldPanel("data_publicacao"),
         FieldPanel("tags"),
     ]
+
+    # Painel de promoções
+    promote_panels = Page.promote_panels
 
     # Painel para campos migrados
     migracao_panels = [
@@ -127,12 +136,14 @@ class NoticiasPage(Page):
         FieldPanel("sensivel_periodo_eleitoral"),
     ]
 
-    edit_handler = TabbedInterface([
-        ObjectList(content_panels, heading='Conteúdo'),
-        ObjectList(settings_panels, heading='Configurações'),
-        # Só mostra o painel de migração para superusuário ou quem tem permissão
-        ObjectList(migracao_panels, heading='Migração', classname="migracao-only"),
-    ])
+    edit_handler = TabbedInterface(
+        [
+            ObjectList(content_panels, heading="Conteúdo"),
+            ObjectList(promote_panels, heading="Promoções"),  # Adicionado painel de promoções
+            ObjectList(settings_panels, heading="Configurações"),
+            ObjectList(migracao_panels, heading="Migração", classname="migracao-only"),
+        ]
+    )
 
     @property
     def get_tags(self):
@@ -216,8 +227,6 @@ class NoticiasIndexPages(RoutablePageMixin, Page):
     content_panels = Page.content_panels + [
         FieldPanel("introduction"),
     ]
-
-    max_count = 1
 
     parent_page_types = [
         "home.HomePage",

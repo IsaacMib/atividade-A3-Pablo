@@ -1,0 +1,45 @@
+{% load wagtailimages_tags %}
+
+<div class="container py-5">
+    {% include "blocks/titulo.html" with titulo="Localização" bgAzul=False %}
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            {% picture self.imagem width-400 %}
+        </div>
+        <div class="col-auto">
+            <p class="text-center">
+                <h2 class="tw:mt-0 tw:mb-8 tw:font-bold">{{ self.nome_local }}</h2>
+            </p>
+            <p class="tw:max-w-80">
+                {{ self.endereco }}
+            </p>
+            <p>
+                CEP: {{ self.cep }}
+            </p>
+            <p>
+                Fone: {{ self.telefone }}
+            </p>
+            <p>
+                Horário de Atendimento: {{ self.horario_atendimento }}
+            </p>
+        </div>
+    </div>
+</div>
+{% include "blocks/titulo.html" with titulo="Como Chegar" bgAzul=False %}
+<div class="tw:pb-24">
+    {% if maps_src %}
+        <div class="google-maps-embed">
+            <iframe
+                src="{{ maps_src }}"
+                width="{{ maps_width }}"
+                height="{{ maps_height }}"
+                style="border:0;"
+                allowfullscreen
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+    {% else %}
+        <p>Mapa não incorporado: verifique o HTML do iframe.</p>
+    {% endif %}
+</div>

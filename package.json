@@ -15,6 +15,7 @@
     "autoprefixer": "^10.4.21",
     "babel-loader": "^9.2.1",
     "css-loader": "^7.1.2",
+    "css-minimizer-webpack-plugin": "^7.0.2",
     "eslint": "^8.55.0",
     "mini-css-extract-plugin": "^2.9.2",
     "postcss": "^8.5.3",
@@ -46,15 +47,16 @@
     "lint": "npm run lint:js && npm run lint:css && npm run lint:format",
     "dev": "webpack serve --mode=development --hot",
     "build": "NODE_ENV=production webpack --progress --bail --mode=production",
+    "build:dev": "NODE_ENV=development webpack --progress --bail --mode=development",
     "watch": "webpack --mode=development --watch"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.13.1",
-    "css-minimizer-webpack-plugin": "^7.0.2",
     "cssnano": "^7.0.7",
     "odometer": "^0.4.8",
     "swiper": "^11.2.8",
-    "uikit": "^3.23.3"
+    "uikit": "^3.23.3",
+    "vanilla-calendar-pro": "^3.0.5"
   }
 }

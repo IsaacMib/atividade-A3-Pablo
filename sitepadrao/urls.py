@@ -8,8 +8,16 @@ from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.images.views.serve import ServeView
 from django.views.generic import RedirectView
 
+from django.conf.urls import handler404, handler500
+from django.shortcuts import render
+
 from search import views as search_views
 from sitepadrao import views as sitepadrao_views
+from . import views
+
+handler403 = 'sitepadrao.views.erro_403'
+handler404 = 'sitepadrao.views.erro_404'
+handler500 = 'sitepadrao.views.erro_500'
 
 urlpatterns = [
     path("health/", sitepadrao_views.health_check, name='health_check'),
@@ -25,7 +33,9 @@ urlpatterns = [
     path(
             "favicon.ico",
             RedirectView.as_view(url=settings.STATIC_URL + "img/favicon.ico"),
-        )
+        ),
+    path("acesso_negado/", sitepadrao_views.acesso_negado, name="acesso_negado"),
+    path("404/", sitepadrao_views.erro_404, name="erro_404"),
 ]
 
 if settings.HABILITAR_SSO_LOGIN:
@@ -55,8 +65,13 @@ urlpatterns = urlpatterns + [
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
     # the list:
-    path("", include(wagtail_urls)),
+    path("", include('wagtail.urls')),
     # Alternatively, if you want Wagtail pages to be served from a subpath
     # of your site, rather than the site root:
     #    path("pages/", include(wagtail_urls)),
 ]
+
+def erro_500(request):
+    return render(request, "500.html", status=500)
+
+handler500 = erro_500

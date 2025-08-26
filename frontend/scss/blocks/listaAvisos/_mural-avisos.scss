@@ -1,0 +1,139 @@
+.mural-avisos {
+  padding: 2rem 0;
+
+  // h2 {
+  //   font-weight: 800;
+  //   font-size: 2rem;
+  //   position: relative;
+  //   display: inline-block;
+  //   padding-bottom: 0.4rem;
+  //   margin-bottom: 2.5rem;
+  //   color: #2f5597;
+
+  //   &::after {
+  //     content: "";
+  //     position: absolute;
+  //     bottom: 0;
+  //     left: 0;
+  //     width: 100%;
+  //     height: 3px;
+  //     background-color: #2f5597;
+  //   }
+  // }
+
+  // .avisos-wrapper {
+  //   display: grid;
+  //   grid-template-columns: repeat(3, 1fr);
+  //   gap: 1.5rem;
+  //   justify-content: center;
+  //   max-width: 1020px;
+  //   margin: 0 auto;
+  // }
+
+  .aviso-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    padding: 1.25rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    min-height: 240px;
+
+    &:hover {
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+
+      &::before {
+        transform: scaleY(1);
+      }
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background-color: #2f5597;
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.3s ease;
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+    }
+  }
+
+  .aviso-title {
+    font-size: 1.2rem;
+    text-align: left;
+    font-weight: 600;
+    color: #2f5597;
+    margin-bottom: 0.2rem;
+  }
+
+  .aviso-desc-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .icon-col {
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+
+  .desc-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .aviso-descricao,
+  .aviso-data {
+    margin: 0;
+    line-height: 1.8;
+    word-break: break-word;
+    text-align: left;
+  }
+
+.aviso-data {
+    font-size: 1.0rem !important;
+    color: #2f5597;
+    margin-top: 0.3rem;
+  }
+
+  .ver-todos-btn {
+    margin-top: 2rem;
+    text-align: center;
+
+    a {
+      border: 1px solid #2f5597;
+      color: #2f5597;
+      padding: 0.5rem 2rem;
+      border-radius: 30px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: #2f5597;
+        color: white;
+      }
+    }
+  }
+
+  @media (max-width: 991px) {
+    .avisos-wrapper {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .avisos-wrapper {
+      grid-template-columns: 1fr;
+    }
+  }
+}
