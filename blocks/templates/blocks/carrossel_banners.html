@@ -1,7 +1,7 @@
 
 <div class="container">
   <!-- Slider main container -->
-  <div class="swiper carrossel-banners">
+  <div class="swiper carrossel-banners bg-red">
     <!-- Additional required wrapper -->
     <div class="swiper-wrapper">
       {% for banner in value.banners %}
@@ -20,10 +20,10 @@ document.addEventListener('DOMContentLoaded', function() {
   const swiperServicosOnline = new Swiper('.carrossel-banners', {
         slidesPerView: 1,
         spaceBetween: 20,
-        {% comment %} autoplay: {
-          delay: 5000,
+        autoplay: {
+          delay: 8000,
           disableOnInteraction: false,
-        }, {% endcomment %}
+        },
         pagination: {
             el: '.swiper-banners-pagination',
             clickable: true,

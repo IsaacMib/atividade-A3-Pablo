@@ -2,16 +2,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px auto;
-  max-width: 1200px;
-  padding: 16px 20px;
+  margin: 0px auto;
+  max-width: 100%;
+  padding: 0 15px;
+  height: 470px;
+  overflow: hidden;
   
   img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     max-width: 100%;
     width: 100%;
-    height: auto;
-    border-radius: 8px;
+    height: 490px;
+    aspect-ratio: 16 / 9;
+    max-height: 470px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    object-fit: cover !important;
     cursor: pointer;
     transition: transform 0.2s ease;
     
