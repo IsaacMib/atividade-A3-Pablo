@@ -78,11 +78,7 @@ TARGET_CHOICES = [
 
 class LinkCabecalhoItemBlock(StructBlock):
     titulo = CharBlock(max_length=255, verbose_name="Título do Link")
-<<<<<<< HEAD
-    url = URLBlock(max_length=255, verbose_name="URL", help_text="O link no padrão ex.: https://www.detran.pb.gov.br/")
-=======
     url = URLBlock(max_length=255, verbose_name="URL", help_text="O link no padrão ex.: https://www.codata.pb.gov.br/")
->>>>>>> site-padrao-main
     target = ChoiceBlock(
         choices=TARGET_CHOICES,
         default='_self',
