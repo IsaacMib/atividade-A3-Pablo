@@ -97,8 +97,8 @@ class VideoBlock(StructBlock):
 
 
 class ListaVideosBlock(StructBlock):
-    videos = ListBlock(VideoBlock(), label="Vídeos", max_num=3)
     ver_todos_url = URLBlock(required=False, label="URL do 'Ver todos'")
+    videos = ListBlock(VideoBlock(), label="Vídeos", max_num=3)
 
     class Meta:
         icon = 'list-ul'
@@ -360,12 +360,12 @@ class OdometerBlock(StructBlock):
         label = 'Odometer'
 
 class OdometerListBlock(StructBlock):
-    odometers = ListBlock(OdometerBlock(), label="Central de Monitoramento GEDRA")
+    odometers = ListBlock(OdometerBlock(), label="Central de Monitoramento")
 
     class Meta:
         template = 'blocks/central_monitoramento_detran.html'
         icon = 'list-ul'
-        label = 'Central de Monitoramento GEDRA '
+        label = 'Central de Monitoramento'
 
 class NoticiasListBlock(StructBlock):
     noticias_index_page = PageChooserBlock(
@@ -380,11 +380,6 @@ class NoticiasListBlock(StructBlock):
         help_text="Título que aparecerá acima da lista de notícias"
     )
     
-    bg_azul = BooleanBlock(
-        required=False,
-        default=False,
-        help_text="Marque para usar fundo azul com texto branco"
-    )
     quantidade = IntegerBlock(
         required=False,
         default=6,

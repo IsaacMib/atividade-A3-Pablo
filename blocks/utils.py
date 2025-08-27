@@ -1,6 +1,6 @@
 # utils.py
 
-ICONES_REDES = [
+ICONES_REDES_GERAL = [
     ('fa-brands fa-facebook', 'Facebook'),
     ('fa-brands fa-instagram', 'Instagram'),
     ('fa-brands fa-youtube', 'YouTube'),
@@ -11,6 +11,8 @@ ICONES_REDES = [
     ('fa-brands fa-whatsapp', 'WhatsApp'),
     ('fa-brands fa-telegram', 'Telegram'),
 ]
+
+ICONES_REDES = sorted(ICONES_REDES_GERAL, key=lambda x: x[1])
 
 ICONES_ACESSO_RAPIDO_GERAL = [
     ('fas fa-headset', 'Atendimentos'),
@@ -36,6 +38,32 @@ ICONES_ACESSO_RAPIDO_GERAL = [
     ('fas fa-tools', 'Ferramentas Administrativas'),
 ]
 
+ICONES_ACESSO_RAPIDO_DETRAN = [
+    ('fas fa-file-invoice', 'Boleto Licenciamento'),
+    ('fas fa-money-bill-wave', 'IPVA'),
+    ('fas fa-car', '1º Emplacamento on-line (0km)'),
+    
+    ('fas fa-id-card', 'ATPVe'),
+    ('fas fa-receipt', 'Taxas de Serviços'),
+    ('fas fa-question-circle', 'Perguntas Frequentes'),
+    ('fas fa-search', 'Consultar Proc. Veículo'),
+    
+    ('fas fa-file-alt', 'Portaria/Instruções Normativas'),
+    ('fas fa-clipboard-check', 'Menu de Exames'),
+    ('fas fa-phone-alt', 'Telefones Úteis'),
+    ('fas fa-folder-open', 'Consultar Processo SGP'),
+
+    # Ícones adicionais
+    ('fas fa-calendar-check', 'Agendamento de Serviços'),
+    ('fas fa-id-badge', 'CNH Digital'),
+    ('fas fa-exclamation-triangle', 'Segurança no Trânsito'),
+    ('fas fa-car-crash', 'Consulta de Multas'),
+    ('fas fa-map-marked-alt', 'Localização de Postos'),
+    ('fas fa-tools', 'Serviços Gerais'),
+    ('fas fa-user-shield', 'Área do Condutor'),
+]
+
+
 ICONES_ACESSO_RAPIDO_EDUCACAO = [
     ('fas fa-file-contract', 'Licitações, contratos'),
     ('fas fa-file-alt', 'Editais'),
@@ -52,26 +80,41 @@ ICONES_ACESSO_RAPIDO_EDUCACAO = [
     ('fas fa-ellipsis-h', 'Outros'),
 ]
 
-ICONES_ACESSO_RAPIDO = ICONES_ACESSO_RAPIDO_GERAL + ICONES_ACESSO_RAPIDO_EDUCACAO
+ICONES_ACESSO_RAPIDO = sorted(
+    ICONES_ACESSO_RAPIDO_GERAL + ICONES_ACESSO_RAPIDO_EDUCACAO + ICONES_ACESSO_RAPIDO_DETRAN,
+    key=lambda x: x[1]
+)
 
-IDS_METABASE_CARDS = [
+IDS_METABASE_CARDS_DETRAN = [
+    (2650, 'Frota de Veículos'),
+    (3447, 'Condutores residentes na Paraíba'),
+    (3755, 'Infrações cometidas no ano atual'),
+    (3756, "CNH's pelo PHS"),
+]
+
+
+IDS_METABASE_CARDS_EDUCACAO = [
     (2650, 'Total de Unicades Escolares(UE)'),
     (3447, 'Total de Matrículas na Educação Básica'),
     (3755, 'Total de Turmas na Educação Básica'),
     (3756, "Total de Vagas na Educação Básica"),
 ]
 
+IDS_METABASE_CARDS = sorted(
+    IDS_METABASE_CARDS_EDUCACAO + IDS_METABASE_CARDS_DETRAN,
+    key=lambda x: x[1]
+)
 
 CLASS_TITULO_BG_COLOR_BLOCK = [
     ('titulo-bg-default' , 'Background Padrão'),
-    ('titulo-bg-azul' , 'Background Azul'),
-    ('titulo-bg-branco' , 'Background Branco')
+    ('titulo-bg-azul' , 'Background Tipo 1'),
+    ('titulo-bg-cinza' , 'Background Tipo 2')
 ]
 
 COLOR_TITULO_BG_COLOR_BLOCK = [
     ('#305A9C' , 'titulo-bg-default'),
+    ('#305A9C' , 'titulo-bg-cinza'),
     ('#FFFFFF' , 'titulo-bg-azul'),
-    ('#305A9C' , 'titulo-bg-branco'),
 ]
 
 def get_metabase_card_text_by_id(card_id):

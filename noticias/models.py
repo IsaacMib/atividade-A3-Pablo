@@ -220,7 +220,7 @@ class NoticiasPage(Page):
 
 class NoticiasIndexPages(RoutablePageMixin, Page):
 
-    introduction = models.TextField(help_text="Texto para o topo da notícia", blank=True)
+    introduction = models.TextField(help_text="Texto para o topo da notícia", blank=True, default="Todas as Notícias")
 
     
 
