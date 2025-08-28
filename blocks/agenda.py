@@ -23,6 +23,7 @@ class ListAgendaBlock(StructBlock):
         agenda_page = value.get('agenda_page')
         context['agenda_page_title'] = agenda_page.title if agenda_page else ""
         context['agenda_page_url'] = agenda_page.url if agenda_page else ""
+        context['agenda_page_id'] = agenda_page.id if agenda_page else None
         return context
 
     class Meta:

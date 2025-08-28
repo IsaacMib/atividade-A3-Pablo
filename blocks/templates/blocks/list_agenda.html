@@ -8,13 +8,13 @@
     </div>
     <div class="agenda-carrossel">
       <div class="daypicker-wrapper">
-        <ul class="daypicker">
+        <ul class="daypicker-{{ agenda_page_id }} daypicker">
           <!-- Os dias serão adicionados dinamicamente pelo JavaScript -->
         </ul>
       </div>
     </div>
     <div class="agenda-content swiper-container">
-      <div class="swiper swiper-agenda-compromissos">
+      <div class="swiper swiper-agenda-compromissos-{{ agenda_page_id }}">
         <div class="swiper-wrapper"></div>
       </div>
       <div class="swiper-button-next swiper-agenda-compromissos-next"></div>
@@ -26,7 +26,7 @@
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     // Inicialização do Swiper
-    const swiperAgenda = new Swiper(".swiper-agenda-compromissos", {
+    const swiperAgenda = new Swiper(".swiper-agenda-compromissos-{{ agenda_page_id }}", {
         centeredSlides: true,
         spaceBetween: 1,
         navigation: {
@@ -57,11 +57,11 @@
         },
       });
 
-    const daypicker = document.querySelector(".daypicker");
+    const daypicker = document.querySelector(".daypicker-{{ agenda_page_id }}");
     const currentMonthElement = document.getElementById("current-month");
     const visibleRange = 3;
     const baseUrl = "{{ agenda_page_url }}";
-    const swiperWrapper = document.querySelector('.swiper-agenda-compromissos .swiper-wrapper');
+    const swiperWrapper = document.querySelector('.swiper-agenda-compromissos-{{ agenda_page_id }} .swiper-wrapper');
 
     function formatDate(date) {
       const yyyy = date.getFullYear();
