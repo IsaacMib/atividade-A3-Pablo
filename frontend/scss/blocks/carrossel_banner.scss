@@ -52,10 +52,20 @@
   align-items: center;
   height: 100%;
 
-  img {
-    height: 100%;
+  picture {
+    height: 100% !important;
+
+    img {
+      height: 100% !important;
+    }
   }
 }
+
+// .banner-image {
+//   width: 100% !important;
+//   height: 100%;
+//   object-fit: cover; /* A propriedade mágica que faz tudo funcionar */
+// }
 
 
 @media screen and (max-width: 500px) {
