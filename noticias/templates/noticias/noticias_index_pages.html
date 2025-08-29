@@ -13,20 +13,15 @@
                     <h1 class="index-header__title">Notícias</h1>
                 </div>
                 <div class="col-md-12">
-                    <p class="index-header__introduction">Visualizando todas as notícias classificadas pela tag <span class="blog-tags__tag tw:text-primary tw:font-bold">{{ tag }}</span>.</p>
+                    <p class="index-header__introduction">
+                        Visualizando todas as notícias classificadas pela tag 
+                        <span class="blog-tags__tag tw:text-primary tw:font-bold">{{ tag }}</span>.
+                    </p>
                 </div>
             </div>
         {% endif %}
-
-        {% comment %} {% if page.get_child_tags %}
-            <ul class="blog-tags">
-                <li><span class="blog-tags__pill blog-tags__pill--selected tw:text-primary tw:font-bold ">Todos</span></li>
-                {% for tag in page.get_child_tags %}
-                    <li><a class="blog-tags__pill tw:text-primary" aria-label="Filter by tag name {{ tag }}" href="{{ tag.url }}">{{ tag }}</a></li>
-                {% endfor %}
-            </ul>
-        {% endif %} {% endcomment %}
     </div>
+
     <div class="lista-noticias--wrapper tw:bg-neutral-100">
         <div class="container">
             <div class="row">
@@ -34,9 +29,19 @@
                     {% if posts %}
                         {% for noticias in posts %}
                             {% if not noticias.sensivel_periodo_eleitoral or not settings.core.SiteSettings.is_periodo_eleitoral %}
-                                <div class="col-lg-6 col-md-12 col-sm-12">
+                                
+                                {# versão desktop/tablet → mostra todas #}
+                                <div class="col-lg-6 col-md-12 col-sm-12 d-none d-md-block">
                                     {% include 'blocks/noticias.html' with noticias=noticias %}
                                 </div>
+
+                                {# versão mobile → mostra só as 4 primeiras #}
+                                {% if forloop.counter <= 4 %}
+                                <div class="col-lg-6 col-md-12 col-sm-12 d-block d-md-none">
+                                    {% include 'blocks/noticias.html' with noticias=noticias %}
+                                </div>
+                                {% endif %}
+
                             {% endif %}
                         {% endfor %}
                     {% else %}
@@ -48,5 +53,6 @@
             </div>
         </div>
     </div>
+
     {% include "include/paginator.html" with posts=posts %}
 {% endblock content %}
