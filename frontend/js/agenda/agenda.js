@@ -66,30 +66,36 @@ document.addEventListener("DOMContentLoaded", function() {
     const calendar = new Calendar('#calendar-agendas', options);
     
     const layoutMultiple = `
-        <div class="calendar-arrow-prev" role="toolbar" aria-label="${calendar.labels.navigation}">
+        <div class="calendar-arrow-lg calendar-arrow-prev" role="toolbar" aria-label="${calendar.labels.navigation}">
             <#ArrowPrev [month] />
         </div>
         <div class="${calendar.styles.grid}" data-vc="grid">
             <#Multiple>
             <div class="${calendar.styles.column}" data-vc="column" role="region">
                 <div class="${calendar.styles.header}" data-vc="header">
-                <div class="${calendar.styles.headerContent}" data-vc-header="content">
-                    <#Month />
-                    <#Year />
-                </div>
+                    <div class="${calendar.styles.headerContent}" data-vc-header="content">
+                        <div class="calendar-arrow-sm">
+                            <#ArrowPrev [month] />
+                        </div>
+                        <#Month />
+                        <#Year />
+                        <div class="calendar-arrow-sm">
+                        <#ArrowNext [month] />
+                        </div>
+                    </div>
                 </div>
                 <div class="${calendar.styles.wrapper}" data-vc="wrapper">
-                <#WeekNumbers />
-                <div class="${calendar.styles.content}" data-vc="content">
-                    <#Week />
-                    <#Dates />
-                </div>
+                    <#WeekNumbers />
+                    <div class="${calendar.styles.content}" data-vc="content">
+                        <#Week />
+                        <#Dates />
+                    </div>
                 </div>
             </div>
             <#/Multiple>
             <#DateRangeTooltip />
         </div>
-        <div class="calendar-arrow-next" role="toolbar" aria-label="${calendar.labels.navigation}">
+        <div class="calendar-arrow-lg calendar-arrow-next" role="toolbar" aria-label="${calendar.labels.navigation}">
             <#ArrowNext [month] />
         </div>
         <#ControlTime />
