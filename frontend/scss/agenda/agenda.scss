@@ -21,7 +21,6 @@
   }
 }
 
-
 [data-vc=calendar] {
   @media (max-width: 375px) {
     min-width: 0px !important;
@@ -41,6 +40,18 @@
   align-items: center;
   min-height: 304px;
   grid-gap: 12px;
+
+  [data-vc-date-btn] {
+    font-size: 1rem;
+  }
+
+  [data-vc-week-day] {
+    font-size: 0.9rem;
+  }
+
+  .vc-wrapper {
+    padding-bottom: 0.5rem;
+  }
 
   @media (max-width: 992px) {
     grid-gap: 0px !important;
@@ -89,7 +100,8 @@
     justify-content: start;
     padding: 1rem;
     @media (max-width: 375px) {
-      padding: 0.5rem;
+      padding: 0.5rem 0px;
+      justify-content: center;
     }
   }
   .vc-week__day {
