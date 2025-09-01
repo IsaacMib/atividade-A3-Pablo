@@ -1,4 +1,5 @@
 from .base import *  # noqa: F403, F401
+from decouple import config
 
 DEBUG = True
 
@@ -10,7 +11,7 @@ ALLOWED_HOSTS = ["*"]
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # WAGTAILADMIN_BASE_URL required for notification emails
-WAGTAILADMIN_BASE_URL = "http://localhost:8000"
+WAGTAILADMIN_BASE_URL = config('WAGTAILADMIN_BASE_URL', default="http://localhost:8000")
 
 try:
     from .local import *  # noqa
