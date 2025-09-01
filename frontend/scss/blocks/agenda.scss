@@ -47,15 +47,28 @@
     margin: 10px auto;
   }
 
+  @media (max-width: 375px) {
+    width: 100%;
+  }
+
   &.no-compromissos {
     display: grid;
     align-items: center;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
 .agenda-item-col {
   max-width: 259px !important;
-  margin-right: 20px;
+  margin-left: 20px;
+  &:first-child {
+    margin-left: 0px;
+  }
+
+  @media (max-width: 576px) {
+    margin-left: 0px;
+  }
 }
 
 .agenda-item--title {

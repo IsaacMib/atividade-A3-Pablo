@@ -64,6 +64,8 @@
   }
 
   @media (max-width: 375px) {
+    overflow: scroll;
+    
     .calendar-arrow-lg {
       display: none;
     }
