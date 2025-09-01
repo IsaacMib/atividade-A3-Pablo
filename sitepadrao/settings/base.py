@@ -321,6 +321,13 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+# Configurações do django allauth
+ACCOUNT_ADAPTER = "auth_keycloak.adapters.KeycloakAdapter"
+
+KEYCLOAK_BASE_URL = os.getenv("KEYCLOAK_BASE_URL", "https://homolog.sso.codata.pb.gov.br/auth")
+KEYCLOAK_REALM = os.getenv("KEYCLOAK_REALM", "desenvolvimento")
+
+SOCIALACCOUNT_STORE_TOKENS = True
 # Configurações do django-allauth para Keycloak
 SOCIALACCOUNT_PROVIDERS = {
     "openid_connect": {
@@ -332,6 +339,7 @@ SOCIALACCOUNT_PROVIDERS = {
                 "secret": os.getenv("KEYCLOAK_SECRET", ""),
                 "settings": {
                     "server_url": os.getenv("KEYCLOAK_SERVER_URL", "https://homolog.sso.codata.pb.gov.br/auth/realms/desenvolvimento/.well-known/openid-configuration"),
+                    "logout_url": f"{KEYCLOAK_BASE_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/logout",
                 },
             },
         ]
