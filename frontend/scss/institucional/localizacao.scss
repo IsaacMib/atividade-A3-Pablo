@@ -2,5 +2,27 @@
     position: relative;
     overflow: hidden;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for the location image */
+.picture-wrapper {
+
+    picture {
+        img {
+            max-width: 100%;
+            border-top-left-radius: 7rem;
+            border-bottom-right-radius: 7rem;
+            display: block;
+            margin: 0 auto 3rem;
+            position: relative;
+            z-index: 2;
+
+            @media (max-width: 768px) {
+                box-shadow: none !important;
+            }
+        }
+    }
+
+    margin-bottom: 1.5rem;
 }
