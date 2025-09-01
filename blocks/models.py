@@ -1,7 +1,7 @@
 from blocks.utils import (
-    ICONES_REDES, 
-    ICONES_ACESSO_RAPIDO, 
-    IDS_METABASE_CARDS, 
+    ICONES_REDES,
+    ICONES_ACESSO_RAPIDO,
+    IDS_METABASE_CARDS,
     CLASS_TITULO_BG_COLOR_BLOCK,
     get_metabase_card_text_by_id,
     get_color_by_class_titulo_bg
@@ -18,9 +18,9 @@ from wagtail.blocks import (
     StreamBlock,
     StructBlock,
     TextBlock,
-    ListBlock, 
+    ListBlock,
     FloatBlock,
-    PageChooserBlock, 
+    PageChooserBlock,
     URLBlock,
     IntegerBlock,
     BooleanBlock
@@ -37,20 +37,23 @@ import magic
 from django.core.exceptions import ValidationError
 
 mappingIconsServicos = {
-            'HIBRIDO': 'icon: link; ratio: 0.75',
-            'PRESENCIAL': 'icon: user; ratio: 0.75',
-            'ONLINE': 'icon: desktop; ratio: 0.75',
-            'PRESENCIAL_AGENDAMENTO': 'icon: calendar; ratio: 0.75',
-        }
+    'HIBRIDO': 'icon: link; ratio: 0.75',
+    'PRESENCIAL': 'icon: user; ratio: 0.75',
+    'ONLINE': 'icon: desktop; ratio: 0.75',
+    'PRESENCIAL_AGENDAMENTO': 'icon: calendar; ratio: 0.75',
+}
+
 
 class AcessoRapidoItemBlock(StructBlock):
     titulo = CharBlock(required=True, max_length=100)
     link = URLBlock(required=True)
-    icone = ChoiceBlock(choices=ICONES_ACESSO_RAPIDO, required=True, label="Ícone")
+    icone = ChoiceBlock(choices=ICONES_ACESSO_RAPIDO,
+                        required=True, label="Ícone")
 
     class Meta:
         icon = 'link'
         label = "Item de Acesso Rápido"
+
 
 class AcessosRapidosBlock(StructBlock):
     itens = ListBlock(AcessoRapidoItemBlock(), default=[])
@@ -59,11 +62,13 @@ class AcessosRapidosBlock(StructBlock):
         icon = 'list-ul'
         label = "Bloco de Acessos Rápidos"
         template = 'blocks/list_acesso_rapido.html'
-        
+
+
 class BannerComLinkBlock(StructBlock):
     imagem = ImageChooserBlock(required=True, label="Imagem do Banner")
     link = URLBlock(required=True, label="URL do Banner")
-    alt_texto = CharBlock(required=False, label="Texto alternativo", help_text="Descrição da imagem (alt)")
+    alt_texto = CharBlock(required=False, label="Texto alternativo",
+                          help_text="Descrição da imagem (alt)")
 
     class Meta:
         icon = 'image'
@@ -93,7 +98,6 @@ class VideoBlock(StructBlock):
         icon = 'media'
         label = "Vídeo"
         template = 'blocks/video.html'
-        
 
 
 class ListaVideosBlock(StructBlock):
@@ -105,31 +109,40 @@ class ListaVideosBlock(StructBlock):
         label = "Lista de Vídeos"
         template = 'blocks/list_video.html'
 
+
 class RedeSocialItemBlock(StructBlock):
     nome = CharBlock(required=True)
     link = URLBlock(required=True)
     icone = ChoiceBlock(choices=ICONES_REDES, required=True)
+
     class Meta:
         icon = "site"
         label = "Bloco de Redes Sociais"
         template = "blocks/redes_sociais.html"
 
-class ListRedeSocial(StructBlock):
-   titulo = CharBlock(required=False, default="Siga-nos nas redes sociais")
-   imagem = ImageChooserBlock(required=False, help_text="Imagem que será exibida ao lado do texto.")
-   redes = ListBlock(RedeSocialItemBlock(), max_num=4)
 
-   class Meta:
-      icon = 'list-ul'
-      label = "Lista de Redes Sociais"
-      template = "blocks/redes_sociais.html"
+class ListRedeSocial(StructBlock):
+    titulo = CharBlock(required=False, default="Siga-nos nas redes sociais")
+    imagem = ImageChooserBlock(
+        required=False, help_text="Imagem que será exibida ao lado do texto.")
+    redes = ListBlock(RedeSocialItemBlock(), max_num=4)
+
+    class Meta:
+        icon = 'list-ul'
+        label = "Lista de Redes Sociais"
+        template = "blocks/redes_sociais.html"
+
 
 class ItemCarrosselBannerBlock(StructBlock):
     imagem = ImageChooserBlock(required=True, label="Imagem do Banner")
+    imagem_mobile = ImageChooserBlock(
+        required=False,
+        label="Imagem do Banner para Celulares e Telas Menores",
+        help_text="Imagem que será exibida em telas menores (ex: celulares)")
     link = URLBlock(required=False, label="URL do Banner")
     texto_alternativo = CharBlock(
-        required=False, 
-        label="Texto alternativo", 
+        required=False,
+        label="Texto alternativo",
         help_text="Descrição da imagem para acessibilidade (alt text)"
     )
     legenda = CharBlock(
@@ -142,6 +155,7 @@ class ItemCarrosselBannerBlock(StructBlock):
         icon = 'image'
         label = "Item do Carrossel"
         template = 'blocks/item_carrossel_banner.html'
+
 
 class CarrosselBannersBlock(StructBlock):
     banners = ListBlock(
@@ -286,6 +300,7 @@ class ServicosOnlineBlock(StructBlock):
         label = 'Carrossel de Serviços Online'
         template = 'blocks/servicos_online.html'
 
+
 class TituloBlock(StructBlock):
     """Bloco de título com opções de estilo e visibilidade."""
     titulo = CharBlock(
@@ -294,8 +309,8 @@ class TituloBlock(StructBlock):
     )
 
     corBackground = ChoiceBlock(
-        choices=CLASS_TITULO_BG_COLOR_BLOCK, 
-        required=False, 
+        choices=CLASS_TITULO_BG_COLOR_BLOCK,
+        required=False,
         label="Cor de Fundo",
         default='titulo-bg-default'
     )
@@ -311,10 +326,13 @@ class TituloBlock(StructBlock):
         icon = 'title'
         label = 'Título'
 
+
 _CACHE_TIMEOUT = 600  # 10 minutos em segundos
 
+
 class OdometerBlock(StructBlock):
-    odometer_value = FloatBlock(required=False, label="Valor do Dado Default", help_text="Preenchido automaticamente pela API", disabled=True)
+    odometer_value = FloatBlock(required=False, label="Valor do Dado Default",
+                                help_text="Preenchido automaticamente pela API", disabled=True)
     id_card = ChoiceBlock(
         required=True,
         label="ID do Card do Metabase",
@@ -327,7 +345,7 @@ class OdometerBlock(StructBlock):
         id_card_text = get_metabase_card_text_by_id(id_card)
         url = f"{settings.METABASE_API_URL}{id_card}"
         headers = {
-          'x-api-key': settings.METABASE_API_KEY
+            'x-api-key': settings.METABASE_API_KEY
         }
         cache_key = f"metabase_odometer_value_{id_card}"
         data = cache.get(cache_key)
@@ -338,7 +356,8 @@ class OdometerBlock(StructBlock):
                     response_json = response.json()
                     result_metadata = response_json.get('result_metadata', [])
                     if result_metadata:
-                        metabase_value = result_metadata[0].get('fingerprint', {}).get('type', {}).get('type/Number',{}).get('q1', 0)
+                        metabase_value = result_metadata[0].get('fingerprint', {}).get(
+                            'type', {}).get('type/Number', {}).get('q1', 0)
                     else:
                         metabase_value = value['odometer_value']
                 else:
@@ -359,6 +378,7 @@ class OdometerBlock(StructBlock):
         icon = 'plus'
         label = 'Odometer'
 
+
 class OdometerListBlock(StructBlock):
     odometers = ListBlock(OdometerBlock(), label="Central de Monitoramento")
 
@@ -367,19 +387,20 @@ class OdometerListBlock(StructBlock):
         icon = 'list-ul'
         label = 'Central de Monitoramento'
 
+
 class NoticiasListBlock(StructBlock):
     noticias_index_page = PageChooserBlock(
         required=True,
         target_model='noticias.NoticiasIndexPages',
         help_text="Selecione a página de índice de notícias"
     )
-    
+
     titulo = CharBlock(
         required=False,
         default="Últimas Notícias",
         help_text="Título que aparecerá acima da lista de notícias"
     )
-    
+
     quantidade = IntegerBlock(
         required=False,
         default=6,
@@ -400,7 +421,8 @@ class NoticiasListBlock(StructBlock):
         noticias = []
         noticias_index_page_url = None
         if noticias_index_page:
-            noticias = noticias_index_page.get_ultimas_noticias(quantidade=quantidade)
+            noticias = noticias_index_page.get_ultimas_noticias(
+                quantidade=quantidade)
             noticias_index_page_url = noticias_index_page.url
         context['noticias'] = noticias
         context['noticias_index_page_url'] = noticias_index_page_url
@@ -411,6 +433,7 @@ class NoticiasListBlock(StructBlock):
         template = 'blocks/list_noticias.html'
         icon = 'list-ul'
         label = 'Lista de Notícias'
+
 
 class AvisosListBlock(StructBlock):
     avisos_index_page = PageChooserBlock(
@@ -438,7 +461,8 @@ class AvisosListBlock(StructBlock):
         avisos = []
         avisos_index_page_url = None
         if avisos_index_page:
-            avisos = avisos_index_page.get_ultimos_avisos(quantidade=quantidade)
+            avisos = avisos_index_page.get_ultimos_avisos(
+                quantidade=quantidade)
             avisos_index_page_url = avisos_index_page.url
         context['avisos'] = avisos
         context['avisos_index_page_url'] = avisos_index_page_url
@@ -450,15 +474,19 @@ class AvisosListBlock(StructBlock):
         icon = 'warning'
         label = 'Lista de Avisos'
 
+
 class LinkStructBlock(StructBlock):
     link_text = CharBlock(required=True, help_text="Texto")
-    internal_page = PageChooserBlock(required=False, help_text="Link para uma página interna")
-    external_url = URLBlock(required=False, help_text="Ou insira uma URL externa")
+    internal_page = PageChooserBlock(
+        required=False, help_text="Link para uma página interna")
+    external_url = URLBlock(
+        required=False, help_text="Ou insira uma URL externa")
 
     def clean(self, value):
         cleaned_data = super().clean(value)
         if not cleaned_data.get('internal_page') and not cleaned_data.get('external_url'):
-            raise ValidationError('Você deve fornecer um link interno ou externo.')
+            raise ValidationError(
+                'Você deve fornecer um link interno ou externo.')
         if cleaned_data.get('internal_page') and cleaned_data.get('external_url'):
             raise ValidationError('Você deve fornecer apenas 1 link.')
         return cleaned_data
@@ -472,16 +500,21 @@ class LinkStructBlock(StructBlock):
         icon = 'link'
         label = 'Link'
 
+
 class LinkWithImageStructBlock(StructBlock):
     link_text = RichTextBlock(required=True, help_text="Texto")
-    internal_page = PageChooserBlock(required=False, help_text="Link para uma página interna")
-    external_url = URLBlock(required=False, help_text="Ou insira uma URL externa")
-    image = ImageChooserBlock(required=False, help_text="Imagem opcional para o link")
+    internal_page = PageChooserBlock(
+        required=False, help_text="Link para uma página interna")
+    external_url = URLBlock(
+        required=False, help_text="Ou insira uma URL externa")
+    image = ImageChooserBlock(
+        required=False, help_text="Imagem opcional para o link")
 
     def clean(self, value):
         cleaned_data = super().clean(value)
         if not cleaned_data.get('internal_page') and not cleaned_data.get('external_url'):
-            raise ValidationError('Você deve fornecer um link interno ou externo.')
+            raise ValidationError(
+                'Você deve fornecer um link interno ou externo.')
         if cleaned_data.get('internal_page') and cleaned_data.get('external_url'):
             raise ValidationError('Você deve fornecer apenas 1 link.')
         return cleaned_data
@@ -519,6 +552,7 @@ class HeadingBlock(StructBlock):
         preview_value = {"heading_text": "Healthy bread types", "size": "h2"}
         description = "Titulo com tamanho selecionável (H2, H3, H4)"
 
+
 class CaptionedImageBlock(StructBlock):
     """
     Custom `StructBlock` for utilizing images with associated caption and
@@ -547,13 +581,15 @@ class CaptionedImageBlock(StructBlock):
         preview_value = {"attribution": "The Wagtail Bakery"}
         description = "An image with optional caption and attribution"
 
+
 class BlockQuote(StructBlock):
     """
     Custom `StructBlock` that allows the user to attribute a quote to the author
     """
 
     text = TextBlock()
-    attribute_name = CharBlock(blank=True, required=False, label="e.g. Mary Berry")
+    attribute_name = CharBlock(
+        blank=True, required=False, label="e.g. Mary Berry")
 
     class Meta:
         icon = "openquote"
@@ -567,22 +603,28 @@ class BlockQuote(StructBlock):
         }
         description = "A quote with an optional attribution"
 
+
 class IframeBlock(StructBlock):
     """
     Bloco para incorporar um iframe customizado.
     """
     url = URLBlock(required=True, label="URL do iframe")
-    width = CharBlock(required=False, default="100%", label="Largura", help_text="Exemplo: 100% ou 600")
-    height = CharBlock(required=False, default="400", label="Altura", help_text="Exemplo: 400")
-    allowfullscreen = BooleanBlock(required=False, default=True, label="Permitir tela cheia")
+    width = CharBlock(required=False, default="100%",
+                      label="Largura", help_text="Exemplo: 100% ou 600")
+    height = CharBlock(required=False, default="400",
+                       label="Altura", help_text="Exemplo: 400")
+    allowfullscreen = BooleanBlock(
+        required=False, default=True, label="Permitir tela cheia")
 
     class Meta:
         icon = "site"
         label = "Iframe"
         template = "blocks/iframe_block.html"
 
+
 class EspecificDocumentChooserBlock(DocumentChooserBlock):
-    allowed_extensions = ['.pdf', '.txt', '.doc', '.docx', '.ods', '.xls', '.xlsx']
+    allowed_extensions = ['.pdf', '.txt',
+                          '.doc', '.docx', '.ods', '.xls', '.xlsx']
     allowed_mimetypes = [
         'application/pdf',
         'text/plain',
@@ -619,6 +661,8 @@ class EspecificDocumentChooserBlock(DocumentChooserBlock):
         return value
 
 # StreamBlocks
+
+
 class BaseStreamBlock(StreamBlock):
     """
     Define the custom blocks that `StreamField` will utilize
@@ -666,12 +710,13 @@ class BaseStreamBlock(StreamBlock):
         description="Uma tabela de dados",
     )
 
+
 class SolucaoItemBlock(StructBlock):
     imagem = ImageChooserBlock(required=True, label="Imagem do Solução")
     link = URLBlock(required=True, label="URL do Solução")
     texto_alternativo = CharBlock(
-        required=False, 
-        label="Texto alternativo", 
+        required=False,
+        label="Texto alternativo",
         help_text="Descrição da imagem para acessibilidade (alt text)"
     )
 
@@ -679,6 +724,7 @@ class SolucaoItemBlock(StructBlock):
         icon = 'image'
         label = "Item de Solução"
         template = 'blocks/item_solucao.html'
+
 
 class CarrosselSolucoesBlock(StructBlock):
     solucoes = ListBlock(
@@ -692,18 +738,22 @@ class CarrosselSolucoesBlock(StructBlock):
         label = "Carrossel de Soluções"
         template = 'blocks/carrossel_solucoes.html'
 
+
 class ProgramaItemBlock(StructBlock):
-    titulo = CharBlock(required=True , max_length=100, label="Título do Programa")
+    titulo = CharBlock(required=True, max_length=100,
+                       label="Título do Programa")
     link = URLBlock(required=True, label="Link do Programa")
     imagem = ImageChooserBlock(required=True, label="Imagem do Programa")
 
     class Meta:
         icon = 'imagem'
-        label =  'Item do Programa'
+        label = 'Item do Programa'
+
 
 class ProgramaBlock(StructBlock):
     itens = ListBlock(ProgramaItemBlock, default=[], min_num=1, max_num=12)
-    link_ver_todos = URLBlock(required=False, label="Link do botão 'Ver todos'")
+    link_ver_todos = URLBlock(
+        required=False, label="Link do botão 'Ver todos'")
 
     class Meta:
         icon = 'list-ul'

@@ -52,11 +52,24 @@
   align-items: center;
   height: 100%;
 
-  img {
-    height: 100%;
+  picture {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100% !important;
+    height: 100% !important;
+
+    .banner-image {
+      height: 100% !important;
+      object-fit: cover !important;
+
+      img {
+        height: 100% !important;
+        object-fit: cover !important;
+      }
+    }
   }
 }
-
 
 @media screen and (max-width: 500px) {
   .container {
@@ -70,7 +83,7 @@
   position: relative !important;
   margin-top: 12px;
   text-align: center; // Centraliza os bullets
-  
+
   .swiper-pagination-bullet {
     --swiper-pagination-bullet-width: 16px;
     --swiper-pagination-bullet-height: 16px;
