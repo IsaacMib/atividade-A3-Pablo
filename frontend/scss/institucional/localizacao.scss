@@ -1,3 +1,5 @@
+@use '../variables.scss';
+
 .map-container {
     position: relative;
     overflow: hidden;
@@ -13,6 +15,7 @@
             max-width: 100%;
             border-top-left-radius: 7rem;
             border-bottom-right-radius: 7rem;
+            box-shadow: 22px 22px 0px #cceef7;
             display: block;
             margin: 0 auto 3rem;
             position: relative;
