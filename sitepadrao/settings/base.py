@@ -339,7 +339,7 @@ SOCIALACCOUNT_PROVIDERS = {
                 "secret": os.getenv("KEYCLOAK_SECRET", ""),
                 "settings": {
                     "server_url": os.getenv("KEYCLOAK_SERVER_URL", "https://homolog.sso.codata.pb.gov.br/auth/realms/desenvolvimento/.well-known/openid-configuration"),
-                    "logout_url": f"{KEYCLOAK_BASE_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/logout",
+                    "logout_url": os.getenv("KEYCLOAK_SERVER_URL_LOGOUT", "https://homolog.sso.codata.pb.gov.br/auth/realms/desenvolvimento/protocol/openid-connect/logout"),
                 },
             },
         ]

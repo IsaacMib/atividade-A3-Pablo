@@ -26,7 +26,12 @@ class KeycloakAdapter(DefaultAccountAdapter):
         user = request.user
         self.provedor = obter_provedor_recente(user)
         """ Quando não há provedor associado é porque o usuário é local. Faz o redirect padrão. """
-        if self.provedor:
+        if (
+            self.provedor
+            and self.provedor.app
+            and "logout_url" in self.provedor.app.settings
+            and self.provedor.app.settings["logout_url"] != ""
+        ):
             if user.is_authenticated:
                 self._logout(user)
             else:
