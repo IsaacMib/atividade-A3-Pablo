@@ -21,6 +21,18 @@
   }
 }
 
+[data-vc=calendar] {
+  @media (max-width: 375px) {
+    min-width: 0px !important;
+  }
+}
+
+[data-vc=column] {
+  @media (max-width: 375px) {
+    min-width: 0px !important;
+  }
+}
+
 
 #calendar-agendas {
   display: grid !important;
@@ -29,36 +41,40 @@
   min-height: 304px;
   grid-gap: 12px;
 
+  [data-vc-date-btn] {
+    font-size: 1rem;
+  }
+
+  [data-vc-week-day] {
+    font-size: 0.9rem;
+  }
+
+  .vc-wrapper {
+    padding-bottom: 0.5rem;
+  }
+
   @media (max-width: 992px) {
     grid-gap: 0px !important;
   }
 
-  // @media (max-width: 600px) {
-  //   grid-template-columns: 1fr 1fr; /* duas colunas iguais */
-  //   margin-left: auto;
-  //   margin-right: auto;
+  .calendar-arrow-sm {
+    height: 50px;
+    width: 43px;
+    display: flex;
+  }
 
-  //   /* div2 ocupa a primeira linha inteira */
-  //   .vc-grid {
-  //     grid-column: 1 / -1; /* pega as duas colunas */
-  //   }
+  @media (max-width: 375px) {
+    .calendar-arrow-lg {
+      display: none;
+    }
 
-  //   /* div1 fica na linha de baixo, primeira coluna */
-  //   .calendar-arrow-prev {
-  //     grid-column: 1;
-  //     grid-row: 2;
-  //     justify-content: center;
-  //     display: grid;
-  //   }
-
-  //   /* div3 fica na linha de baixo, segunda coluna */
-  //   .calendar-arrow-next {
-  //     grid-column: 2;
-  //     grid-row: 2;
-  //     justify-content: center;
-  //     display: grid;
-  //   }
-  // }
+        
+  }
+  @media (min-width: 375px) {
+    .calendar-arrow-sm {
+      display: none;
+    }
+  }
 
   .vc-date__btn {
     max-width: 30px;
@@ -83,6 +99,10 @@
     box-shadow: 0px 3.15px 3.15px 0px #00000040;
     justify-content: start;
     padding: 1rem;
+    @media (max-width: 375px) {
+      padding: 0.5rem 0px;
+      justify-content: center;
+    }
   }
   .vc-week__day {
     color: #000;

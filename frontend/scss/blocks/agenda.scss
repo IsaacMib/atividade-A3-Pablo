@@ -134,6 +134,9 @@
   ul {
     &.daypicker {
       padding: 0 36px;
+      @media (max-width: 375px) {
+        padding: 0px;
+      }
     }
   }
 
@@ -157,6 +160,10 @@
     width: 95px;
     height: 95px;
 
+    @media (max-width: 375px) {
+      width: 70px;
+    }
+
     color: #DBDBDB;
 
     align-items: center;
@@ -177,6 +184,9 @@
     height: 95px;
     opacity: 1;
     border-radius: 5px;
+    @media (max-width: 375px) {
+      width: 70px;
+    }
 
   }
 
