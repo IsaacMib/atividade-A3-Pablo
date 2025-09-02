@@ -1,4 +1,4 @@
-{% load wagtailimages_tags %}
+{% load wagtailimages_tags noticias_tags %}
 
 <div class="container py-5">
     {% include "include/titulo.html" with titulo="Localização" bgClass='' %}
@@ -43,3 +43,4 @@
         <p>Mapa não incorporado: verifique o HTML do iframe.</p>
     {% endif %}
 </div>
+{% ultimas_noticias quantidade=6 titulo="Notícias Recentes" %}

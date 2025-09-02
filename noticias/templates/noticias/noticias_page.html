@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags static file_extras %}
+{% load wagtailcore_tags wagtailimages_tags static file_extras noticias_tags %}
 {% block content %}
     <div class="container">
         {% if settings.core.SiteSettings.is_periodo_eleitoral and page.sensivel_periodo_eleitoral %}
@@ -89,30 +89,8 @@
         {% endif %}
     </div>
     {% if not settings.core.SiteSettings.is_periodo_eleitoral and not page.sensivel_periodo_eleitoral %}
-        <div class="lista-noticias--wrapper tw:bg-neutral-100 tw:mt-2 tw:mb-2">
-            <div class="container">
-                {% include 'include/titulo.html' with titulo='Últimas Notícias' bgClass='' %}
-                <div class="row">
-                    <div class="row">
-                        {% if ultimas_noticias %}
-                            {% for noticias in ultimas_noticias %}
-                                <div class="col-lg-6 col-md-12 col-sm-12">
-                                    {% include 'blocks/noticias.html' with noticias=noticias %}
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <div class="col-md-12">
-                                <p>Ah, droga. Ainda não temos Notícias no site. Desculpe.</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="text-center tw:mb-8">
-            {% include "include/ver_todos_btn.html" with ver_todos_url=page.get_parent.specific.url texto_link="Ver todos" %}
-        </div>
+        {% get_noticias_index_url as noticias_index_url %}
+        {% include 'include/ultimas-noticias.html' with ultimas_noticias=ultimas_noticias url_ver_todos=noticias_index_url %}
     {% endif %}
     <script>
     document.addEventListener('DOMContentLoaded', function() {
