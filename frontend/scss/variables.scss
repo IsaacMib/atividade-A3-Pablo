@@ -38,6 +38,7 @@ $primary-color: $color-primary;
 $top-icons: invert(100%);
 $top-background-busca: #0f2f4e;
 $quick-access-color: rgba(48, 89, 155, 1);
+$quick-access-hover-bg: #B3C0D4;
 
 // UIKit
 $global-link-color: #DA7D02;
@@ -53,6 +54,7 @@ $color-grey-600: #757575;
 $color-grey-700: #616161;
 $color-grey-800: #424242;
 $color-grey-900: #212121;
+$color-grey-210: #d9d9d9; 
 
 
 $color-white: #ffffff;
@@ -75,5 +77,11 @@ $footer-color: #30599B;
 // Footer
 $footer-color: #30599B;
 
+// Opacities / Overlays
+$color-overlay-8: rgba(0, 0, 0, 0.08);
+$color-overlay-10: rgba(0, 0, 0, 0.1);
+$color-overlay-20: rgba(0, 0, 0, 0.2);
+$color-overlay-30: rgba(0, 0, 0, 0.3);
+$color-overlay-40: rgba(0, 0, 0, 0.4);
 
 

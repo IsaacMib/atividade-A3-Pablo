@@ -1,11 +1,13 @@
-<div class="titulo-container {{ bgClass }} text-center tw:pt-12 tw:pb-12">
+{% load bgcolor_filters %}
+
+<div class="titulo-container {{ bgClass }} {{ bgClassExtra}} text-center">
    <div class="d-flex flex-column align-items-center">
        <h1 class="titulo-1">
            {{ titulo }}
        </h1>
        <div class="titulo-linha">
            <svg width="133" height="3">
-               <line x1="0" y1="1.5" x2="133" y2="1.5" stroke="{{ bgColor }}" stroke-width="3"/>
+               <line x1="0" y1="1.5" x2="133" y2="1.5" stroke="{{ bgClass|bgcolor_from_class }}" stroke-width="3"/>
            </svg>
        </div>
    </div>

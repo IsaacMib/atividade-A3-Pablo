@@ -1,20 +1,20 @@
-<div class="dado-monitoramento--layout">
-  <div class="dado-monitoramento--wrapper">
-    <span id="odometer-{{uuid|slugify}}" class="odometer dado-monitoramento--numero" data-odometer-value="{{ self.metabase_value }}"  >0</span>
-    <span class="dado-monitoramento--descricao">{{id_card_text}}</span>
+<div>
+  <div class="dado-monitoramento--layout">
+    <div class="dado-monitoramento--wrapper">
+      <span id="odometer-{{uuid|slugify}}" class="odometer dado-monitoramento--numero" data-odometer-value="{{ self.metabase_value }}"  >0</span>
+      <span class="dado-monitoramento--descricao">{{id_card_text}}</span>
+    </div>
+    <div class="dado-monitoramento--separator-horizontal">
+      <svg width="2" height="72" viewBox="0 0 2 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.00012 0.5L1.00012 72" stroke="white"/>
+      </svg>
+    </div>
+    <div class="dado-monitoramento--separator-vertical">
+      <svg width="133" height="3" viewBox="0 0 133 3" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 1.5H133" stroke-width="2"></path>
+      </svg>
+    </div>
   </div>
-  <div class="dado-monitoramento--separator-horizontal">
-    <svg width="2" height="72" viewBox="0 0 2 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M1.00012 0.5L1.00012 72" stroke="white"/>
-    </svg>
-  </div>
-  <div class="dado-monitoramento--separator-vertical">
-    <svg width="133" height="3" viewBox="0 0 133 3" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0 1.5H133" stroke-width="2"></path>
-    </svg>
-  </div>
-
-  
 </div>
 
 <script>

@@ -2,7 +2,7 @@
 
 <section class="mural-avisos">
   <div class="container text-center">
-    {% include 'include/titulo.html' with titulo='Mural de Avisos' bgClass='' bgColor='#305A9C' %}
+    {% include 'include/titulo.html' with titulo='Mural de Avisos' bgClass='' %}
 
     <div class="avisos-wrapper row justify-content-center">
       {% for aviso in avisos|slice:":6" %}
@@ -35,9 +35,7 @@
     </div>
 
     {% if avisos_index_page_url %}
-      <div class="ver-todos-btn">
-        <a href="{{ avisos_index_page_url }}">{{ texto_link|default:"Ver todos" }}</a>
-      </div>
+      {% include "include/ver_todos_btn.html" with ver_todos_url=avisos_index_page_url %}
     {% endif %}
   </div>
 </section>

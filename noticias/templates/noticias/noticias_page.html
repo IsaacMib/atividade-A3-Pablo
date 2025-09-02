@@ -91,7 +91,7 @@
     {% if not settings.core.SiteSettings.is_periodo_eleitoral and not page.sensivel_periodo_eleitoral %}
         <div class="lista-noticias--wrapper tw:bg-neutral-100 tw:mt-2 tw:mb-2">
             <div class="container">
-                {% include 'include/titulo.html' with titulo='Últimas Notícias' bgClass='' bgColor='#305A9C' %}
+                {% include 'include/titulo.html' with titulo='Últimas Notícias' bgClass='' %}
                 <div class="row">
                     <div class="row">
                         {% if ultimas_noticias %}
