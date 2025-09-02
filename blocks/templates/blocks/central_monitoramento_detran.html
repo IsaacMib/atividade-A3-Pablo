@@ -2,6 +2,7 @@
 
 <div class="central-monitoramento-detran tw:bg-primary tw:text-white">
   <div class="container">
+    {% include 'include/titulo.html' with titulo='Central de Monitoramento' bgClass='titulo-bg-azul' %}
     <div class="row">
         {% for odometer in self.odometers %}
           <div class="dado-odometer col-12 col-lg-3">

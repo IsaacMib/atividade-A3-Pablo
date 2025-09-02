@@ -1,9 +1,11 @@
 {% load wagtailcore_tags %}
-
-<div class="videos-container">
-  {% for video in self.videos %}
-    {% include_block video %}
-  {% endfor %}
+<div class="videos-wrapper">
+  {% include 'include/titulo.html' with titulo='Videos' bgClass='' %}
+  <div class="videos-container">
+    {% for video in self.videos %}
+      {% include_block video %}
+    {% endfor %}
+  </div>
 </div>
 
 {% if self.ver_todos_url %}

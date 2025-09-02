@@ -2,6 +2,7 @@
 
 .acesso-rapido {
   padding: 16px 8% !important;
+  margin-bottom: 48px !important;
 }
 
 .acesso-rapido a, .acesso-rapido a:hover {
@@ -19,7 +20,7 @@
 }
 
 .quick-access:hover {
-  background-color: ariables.$quick-access-hover-bg;
+  background-color: variables.$quick-access-hover-bg;
   box-shadow: 0 0 10px variables.$color-overlay-8;
   transform: scale(1.02);
   border-color: variables.$quick-access-color;
@@ -51,6 +52,7 @@
     background-color: variables.$color-surface !important;
     border-radius: 12px !important;
     margin: 0 4% !important;
+    margin-bottom: 48px !important;
     box-shadow: 0 4px 12px  variables.$color-overlay-10 !important;
     border: none !important;
   }

@@ -12,10 +12,6 @@
   </div>
 
   {% if value.link_ver_todos %}
-    <div class="text-center mt-3">
-      <a class="btn btn-outline-primary" href="{{ value.link_ver_todos }}">
-        ver todos
-      </a>
-    </div>
+    {% include "include/ver_todos_btn.html" with ver_todos_url=value.link_ver_todos %}
   {% endif %}
 </div>
