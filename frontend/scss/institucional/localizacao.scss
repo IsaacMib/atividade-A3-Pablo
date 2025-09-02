@@ -4,7 +4,7 @@
     position: relative;
     overflow: hidden;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px variables.$color-overlay-10;
 }
 
 /* Style for the location image */
@@ -15,7 +15,7 @@
             max-width: 100%;
             border-top-left-radius: 7rem;
             border-bottom-right-radius: 7rem;
-            box-shadow: 22px 22px 0px #cceef7;
+            box-shadow: variables.$company-info-img-box-shadow;
             display: block;
             margin: 0 auto 3rem;
             position: relative;
