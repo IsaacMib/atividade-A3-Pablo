@@ -317,8 +317,6 @@ class TituloBlock(StructBlock):
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
-        class_name = value.get('corBackground') or 'titulo-bg-default'
-        context['linhaSvgColor'] = get_color_by_class_titulo_bg(class_name)
         return context
 
     class Meta:

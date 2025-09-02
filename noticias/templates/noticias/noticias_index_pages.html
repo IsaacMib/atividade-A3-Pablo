@@ -4,7 +4,7 @@
 {% block content %}
     <div class="container">
         {% if not tag %}
-            {% include 'include/titulo.html' with titulo=self.introduction|default:'Todas as Notícias' bgClass='' bgColor='#305A9C' %}
+            {% include 'include/titulo.html' with titulo=self.introduction|default:'Todas as Notícias' bgClass='' %}
         {% endif %} 
 
         {% if tag %}
