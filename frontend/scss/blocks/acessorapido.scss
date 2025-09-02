@@ -14,13 +14,13 @@
   padding: 20px;
   text-align: center;
   transition: 0.2s ease-in-out;
-  background-color: #fff;
+  background-color: variables.$color-white;
   height: 100%;
 }
 
 .quick-access:hover {
-  background-color: #B3C0D4;
-  box-shadow: 0 0 10px rgba(0,0,0,0.08);
+  background-color: ariables.$quick-access-hover-bg;
+  box-shadow: 0 0 10px variables.$color-overlay-8;
   transform: scale(1.02);
   border-color: variables.$quick-access-color;
 }
@@ -30,7 +30,7 @@
   height: 52px;
   font-size: 20px;
   margin-bottom: 10px;
-  background-color: rgba(217, 217, 217, 1);
+  background-color: variables.$color-grey-200;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -44,13 +44,14 @@
   font-weight: 500;
 }
 
+/* APENAS MOBILE - não afeta desktop */
 @media (max-width: 767px) {
   .acesso-rapido {
     padding: 16px !important;
     background-color: variables.$color-surface !important;
     border-radius: 12px !important;
     margin: 0 4% !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 4px 12px  variables.$color-overlay-10 !important;
     border: none !important;
   }
   
@@ -70,6 +71,8 @@
     float: none !important;
     display: block !important;
     border-bottom: 1px solid variables.$color-grey-300 !important;
+    
+    /* BARRA VERTICAL | ANTES DO ÍCONE */
     position: relative !important;
     padding-left: 20px !important;
   }
@@ -149,6 +152,7 @@
     flex-grow: 1 !important;
   }
   
+  /* Seta no final */
   .acesso-rapido > .row.g-4 > [class*="col-"] > a > .quick-access::after {
     content: "›" !important;
     font-size: 24px !important;
@@ -158,6 +162,7 @@
     flex-shrink: 0 !important;
   }
   
+  /* Centralizar todo o conteúdo na tela */
   .acesso-rapido {
     max-width: 400px !important;
     margin-left: auto !important;
