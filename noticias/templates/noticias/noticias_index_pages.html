@@ -20,8 +20,8 @@
                 </div>
             </div>
         {% endif %}
-    </div>
-     {% comment %} {% if page.get_child_tags %}
+    
+        {% comment %} {% if page.get_child_tags %}
             <ul class="blog-tags">
                 <li><span class="blog-tags__pill blog-tags__pill--selected tw:text-primary tw:font-bold ">Todos</span></li>
                 {% for tag in page.get_child_tags %}
@@ -29,6 +29,7 @@
                 {% endfor %}
             </ul>
         {% endif %} {% endcomment %}
+    </div>
 
     <div class="lista-noticias--wrapper tw:bg-neutral-100">
         <div class="container">
