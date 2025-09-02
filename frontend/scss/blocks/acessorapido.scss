@@ -2,6 +2,7 @@
 
 .acesso-rapido {
   padding: 16px 8% !important;
+  margin-bottom: 48px !important;
 }
 
 .acesso-rapido a, .acesso-rapido a:hover {
@@ -51,6 +52,7 @@
     background-color: variables.$color-surface !important;
     border-radius: 12px !important;
     margin: 0 4% !important;
+    margin-bottom: 48px !important;
     box-shadow: 0 4px 12px  variables.$color-overlay-10 !important;
     border: none !important;
   }
