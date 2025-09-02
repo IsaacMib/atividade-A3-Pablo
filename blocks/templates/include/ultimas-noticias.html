@@ -1,0 +1,44 @@
+{% load wagtailcore_tags wagtailimages_tags static file_extras %}
+
+{% comment %}
+Template reutilizável para exibir uma lista das últimas notícias.
+
+Parâmetros esperados:
+- ultimas_noticias: QuerySet com as notícias a serem exibidas
+- titulo: Título da seção (opcional, padrão: "Últimas Notícias")
+- mostrar_ver_todos: Boolean para mostrar o botão "Ver todos" (opcional, padrão: True)
+- url_ver_todos: URL para o botão "Ver todos" (opcional)
+- classe_bg: Classe CSS para background (opcional, padrão: "tw:bg-neutral-100")
+
+Exemplo de uso:
+{% include 'include/ultimas-noticias.html' with ultimas_noticias=minhas_noticias titulo='Notícias Recentes' %}
+
+Ou usando a template tag:
+{% load noticias_tags %}
+{% ultimas_noticias quantidade=4 titulo="Notícias Recentes" %}
+{% endcomment %}
+
+<div class="lista-noticias--wrapper {{ classe_bg|default:'tw:bg-neutral-100' }} tw:mt-2 tw:mb-2">
+    <div class="container">
+        {% include 'include/titulo.html' with titulo=titulo|default:'Últimas Notícias' bgClass='' %}
+        <div class="row">
+            {% if ultimas_noticias %}
+                {% for noticias in ultimas_noticias %}
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        {% include 'blocks/noticias.html' with noticias=noticias %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-md-12">
+                    <p>Ainda não temos notícias no site.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if mostrar_ver_todos|default:True and url_ver_todos %}
+    <div class="text-center tw:mb-8">
+        {% include "include/ver_todos_btn.html" with ver_todos_url=url_ver_todos texto_link="Ver todos" %}
+    </div>
+{% endif %}
