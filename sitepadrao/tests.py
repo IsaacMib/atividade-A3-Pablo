@@ -55,7 +55,7 @@ class WagtailLogoutWithSSOTest(TestCase):
     @patch('sitepadrao.views.settings.HABILITAR_SSO_LOGIN', True)
     @patch('sitepadrao.views.SSO_AVAILABLE', True)
     @patch('sitepadrao.views.obter_provedor_recente')
-    @patch('sitepadrao.views._logout_sso')
+    @patch('sitepadrao.views.logout_sso')
     def test_logout_calls_sso_logout_when_provedor_exists(self, mock_logout_sso, mock_obter_provedor):
         """Testa se o logout do SSO é chamado quando há provedor configurado."""
         # Mock de um provedor com configurações de logout
