@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 <div class="videos-wrapper">
-  {% include 'include/titulo.html' with titulo='Videos' bgClass='' %}
+  {% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
   <div class="videos-container">
     {% for video in self.videos %}
       {% include_block video %}

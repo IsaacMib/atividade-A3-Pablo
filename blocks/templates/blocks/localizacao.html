@@ -1,7 +1,7 @@
 {% load wagtailimages_tags noticias_tags %}
 
 <div class="container py-5">
-    {% include "include/titulo.html" with titulo="Localização" bgClass='' %}
+    {% include 'include/titulo.html' with titulo="Localização" bgClass='' %}
     <div class="row justify-content-center picture-wrapper">
         <div class="col-auto tw:mr-7">
             {% picture self.imagem width-400 %}
@@ -25,7 +25,8 @@
         </div>
     </div>
 </div>
-{% include "include/titulo.html" with titulo="Como Chegar" bgClass='' %}
+{% if maps_src %}
+{% include 'include/titulo.html' with titulo="Como Chegar" bgClass='' %}
 <div class="tw:pb-24">
     {% if maps_src %}
         <div class="google-maps-embed">
@@ -43,4 +44,5 @@
         <p>Mapa não incorporado: verifique o HTML do iframe.</p>
     {% endif %}
 </div>
+{% endif %}
 {% ultimas_noticias quantidade=6 titulo="Notícias Recentes" %}

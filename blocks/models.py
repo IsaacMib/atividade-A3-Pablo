@@ -56,6 +56,7 @@ class AcessoRapidoItemBlock(StructBlock):
 
 
 class AcessosRapidosBlock(StructBlock):
+    titulo = CharBlock(required=False, default="Acessos Rápidos")
     itens = ListBlock(AcessoRapidoItemBlock(), default=[])
 
     class Meta:
@@ -101,6 +102,7 @@ class VideoBlock(StructBlock):
 
 
 class ListaVideosBlock(StructBlock):
+    titulo = CharBlock(required=False, default="Vídeos")
     ver_todos_url = URLBlock(required=False, label="URL do 'Ver todos'")
     videos = ListBlock(VideoBlock(), label="Vídeos", max_num=3)
 
@@ -223,6 +225,11 @@ class ServicoOnlineItemBlock(StructBlock):
 
 
 class ServicosOnlineBlock(StructBlock):
+    titulo = CharBlock(
+        required=True,
+        default="Serviços Online",
+        help_text="Título que aparecerá acima da lista de serviços"
+    )
     orgao_sigla = CharBlock(
         required=True,
         label="Órgão (sigla)",
@@ -378,6 +385,11 @@ class OdometerBlock(StructBlock):
 
 
 class OdometerListBlock(StructBlock):
+    titulo = CharBlock(
+        required=False,
+        default="Central de Monitoramento",
+        help_text="Título que aparecerá acima da lista de odômetros"
+    )
     odometers = ListBlock(OdometerBlock(), label="Central de Monitoramento")
 
     class Meta:
@@ -387,16 +399,16 @@ class OdometerListBlock(StructBlock):
 
 
 class NoticiasListBlock(StructBlock):
-    noticias_index_page = PageChooserBlock(
-        required=True,
-        target_model='noticias.NoticiasIndexPages',
-        help_text="Selecione a página de índice de notícias"
-    )
-
     titulo = CharBlock(
         required=False,
         default="Últimas Notícias",
         help_text="Título que aparecerá acima da lista de notícias"
+    )
+
+    noticias_index_page = PageChooserBlock(
+        required=True,
+        target_model='noticias.NoticiasIndexPages',
+        help_text="Selecione a página de índice de notícias"
     )
 
     quantidade = IntegerBlock(
@@ -434,6 +446,11 @@ class NoticiasListBlock(StructBlock):
 
 
 class AvisosListBlock(StructBlock):
+    titulo = CharBlock(
+        required=False,
+        default="Últimos Avisos",
+        help_text="Título que aparecerá acima da lista de avisos"
+    )
     avisos_index_page = PageChooserBlock(
         required=True,
         target_model='avisos.AvisosIndexPage',

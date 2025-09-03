@@ -5,9 +5,11 @@
    padding-top: 48px;
    padding-bottom: 48px;
 
-   &.titulo-pequeno {
-      padding-top: 12px;
-      padding-bottom: 12px;
+   &.titulo-pequeno-mobile {
+      @media (max-width: 768px) {
+         padding-top: 12px;
+         padding-bottom: 12px;
+      }
    }
  }
  
