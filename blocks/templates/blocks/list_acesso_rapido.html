@@ -1,5 +1,5 @@
 <div class="container acesso-rapido">
-  {% include 'include/titulo.html' with titulo='Acesso rápido' bgClassExtra='titulo-pequeno' %}
+  {% include 'include/titulo.html' with titulo=self.titulo bgClassExtra='titulo-pequeno-mobile' %}
   <div class="row g-4">
     {% for item in value.itens %}
       <div class="col-6 col-sm-4 col-md-3">

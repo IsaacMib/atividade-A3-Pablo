@@ -8,6 +8,13 @@ import re
 
 
 class LocalizacaoBlock(StructBlock):
+    titulo_secao_localizacao = CharBlock(
+        max_length=255,
+        help_text="Título da seção de localização",
+        default="Localização",
+        required=True
+    )
+
     nome_local = CharBlock(
         max_length=255,
         help_text="Nome do local",
@@ -36,6 +43,13 @@ class LocalizacaoBlock(StructBlock):
     imagem = ImageChooserBlock(
         required=False,
         help_text="Imagem do local (opcional)"
+    )
+
+    titulo_secao_mapa = CharBlock(
+        max_length=255,
+        help_text="Título da seção antes do mapa",
+        default="Como Chegar",
+        required=True
     )
 
     iframe_google_maps = CharBlock(

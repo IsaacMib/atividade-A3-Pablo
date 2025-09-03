@@ -2,7 +2,7 @@
 
 <section class="mural-avisos">
   <div class="container text-center">
-    {% include 'include/titulo.html' with titulo='Mural de Avisos' bgClass='' %}
+    {% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
 
     <div class="avisos-wrapper row justify-content-center">
       {% for aviso in avisos|slice:":6" %}
