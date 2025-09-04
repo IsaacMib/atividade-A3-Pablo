@@ -57,6 +57,7 @@
     "odometer": "^0.4.8",
     "swiper": "^11.2.8",
     "uikit": "^3.23.3",
-    "vanilla-calendar-pro": "^3.0.5"
+    "vanilla-calendar-pro": "^3.0.5",
+    "vanilla-cookieconsent": "^3.1.0"
   }
 }
