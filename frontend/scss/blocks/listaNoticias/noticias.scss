@@ -36,6 +36,7 @@
   font-size: 1rem;
   font-weight: 500;
   line-height: 10px;
+  background-color: variables.$color-primary;
 }
 
 .noticias-conteudo--imagem {
@@ -81,6 +82,9 @@
 }
 
 @media screen and (max-width: 576px) {
+  .noticias-wrap {
+    padding: 10px 0;
+  }
   .noticias-wrap img {
     aspect-ratio: 21 / 10;
     width: 100%;
@@ -95,6 +99,10 @@
   }
   .noticias-conteudo {
     border: 2px solid variables.$color-primary;
+  }
+  .noticias-conteudo--data {
+    margin: 0;
+    margin-top: -10px;
   }
   .noticias-conteudo--imagem {
     width: 100%;

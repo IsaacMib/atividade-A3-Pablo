@@ -2,7 +2,9 @@
 
 <div class="noticias-wrap">
   <div class="noticias-conteudo tw:shadow-neutral-400 tw:ring-0 tw:bg-white">
-    <p class="noticias-conteudo--data tw:text-white tw:bg-primary-light">{{ noticias.data_publicacao|date:"d/m/Y" }}</p>
+    <div class="col d-flex justify-content-center justify-content-md-start">
+        <p class="noticias-conteudo--data tw:text-white">{{ noticias.data_publicacao|date:"d/m/Y" }}</p>
+    </div>
     {% if noticias.get_imagem_destaque %}
         <div class="noticias-conteudo--imagem"> 
           <a href="{% pageurl noticias %}">
