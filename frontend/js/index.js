@@ -1,10 +1,11 @@
-import "../scss/main.scss";
-import "../../tw/styles.css";
 import 'odometer/themes/odometer-theme-default.css';
 import 'vanilla-calendar-pro/styles/index.css';
 import 'vanilla-calendar-pro/styles/layout.css'; // Only the skeleton
 import 'vanilla-calendar-pro/styles/themes/light.css'; // Light theme
 import "vanilla-cookieconsent/dist/cookieconsent.css"; // Cookieconsent
+
+import "../scss/main.scss";
+import "../../tw/styles.css";
 
 import * as bootstrap from 'bootstrap';
 window.bootstrap = bootstrap;
