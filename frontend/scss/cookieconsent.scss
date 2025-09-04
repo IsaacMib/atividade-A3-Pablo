@@ -1,13 +1,15 @@
+@use "variables";
+
 .cc--light-funky {
     color-scheme: light;
 
     --cc-bg: #f9faff;
-    --cc-primary-color: #112954;
-    --cc-secondary-color: #112954;
+    --cc-primary-color: #{variables.$color-primary}; // #112954;
+    --cc-secondary-color: #{variables.$color-primary}; //#112954;
 
-    --cc-btn-primary-bg: #3859d0;
+    --cc-btn-primary-bg: #{variables.$color-primary}; //#3859d0;
     --cc-btn-primary-color: var(--cc-bg);
-    --cc-btn-primary-hover-bg: #213657;
+    --cc-btn-primary-hover-bg: #{variables.$color-primary-70}; //#213657;
     --cc-btn-primary-hover-color: #fff;
 
     --cc-btn-secondary-bg: #dfe7f9;

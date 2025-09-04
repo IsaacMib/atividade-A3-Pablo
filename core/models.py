@@ -61,6 +61,19 @@ class SiteSettings(BaseSiteSetting):
         help_text="Define até quantos níveis de páginas o menu principal irá exibir. (Máximo: 3)"
     )
 
+    # Configurações para cookies e Google Analytics
+    cookies_habilitado = models.BooleanField(
+        verbose_name="Habilitar Aviso de Cookies",
+        default=False,
+        help_text="Ative para exibir o banner de consentimento de cookies no site."
+    )
+    google_analytics_tag = models.CharField(
+        verbose_name="Tag do Google Analytics",
+        max_length=20,
+        blank=True,
+        help_text="Insira a tag do Google Analytics (ex: G-XXXXXXXXXX). O aviso de cookies analíticos só será exibido se esta tag estiver definida."
+    )
+
     panels = [
         FieldPanel("title_suffix"),
         MultiFieldPanel(
@@ -84,6 +97,13 @@ class SiteSettings(BaseSiteSetting):
             ],
             heading="Menu do Site"
         ),
+        MultiFieldPanel(
+            [
+                FieldPanel("cookies_habilitado"),
+                FieldPanel("google_analytics_tag"),
+            ],
+            heading="Cookies e Analytics"
+        ),
     ]
 
     def is_periodo_eleitoral(self):
@@ -97,12 +117,40 @@ class SiteSettings(BaseSiteSetting):
             return self.periodo_eleitoral_inicio <= hoje <= self.periodo_eleitoral_fim
         return False
 
+    def deve_exibir_cookies(self):
+        """
+        Retorna True se o aviso de cookies deve ser exibido.
+        """
+        return self.cookies_habilitado
+
+    def tem_google_analytics(self):
+        """
+        Retorna True se a tag do Google Analytics está configurada.
+        """
+        return bool(self.google_analytics_tag and self.google_analytics_tag.strip())
+
+    def deve_exibir_cookies_analytics(self):
+        """
+        Retorna True se o aviso de cookies analíticos deve ser exibido.
+        Só exibe se os cookies estão habilitados E a tag do Google Analytics está definida.
+        """
+        return self.deve_exibir_cookies() and self.tem_google_analytics()
+
     def clean(self):
         super().clean()
         if self.menu_max_levels > 3:
             raise ValidationError({
                 "menu_max_levels": "O número máximo de níveis permitido para o menu é 3."
             })
+        
+        # Validação do Google Analytics
+        if self.google_analytics_tag:
+            tag = self.google_analytics_tag.strip()
+            if tag and not (tag.startswith('G-') or tag.startswith('UA-') or tag.startswith('GT-')):
+                raise ValidationError({
+                    "google_analytics_tag": "A tag deve começar com 'G-', 'UA-' ou 'GT-' seguido do identificador."
+                })
+        
         if self.periodo_eleitoral_habilitado:
             if not self.periodo_eleitoral_inicio and not self.periodo_eleitoral_fim:
                 raise ValidationError({
