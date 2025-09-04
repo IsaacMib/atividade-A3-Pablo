@@ -742,6 +742,7 @@ class SolucaoItemBlock(StructBlock):
 
 
 class CarrosselSolucoesBlock(StructBlock):
+    titulo = CharBlock(required=False, default="Soluções")
     solucoes = ListBlock(
         SolucaoItemBlock(),
         label="Soluções",
@@ -766,6 +767,7 @@ class ProgramaItemBlock(StructBlock):
 
 
 class ProgramaBlock(StructBlock):
+    titulo = CharBlock(required=False, default="Programas")
     itens = ListBlock(ProgramaItemBlock, default=[], min_num=1, max_num=12)
     link_ver_todos = URLBlock(
         required=False, label="Link do botão 'Ver todos'")
