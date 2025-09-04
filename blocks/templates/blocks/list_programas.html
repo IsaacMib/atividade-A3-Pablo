@@ -1,6 +1,7 @@
 {% load wagtailimages_tags %}
 
 <div class="container programas">
+  {% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
   <div class="row g-2">
     {% for item in value.itens %}
       <div class="col-8 col-md-3">
