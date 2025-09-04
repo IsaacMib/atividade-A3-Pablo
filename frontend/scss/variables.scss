@@ -70,12 +70,12 @@ $font-size-itens-menu: 20px;
 $font-size-itens-sub-menu: 20px;
 
 // Footer
-$footer-color: #30599B;
+$footer-color: $color-primary;
 
 
 
 // Footer
-$footer-color: #30599B;
+$footer-color: $color-primary;
 
 // Opacities / Overlays
 $color-overlay-8: rgba(0, 0, 0, 0.08);
@@ -84,4 +84,4 @@ $color-overlay-20: rgba(0, 0, 0, 0.2);
 $color-overlay-30: rgba(0, 0, 0, 0.3);
 $color-overlay-40: rgba(0, 0, 0, 0.4);
 
-
+$color_title_redes_sociais: $color-primary;
