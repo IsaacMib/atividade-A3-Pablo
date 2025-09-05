@@ -43,6 +43,7 @@
 .quick-access-title {
   font-size: 14px;
   font-weight: 500;
+  color: variables.$color-primary !important;
 }
 
 /* APENAS MOBILE - não afeta desktop */
@@ -148,7 +149,7 @@
   .acesso-rapido > .row.g-4 > [class*="col-"] > a > .quick-access > .quick-access-wrapper > .quick-access-title {
     font-size: 16px !important;
     font-weight: 500 !important;
-    color: variables.$color-grey-800 !important;
+    color: variables.$color-primary !important;
     margin: 0 !important;
     text-align: left !important;
     flex-grow: 1 !important;
