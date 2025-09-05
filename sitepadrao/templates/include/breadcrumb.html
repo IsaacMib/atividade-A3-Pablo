@@ -1,15 +1,23 @@
+{% load static %}
+
 <div class="container" >
   <div class="breadcrumb-content">
       {% if self.get_ancestors|length > 1 %}
           <ol class="breadcrumb">
               {% for p in self.get_ancestors %}
                   {% if p.is_root == False %}
-                      <li class="breadcrumb-item"><a href="{{ p.url }}">{{ p.title }}</a></li>
+                    {% if forloop.counter0 == 1 %}
+                      <li class="breadcrumb-item first-item"><a href="{{ p.url }}">
+                        <img src="{% static 'img/home.svg' %}" alt="home"/>
+                      </a></li>
+                    {% else %}
+                      <li class="breadcrumb-item"><a href="{{ p.url }}"><strong>{{ p.title }}</strong></a></li>
+                    {% endif %}
                   {% endif %}
               {% endfor %}
 
               <li class="breadcrumb-item active" aria-current="page">{{ self.title }}</li>
-          </ul>
+          </ol>
       {% endif %}
   </div>
 </div>

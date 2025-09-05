@@ -39,7 +39,7 @@ class NoticiasPage(Page):
     subtitle = models.CharField(verbose_name="Subtítulo", blank=True, max_length=255)
     descricao = models.TextField(
         verbose_name="Descrição",
-        blank=True,
+        blank=False,
         help_text="Breve descrição do conteúdo da página.",
         validators=[MaxLengthValidator(230)],
     )
