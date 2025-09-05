@@ -24,14 +24,6 @@
   border-top: 2px solid variables.$color-primary;
 }
 
-.noticias-conteudo--heading {
-  color: variables.$color-link-noticias;
-}
-
-.noticias-conteudo--heading {
-  color: variables.$color-link-noticias;
-}
-
 .noticias-conteudo--data {  
   position: absolute;
   z-index: 2;
@@ -45,6 +37,10 @@
   font-weight: 500;
   line-height: 10px;
   background-color: variables.$color-primary;
+}
+
+.noticias-conteudo--heading {
+  color: variables.$color-primary;
 }
 
 .noticias-conteudo--imagem {
