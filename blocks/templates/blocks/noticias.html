@@ -1,5 +1,65 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
+<script>
+  const NOTICIAS_TITLE_WRAPPER = '.noticias-title-wrapper';
+  const TITLE_BREAKPOINTS = [
+    { maxWidth: 434, dataAttr: 'charsVvs', defaultChars: 35 },
+    { maxWidth: 460, dataAttr: 'charsVs', defaultChars: 56 },
+    { maxWidth: 475, dataAttr: 'charsSm', defaultChars: 60 }, 
+    { maxWidth: 639, dataAttr: 'charsMd', defaultChars: 75 }, 
+    { maxWidth: 1190, dataAttr: 'charsLg', defaultChars: 80 },  
+    { maxWidth: Infinity, dataAttr: 'charsXl', defaultChars: null} 
+  ];
+
+  const NOTICIAS_DESC_ELEMENT = '.noticias-descricao';
+  const DESC_BREAKPOINTS = [
+    { maxWidth: 440, dataAttr: 'charsVs', defaultChars: 50 }, 
+    { maxWidth: 639, dataAttr: 'charsSm', defaultChars: 90 },
+    { maxWidth: 1000, dataAttr: 'charsMd', defaultChars: 140 },
+    { maxWidth: 1200, dataAttr: 'charsLg', defaultChars: 125 },
+    { maxWidth: 1430, dataAttr: 'charsVl', defaultChars: 170 },
+    { maxWidth: 1500, dataAttr: 'charsVvl', defaultChars: 200 },
+    { maxWidth: Infinity, dataAttr: 'charsXl', defaultChars: null}
+  ];
+
+
+  function truncateContent(breakpoints, elementClass) {
+    const wrappers = document.querySelectorAll(elementClass);
+    const width = window.innerWidth;
+    
+    const currentBreakpoint = breakpoints.find(bp => width <= bp.maxWidth);
+    
+    wrappers.forEach(wrapper => {
+      const originalText = wrapper.dataset.originalValue;
+      if (!originalText) return;
+      
+      const maxChars = wrapper.dataset[currentBreakpoint.dataAttr] 
+        ? parseInt(wrapper.dataset[currentBreakpoint.dataAttr]) 
+        : (currentBreakpoint.defaultChars || originalText.length);
+      
+      if (originalText.length > maxChars) {
+        wrapper.textContent = originalText.substring(0, maxChars).trim() + '...';
+      } else {
+        wrapper.textContent = originalText;
+      }
+    });
+  }
+  
+  let resizeTimeout;
+  window.addEventListener('load', () => {
+    truncateContent(TITLE_BREAKPOINTS, NOTICIAS_TITLE_WRAPPER);
+    truncateContent(DESC_BREAKPOINTS, NOTICIAS_DESC_ELEMENT);
+  });
+
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      truncateContent(TITLE_BREAKPOINTS, NOTICIAS_TITLE_WRAPPER);
+      truncateContent(DESC_BREAKPOINTS, NOTICIAS_DESC_ELEMENT);
+    }, 50);
+  });
+</script>
+
 <div class="noticias-wrap">
   <a href="{% pageurl noticias %}">
     <div class="noticias-conteudo tw:shadow-neutral-400 tw:ring-0 tw:bg-white">
@@ -14,24 +74,33 @@
         </h2>
       </div>
       {% if noticias.get_imagem_destaque %}
-          <div class="noticias-conteudo--imagem"> 
+          <div class="noticias-conteudo--imagem mb-2"> 
             {% picture noticias.get_imagem_destaque format-{avif,webp,jpeg} fill-322x247 loading="lazy" %}
           </div>
       {% else %}
-          <div class="noticias-conteudo--imagem semImagem">
+          <div class="noticias-conteudo--imagem semImagem mb-2">
             <img src="{% static 'img/img_noticia_default.png' %}" alt="{{ noticias.title }}" class="img-fluid"/>
           </div>
       {% endif %}
       
       <div class="noticias-conteudo--body">
-        <h2 class="noticias-conteudo--heading{% if not noticias.get_imagem_destaque %} semImagem{% endif %} heading-desktop">
+        <div class="noticias-conteudo--heading{% if not noticias.get_imagem_destaque %} semImagem{% endif %}">
+          {% load noticias_tags %}
           <strong>
-            {{ noticias.title }}
+            <div class="noticias-title-wrapper"
+              data-original-value="{{ noticias.title }}"
+            >
+              {{ noticias.title | safe }}
+            </div>
           </strong>
-        </h2>
-        <p class="text-body">{{ noticias.descricao }}</p>
+        </div>
+        <p
+          class="noticias-descricao text-body"
+          data-original-value="{{ noticias.descricao }}"
+        >
+          {{ noticias.descricao | safe }}
+        </p>
       </div>
     </div>
   </a>
-  
 </div>
