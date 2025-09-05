@@ -8,3 +8,19 @@
     padding-left: 5px;
   }
 }
+
+.breadcrumb-item {
+  --bs-breadcrumb-divider: '';
+  
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  background-image: url('../img/next.svg');
+  background-repeat: no-repeat;
+  background-size: 8px;
+  width: 16px;
+  height: 16px;
+  margin-top: 5px;
+  margin-left: 12px;
+  margin-right: 12px;
+}
