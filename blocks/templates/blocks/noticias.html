@@ -1,12 +1,21 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
 <div class="noticias-wrap">
-  <a href="{% pageurl noticias %}" class="noticias-conteudo tw:shadow-neutral-400 tw:ring-0 tw:bg-white">
-    <div class="noticias-card">
-      <p class="noticias-conteudo--data tw:text-white tw:bg-primary-light">{{ noticias.data_publicacao|date:"d/m/Y" }}</p>
+  <a href="{% pageurl noticias %}">
+    <div class="noticias-conteudo tw:shadow-neutral-400 tw:ring-0 tw:bg-white">
+      <div class="col d-flex justify-content-center justify-content-md-start">
+          <p class="noticias-conteudo--data tw:text-white">{{ noticias.data_publicacao|date:"d/m/Y" }}</p>
+      </div>
+      <div class="col d-flex justify-content-center mb-0 heading-mobile d-flex d-sm-none">
+        <h2 class="noticias-conteudo--heading{% if not noticias.get_imagem_destaque %} semImagem{% endif %}">
+          <strong>
+            {{ noticias.title }}
+          </strong>
+        </h2>
+      </div>
       {% if noticias.get_imagem_destaque %}
           <div class="noticias-conteudo--imagem"> 
-              {% picture noticias.get_imagem_destaque format-{avif,webp,jpeg} fill-322x247 loading="lazy" %}
+            {% picture noticias.get_imagem_destaque format-{avif,webp,jpeg} fill-322x247 loading="lazy" %}
           </div>
       {% else %}
           <div class="noticias-conteudo--imagem semImagem">
@@ -15,11 +24,14 @@
       {% endif %}
       
       <div class="noticias-conteudo--body">
-        <h2 class="noticias-conteudo--heading{% if not noticias.get_imagem_destaque %} semImagem{% endif %}">
-          <strong>{{ noticias.title }}</strong>
+        <h2 class="noticias-conteudo--heading{% if not noticias.get_imagem_destaque %} semImagem{% endif %} heading-desktop">
+          <strong>
+            {{ noticias.title }}
+          </strong>
         </h2>
         <p>{{ noticias.descricao }}</p>
       </div>
     </div>
   </a>
+  
 </div>
