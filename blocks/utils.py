@@ -139,3 +139,18 @@ def get_color_by_class_titulo_bg(class_name):
             return color
     return '#305A9C'
 
+GRID_IMAGENS_TYPES = [
+    ('grid-imagens-2', 'Grid com 2 imagens por linha'),
+    ('grid-imagens-3', 'Grid com 3 imagens por linha'),
+    ('grid-imagens-4', 'Grid com 4 imagens por linha'),
+    ('grid-imagens-6', 'Grid com 6 imagens por linha'),
+]
+
+GRID_IMAGENS_DEFAULT_TYPE = 'grid-imagens-3'
+
+GRID_IMAGENS_CLASSES = {
+    'grid-imagens-2': 'col-12 col-md-6 d-flex justify-content-center',      # 2 colunas por linha
+    'grid-imagens-3': 'col-12 col-md-4 d-flex justify-content-center',       # 3 colunas por linha
+    'grid-imagens-4': 'col-6 col-md-3 d-flex justify-content-center',       # 4 colunas por linha
+    'grid-imagens-6': 'col-6 col-md-2 d-flex justify-content-center',       # 6 colunas por linha
+}
