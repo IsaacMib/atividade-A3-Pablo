@@ -31,7 +31,15 @@
     .block-localizacoes.container {
         width: auto;
     }
+    .block-localizacoes.row.col-auto {
+        margin-right: 22px !important;
+        margin-left: 0 !important;
+    }
     .picture-wrapper.col-auto {
         margin-right: 0 !important;
+    }
+    .picture-wrapper {
+        margin-right: 16px !important;
+        margin-left: 16px !important;
     }
 }
