@@ -20,12 +20,18 @@
             margin: 0 auto 3rem;
             position: relative;
             z-index: 2;
-
-            @media (max-width: 768px) {
-                box-shadow: none !important;
-            }
+            aspect-ratio: 1/1;
         }
     }
 
     margin-bottom: 1.5rem;
+}
+
+@media screen and (max-width: 576px) {
+    .block-localizacoes.container {
+        width: auto;
+    }
+    .picture-wrapper.col-auto {
+        margin-right: 0 !important;
+    }
 }
