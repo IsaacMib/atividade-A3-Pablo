@@ -3,10 +3,8 @@ from blocks.utils import (
     ICONES_ACESSO_RAPIDO,
     IDS_METABASE_CARDS,
     CLASS_TITULO_BG_COLOR_BLOCK,
-    GRID_IMAGENS_TYPES,
-    GRID_IMAGENS_CLASSES,
-    GRID_IMAGENS_DEFAULT_TYPE,
-    get_metabase_card_text_by_id
+    get_metabase_card_text_by_id,
+    get_color_by_class_titulo_bg
 )
 
 import requests
@@ -768,28 +766,13 @@ class ProgramaItemBlock(StructBlock):
         label = 'Item do Programa'
 
 
-class GridImagensBlock(StructBlock):
-    titulo = CharBlock(required=True, label="Titulo do bloco Ex.: Programas, Soluções", default="Programas")
+class ProgramaBlock(StructBlock):
+    titulo = CharBlock(required=False, default="Programas")
+    itens = ListBlock(ProgramaItemBlock, default=[], min_num=1, max_num=12)
     link_ver_todos = URLBlock(
         required=False, label="Link do botão 'Ver todos'")
-    grid_type = ChoiceBlock(choices=GRID_IMAGENS_TYPES,
-                             default=GRID_IMAGENS_DEFAULT_TYPE,
-                             required=True, label="Tipo de Grid")
-    itens = ListBlock(ProgramaItemBlock, default=[], min_num=1, max_num=12)
-    
-    def get_column_classes(self, grid_type):
-        """
-        Retorna as classes de coluna Bootstrap baseadas no tipo de grid.
-        """
-        return GRID_IMAGENS_CLASSES.get(grid_type, GRID_IMAGENS_CLASSES[GRID_IMAGENS_DEFAULT_TYPE])
-    
-    def get_context(self, value, parent_context=None):
-        context = super().get_context(value, parent_context=parent_context)
-        grid_type = value.get('grid_type', GRID_IMAGENS_DEFAULT_TYPE)
-        context['column_classes'] = self.get_column_classes(grid_type)
-        return context
 
     class Meta:
         icon = 'list-ul'
-        label = "Grid de Imagens"
-        template = 'blocks/grid_imagens.html'
+        label = "Bloco de Programas"
+        template = 'blocks/list_programas.html'

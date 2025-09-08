@@ -2,9 +2,9 @@
 
 <div class="container programas">
   {% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
-  <div class="row g-2 justify-content-center">
+  <div class="row g-2">
     {% for item in value.itens %}
-      <div class="{{ column_classes }}">
+      <div class="col-8 col-md-3">
         <a href="{{ item.link }}" target="_blank" aria-label="{{ item.titulo }}">
           {% image item.imagem fill-350x200 alt=item.titulo %}
         </a>
