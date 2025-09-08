@@ -37,7 +37,7 @@
 
       <!-- Ícones -->
       <div class="col-12 mb-4">
-        <div class="social-icons d-flex justify-content-center gap-3">
+        <div class="social-icons d-flex flex-wrap justify-content-center gap-md-3 gap-0">
           {% for rede in self.redes %}
           <a href="{{ rede.link }}" target="_blank" aria-label="{{ rede.nome }}">
             <i class="{{ rede.icone }}"></i>
