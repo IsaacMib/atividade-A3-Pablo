@@ -2,10 +2,11 @@
 
 // Primary
 $color-primary: #30599b;
+$color-primary-dark: #0a00b6;
+
 $color-primary-70: #30599bb3;
 $color-primary-50: #30599b80;
 $color-primary-light: #9d46ff;
-$color-primary-dark: #0a00b6;
 $color-on-primary: #ffffff;
 
 
@@ -85,3 +86,7 @@ $color-overlay-30: rgba(0, 0, 0, 0.3);
 $color-overlay-40: rgba(0, 0, 0, 0.4);
 
 $color_title_redes_sociais: $color-primary;
+
+$color_agenda_column_border: #00000033;
+$color_agenda_column_shadow: #00000040;
+$color_agenda_column_btn: #94a3b8;

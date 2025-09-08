@@ -1,0 +1,66 @@
+@use '../variables.scss';
+
+[data-theme=dark] {
+  .agenda-page--title {
+    color: variables.$color-primary-dark;
+
+    &::after {
+      background-color: variables.$color-primary-dark;
+    }
+  }
+
+  #calendar-agendas {
+    .vc-column {
+      border: 0.79px solid variables.$color_agenda_column_border;
+      box-shadow: 0px 3.15px 3.15px 0px variables.$color_agenda_column_shadow;
+    }
+
+    .vc-month,
+    .vc-year {
+      color: variables.$color-primary-dark;
+    }
+
+    .vc-header__content {
+      border: 0.79px solid variables.$color_agenda_column_border;
+      box-shadow: 0px 3.15px 3.15px 0px variables.$color_agenda_column_shadow;
+    }
+    .vc-week__day {
+      color: variables.$color-black;
+    }
+    .vc-week__day[data-vc-week-day-off] {
+      color: variables.$color-black;
+    }
+    .vc-date[data-vc-date-holiday] .vc-date__btn, 
+    .vc-date[data-vc-date-weekend] .vc-date__btn {
+      color: variables.$color-black;
+    }
+
+    .vc-date[data-vc-date-holiday][data-vc-date-month=next] .vc-date__btn, 
+    .vc-date[data-vc-date-holiday][data-vc-date-month=prev] .vc-date__btn, 
+    .vc-date[data-vc-date-weekend][data-vc-date-month=next] .vc-date__btn, 
+    .vc-date[data-vc-date-weekend][data-vc-date-month=prev] .vc-date__btn {
+      color: variables.$color_agenda_column_btn;
+    }
+
+    .vc-date[data-vc-date-holiday][data-vc-date-disabled] .vc-date__btn, 
+    .vc-date[data-vc-date-weekend][data-vc-date-disabled] .vc-date__btn,
+    .vc-date[data-vc-date-disabled] .vc-date__btn {
+      color: variables.$color_agenda_column_btn;
+    }
+
+    .bg-temcompromissos {
+      color: variables.$color-primary-dark !important;
+    }
+
+    
+
+    .vc-date[data-vc-date-selected] .vc-date__btn,
+    .vc-months__month[data-vc-months-month-selected], 
+    .vc-years__year[data-vc-years-year-selected] {
+      background-color: variables.$color-primary-dark;
+      color: variables.$color-white !important;
+    }
+  }
+}
+
+
