@@ -168,7 +168,12 @@
   /* Centralizar todo o conteúdo na tela */
   .acesso-rapido {
     max-width: 400px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
+    margin-left: 16px !important;
+    margin-right: 16px !important;
+  }
+
+  .container.acesso-rapido {
+    width: auto;
+    max-width: 100% !important;
   }
 }
