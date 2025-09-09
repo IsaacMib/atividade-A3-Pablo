@@ -3,35 +3,36 @@
 <script>
   const NOTICIAS_TITLE_WRAPPER = '.noticias-title-wrapper';
   const TITLE_BREAKPOINTS = [
-    { maxWidth: 434, dataAttr: 'charsVvs', defaultChars: 35 },
-    { maxWidth: 460, dataAttr: 'charsVs', defaultChars: 56 },
-    { maxWidth: 475, dataAttr: 'charsSm', defaultChars: 60 }, 
-    { maxWidth: 639, dataAttr: 'charsMd', defaultChars: 75 }, 
-    { maxWidth: 1190, dataAttr: 'charsLg', defaultChars: 80 },  
-    { maxWidth: Infinity, dataAttr: 'charsXl', defaultChars: null} 
+    { maxWidth: 50, dataAttr: 'charsVvs', defaultChars: 35 },
+    { maxWidth: 90, dataAttr: 'charsVs', defaultChars: 56 },
+    { maxWidth: 200, dataAttr: 'charsMd', defaultChars: 50 },
+    { maxWidth: 300, dataAttr: 'charsSm', defaultChars: 70 }, 
+    { maxWidth: 430, dataAttr: 'charsLg', defaultChars: 95 },
+    { maxWidth: 480, dataAttr: 'charsXl', defaultChars: null}
   ];
 
   const NOTICIAS_DESC_ELEMENT = '.noticias-descricao';
   const DESC_BREAKPOINTS = [
-    { maxWidth: 440, dataAttr: 'charsVs', defaultChars: 50 }, 
-    { maxWidth: 639, dataAttr: 'charsSm', defaultChars: 90 },
-    { maxWidth: 1000, dataAttr: 'charsMd', defaultChars: 140 },
-    { maxWidth: 1200, dataAttr: 'charsLg', defaultChars: 125 },
-    { maxWidth: 1430, dataAttr: 'charsVl', defaultChars: 170 },
-    { maxWidth: 1500, dataAttr: 'charsVvl', defaultChars: 200 },
-    { maxWidth: Infinity, dataAttr: 'charsXl', defaultChars: null}
+    { maxWidth: 50, dataAttr: 'charsVs', defaultChars: 50 }, 
+    { maxWidth: 100, dataAttr: 'charsSm', defaultChars: 90 },
+    { maxWidth: 250, dataAttr: 'charsMd', defaultChars: 120 },
+    { maxWidth: 300, dataAttr: 'charsLg', defaultChars: 135 },
+    { maxWidth: 430, dataAttr: 'charsVl', defaultChars: 170 },
+    { maxWidth: 500, dataAttr: 'charsVvl', defaultChars: 200 },
+    { maxWidth: 550, dataAttr: 'charsXl', defaultChars: null}
   ];
 
 
   function truncateContent(breakpoints, elementClass) {
     const wrappers = document.querySelectorAll(elementClass);
-    const width = window.innerWidth;
-    
-    const currentBreakpoint = breakpoints.find(bp => width <= bp.maxWidth);
     
     wrappers.forEach(wrapper => {
       const originalText = wrapper.dataset.originalValue;
       if (!originalText) return;
+      
+      const parentWidth = wrapper.parentElement.offsetWidth;
+      
+      const currentBreakpoint = breakpoints.find(bp => parentWidth <= bp.maxWidth) ?? originalText.length;
       
       const maxChars = wrapper.dataset[currentBreakpoint.dataAttr] 
         ? parseInt(wrapper.dataset[currentBreakpoint.dataAttr]) 
@@ -56,7 +57,7 @@
     resizeTimeout = setTimeout(() => {
       truncateContent(TITLE_BREAKPOINTS, NOTICIAS_TITLE_WRAPPER);
       truncateContent(DESC_BREAKPOINTS, NOTICIAS_DESC_ELEMENT);
-    }, 50);
+    }, 30);
   });
 </script>
 
