@@ -8,7 +8,7 @@
 
     {% include 'include/titulo.html' with titulo=page.introduction|default:"Quadro de Avisos" bgClass='' %}
 
-    <div class="avisos-wrapper row justify-content-center">
+    <div class="avisos-wrapper row justify-content-start">
         {% for aviso in posts %}
         <a class="col-12 col-lg-4 col-md-6" href="{% pageurl aviso %}" style="text-decoration: none; color: inherit;">
           <div class="aviso-card">
@@ -25,13 +25,13 @@
                   {{ aviso.descricao|striptags|truncatechars:120}}
                 </p>
                 {% if aviso.data_publicacao %}
-                  <p class="aviso-data">Data: {{ aviso.data_publicacao|date:"d/m/Y" }}</p>
+                  <p class="aviso-data fw-bold">Data: {{ aviso.data_publicacao|date:"d/m/Y" }}</p>
                 {% endif %}
               </div>
             </div>
 
             {% if aviso.data_publicacao %}
-              <p class="aviso-data"></p>
+              <p class="aviso-data fw-bold"></p>
             {% endif %}
           </div>
         </a>
