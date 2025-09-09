@@ -1,3 +1,5 @@
+@use './../../variables.scss';
+
 .avisos-wrapper {
     // display: grid !important;
     // grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)) !important;
@@ -78,7 +80,7 @@
     display: flex !important;
     align-items: flex-start !important;
     gap: 0.5rem !important;
-    margin-top: auto !important;
+    color: variables.$color-primary;
 }
 
 .icon-col {
