@@ -29,13 +29,13 @@
                   {{ aviso.descricao|striptags|truncatechars:120}}
                 </p>
                 {% if aviso.data_publicacao %}
-                  <p class="aviso-data">Data: {{ aviso.data_publicacao|date:"d/m/Y" }}</p>
+                  <p class="aviso-data fw-bold">Data: {{ aviso.data_publicacao|date:"d/m/Y" }}</p>
                 {% endif %}
               </div>
             </div>
 
             {% if aviso.data_publicacao %}
-              <p class="aviso-data"></p>
+              <p class="aviso-data fw-bold"></p>
             {% endif %}
           </div>
         </a>
