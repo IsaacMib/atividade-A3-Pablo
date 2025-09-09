@@ -3,7 +3,7 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="dark" class="cc--light-funky">
+<html lang="pt-BR" data-theme="dark" data-bs-theme="dark">
     <head>
         <meta charset="utf-8" />
         <title>
@@ -67,7 +67,7 @@
         {% endif %}
     </head>
 
-    <body class="tw:font-inter {% block body_class %}{% endblock %}">
+    <body class="tw:font-inter cc--light-funky {% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
 
         {% include 'barra_identidade.html' %}

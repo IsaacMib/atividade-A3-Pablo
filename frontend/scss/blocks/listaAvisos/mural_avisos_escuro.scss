@@ -1,0 +1,37 @@
+@use './../../variables.scss';
+[data-theme=dark] {
+  .mural-avisos {
+    .aviso-card {
+      background-color: variables.$color-black;
+      box-shadow: 0 1px 4px variables.$color-white;
+
+      &:hover {
+        box-shadow: 0 4px 10px variables.$color-white;
+      }
+
+      &::before {
+        background-color:  variables.$color-white; //#2f5597;
+      }
+    }
+
+    .aviso-title {
+      color: variables.$color-white; //#2f5597;
+    }
+
+    .aviso-data {
+      color: variables.$color-white;//#2f5597;
+    }
+
+    .ver-todos-btn {
+      a {
+        border: 1px solid variables.$color-white;//#2f5597;
+        color: variables.$color-white;//#2f5597;
+
+        &:hover {
+          background-color: variables.$color-white;//#2f5597;
+          color: variables.$color-black;
+        }
+      }
+    }
+  }
+}

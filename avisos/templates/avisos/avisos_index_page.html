@@ -6,11 +6,7 @@
 {% block content %}
 <div class="container text-center">
 
-    {% if page.introduction %}
-    <h1 class="texto-azul intro text-center mb-4" style="max-width: 2000px;">
-        {{ page.introduction|richtext }}
-    </h1>
-    {% endif %}
+    {% include 'include/titulo.html' with titulo=page.introduction|default:"Quadro de Avisos" bgClass='' %}
 
     <div class="avisos-wrapper row justify-content-center">
         {% for aviso in posts %}

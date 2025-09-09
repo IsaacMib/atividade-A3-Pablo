@@ -1,0 +1,34 @@
+@use './../../variables.scss';
+
+[data-theme=dark] {
+  .aviso-card {
+      background-color: variables.$color-black !important;
+      box-shadow: none;
+      border: 1px solid variables.$color-white !important;
+
+      &:hover {
+        box-shadow: none;
+        border: 1px solid variables.$color-white !important;
+      }
+
+      &::before {
+          background-color: variables.$color-white !important;
+      }
+  }
+
+  .aviso-title {
+    color: variables.$color-white !important;
+  }
+
+  .aviso-descricao {
+    color: variables.$color-white !important;
+  }
+
+  .aviso-subtitle {
+      color: variables.$color-grey-800 !important;
+  }
+
+  .aviso-data {
+      color: variables.$color-white !important;
+  }
+}

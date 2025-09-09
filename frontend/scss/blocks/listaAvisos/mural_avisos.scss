@@ -1,3 +1,5 @@
+@use './../../variables.scss';
+
 .mural-avisos {
   padding: 2rem 0;
 
@@ -31,9 +33,9 @@
   // }
 
   .aviso-card {
-    background-color: white;
+    background-color: variables.$color-white;
     border-radius: 8px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 4px variables.$color_card_shadow;
     padding: 1.25rem;
     position: relative;
     display: flex;
@@ -44,7 +46,7 @@
     min-height: 240px;
 
     &:hover {
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 10px variables.$color_card_shadow_hover;
 
       &::before {
         transform: scaleY(1);
@@ -58,7 +60,7 @@
       top: 0;
       height: 100%;
       width: 4px;
-      background-color: #2f5597;
+      background-color:  variables.$color-primary; //#2f5597;
       transform: scaleY(0);
       transform-origin: top;
       transition: transform 0.3s ease;
@@ -71,7 +73,7 @@
     font-size: 1.2rem;
     text-align: left;
     font-weight: 600;
-    color: #2f5597;
+    color: variables.$color-primary; //#2f5597;
     margin-bottom: 0.2rem;
   }
 
@@ -102,7 +104,7 @@
 
 .aviso-data {
     font-size: 1.0rem !important;
-    color: #2f5597;
+    color: variables.$color-primary;//#2f5597;
     margin-top: 0.3rem;
   }
 
@@ -111,16 +113,16 @@
     text-align: center;
 
     a {
-      border: 1px solid #2f5597;
-      color: #2f5597;
+      border: 1px solid variables.$color-primary;//#2f5597;
+      color: variables.$color-primary;//#2f5597;
       padding: 0.5rem 2rem;
       border-radius: 30px;
       text-decoration: none;
       transition: all 0.2s ease;
 
       &:hover {
-        background-color: #2f5597;
-        color: white;
+        background-color: variables.$color-primary;//#2f5597;
+        color: variables.$color-white;
       }
     }
   }

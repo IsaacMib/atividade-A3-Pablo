@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     const options = {
+        themeAttrDetect: 'html[data-theme]',
         locale: 'pt-BR',
         type: 'multiple',
         selectedTheme: 'light',

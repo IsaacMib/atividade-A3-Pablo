@@ -1,5 +1,6 @@
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
+  document.documentElement.setAttribute('data-bs-theme', theme);
   localStorage.setItem('theme', theme);
 }
 
@@ -19,6 +20,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Adiciona o evento de clique à tag <a>
 document.getElementById('theme-toggle').addEventListener('click', function (event) {
+  event.preventDefault(); // Evita que o link recarregue a página
+  toggleTheme();
+});
+
+document.getElementById('theme-toggle-mobile').addEventListener('click', function (event) {
   event.preventDefault(); // Evita que o link recarregue a página
   toggleTheme();
 });

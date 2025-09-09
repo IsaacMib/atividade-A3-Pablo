@@ -175,7 +175,7 @@ class AvisosPage(Page):
     ]
 
 class AvisosIndexPage(RoutablePageMixin, Page):
-    introduction = models.TextField(help_text="Texto para o topo da página de avisos", blank=True)
+    introduction = models.CharField(max_length=255, help_text="Texto para o topo da página de avisos", blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel("introduction"),

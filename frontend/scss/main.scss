@@ -44,6 +44,12 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
+[data-theme=dark] {
+    body {
+        background-color: variables.$color-black !important;
+    }
+}
+
 .row > * {
     @media (max-width: 375px) {
         padding-right: 0px;
