@@ -7,7 +7,7 @@
           <p class="noticias-conteudo--data tw:text-white">{{ noticias.data_publicacao|date:"d/m/Y" }}</p>
       </div>
       <div class="col d-flex justify-content-center mb-0 heading-mobile d-flex d-sm-none">
-        <h2 class="noticias-conteudo--heading{% if not noticias.get_imagem_destaque %} semImagem{% endif %} heading-desktop">
+        <h2 class="noticias-conteudo--heading{% if not noticias.get_imagem_destaque %} semImagem{% endif %}">
           <strong>
             <div class="noticias-title-wrapper">
               {{ noticias.title }}
@@ -26,7 +26,7 @@
       {% endif %}
       
       <div class="noticias-conteudo--body">
-        <div class="noticias-conteudo--heading{% if not noticias.get_imagem_destaque %} semImagem{% endif %}">
+        <div class="noticias-conteudo--heading{% if not noticias.get_imagem_destaque %} semImagem{% endif %} heading-desktop">
           <strong>
             <div class="noticias-title-wrapper">
               {{ noticias.title | safe }}
