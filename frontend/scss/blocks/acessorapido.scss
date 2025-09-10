@@ -1,8 +1,12 @@
 @use '../variables';
 
+.acesso-rapido-wrapper {
+  background-color: variables.$color-white;
+}
+
 .acesso-rapido {
   padding: 16px 8% !important;
-  margin-bottom: 48px !important;
+  padding-bottom: 48px !important;
 }
 
 .acesso-rapido a, .acesso-rapido a:hover {

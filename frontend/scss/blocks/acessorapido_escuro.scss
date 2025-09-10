@@ -1,0 +1,69 @@
+@use './../variables.scss';
+
+[data-theme=dark] {
+  .acesso-rapido-wrapper {
+    background-color: variables.$color-black;
+}
+
+  .quick-access {
+    border: 1px solid variables.$color-white; 
+    background-color: variables.$color-black;
+  }
+
+  .quick-access:hover {
+    background-color: variables.$color-black;
+    box-shadow: 0 0 10px variables.$color-white;
+    border-color: variables.$color-white;
+  }
+
+  .quick-access-icon {
+    background-color: variables.$color-black;
+    border: 1px solid variables.$color-white;
+    
+    i {
+      color: variables.$color-white !important;
+    }
+  }
+
+  .quick-access-title {
+    color: variables.$color-white !important;
+  }
+
+  /* APENAS MOBILE - não afeta desktop */
+  @media (max-width: 767px) {
+    .acesso-rapido {
+      background-color: variables.$color-black !important;
+      box-shadow: 0 4px 12px  variables.$color-white !important;
+    }
+    
+    .acesso-rapido > .row.g-4 > [class*="col-"] {
+      border-bottom: 1px solid variables.$color-white !important;
+    }
+    
+    .acesso-rapido > .row.g-4 > [class*="col-"]::before {
+      color: variables.$color-white !important;
+    }
+    
+    .acesso-rapido > .row.g-4 > [class*="col-"] > a > .quick-access {
+      background-color: transparent !important;
+    }
+    
+    .acesso-rapido > .row.g-4 > [class*="col-"] > a > .quick-access:hover {
+      background-color: variables.$color-white !important;
+    }
+    
+    .acesso-rapido > .row.g-4 > [class*="col-"] > a > .quick-access > .quick-access-wrapper > .quick-access-icon {
+      background-color: variables.$color-white !important;
+    }
+    
+    .acesso-rapido > .row.g-4 > [class*="col-"] > a > .quick-access > .quick-access-wrapper > .quick-access-title {
+      color: variables.$color-white !important;
+    }
+    
+    /* Seta no final */
+    .acesso-rapido > .row.g-4 > [class*="col-"] > a > .quick-access::after {
+      color: variables.$color-white !important;
+    }
+  }
+
+}
