@@ -3,6 +3,8 @@
 [data-theme=dark] {
   .acesso-rapido-wrapper {
     background-color: variables.$color-black;
+    padding-top: 40px;
+    padding-bottom: 1px;
 }
 
   .quick-access {
@@ -33,7 +35,8 @@
   @media (max-width: 767px) {
     .acesso-rapido {
       background-color: variables.$color-black !important;
-      box-shadow: 0 4px 12px  variables.$color-white !important;
+      box-shadow: none !important;
+      border: 1px solid variables.$color-white !important;
     }
     
     .acesso-rapido > .row.g-4 > [class*="col-"] {
@@ -53,7 +56,7 @@
     }
     
     .acesso-rapido > .row.g-4 > [class*="col-"] > a > .quick-access > .quick-access-wrapper > .quick-access-icon {
-      background-color: variables.$color-white !important;
+      background-color: variables.$color-black !important;
     }
     
     .acesso-rapido > .row.g-4 > [class*="col-"] > a > .quick-access > .quick-access-wrapper > .quick-access-title {
