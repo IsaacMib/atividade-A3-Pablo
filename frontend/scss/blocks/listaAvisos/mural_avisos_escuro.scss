@@ -1,6 +1,9 @@
 @use './../../variables.scss';
 [data-theme=dark] {
   .mural-avisos {
+    background-color: variables.$color-black;
+    border-top: 0.5px solid variables.$color-white;
+    border-bottom: 0.5px solid variables.$color-white;
     .aviso-card {
       background-color: variables.$color-black;
       box-shadow: 0 1px 4px variables.$color-white;

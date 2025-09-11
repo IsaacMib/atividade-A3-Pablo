@@ -2,6 +2,7 @@
 
 .btn-ver-todos-container {
   padding: 1.6rem 0px;
+  background-color: variables.$color-white;
 }
 
 .btn-ver-todos-bg-cinza {
@@ -12,9 +13,9 @@
   margin-top: 20px;
   display: inline-block;
   padding: 12px 42px;
-  border: 1px solid #396BBB;
-  background-color: #fff;
-  color: #396BBB;
+  border: 1px solid variables.$color-primary;
+  background-color: variables.$color-white;
+  color: variables.$color-primary;
   text-decoration: none;
   font-weight: bold;
   border-radius: 10px;
@@ -22,8 +23,8 @@
 
   
   &:hover {
-    background-color: #052F4A;
-    color: #fff;
+    background-color: variables.$color-link-noticias-hover;
+    color: variables.$color-white;
     text-decoration: none;
   }
 }

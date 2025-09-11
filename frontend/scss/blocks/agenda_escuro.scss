@@ -3,6 +3,8 @@
 [data-theme=dark] {
   .list-agenda-block {
     background-color: variables.$color-black;
+    border-top: 0.5px solid variables.$color-white;
+    border-bottom: 0.5px solid variables.$color-white;
   }
 
   .list-agenda-header {

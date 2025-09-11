@@ -3,8 +3,12 @@
 [data-theme=dark] {
   .acesso-rapido-wrapper {
     background-color: variables.$color-black;
-    padding-top: 40px;
-    padding-bottom: 1px;
+    border-top: 0.5px solid variables.$color-white;
+    border-bottom: 0.5px solid variables.$color-white;
+    @media (max-width: 767px) {
+      padding-top: 40px;
+      padding-bottom: 1px;
+    }
   }
 
   .quick-access {
