@@ -1,5 +1,9 @@
 @use '../variables.scss';
 
+.google-maps-container {
+    padding-bottom: 5rem;
+}
+
 .map-container {
     position: relative;
     overflow: hidden;
@@ -20,12 +24,33 @@
             margin: 0 auto 3rem;
             position: relative;
             z-index: 2;
-
-            @media (max-width: 768px) {
-                box-shadow: none !important;
-            }
+            aspect-ratio: 1/1;
         }
     }
 
     margin-bottom: 1.5rem;
+}
+
+@media screen and (max-width: 576px) {
+    .block-localizacoes.container {
+        width: auto;
+    }
+    .block-localizacoes.row.col-auto {
+        margin-right: 22px !important;
+        margin-left: 0 !important;
+    }
+    .picture-wrapper.col-auto {
+        margin-right: 0 !important;
+    }
+    .picture-wrapper {
+        margin-right: 16px !important;
+        margin-left: 16px !important;
+    }
+}
+
+@media screen and (max-width: 375px) {
+    .row.picture-wrapper {
+        padding-right: 10px;
+        padding-left: 16px;
+    }
 }
