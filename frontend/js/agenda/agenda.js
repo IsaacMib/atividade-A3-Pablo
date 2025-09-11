@@ -31,7 +31,6 @@ document.addEventListener("DOMContentLoaded", function() {
         themeAttrDetect: 'html[data-theme]',
         locale: 'pt-BR',
         type: 'multiple',
-        selectedTheme: 'light',
         displayMonthsCount: 2,
         monthsToSwitch: 1,
         selectionDatesMode: 'single',
