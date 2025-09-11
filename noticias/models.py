@@ -15,8 +15,9 @@ from wagtail.models import Page
 from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
 from datetime import datetime
 
+from custom.char_count_widget import CharCounterTextarea
+
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.core.validators import MaxLengthValidator
 from wagtail.images.blocks import ImageChooserBlock
 from core.utils import get_file_type, get_fontawesome_file_icon
 
@@ -37,11 +38,11 @@ class NoticiasPage(Page):
     Página que representa uma notícia.
     """
     subtitle = models.CharField(verbose_name="Subtítulo", blank=True, max_length=255)
-    descricao = models.TextField(
+    descricao = models.CharField(
         verbose_name="Descrição",
         blank=False,
         help_text="Breve descrição do conteúdo da página.",
-        validators=[MaxLengthValidator(230)],
+        max_length=220,
     )
     data_publicacao = models.DateTimeField(
         "Data de publicação da notícia", default=datetime.now, blank=True, null=True
@@ -104,7 +105,7 @@ class NoticiasPage(Page):
     # Painéis padrão
     content_panels = Page.content_panels + [
         FieldPanel("subtitle"),
-        FieldPanel("descricao"),
+        FieldPanel("descricao", widget=CharCounterTextarea()),
         MultiFieldPanel(
             [
                 FieldPanel("slideshow_imagens"),

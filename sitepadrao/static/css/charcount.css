@@ -1,0 +1,12 @@
+.charcount-wrapper {
+    position: relative;
+    margin-bottom: 0.25rem;
+}
+
+.charcount-display {
+    float: right;
+    font-size: 0.85rem;
+    color: #555;
+    margin-top: 4px;
+    text-align: right;
+}
