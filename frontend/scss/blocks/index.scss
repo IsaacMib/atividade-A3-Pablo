@@ -1,6 +1,7 @@
 
 @use './listvideo.scss';
 @use './banner.scss';
+@use './banner_escuro.scss';
 @use './listaNoticias/index.scss' as listaNoticias;
 @use './listaAvisos/index.scss' as ListaAvisos;
 @use './servicos_online.scss';
@@ -14,4 +15,4 @@
 @use './agenda.scss';
 @use './agenda_escuro.scss';
 @use './solucao.scss';
-@use './btnVerTodos.scss';
+@use './btn_ver_todos.scss';
