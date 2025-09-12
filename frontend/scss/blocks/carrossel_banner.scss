@@ -1,4 +1,4 @@
-//TODOGABRIEL: Continuar aqui.
+@use './../variables.scss';
 
 .carrossel-banners {
   width: 100%;
@@ -89,8 +89,8 @@
   .swiper-pagination-bullet {
     --swiper-pagination-bullet-width: 16px;
     --swiper-pagination-bullet-height: 16px;
-    --swiper-pagination-bullet-inactive-color: #fff;
-    border: 1px #000000 solid;
+    --swiper-pagination-bullet-inactive-color: #{variables.$color-white};
+    border: 1px solid variables.$color-black;
     margin: 0 8px !important; // Espaçamento entre bullets
   }
 }
@@ -138,6 +138,6 @@
 }
 
 .swiper-pagination-bullet-active {
-  --swiper-pagination-color: #D9D9D9;
+  --swiper-pagination-color: #{variables.$color-grey-210};
   border: none !important;
 }

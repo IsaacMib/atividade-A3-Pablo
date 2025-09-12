@@ -1,0 +1,16 @@
+@use './../variables.scss';
+
+[data-theme=dark] {
+  // Mantenha sua paginação personalizada
+  .swiper-banners-pagination {
+    .swiper-pagination-bullet {
+      --swiper-pagination-bullet-inactive-color: #{variables.$color-black};
+      --swiper-pagination-bullet-inactive-opacity: 1;
+      border: 1px solid variables.$color-white;
+    }
+  }
+
+  .swiper-pagination-bullet-active {
+    --swiper-pagination-color: #{variables.$color-white};
+  }
+}

@@ -395,7 +395,7 @@ class OdometerListBlock(StructBlock):
     odometers = ListBlock(OdometerBlock(), label="Central de Monitoramento")
 
     class Meta:
-        template = 'blocks/central_monitoramento_detran.html'
+        template = 'blocks/central_monitoramento.html'
         icon = 'list-ul'
         label = 'Central de Monitoramento'
 

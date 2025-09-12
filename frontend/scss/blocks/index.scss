@@ -1,19 +1,33 @@
 
-@use './listvideo.scss';
+@use './list_video.scss';
+@use './list_video_escuro.scss';
+
 @use './banner.scss';
 @use './banner_escuro.scss';
-@use './listaNoticias/index.scss' as listaNoticias;
-@use './listaAvisos/index.scss' as ListaAvisos;
+
+@use './lista_noticias/index.scss' as listaNoticias;
+@use './lista_avisos/index.scss';
 @use './servicos_online.scss';
+
 @use './carrossel_banner.scss';
+@use './carrossel_banner_escuro.scss';
+
 @use './titulo.scss';
+
 @use './acessorapido.scss';
 @use './acessorapido_escuro.scss';
+
 @use './rede_social.scss';
-@use './centralMonitoramentoDetran.scss';
-@use './carrosselsolucao.scss' as carrossel;
+
+@use './central_monitoramento.scss';
+@use './central_monitoramento_escuro.scss';
+
+@use './carrossel_solucao.scss';
+
 @use './agenda.scss';
 @use './agenda_escuro.scss';
+
 @use './solucao.scss';
+
 @use './btn_ver_todos.scss';
 @use './btn_ver_todos_escuro.scss';
