@@ -3,6 +3,9 @@
 $color-white: #ffffff;
 $color-black: #000000;
 
+$color-gradient-inicio: #396BBB;
+$color-gradient-fim: #1A3155;
+
 // Primary
 $color-primary: #30599b;
 $color-primary-dark: #0a00b6;
@@ -95,8 +98,8 @@ $color_agenda_column_border: #00000033;
 $color_agenda_column_shadow: #00000040;
 $color_agenda_column_btn: #94a3b8;
 
-$color_card_shadow: rgba(0, 0, 0, 0.1);
-$color_card_shadow_hover: rgba(0, 0, 0, 0.15);
+$color_card_shadow: #0000001a;
+$color_card_shadow_hover: #00000026;
 
 $color_agenda_item_bg: #D9D9D91A;
 $color_agenda_item_bg_escuro: #161616;

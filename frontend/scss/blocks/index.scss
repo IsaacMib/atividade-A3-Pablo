@@ -7,6 +7,8 @@
 
 @use './lista_noticias/index.scss' as listaNoticias;
 @use './lista_avisos/index.scss';
+
+@use './servicos_online_escuro.scss';
 @use './servicos_online.scss';
 
 @use './carrossel_banner.scss';
@@ -18,6 +20,7 @@
 @use './acessorapido_escuro.scss';
 
 @use './rede_social.scss';
+@use './rede_social_escuro.scss';
 
 @use './central_monitoramento.scss';
 @use './central_monitoramento_escuro.scss';
@@ -31,3 +34,6 @@
 
 @use './btn_ver_todos.scss';
 @use './btn_ver_todos_escuro.scss';
+
+@use './programas.scss';
+@use './programas_escuro.scss';

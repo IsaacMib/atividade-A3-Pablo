@@ -1,0 +1,8 @@
+@use './../variables.scss';
+
+[data-theme=dark] {
+  .programas-wrapper {
+    background-color: variables.$color-white;
+  }
+
+}

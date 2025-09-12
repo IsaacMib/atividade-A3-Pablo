@@ -775,7 +775,7 @@ class GridImagensBlock(StructBlock):
     grid_type = ChoiceBlock(choices=GRID_IMAGENS_TYPES,
                              default=GRID_IMAGENS_DEFAULT_TYPE,
                              required=True, label="Tipo de Grid")
-    itens = ListBlock(ProgramaItemBlock, default=[], min_num=1, max_num=12)
+    itens = ListBlock(ProgramaItemBlock, min_num=1, max_num=12)
     
     def get_column_classes(self, grid_type):
         """
