@@ -1,3 +1,4 @@
+from django import forms
 from django.db import models
 
 from django.contrib import messages
@@ -15,8 +16,6 @@ from wagtail.models import Page
 from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
 from datetime import datetime
 
-from custom.char_count_widget import CharCounterTextarea
-
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from wagtail.images.blocks import ImageChooserBlock
 from core.utils import get_file_type, get_fontawesome_file_icon
@@ -33,11 +32,13 @@ class NoticiasPageTag(TaggedItemBase):
         "NoticiasPage", related_name="tagged_items", on_delete=models.CASCADE
     )
 
+
 class NoticiasPage(Page):
     """
     Página que representa uma notícia.
     """
-    subtitle = models.CharField(verbose_name="Subtítulo", blank=True, max_length=255)
+    subtitle = models.CharField(
+        verbose_name="Subtítulo", blank=True, max_length=255)
     descricao = models.CharField(
         verbose_name="Descrição",
         blank=False,
@@ -82,7 +83,8 @@ class NoticiasPage(Page):
 
     arquivos = StreamField(
         [
-            ("arquivo", EspecificDocumentChooserBlock(required=True, label="Arquivos")),
+            ("arquivo", EspecificDocumentChooserBlock(
+                required=True, label="Arquivos")),
         ],
         verbose_name="Arquivos da notícia",
         blank=True,
@@ -105,7 +107,14 @@ class NoticiasPage(Page):
     # Painéis padrão
     content_panels = Page.content_panels + [
         FieldPanel("subtitle"),
-        FieldPanel("descricao", widget=CharCounterTextarea()),
+        FieldPanel(
+            "descricao",
+            widget=forms.Textarea(attrs={
+                'data-controller': 'char-count',
+                'data-char-count-max-value': 220,
+                'data-action': 'input->char-count#updateCount paste->char-count#updateCount',
+            }),
+        ),
         MultiFieldPanel(
             [
                 FieldPanel("slideshow_imagens"),
@@ -140,9 +149,11 @@ class NoticiasPage(Page):
     edit_handler = TabbedInterface(
         [
             ObjectList(content_panels, heading="Conteúdo"),
-            ObjectList(promote_panels, heading="Promoções"),  # Adicionado painel de promoções
+            # Adicionado painel de promoções
+            ObjectList(promote_panels, heading="Promoções"),
             ObjectList(settings_panels, heading="Configurações"),
-            ObjectList(migracao_panels, heading="Migração", classname="migracao-only"),
+            ObjectList(migracao_panels, heading="Migração",
+                       classname="migracao-only"),
         ]
     )
 
@@ -158,7 +169,7 @@ class NoticiasPage(Page):
         for tag in tags:
             tag.url = f"{base_url}tags/{tag.slug}/"
         return tags
-    
+
     # Specifies parent to NoticiasPage as being NoticiasIndexPages
     parent_page_types = ["NoticiasIndexPages"]
 
@@ -172,7 +183,7 @@ class NoticiasPage(Page):
     def get_context(self, request):
         context = super().get_context(request)
         context["ultimas_noticias"] = self.get_ultimas_noticias()
-        
+
         return context
 
     def get_imagem_destaque(self):
@@ -219,6 +230,7 @@ class NoticiasPage(Page):
         index.SearchField('descricao'),
     ]
 
+
 class NoticiasIndexPages(RoutablePageMixin, Page):
 
     introduction = models.TextField(
@@ -241,14 +253,15 @@ class NoticiasIndexPages(RoutablePageMixin, Page):
     # objects). On the demo site we use this on the HomePage
     def children(self):
         return self.get_children().specific().live()
-    
+
     # Overrides the context to list all child items, that are live, by the
     # date that they were published
     # https://docs.wagtail.org/en/stable/getting_started/tutorial.html#overriding-context
     def get_context(self, request):
         context = super(NoticiasIndexPages, self).get_context(request)
-        all_posts = NoticiasPage.objects.descendant_of(self).live().order_by("-data_publicacao")
-        paginator = Paginator(all_posts, 12) # Show 12 posts per page
+        all_posts = NoticiasPage.objects.descendant_of(
+            self).live().order_by("-data_publicacao")
+        paginator = Paginator(all_posts, 12)  # Show 12 posts per page
         page = request.GET.get("page")
         try:
             # If the page exists and the ?page=x is an int
@@ -262,7 +275,7 @@ class NoticiasIndexPages(RoutablePageMixin, Page):
             posts = paginator.page(paginator.num_pages)
         context["posts"] = posts
         return context
-    
+
      # This defines a Custom view that utilizes Tags. This view will return all
     # related NoticiasPage for a given Tag or redirect back to the BlogIndexPage.
     # More information on RoutablePages is at
@@ -282,11 +295,11 @@ class NoticiasIndexPages(RoutablePageMixin, Page):
         posts = self.get_posts(tag=tag)
         context = {"self": self, "tag": tag, "posts": posts}
         return render(request, "noticias/noticias_index_pages.html", context)
-    
+
     def serve_preview(self, request, mode_name):
         # Needed for previews to work
         return self.serve(request)
-    
+
     # Returns the child NoticiasPage objects for this NoticiasIndexPages.
     # If a tag is used then it will filter the posts by tag.
     def get_posts(self, tag=None):
@@ -294,7 +307,7 @@ class NoticiasIndexPages(RoutablePageMixin, Page):
         if tag:
             posts = posts.filter(tags=tag)
         return posts
-    
+
     # Returns the list of Tags for all child posts of this NoticiasPage.
     def get_child_tags(self):
         tags = []
@@ -303,6 +316,6 @@ class NoticiasIndexPages(RoutablePageMixin, Page):
             tags += post.get_tags
         tags = sorted(set(tags))
         return tags
-    
+
     def get_ultimas_noticias(self, quantidade=6):
         return NoticiasPage.objects.live().descendant_of(self).order_by('-data_publicacao')[:quantidade]
