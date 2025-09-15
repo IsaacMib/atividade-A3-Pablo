@@ -37,7 +37,7 @@ class HomePage(Page):
             ("list_agenda", ListAgendaBlock()),
             ("carrossel_solucoes", CarrosselSolucoesBlock()),
             ("programa", GridImagensBlock()),
-            ("servico_online_item", ServicoOnlineItemBlock()),
+          
         ],
         use_json_field=True,
         null=True,
