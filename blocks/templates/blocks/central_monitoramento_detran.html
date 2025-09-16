@@ -3,9 +3,9 @@
 <div class="central-monitoramento-detran tw:bg-primary tw:text-white">
   <div class="container">
     {% include 'include/titulo.html' with titulo=self.titulo bgClass='titulo-bg-azul' %}
-    <div class="row">
+    <div class="row justify-content-center"> 
         {% for odometer in self.odometers %}
-          <div class="dado-odometer col-12 col-lg-3">
+          <div class="dado-odometer col-12 col-lg-3 d-flex justify-content-center"> 
             {% include_block odometer %}
           </div>
         {% endfor %}      
