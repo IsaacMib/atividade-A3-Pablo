@@ -9,15 +9,12 @@
                 <h2 class="titulo-1">Linha do Tempo</h2>
             {% endif %}
         </div>
-        
-        {% if value.cards %}
+        <div class="linha-do-tempo-cards-container">
             {% for card in value.cards %}
-                <div class="card-linha-do-tempo">
-                    {% include 'blocks/card_linha_do_tempo.html' with cardlinhadotempo=card %}
-                </div>
+                {% include 'blocks/card_linha_do_tempo.html' with cardlinhadotempo=card %}
+            {% empty %}
+                <p>Nenhum card adicionado à linha do tempo.</p>
             {% endfor %}
-        {% else %}
-            <p>Nenhum card adicionado à linha do tempo.</p>
-        {% endif %}
+        </div>
     </div>
 </div>

@@ -682,7 +682,8 @@ class EspecificDocumentChooserBlock(DocumentChooserBlock):
 class CardLinhaDoTempoBlock(StructBlock):
     imagem = ImageChooserBlock(required=True, label="Imagem")
     texto_alternativo = CharBlock(required=False, label="Texto alternativo")
-    titulo = CharBlock(required=True, label="Título")
+    titulo = CharBlock(required=False, label="Título")
+    descricao = RichTextBlock(required=False, label="Descrição")
     data = DateBlock(required=True, label="Data")
 
     class Meta:
