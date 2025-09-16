@@ -5,9 +5,16 @@
   .central-monitoramento {
     background-color: variables.$color-white;
     color: variables.$color-black;
-    border-top: 0.5px solid variables.$color-black;
-    border-bottom: 0.5px solid variables.$color-black;
   }
+
+  .dado-monitoramento--separator-horizontal {
+    svg {
+      path {
+        stroke: variables.$color-black;
+      }
+    }
+  }
+
   .dado-odometer {
     .dado-monitoramento--separator-vertical {
       svg {

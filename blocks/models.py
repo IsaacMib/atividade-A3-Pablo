@@ -769,7 +769,7 @@ class ProgramaItemBlock(StructBlock):
 
 
 class GridImagensBlock(StructBlock):
-    titulo = CharBlock(required=True, label="Titulo do bloco Ex.: Programas, Soluções", default="Programas")
+    titulo = CharBlock(required=True, label="Titulo do bloco Ex.: Programas, Orgãos Vinculados", default="Programas")
     link_ver_todos = URLBlock(
         required=False, label="Link do botão 'Ver todos'")
     grid_type = ChoiceBlock(choices=GRID_IMAGENS_TYPES,

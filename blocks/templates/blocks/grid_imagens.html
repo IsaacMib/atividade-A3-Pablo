@@ -3,7 +3,7 @@
 <div class="programas-wrapper">
   <div class="container programas">
     {% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
-    <div class="row g-2 justify-content-center">
+    <div class="programas-content row g-2 justify-content-center">
       {% for item in value.itens %}
         <div class="{{ column_classes }}">
           <a href="{{ item.link }}" target="_blank" aria-label="{{ item.titulo }}">

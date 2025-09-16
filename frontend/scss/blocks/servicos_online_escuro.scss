@@ -11,6 +11,14 @@
     }
   }
 
+  .swiper-button-prev.swiper-servicos-button-prev {
+    background-image: url("../img/prev_branco.svg");
+  }
+
+  .swiper-button-next.swiper-servicos-button-next {
+      background-image: url("../img/next_branco.svg");
+  }
+
   .card {
     box-shadow: none;
     border: 1px solid variables.$color-white !important;

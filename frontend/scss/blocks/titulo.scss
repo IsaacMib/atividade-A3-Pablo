@@ -18,7 +18,7 @@
    background-color: variables.$color-primary;
    
    .titulo-1 {
-      color: #FFFFFF;
+      color: variables.$color-white;
    }
  }
 
@@ -36,7 +36,7 @@
     font-size: 30px;
     line-height: 100%;
     margin-bottom: 8px;
-    color: #305A9C;
+    color: variables.$color-primary;
  }
  
  

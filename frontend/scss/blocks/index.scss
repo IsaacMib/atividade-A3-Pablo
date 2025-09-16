@@ -14,6 +14,7 @@
 @use './carrossel_banner.scss';
 @use './carrossel_banner_escuro.scss';
 
+@use './titulo_escuro.scss';
 @use './titulo.scss';
 
 @use './acessorapido.scss';
@@ -26,11 +27,10 @@
 @use './central_monitoramento_escuro.scss';
 
 @use './carrossel_solucao.scss';
+@use './carrossel_solucao_escuro.scss';
 
 @use './agenda.scss';
 @use './agenda_escuro.scss';
-
-@use './solucao.scss';
 
 @use './btn_ver_todos.scss';
 @use './btn_ver_todos_escuro.scss';

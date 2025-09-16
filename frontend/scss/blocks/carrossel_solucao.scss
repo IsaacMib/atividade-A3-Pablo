@@ -1,3 +1,9 @@
+@use './../variables.scss';
+
+.carrossel-solucoes-wrapper {
+  background-color: variables.$color-white;
+  padding-bottom: 24px;
+}
 
 .swiper-solucoes-next,
 .swiper-solucoes-prev {

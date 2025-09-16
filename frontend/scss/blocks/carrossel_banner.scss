@@ -1,5 +1,9 @@
 @use './../variables.scss';
 
+.carrossel-banners-wrapper {
+  background-color: variables.$color-white;
+}
+
 .carrossel-banners {
   width: 100%;
   overflow: hidden;

@@ -1,6 +1,9 @@
 @use './../variables.scss';
 
 [data-theme=dark] {
+  .carrossel-banners-wrapper {
+    background-color: variables.$color-black;
+  }
   // Mantenha sua paginação personalizada
   .swiper-banners-pagination {
     .swiper-pagination-bullet {
