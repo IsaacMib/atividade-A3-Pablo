@@ -111,12 +111,6 @@ CLASS_TITULO_BG_COLOR_BLOCK = [
     ('titulo-bg-cinza' , 'Background Tipo 2')
 ]
 
-COLOR_TITULO_BG_COLOR_BLOCK = [
-    ('#305A9C' , 'titulo-bg-default'),
-    ('#305A9C' , 'titulo-bg-cinza'),
-    ('#FFFFFF' , 'titulo-bg-azul'),
-]
-
 def get_metabase_card_text_by_id(card_id):
     """
     Retorna o texto correspondente ao id informado no array IDS_METABASE_CARDS.
@@ -126,18 +120,6 @@ def get_metabase_card_text_by_id(card_id):
         if str(id_opcao) == str(card_id):
             return texto
     return ""
-
-def get_color_by_class_titulo_bg(class_name):
-    """
-    Retorna a cor correspondente ao class_name presente em CLASS_TITULO_BG_COLOR_BLOCK,
-    buscando o valor correspondente em COLOR_TITULO_BG_COLOR_BLOCK.
-    Se não encontrar, retorna #305A9C.
-    """
-    # Busca o nome da cor correspondente ao class_name
-    for color, class_option in COLOR_TITULO_BG_COLOR_BLOCK:
-        if class_option == class_name:
-            return color
-    return '#305A9C'
 
 GRID_IMAGENS_TYPES = [
     ('grid-imagens-2', 'Grid com 2 imagens por linha'),

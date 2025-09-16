@@ -1,4 +1,4 @@
-@use '../variables.scss';
+@use "../variables.scss";
 
 .titulo-container {
    width: 100%;
@@ -11,37 +11,61 @@
          padding-bottom: 12px;
       }
    }
- }
- 
- 
- .titulo-bg-azul {
+}
+
+.titulo-bg-azul {
    background-color: variables.$color-primary;
-   
+
    .titulo-1 {
       color: variables.$color-white;
    }
- }
 
- .titulo-bg-cinza {
+   .titulo-linha {
+      svg {
+         line {
+            stroke: variables.$color-white;
+         }
+      }
+   }
+}
+
+.titulo-bg-cinza {
    background-color: variables.$color-grey-100;
- }
+   .titulo-linha {
+      svg {
+         line {
+            stroke: variables.$color-primary;
+         }
+      }
+   }
+}
 
 .titulo-bg-default {
    background-color: variables.$color-white;
- }
- 
- 
- .titulo-1 {
-    font-weight: 700;
-    font-size: 30px;
-    line-height: 100%;
-    margin-bottom: 8px;
-    color: variables.$color-primary;
- }
- 
- 
- .titulo-linha {
-    padding-top: 8px;
-    padding-bottom: 8px;
- }
- 
+   .titulo-linha {
+      svg {
+         line {
+            stroke: variables.$color-primary;
+         }
+      }
+   }
+}
+
+.titulo-1 {
+   font-weight: 700;
+   font-size: 30px;
+   line-height: 100%;
+   margin-bottom: 8px;
+   color: variables.$color-primary;
+}
+
+.titulo-linha {
+   padding-top: 8px;
+   padding-bottom: 8px;
+
+   svg {
+      line {
+         stroke: variables.$color-primary;
+      }
+   }
+}
