@@ -1,0 +1,11 @@
+{% load wagtailimages_tags %}
+
+<div class="card-linha-do-tempo">
+    <div class="card-linha-do-tempo__image">
+        {% image card.imagem original alt=card.texto_alternativo|default:card.titulo %}
+    </div>
+    <div class="card-linha-do-tempo__content">
+        <h3 class="card-linha-do-tempo__title">{{ card.titulo }}</h3>
+        <p class="card-linha-do-tempo__date">{{ card.data|date:"d/m/Y" }}</p>
+    </div>
+</div>

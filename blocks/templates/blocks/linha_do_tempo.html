@@ -1,0 +1,23 @@
+{% load wagtailimages_tags %}
+
+<div class="linha-do-tempo">
+    <div class="container">
+        <div class="titulo-container text-center">
+            {% if value.titulo %}
+                {% include 'include/titulo.html' with titulo=value.titulo bgClass='' %}
+            {% else %}
+                <h2 class="titulo-1">Linha do Tempo</h2>
+            {% endif %}
+        </div>
+        
+        {% if value.cards %}
+            {% for card in value.cards %}
+                <div class="card-linha-do-tempo">
+                    {% include 'blocks/card_linha_do_tempo.html' with cardlinhadotempo=card %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Nenhum card adicionado à linha do tempo.</p>
+        {% endif %}
+    </div>
+</div>

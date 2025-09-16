@@ -25,7 +25,8 @@ from wagtail.blocks import (
     PageChooserBlock,
     URLBlock,
     IntegerBlock,
-    BooleanBlock
+    BooleanBlock,
+    DateBlock,
 )
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.embeds.blocks import EmbedBlock
@@ -677,6 +678,19 @@ class EspecificDocumentChooserBlock(DocumentChooserBlock):
                 )
         return value
 
+
+class CardLinhaDoTempoBlock(StructBlock):
+    imagem = ImageChooserBlock(required=True, label="Imagem")
+    texto_alternativo = CharBlock(required=False, label="Texto alternativo")
+    titulo = CharBlock(required=True, label="Título")
+    data = DateBlock(required=True, label="Data")
+
+    class Meta:
+        icon = 'title'
+        label = 'Card da Linha do Tempo'
+        template = 'blocks/card_linha_do_tempo.html'
+
+
 # StreamBlocks
 
 
@@ -728,6 +742,16 @@ class BaseStreamBlock(StreamBlock):
     )
 
 
+class LinhaDoTempoBlock(StructBlock):
+    titulo = CharBlock(required=True, label="Título")
+    cards = ListBlock(CardLinhaDoTempoBlock(), default=[], min_num=1, max_num=12, icon='form', label="Card")
+
+    class Meta:
+        icon = 'title'
+        label = 'Linha do Tempo'
+        template = 'blocks/linha_do_tempo.html'
+
+
 class SolucaoItemBlock(StructBlock):
     imagem = ImageChooserBlock(required=True, label="Imagem do Solução")
     link = URLBlock(required=True, label="URL do Solução")
@@ -769,20 +793,21 @@ class ProgramaItemBlock(StructBlock):
 
 
 class GridImagensBlock(StructBlock):
-    titulo = CharBlock(required=True, label="Titulo do bloco Ex.: Programas, Soluções", default="Programas")
+    titulo = CharBlock(
+        required=True, label="Titulo do bloco Ex.: Programas, Soluções", default="Programas")
     link_ver_todos = URLBlock(
         required=False, label="Link do botão 'Ver todos'")
     grid_type = ChoiceBlock(choices=GRID_IMAGENS_TYPES,
-                             default=GRID_IMAGENS_DEFAULT_TYPE,
-                             required=True, label="Tipo de Grid")
+                            default=GRID_IMAGENS_DEFAULT_TYPE,
+                            required=True, label="Tipo de Grid")
     itens = ListBlock(ProgramaItemBlock, default=[], min_num=1, max_num=12)
-    
+
     def get_column_classes(self, grid_type):
         """
         Retorna as classes de coluna Bootstrap baseadas no tipo de grid.
         """
         return GRID_IMAGENS_CLASSES.get(grid_type, GRID_IMAGENS_CLASSES[GRID_IMAGENS_DEFAULT_TYPE])
-    
+
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
         grid_type = value.get('grid_type', GRID_IMAGENS_DEFAULT_TYPE)
