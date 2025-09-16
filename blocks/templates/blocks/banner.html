@@ -3,6 +3,22 @@
 
 <div class="banner-container">
   <a href="{{ self.link }}" target="_blank" aria-label="{{self.imagem.title}}">
-    {% image self.imagem original alt=self.alt_texto %}
+    <picture>
+      {# 1. Fonte para MOBILE (se existir) #}
+      {% if self.imagem_mobile %}
+          {% image self.imagem_mobile original as mobile_img %}
+          <source media="(max-width: 768px)" srcset="{{ mobile_img.url }}">
+      {% endif %}
+
+      {# 2. Fonte para DESKTOP #}
+      {% image self.imagem original as desktop_img %}
+      <source media="(min-width: 769px)" srcset="{{ desktop_img.url }}">
+
+      {# 3. Imagem de FALLBACK (obrigatória) #}
+      {# Esta é a tag que será realmente renderizada. #}
+      <img src="{{ desktop_img.url }}" 
+           alt="{{ self.texto_alternativo|default:'imagem' }}" 
+           class="banner-image">
+    </picture>
   </a>
 </div>
