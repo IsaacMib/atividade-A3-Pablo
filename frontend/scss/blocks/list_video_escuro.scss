@@ -11,7 +11,7 @@
   }
   .video-card {
     background: variables.$color-black;
-    box-shadow: 0 2px 8px variables.$color_list_video_shadow;
+    box-shadow: 0 2px 8px variables.$color-list-video-shadow;
   }
 
   .video-item {
@@ -28,6 +28,6 @@
   }
 
   .video-title {
-    color: variables.$color_list_video_title;
+    color: variables.$color-list-video-title;
   }
 }

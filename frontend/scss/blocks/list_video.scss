@@ -12,7 +12,7 @@
   width: 300px;
   background: variables.$color-white;
   border-radius: 8px;
-  box-shadow: 0 2px 8px variables.$color_list_video_shadow;
+  box-shadow: 0 2px 8px variables.$color-list-video-shadow;
   overflow: hidden;
   text-align: center;
   
@@ -27,5 +27,5 @@
   padding: 10px;
   font-size: 16px;
   font-weight: bold;
-  color: variables.$color_list_video_title;
+  color: variables.$color-list-video-title;
 }

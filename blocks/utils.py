@@ -94,10 +94,10 @@ IDS_METABASE_CARDS_DETRAN = [
 
 
 IDS_METABASE_CARDS_EDUCACAO = [
-    (2650, 'Total de Unicades Escolares(UE)'),
-    (3447, 'Total de Matrículas na Educação Básica'),
-    (3755, 'Total de Turmas na Educação Básica'),
-    (3756, "Total de Vagas na Educação Básica"),
+    (2651, 'Total de Unicades Escolares(UE)'),
+    (3448, 'Total de Matrículas na Educação Básica'),
+    (3757, 'Total de Turmas na Educação Básica'),
+    (3758, "Total de Vagas na Educação Básica"),
 ]
 
 IDS_METABASE_CARDS = sorted(

@@ -86,8 +86,8 @@
 
   .vc-column {
     border-radius: 10px;
-    border: 0.79px solid variables.$color_agenda_column_border;
-    box-shadow: 0px 3.15px 3.15px 0px variables.$color_agenda_column_shadow;
+    border: 0.79px solid variables.$color-agenda-column-border;
+    box-shadow: 0px 3.15px 3.15px 0px variables.$color-agenda-column-shadow;
   }
 
   .vc-month,
@@ -98,9 +98,9 @@
   }
 
   .vc-header__content {
-    border: 0.79px solid variables.$color_agenda_column_border;
+    border: 0.79px solid variables.$color-agenda-column-border;
     border-radius: 10px;
-    box-shadow: 0px 3.15px 3.15px 0px variables.$color_agenda_column_shadow;
+    box-shadow: 0px 3.15px 3.15px 0px variables.$color-agenda-column-shadow;
     justify-content: start;
     padding: 1rem;
     @media (max-width: 375px) {
@@ -123,13 +123,13 @@
   .vc-date[data-vc-date-holiday][data-vc-date-month=prev] .vc-date__btn, 
   .vc-date[data-vc-date-weekend][data-vc-date-month=next] .vc-date__btn, 
   .vc-date[data-vc-date-weekend][data-vc-date-month=prev] .vc-date__btn {
-    color: variables.$color_agenda_column_btn;
+    color: variables.$color-agenda-column-btn;
   }
 
   .vc-date[data-vc-date-holiday][data-vc-date-disabled] .vc-date__btn, 
   .vc-date[data-vc-date-weekend][data-vc-date-disabled] .vc-date__btn,
   .vc-date[data-vc-date-disabled] .vc-date__btn {
-    color: variables.$color_agenda_column_btn;
+    color: variables.$color-agenda-column-btn;
   }
 
   .bg-temcompromissos {

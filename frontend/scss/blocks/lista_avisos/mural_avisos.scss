@@ -35,7 +35,7 @@
   .aviso-card {
     background-color: variables.$color-white;
     border-radius: 8px;
-    box-shadow: 0 1px 4px variables.$color_card_shadow;
+    box-shadow: 0 1px 4px variables.$color-card-shadow;
     padding: 1.25rem;
     position: relative;
     display: flex;
@@ -46,7 +46,7 @@
     min-height: 240px;
 
     &:hover {
-      box-shadow: 0 4px 10px variables.$color_card_shadow_hover;
+      box-shadow: 0 4px 10px variables.$color-card-shadow-hover;
 
       &::before {
         transform: scaleY(1);
