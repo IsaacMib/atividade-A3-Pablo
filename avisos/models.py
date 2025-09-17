@@ -68,7 +68,11 @@ class AvisosPage(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel("subtitle"),
-        FieldPanel("descricao"),
+        FieldPanel("descricao", widget=forms.Textarea(attrs={
+            'data-controller': 'char-count',
+            'data-char-count-max-value': 255,
+            'data-action': 'input->char-count#updateCount paste->char-count#updateCount',
+        })),
         MultiFieldPanel(
             [
                 FieldPanel("nao_exibir_lista_de_arquivos"),
