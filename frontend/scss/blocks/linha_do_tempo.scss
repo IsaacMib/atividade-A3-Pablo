@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: row;
   height: min-content;
+  margin-bottom: 2.5rem;
 }
 
 .card-linha-do-tempo {
@@ -20,27 +21,13 @@
   background-color: white;
 }
 
-@media (min-width: 1200px) {
-  .row.block-linha-do-tempo {
+.row.block-linha-do-tempo {
+  @media (min-width: 1200px) {
     &:has(:first-child:nth-last-child(2)) {
-      max-height: calc(360px + .5rem);
+      max-height: calc(360px + 0.5rem);
     }
     &:has(:first-child:nth-last-child(1)) {
-      max-height: calc(540px + .5rem);
-    }
-  }
-
-  .linha-do-tempo__item {
-    position: relative;
-
-    &:not(:first-child) {
-      &:nth-child(odd) {
-        transform: translateY(-50%);
-      }
-    }
-    
-    &:nth-child(even) {
-      transform: translateY(calc(-50%));
+      max-height: calc(540px + 0.5rem);
     }
   }
 }
@@ -51,18 +38,35 @@
   align-items: center;
   padding: 0;
   margin: 0 1rem 0;
-  // margin-top: 0;
+  
+  @media (min-width: 1200px) {
+    &:nth-child(even) {
+      justify-content: flex-end;
+      transform: translateY(calc(-50%));
+      .arrow.right {
+        visibility: hidden;
+      }
+    }
 
-  &:nth-child(even) {
-    justify-content: flex-end;
-    .arrow.right {
-      visibility: hidden;
+    &:nth-child(odd) {
+      justify-content: flex-start;
+      &:not(:first-child) {
+        transform: translateY(-50%);
+      }
+      .arrow.left {
+        visibility: hidden;
+      }
     }
   }
+}
 
-  &:nth-child(odd) {
-    justify-content: flex-start;
-    .arrow.left {
+@media (max-width: 1200px) {
+  .linha-do-tempo__item {
+    justify-content: flex-end;
+    margin: 15rem auto;
+  }
+  .linha-do-tempo {
+    .arrow.right {
       visibility: hidden;
     }
   }
