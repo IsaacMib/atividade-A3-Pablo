@@ -338,7 +338,7 @@ class TituloBlock(StructBlock):
         label = 'Título'
 
 
-_CACHE_TIMEOUT = 600  # 10 minutos em segundos
+_CACHE_TIMEOUT = 10*60  # 10 minutos em segundos
 
 
 class OdometerBlock(StructBlock):
