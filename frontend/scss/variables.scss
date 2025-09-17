@@ -3,12 +3,15 @@
 $color-white: #ffffff;
 $color-black: #000000;
 
+$color-black-80: #00000080;
+
 $color-gradient-inicio: #396BBB;
 $color-gradient-fim: #1A3155;
 
 // Primary
 $color-primary: #30599b;
 $color-primary-dark: #0a00b6;
+$color-primary-active: #396BBB38;
 
 $color-primary-70: #30599bb3;
 $color-primary-50: #30599b80;
@@ -35,6 +38,7 @@ $color-on-error: #ffffff;
 //Informações da Empresa
 $company-info-bg: linear-gradient(to right, #e3f6fa, #fdfeff);
 $company-info-img-box-shadow: 22px 22px 0px #cceef7;
+$company-info-img-box-shadow-dark: 21px 21px 0px $color-black, 21px 21px 0px 1px $color-white;
 
 // Other (Material Design Guide)
 $color-primary-variant: #3700b3;
@@ -55,8 +59,10 @@ $color-grey-50:  #F9F9F9;
 $color-grey-100: #f6f6f6;
 $color-grey-200: #eeeeee;
 $color-grey-210: #d9d9d9;
+$color-grey-220: #d3d3d3;
 $color-grey-300: #e0e0e0;
 $color-grey-400: #bdbdbd;
+$color-grey-410: #bebebe;
 $color-grey-500: #9e9e9e;
 $color-grey-600: #757575;
 $color-grey-700: #616161;
@@ -72,6 +78,7 @@ $color-link-navbar-hover: $color-white;
 $color-link-navbar-hover-mobile: $color-grey-700;
 $color-link-navbar-mobile: $color-grey-700;
 $color-link-noticias: $color-primary; //#396BBB;
+$color-link-noticias: $color-primary-active; //#396BBB;
 $color-link-noticias-hover: #052F4A;
 
 $font-size-itens-menu: 20px;
@@ -111,3 +118,7 @@ $color-agenda-has-appointment: #222;
 
 $color-list-video-shadow: $color-agenda-item-border;
 $color-list-video-title: #333;
+
+$swiper-background-color: $color-grey-220;
+$tamanho-imagem-noticia-thumbs: 80px;
+$swiper-thumbs-background-color: #444;

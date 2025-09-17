@@ -28,7 +28,7 @@
                             {% picture page.get_imagem_destaque format-{avif,webp,jpeg} height-380 loading="lazy" sizes="100%" %} 
                         </div>
                     {% else %}
-                    <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="swiper noticias-mySwiper2">
+                    <div class="swiper noticias-mySwiper2">
                         <div class="swiper-wrapper">
                             {% for imagem in page.images %}
                                 {% if imagem.block_type == 'imagem' and imagem.value %}
