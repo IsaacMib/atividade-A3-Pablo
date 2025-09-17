@@ -1,57 +1,72 @@
 @use '../variables.scss';
 
 .linha-do-tempo {
-    
+  display: flex;
+  flex-direction: row;
+  height: min-content;
 }
 
 .card-linha-do-tempo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    border: solid 4px variables.$color-primary;
-    padding: 2rem;
-    max-height: 360px;
-    aspect-ratio: 1.3;
-    overflow-y: scroll;
-    z-index: 15;
-    background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  border: solid 4px variables.$color-primary;
+  padding: 2rem;
+  max-height: 360px;
+  aspect-ratio: 1.3;
+  overflow-y: scroll;
+  z-index: 15;
+  background-color: white;
 }
 
-.linha-do-tempo__item {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 0;
-    margin: 1rem;
+@media (min-width: 1200px) {
+  .row.block-linha-do-tempo {
+    &:has(:first-child:nth-last-child(2)) {
+      max-height: calc(360px + .5rem);
+    }
+    &:has(:first-child:nth-last-child(1)) {
+      max-height: calc(540px + .5rem);
+    }
+  }
 
-    &:nth-child(odd) {
-      justify-content: flex-end;
-      .arrow.right { visibility: hidden; }
+  .linha-do-tempo__item {
+    position: relative;
+
+    &:not(:first-child) {
+      &:nth-child(odd) {
+        transform: translateY(-50%);
+      }
     }
     
     &:nth-child(even) {
-        justify-content: flex-start;
-        .arrow.left { visibility: hidden; }
+      transform: translateY(calc(-50%));
     }
+  }
 }
 
-// .linha-do-tempo-cards-container:nth-child(odd) {
-//     justify-content: flex-end;
+.linha-do-tempo__item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  margin: 0 1rem 0;
+  // margin-top: 0;
 
-//     .linha-do-tempo__item > div > .arrow.right {
-//       visibility: hidden;
-//     }
-// }
+  &:nth-child(even) {
+    justify-content: flex-end;
+    .arrow.right {
+      visibility: hidden;
+    }
+  }
 
-
-// .linha-do-tempo-cards-container:nth-child(even) {
-//     justify-content: flex-start;
-
-//     .linha-do-tempo__item > div > .arrow.left {
-//       visibility: hidden;
-//     }
-// }
+  &:nth-child(odd) {
+    justify-content: flex-start;
+    .arrow.left {
+      visibility: hidden;
+    }
+  }
+}
 
 .arrow {
   border: solid variables.$color-primary;
@@ -63,52 +78,15 @@
 }
 
 .right {
-  -webkit-transform:  translateX(-75%) rotate(-45deg);
-  transform:  translateX(-75%) rotate(-45deg);
+  -webkit-transform: translateX(-75%) rotate(-45deg);
+  transform: translateX(-75%) rotate(-45deg);
 }
 
 .left {
-  -webkit-transform:  translateX(75%) rotate(135deg);
-  transform:  translateX(75%) rotate(135deg);
+  -webkit-transform: translateX(75%) rotate(135deg);
+  transform: translateX(75%) rotate(135deg);
 }
 
-
-// .linha-do-tempo__item:after{ // Our small triangle to fill the space
-//   content:"";
-//   border-color: variables.$color-primary transparent transparent;
-//   border-style:solid;
-//   border-width:9px; 
-//   width:0;
-//   height:0;
-//   position:absolute;
-//   bottom:-18px;
-//   left:21px
-// }
-
-// .linha-do-tempo__item:before{
-//   content:"";
-//   border-color: variables.$color-primary transparent transparent;
-//   border-style:solid;
-//   border-width:10px;
-//   width:0;
-//   height:0;
-//   position:absolute;
-//   top:-20px;
-//   right:20px
-// }
-
-// .linha-do-tempo > .container::after {
-//   content: '';
-//   position: absolute;
-//   width: 20px;
-//   height: 20px;
-//   background-color: white;
-//   border: 4px solid #007bff;
-//   border-radius: 50%;
-//   top: 30px; /* Adjust vertical position */
-//   z-index: 1000;
-// }
-
 .card-linha-do-tempo {
-    position: relative;
+  position: relative;
 }
