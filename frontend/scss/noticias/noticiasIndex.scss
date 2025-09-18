@@ -49,7 +49,7 @@
     }
   }
   &.disabled {
-    --paginator-svg-color: variables.$color-grey-410;
+    --paginator-svg-color: #{variables.$color-grey-410};
     border: none;
     &.with-border {
       border: 1px solid variables.$color-grey-410;

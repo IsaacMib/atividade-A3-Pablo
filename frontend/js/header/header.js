@@ -1,6 +1,15 @@
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   document.documentElement.setAttribute('data-bs-theme', theme);
+  if (theme === 'light') {
+    document.documentElement.classList.remove('cc--darkmode');
+    // document.documentElement.classList.remove('cc--elegant-black');
+    document.documentElement.classList.add('cc--light-funky');
+  } else if (theme === 'dark') {
+    document.documentElement.classList.add('cc--darkmode');
+    // document.documentElement.classList.add('cc--elegant-black');
+    document.documentElement.classList.remove('cc--light-funky');
+  }
   localStorage.setItem('theme', theme);
 }
 

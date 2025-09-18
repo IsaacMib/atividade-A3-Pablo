@@ -3,6 +3,7 @@
 $color-white: #ffffff;
 $color-black: #000000;
 
+$color-black-10: #0000001A;
 $color-black-80: #00000080;
 
 $color-gradient-inicio: #396BBB;
@@ -34,6 +35,10 @@ $color-on-surface: #000000;
 // Error
 $color-error: #b00020;
 $color-on-error: #ffffff;
+
+//Warnings
+$color-warning: #EBD000;
+$color-on-warning: #000000;
 
 //Informações da Empresa
 $company-info-bg: linear-gradient(to right, #e3f6fa, #fdfeff);
@@ -105,12 +110,12 @@ $color-agenda-column-border: #00000033;
 $color-agenda-column-shadow: #00000040;
 $color-agenda-column-btn: #94a3b8;
 
-$color-card-shadow: #0000001a;
+$color-card-shadow: $color-black-10;
 $color-card-shadow-hover: #00000026;
 
 $color-agenda-item-bg: #D9D9D91A;
 $color-agenda-item-bg-escuro: #161616;
-$color-agenda-item-border: #0000001A;
+$color-agenda-item-border: $color-black-10;
 $color-agenda-item-shadow: rgba(0, 0, 0, 0.2509803922);
 $color-agenda-item-divider: #1010101A;
 $color-agenda-day-text: #DBDBDB;
