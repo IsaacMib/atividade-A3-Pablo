@@ -11,13 +11,15 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.admin.panels import ObjectList, FieldPanel, MultiFieldPanel, TabbedInterface, PanelPlaceholder
 from wagtail.fields import StreamField
 from wagtail.search import index
-from core.models import Page as DefaultWagtailPage
+from wagtail.admin.models import Page
 from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
 from datetime import datetime
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from core.utils import get_file_type, get_fontawesome_file_icon
 from django.core.exceptions import ValidationError
 from django import forms
+
+from core.utils import get_page_title_with_counter
 
 TITULO_MAX_LENGTH = 50
 
@@ -26,22 +28,6 @@ class AvisosPageTag(TaggedItemBase):
     content_object = ParentalKey(
         "AvisosPage", related_name="tagged_items", on_delete=models.CASCADE
     )
-
-
-class Page(DefaultWagtailPage):
-
-    class Meta:
-        proxy = True
-
-    content_panels = [
-        PanelPlaceholder("wagtail.admin.panels.TitleFieldPanel", ["title"], {
-            'widget': forms.TextInput(attrs={
-                'data-controller': 'char-count',
-                'data-char-count-max-value': TITULO_MAX_LENGTH,
-                'data-action': 'input->char-count#updateCount paste->char-count#updateCount',
-            }),
-        }),
-    ] + Page.content_panels[1:]
 
 
 class AvisosPage(Page):
@@ -92,7 +78,7 @@ class AvisosPage(Page):
         help_text="Marque para não exibir a lista de arquivos na página do aviso."
     )
 
-    content_panels = Page.content_panels + [
+    content_panels = get_page_title_with_counter(TITULO_MAX_LENGTH) + [
         FieldPanel("subtitle"),
         FieldPanel("descricao", widget=forms.Textarea(attrs={
             'data-controller': 'char-count',

@@ -1,5 +1,8 @@
-import magic
 import os
+import magic
+
+from wagtail.admin.panels import PanelPlaceholder
+from django.forms import TextInput
 
 def get_file_type(file_obj):
     """
@@ -55,6 +58,7 @@ def get_file_type(file_obj):
         return ext
     return ''
 
+
 def get_fontawesome_file_icon(file_type):
     """
     Retorna a classe do ícone FontAwesome de acordo com o tipo do arquivo.
@@ -76,3 +80,20 @@ def get_fontawesome_file_icon(file_type):
         'png': 'fa-file-image',
     }
     return mapping.get(file_type, '')
+
+
+def get_page_title_with_counter(char_limit=255):
+    """
+    Retorna um painel com o campo de título com contador de caracteres.
+    Caso não seja definido um valor para o limite de caracteres, será
+    utilizado o valor padrão de 255.
+    """
+    return [
+        PanelPlaceholder("wagtail.admin.panels.TitleFieldPanel", ["title"], {
+            'widget': TextInput(attrs={
+                'data-controller': 'char-count',
+                'data-char-count-max-value': char_limit,
+                'data-action': 'input->char-count#updateCount paste->char-count#updateCount',
+            }),
+        }),
+    ]

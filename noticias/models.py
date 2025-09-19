@@ -11,7 +11,7 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList, Tabbed
 from wagtail.fields import StreamField
 from wagtail.search import index
 
-from core.models import Page
+from core.models import PageWithCounter as Page
 
 from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
 from datetime import datetime

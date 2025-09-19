@@ -16,31 +16,27 @@ from django import forms
 from datetime import date
 from django.core.exceptions import ValidationError
 
+from .utils import get_page_title_with_counter
+
 from wagtail.models import Page as WagtailPage
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel, PanelPlaceholder
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
 
 from blocks.models import ListRedeSocial
 
 
-class Page(WagtailPage):
+class PageWithCounter(WagtailPage):
     """
-    Custom Page model that adds a character counter to the title field.
-    All page models should inherit from this class instead of wagtail.models.Page.
+    Página com contador de caracteres no campo de título.
+    Para facilitar a criação de páginas com contagem de caracteres no título.
+    Essa classe deve ser importada e renomeada para 'Page' fazendo com que o contador
+    apareça nas páginas que herdem desta classe. 
     """
     class Meta:
         proxy = True
 
-    content_panels = [
-        PanelPlaceholder("wagtail.admin.panels.TitleFieldPanel", ["title"], {
-            'widget': forms.TextInput(attrs={
-                'data-controller': 'char-count',
-                'data-char-count-max-value': 255,
-                'data-action': 'input->char-count#updateCount paste->char-count#updateCount',
-            }),
-        }),
-    ] + WagtailPage.content_panels[1:]
+    content_panels = get_page_title_with_counter() + \
+        WagtailPage.content_panels[1:]
 
 
 @register_setting(icon="site")
