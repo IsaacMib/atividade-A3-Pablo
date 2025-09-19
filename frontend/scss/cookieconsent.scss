@@ -54,8 +54,39 @@
 
 // Tema escuro
 .cc--darkmode {
+    --cc-bg: #{variables.$color-black}; 
+
     --cc-primary-color: #{variables.$color-white};
     --cc-btn-primary-bg: #{variables.$color-white};
+
+    .cm__texts {
+        color: variables.$color-black !important;
+    }    
+
+    #cc-main {
+        .cm {
+            background-color: #{variables.$color-white} !important;
+        }
+        .cm__desc {
+            color: variables.$color-grey-700 !important;
+        }
+        .cm__btn {
+            background: variables.$color-grey-800;
+            border: 1px solid variables.$color-grey-800;
+            color: variables.$color-white;
+            &:hover {
+                background-color: variables.$color-black;
+            }
+        }
+        .cm__btn--secondary {
+            background: variables.$color-grey-300;
+            border-color: variables.$color-grey-300;
+            color: variables.$color-black;
+            &:hover {
+                background-color: variables.$color-grey-500;
+            }
+        }
+    }
 
     --cc-btn-primary-hover-bg: #{variables.$color-grey-700};
     --cc-btn-primary-hover-border-color: #{variables.$color-grey-700};

@@ -1,5 +1,6 @@
+@use '../variables.scss';
 @use  '../sprite';
-
+//TODOGABRIEL: Iniciar aqui!
 .header-layout {
   // display: grid;
   // grid-gap: 32px;
@@ -10,7 +11,7 @@
   padding: 32px 0px; 
 }
 
-$border-radius-search: 36px;
+
 
 .header-input-search,
 .header-btn-search {
@@ -20,7 +21,7 @@ $border-radius-search: 36px;
 .header-input-search {
   border-top-left-radius: 36px;
   border-bottom-left-radius: 36px;
-  border: 1px solid var(--tw-color-primary);
+  border: 1px solid variables.$color-primary;
   padding: 8px 32px;
   
   min-width: 325px;
@@ -35,9 +36,9 @@ $border-radius-search: 36px;
 }
 
 .header-btn-search {
-  border-top-right-radius: $border-radius-search;
-  border-bottom-right-radius: $border-radius-search;
-  border: 1px solid var(--tw-color-primary);
+  border-top-right-radius: variables.$border-radius-search;
+  border-bottom-right-radius: variables.$border-radius-search;
+  border: 1px solid variables.$color-primary;
   padding: 8px 0px 8px 12px;
   min-width: 170px;
 
@@ -101,7 +102,7 @@ $border-radius-search: 36px;
   position: relative;
   // display: grid;
   // align-items: center;
-  border-right: 1px solid rgba(0, 0, 0, .2);
+  border-right: 1px solid variables.$color-overlay-20;
   &:before {
     content: "";
     left: -5px;
@@ -116,7 +117,7 @@ $border-radius-search: 36px;
   // display: grid;
   // grid-template-columns: auto auto auto;
   // grid-gap: 12px;
-  border-left: 1px solid rgba(0, 0, 0, .2);
+  border-left: 1px solid variables.$color-overlay-20;
 }
 
 .header-btn-search-text {
