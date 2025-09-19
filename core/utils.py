@@ -2,7 +2,8 @@ import os
 import magic
 
 from wagtail.admin.panels import PanelPlaceholder
-from django.forms import TextInput
+from django.forms import TextInput, Textarea
+
 
 def get_file_type(file_obj):
     """
@@ -97,3 +98,19 @@ def get_page_title_with_counter(char_limit=255):
             }),
         }),
     ]
+
+
+def get_widget_input_with_counter(
+    char_limit: int = 255,
+    InputField: TextInput | Textarea = Textarea
+):
+    """
+    Retorna um widget textarea com contador de caracteres.
+    Caso não seja definido um valor para o limite de caracteres, será
+    utilizado o valor padrão de 255.
+    """
+    return InputField(attrs={
+        'data-controller': 'char-count',
+        'data-char-count-max-value': char_limit,
+        'data-action': 'input->char-count#updateCount paste->char-count#updateCount',
+    })

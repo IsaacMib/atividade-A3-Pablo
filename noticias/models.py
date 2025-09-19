@@ -18,7 +18,7 @@ from datetime import datetime
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from wagtail.images.blocks import ImageChooserBlock
-from core.utils import get_file_type, get_fontawesome_file_icon
+from core.utils import get_file_type, get_fontawesome_file_icon, get_widget_input_with_counter
 
 
 class NoticiasPageTag(TaggedItemBase):
@@ -109,12 +109,7 @@ class NoticiasPage(Page):
         FieldPanel("subtitle"),
         FieldPanel(
             "descricao",
-            widget=forms.Textarea(attrs={
-                'data-controller': 'char-count',
-                'data-char-count-max-value': 220,
-                'data-action': 'input->char-count#updateCount paste->char-count#updateCount',
-            }),
-        ),
+            widget=get_widget_input_with_counter(char_limit=220)),
         MultiFieldPanel(
             [
                 FieldPanel("slideshow_imagens"),

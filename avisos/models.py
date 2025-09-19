@@ -15,11 +15,14 @@ from wagtail.admin.models import Page
 from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
 from datetime import datetime
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from core.utils import get_file_type, get_fontawesome_file_icon
+from core.utils import (
+    get_file_type,
+    get_fontawesome_file_icon,
+    get_page_title_with_counter,
+    get_widget_input_with_counter
+)
 from django.core.exceptions import ValidationError
 from django import forms
-
-from core.utils import get_page_title_with_counter
 
 TITULO_MAX_LENGTH = 50
 
@@ -80,11 +83,7 @@ class AvisosPage(Page):
 
     content_panels = get_page_title_with_counter(TITULO_MAX_LENGTH) + [
         FieldPanel("subtitle"),
-        FieldPanel("descricao", widget=forms.Textarea(attrs={
-            'data-controller': 'char-count',
-            'data-char-count-max-value': 255,
-            'data-action': 'input->char-count#updateCount paste->char-count#updateCount',
-        })),
+        FieldPanel("descricao", widget=get_widget_input_with_counter()),
         MultiFieldPanel(
             [
                 FieldPanel("nao_exibir_lista_de_arquivos"),
