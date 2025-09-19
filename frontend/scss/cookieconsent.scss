@@ -50,3 +50,14 @@
 //     border-top-left-radius: 0;
 //     border-top-right-radius: 0;
 // }
+
+
+// Tema escuro
+.cc--darkmode {
+    --cc-primary-color: #{variables.$color-white};
+    --cc-btn-primary-bg: #{variables.$color-white};
+
+    --cc-btn-primary-hover-bg: #{variables.$color-grey-700};
+    --cc-btn-primary-hover-border-color: #{variables.$color-grey-700};
+    --cc-btn-primary-hover-color: #{variables.$color-white};
+}

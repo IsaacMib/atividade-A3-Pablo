@@ -9,6 +9,7 @@ from wagtail.contrib.search_promotions.models import Query
 from noticias.models import NoticiasPage  # ajuste conforme o nome do seu app/modelo
 from plone_migration.models import PloneImportedFile, PloneImportedImage
 from django.db import models
+from django.db.models import Q
 
 def get_result_type(result):
     return result.content_type.model.replace('_', ' ').title()
@@ -61,8 +62,21 @@ def search(request):
 
     # Executar busca
     if search_query:
-        # Busca nas páginas
-        search_results = list(Page.objects.live().search(search_query))
+        # Dividir a query em palavras para busca mais flexível
+        search_terms = search_query.strip().split()
+        
+        # Busca nas páginas com múltiplos termos
+        pages_query = Page.objects.live()
+        for term in search_terms:
+            pages_query = pages_query.filter(
+                Q(title__icontains=term) |
+                Q(search_description__icontains=term)
+            )
+        search_results = list(pages_query)
+        
+        # Se não encontrou resultados com todos os termos, tenta com busca individual
+        if not search_results:
+            search_results = list(Page.objects.live().search(search_query))
         
         # Aplicar filtros de tipo
         if selected_types:
@@ -75,23 +89,26 @@ def search(request):
                 if r.last_published_at and r.last_published_at >= date_cutoff
             ]
         
-        # Buscar nos títulos dos arquivos (usando o tipo primitivo do Wagtail: 'document')
+        # Buscar nos títulos dos arquivos com busca parcial
         arquivos_resultados = []
         if not selected_types or "document" in selected_types:
-            arquivos_resultados = list(
-                PloneImportedFile.objects.filter(
-                    models.Q(title__icontains=search_query) |
-                    models.Q(file__icontains=search_query)
+            arquivo_query = PloneImportedFile.objects.all()
+            for term in search_terms:
+                arquivo_query = arquivo_query.filter(
+                    Q(title__icontains=term) |
+                    Q(file__icontains=term)
                 )
-            )
-        # Buscar nos títulos das imagens (usando o tipo primitivo do Wagtail: 'image')
+            arquivos_resultados = list(arquivo_query)
+        
+        # Buscar nos títulos das imagens com busca parcial
         imagens_resultados = []
         if not selected_types or "image" in selected_types:
-            imagens_resultados = list(
-                PloneImportedImage.objects.filter(
-                    models.Q(title__icontains=search_query)
+            imagem_query = PloneImportedImage.objects.all()
+            for term in search_terms:
+                imagem_query = imagem_query.filter(
+                    Q(title__icontains=term)
                 )
-            )
+            imagens_resultados = list(imagem_query)
 
         # Junta todos os resultados em uma única lista
         all_results = search_results + arquivos_resultados + imagens_resultados
