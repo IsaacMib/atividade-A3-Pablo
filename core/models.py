@@ -3,8 +3,7 @@ from django import forms
 from datetime import date
 from django.core.exceptions import ValidationError
 
-from wagtail.models import Page as WagtailPage
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel, PanelPlaceholder
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
 
@@ -12,13 +11,9 @@ from blocks.models import ListRedeSocial
 
 
 from django.db import models
-from django import forms
 from datetime import date
 from django.core.exceptions import ValidationError
 
-from .utils import get_page_title_with_counter
-
-from wagtail.models import Page as WagtailPage
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
 
