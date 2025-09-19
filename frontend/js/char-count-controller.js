@@ -5,6 +5,7 @@ class CharCountController extends window.StimulusModule.Controller {
     this.setupOutput();
     this.updateCount();
     this.definedMaxValue = this.maxValue;
+    // this.element.setAttribute('maxlength', this.maxValue);
   }
 
 
@@ -27,7 +28,12 @@ class CharCountController extends window.StimulusModule.Controller {
     const value = event ? event.target.value : this.element.value;
     const chars = (value || '').length;
     const max = this.element.getAttribute('maxlength');
-    this.definedMaxValue = this.maxValue ?? max;
+    if (this.maxValue) {
+      this.definedMaxValue = this.maxValue;
+      this.element.setAttribute('maxlength', this.maxValue);
+    } else {
+      this.definedMaxValue = max;
+    }
     if (chars >= this.definedMaxValue) {
       this.output.style.color = 'red';
     } else if (chars > this.definedMaxValue * 0.8) {
