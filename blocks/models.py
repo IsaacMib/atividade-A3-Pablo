@@ -70,6 +70,10 @@ class AcessosRapidosBlock(StructBlock):
 
 class BannerComLinkBlock(StructBlock):
     imagem = ImageChooserBlock(required=True, label="Imagem do Banner")
+    imagem_mobile = ImageChooserBlock(
+        required=False,
+        label="Imagem do Banner para Celulares e Telas Menores",
+        help_text="Imagem que será exibida em telas menores (ex: celulares)")
     link = URLBlock(required=True, label="URL do Banner")
     alt_texto = CharBlock(required=False, label="Texto alternativo",
                           help_text="Descrição da imagem (alt)")
