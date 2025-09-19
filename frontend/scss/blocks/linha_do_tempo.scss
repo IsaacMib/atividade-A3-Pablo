@@ -67,7 +67,11 @@
         }
 
         .linha-do-tempo-calendar-icon.left {
-          align-self: center;
+          position: absolute;
+          left: 47%;
+          top: 50%;
+          transform: translateY(-50%);
+          margin: 0;
         }
       }
     }
@@ -75,6 +79,8 @@
     &:nth-child(odd) {
       .linha-do-tempo-item-row {
         justify-content: flex-start;
+        position: relative;
+        
         &:not(:first-child) {
           transform: translateY(-50%);
         }
@@ -84,7 +90,11 @@
         }
 
         .linha-do-tempo-calendar-icon.right {
-          align-self: center;
+          position: absolute;
+          right: 48%;
+          top: 50%;
+          transform: translateY(-50%);
+          margin: 0;
         }
       }
     }
