@@ -1,14 +1,22 @@
 {% load wagtailimages_tags %}
 <div class="linha-do-tempo__item">
-    <div class="arrow left"></div>
-    <div class="card-linha-do-tempo">
-        <div class="card-linha-do-tempo__image">
-            {% image card.imagem width-400 alt=card.texto_alternativo|default:card.titulo %}
+    <div class="linha-do-tempo-item-row">
+        <svg class="linha-do-tempo-calendar-icon left" viewBox="0 0 64 64" width="64" height="64">
+            <circle cx="32" cy="32" r="30" fill=""/>
+        </svg>
+        <div class="arrow left"></div>
+        <div class="card-linha-do-tempo">
+            <div class="card-linha-do-tempo__image">
+                {% image card.imagem width-400 alt=card.texto_alternativo|default:card.titulo %}
+            </div>
+            <div class="card-linha-do-tempo__content text-center">
+                <h3 class="card-linha-do-tempo__title">{{ card.titulo }}</h3>
+                <p class="card-linha-do-tempo__date">{{ card.data|date:"d/m/Y" }}</p>
+            </div>
         </div>
-        <div class="card-linha-do-tempo__content text-center">
-            <h3 class="card-linha-do-tempo__title">{{ card.titulo }}</h3>
-            <p class="card-linha-do-tempo__date">{{ card.data|date:"d/m/Y" }}</p>
-        </div>
+        <div class="arrow right"></div>
+        <svg class="linha-do-tempo-calendar-icon right" viewBox="0 0 64 64" width="64" height="64">
+            <circle cx="32" cy="32" r="30" fill="" />
+        </svg>
     </div>
-    <div class="arrow right"></div>
 </div>

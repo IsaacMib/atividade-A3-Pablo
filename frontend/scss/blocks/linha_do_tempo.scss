@@ -38,23 +38,54 @@
   align-items: center;
   padding: 0;
   margin: 0 1rem 0;
-  
+
+  .linha-do-tempo-item-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+    margin: 0 1rem 0;
+  }
+
+  .linha-do-tempo-calendar-icon {
+    fill: variables.$color-primary;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0;
+    margin: 0 1rem 0;
+  }
+
   @media (min-width: 1200px) {
     &:nth-child(even) {
-      justify-content: flex-end;
-      transform: translateY(calc(-50%));
-      .arrow.right {
-        visibility: hidden;
+      .linha-do-tempo-item-row {
+        justify-content: flex-end;
+        transform: translateY(calc(-50%));
+        .right {
+          visibility: hidden;
+        }
+
+        .linha-do-tempo-calendar-icon.left {
+          align-self: center;
+        }
       }
     }
 
     &:nth-child(odd) {
-      justify-content: flex-start;
-      &:not(:first-child) {
-        transform: translateY(-50%);
-      }
-      .arrow.left {
-        visibility: hidden;
+      .linha-do-tempo-item-row {
+        justify-content: flex-start;
+        &:not(:first-child) {
+          transform: translateY(-50%);
+        }
+
+        .left {
+          visibility: hidden;
+        }
+
+        .linha-do-tempo-calendar-icon.right {
+          align-self: center;
+        }
       }
     }
   }
@@ -66,7 +97,7 @@
     margin: 15rem auto;
   }
   .linha-do-tempo {
-    .arrow.right {
+    .right {
       visibility: hidden;
     }
   }
