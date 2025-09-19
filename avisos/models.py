@@ -132,7 +132,7 @@ class AvisosPage(Page):
         super().clean()
         parent = self.get_parent()
         parent_path = parent.path if parent else ''
-        if len(self.title) > TITULO_MAX_LENGTH:
+        if len(self.title) > 50:
             raise ValidationError(
                 {"title": "O título não pode ter mais que 50 caracteres."})
 
