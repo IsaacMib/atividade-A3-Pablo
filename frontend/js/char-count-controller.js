@@ -10,8 +10,13 @@ class CharCountController extends window.StimulusModule.Controller {
 
   setupOutput() {
     if (this.output) return;
-    const maxValue = this.element.getAttribute('maxlength');
-    this.definedMaxValue = maxValue ?? this.maxValue;
+    const max = this.element.getAttribute('maxlength');
+    if (this.maxValue) {
+      this.definedMaxValue = this.maxValue;
+      this.element.setAttribute('maxlength', this.maxValue);
+    } else {
+      this.definedMaxValue = max;
+    }
     const template = document.createElement('template');
     template.innerHTML = `<div class="charcount-wrapper" style="display: flex; justify-content: flex-end;">
             <output
