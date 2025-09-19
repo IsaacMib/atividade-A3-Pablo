@@ -22,9 +22,6 @@ from core.utils import (
     get_widget_input_with_counter
 )
 from django.core.exceptions import ValidationError
-from django import forms
-
-TITULO_MAX_LENGTH = 50
 
 
 class AvisosPageTag(TaggedItemBase):
@@ -81,7 +78,7 @@ class AvisosPage(Page):
         help_text="Marque para não exibir a lista de arquivos na página do aviso."
     )
 
-    content_panels = get_page_title_with_counter(TITULO_MAX_LENGTH) + [
+    content_panels = get_page_title_with_counter(50) + [
         FieldPanel("subtitle"),
         FieldPanel("descricao", widget=get_widget_input_with_counter()),
         MultiFieldPanel(

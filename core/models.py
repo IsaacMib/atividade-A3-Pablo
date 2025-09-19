@@ -25,20 +25,6 @@ from wagtail.fields import StreamField
 from blocks.models import ListRedeSocial
 
 
-class PageWithCounter(WagtailPage):
-    """
-    Página com contador de caracteres no campo de título.
-    Para facilitar a criação de páginas com contagem de caracteres no título.
-    Essa classe deve ser importada e renomeada para 'Page' fazendo com que o contador
-    apareça nas páginas que herdem desta classe. 
-    """
-    class Meta:
-        proxy = True
-
-    content_panels = get_page_title_with_counter() + \
-        WagtailPage.content_panels[1:]
-
-
 @register_setting(icon="site")
 class SiteSettings(BaseSiteSetting):
     title_suffix = models.CharField(

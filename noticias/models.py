@@ -7,18 +7,22 @@ from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import Tag, TaggedItemBase
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList, TabbedInterface, PageChooserPanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList, TabbedInterface
 from wagtail.fields import StreamField
 from wagtail.search import index
-
-from core.models import PageWithCounter as Page
+from wagtail.models import Page
 
 from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
 from datetime import datetime
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from wagtail.images.blocks import ImageChooserBlock
-from core.utils import get_file_type, get_fontawesome_file_icon, get_widget_input_with_counter
+from core.utils import (
+    get_file_type,
+    get_fontawesome_file_icon,
+    get_page_title_with_counter,
+    get_widget_input_with_counter
+)
 
 
 class NoticiasPageTag(TaggedItemBase):
@@ -105,7 +109,7 @@ class NoticiasPage(Page):
     )
 
     # Painéis padrão
-    content_panels = Page.content_panels + [
+    content_panels = get_page_title_with_counter() + [
         FieldPanel("subtitle"),
         FieldPanel(
             "descricao",
