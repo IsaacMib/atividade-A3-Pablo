@@ -7,10 +7,9 @@ from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import Tag, TaggedItemBase
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList, TabbedInterface, PageChooserPanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList, TabbedInterface
 from wagtail.fields import StreamField
 from wagtail.search import index
-
 from wagtail.models import Page
 
 from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
@@ -18,7 +17,12 @@ from datetime import datetime
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from wagtail.images.blocks import ImageChooserBlock
-from core.utils import get_file_type, get_fontawesome_file_icon
+from core.utils import (
+    get_file_type,
+    get_fontawesome_file_icon,
+    get_page_title_with_counter,
+    get_widget_input_with_counter
+)
 
 
 class NoticiasPageTag(TaggedItemBase):
@@ -105,16 +109,11 @@ class NoticiasPage(Page):
     )
 
     # Painéis padrão
-    content_panels = Page.content_panels + [
+    content_panels = get_page_title_with_counter() + [
         FieldPanel("subtitle"),
         FieldPanel(
             "descricao",
-            widget=forms.Textarea(attrs={
-                'data-controller': 'char-count',
-                'data-char-count-max-value': 220,
-                'data-action': 'input->char-count#updateCount paste->char-count#updateCount',
-            }),
-        ),
+            widget=get_widget_input_with_counter(char_limit=220)),
         MultiFieldPanel(
             [
                 FieldPanel("slideshow_imagens"),

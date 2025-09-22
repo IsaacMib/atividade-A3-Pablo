@@ -1,21 +1,24 @@
 from django.db import models
+from django import forms
 from datetime import date
 from django.core.exceptions import ValidationError
 
-from wagtail.contrib.settings.models import (
-    BaseSiteSetting,
-    register_setting,
-)
-
-from wagtail.admin.panels import (
-    FieldPanel,
-    MultiFieldPanel,
-)
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
 
 from blocks.models import ListRedeSocial
 
-# Create your models here.
+
+from django.db import models
+from datetime import date
+from django.core.exceptions import ValidationError
+
+from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
+from wagtail.fields import StreamField
+
+from blocks.models import ListRedeSocial
+
 
 @register_setting(icon="site")
 class SiteSettings(BaseSiteSetting):
@@ -142,7 +145,7 @@ class SiteSettings(BaseSiteSetting):
             raise ValidationError({
                 "menu_max_levels": "O número máximo de níveis permitido para o menu é 3."
             })
-        
+
         # Validação do Google Analytics
         if self.google_analytics_tag:
             tag = self.google_analytics_tag.strip()
@@ -150,7 +153,7 @@ class SiteSettings(BaseSiteSetting):
                 raise ValidationError({
                     "google_analytics_tag": "A tag deve começar com 'G-', 'UA-' ou 'GT-' seguido do identificador."
                 })
-        
+
         if self.periodo_eleitoral_habilitado:
             if not self.periodo_eleitoral_inicio and not self.periodo_eleitoral_fim:
                 raise ValidationError({
@@ -164,7 +167,7 @@ class SiteSettings(BaseSiteSetting):
             if not self.periodo_eleitoral_fim:
                 raise ValidationError({
                     "periodo_eleitoral_fim": "Obrigatório quando o período eleitoral está habilitado."
-                }) 
+                })
             if self.periodo_eleitoral_inicio > self.periodo_eleitoral_fim:
                 raise ValidationError({
                     "periodo_eleitoral_inicio": "A data de início não pode ser posterior à data de fim.",
