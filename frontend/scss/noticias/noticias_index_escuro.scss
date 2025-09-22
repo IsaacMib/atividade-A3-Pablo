@@ -1,6 +1,15 @@
 @use '../variables.scss';
 
 [data-theme="dark"] {
+  .noticias-page--wrapper {
+    background-color: variables.$color-black;
+  }
+
+  .page-noticias__published {
+    color: variables.$color-white;
+    font-weight: 400;
+  }
+
   .noticias-pagination-item {
     --paginator-svg-color: #{variables.$color-white};
     border: 1px solid variables.$color-white;

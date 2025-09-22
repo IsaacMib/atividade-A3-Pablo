@@ -24,7 +24,14 @@
 }
 
 .breadcrumb-item {
-  --bs-breadcrumb-divider: '';  
+  --bs-breadcrumb-divider: '';
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 500px;
+  white-space: nowrap;
+  @media (max-width: 768px) {
+    max-width: 60%;
+  }
 }
 
 .breadcrumb-item + .breadcrumb-item::before {

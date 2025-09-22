@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags static file_extras noticias_tags %}
 {% block content %}
+<div class="noticias-page--wrapper d-flex">
     <div class="container">
         {% if settings.core.SiteSettings.is_periodo_eleitoral and page.sensivel_periodo_eleitoral %}
             {% include 'include/periodo-eleitoral.html' %}
         {% else %}
-            <div class="page-noticias-header tw:mt-12 tw:mb-12">
+            <div class="page-noticias-header tw:pt-12 tw:pb-12">
                 <h1 class="index-header__title index-header__title--blog titulo-noticia justify-content-center tw:font-bold">{{ page.title }}</h1>
                 {% comment %} {% if page.descricao %}
                     <p>{{ page.descricao }}</p>
@@ -22,7 +23,7 @@
                 {% endif %}
             </div>
             {% if page.get_imagem_destaque %}
-                <div class="noticias-img-destaque tw:mb-12">
+                <div class="noticias-img-destaque tw:pb-12">
                     {% if page.get_imagem_destaque and not page.slideshow_imagens %}
                         <div class="d-flex justify-content-center"> 
                             {% picture page.get_imagem_destaque format-{avif,webp,jpeg} height-380 loading="lazy" sizes="100%" %} 
@@ -88,33 +89,34 @@
             {% endif %}
         {% endif %}
     </div>
-    {% if not settings.core.SiteSettings.is_periodo_eleitoral and not page.sensivel_periodo_eleitoral %}
-        {% get_noticias_index_url as noticias_index_url %}
-        {% include 'include/ultimas-noticias.html' with ultimas_noticias=ultimas_noticias url_ver_todos=noticias_index_url %}
-    {% endif %}
-    <script>
+</div>
+{% if not settings.core.SiteSettings.is_periodo_eleitoral and not page.sensivel_periodo_eleitoral %}
+    {% get_noticias_index_url as noticias_index_url %}
+    {% include 'include/ultimas-noticias.html' with ultimas_noticias=ultimas_noticias url_ver_todos=noticias_index_url %}
+{% endif %}
+<script>
     document.addEventListener('DOMContentLoaded', function() {
     var swiper = new Swiper(".noticias-mySwiper", {
-      loop: true,
-      spaceBetween: 10,
-      slidesPerView: 4,
-      freeMode: true,
-      watchSlidesProgress: true,
-      autoHeight: true,
+        loop: true,
+        spaceBetween: 10,
+        slidesPerView: 4,
+        freeMode: true,
+        watchSlidesProgress: true,
+        autoHeight: true,
     });
     var swiper2 = new Swiper(".noticias-mySwiper2", {
-      spaceBetween: 10,
-      loop: true,
-      navigation: {
+        spaceBetween: 10,
+        loop: true,
+        navigation: {
         nextEl: ".swiper-button-next",
         prevEl: ".swiper-button-prev",
-      },
-      thumbs: {
+        },
+        thumbs: {
         swiper: swiper,
-      },
+        },
     });
     });
-    
-    </script>
+
+</script>
 {% endblock content %}
 

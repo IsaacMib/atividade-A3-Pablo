@@ -1,6 +1,8 @@
 @use '../variables.scss';
 
-//TODOGABRIEL: Preciso fazer o tema escuro depois.
+.noticias-page--wrapper {
+  background-color: variables.$color-white;
+}
 
 @media (max-width: 767.98px) { // mobile até md
   .lista-noticias--wrapper .row > .col-lg-6:nth-child(n+5) {

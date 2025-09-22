@@ -1,6 +1,9 @@
 @use './../../variables.scss';
 
 [data-theme=dark] {
+  .titulo-noticia {
+    color: variables.$color-white;
+  }
   .noticias-conteudo {
     border-top: 1px solid variables.$color-white;
     border: 1px solid variables.$color-white;
