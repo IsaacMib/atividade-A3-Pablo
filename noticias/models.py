@@ -38,12 +38,12 @@ class NoticiasPage(Page):
     Página que representa uma notícia.
     """
     subtitle = models.CharField(
-        verbose_name="Subtítulo", blank=True, max_length=255)
+        verbose_name="Subtítulo", blank=True, max_length=211)
     descricao = models.CharField(
         verbose_name="Descrição",
         blank=False,
         help_text="Breve descrição do conteúdo da página.",
-        max_length=220,
+        max_length=211,
     )
     data_publicacao = models.DateTimeField(
         "Data de publicação da notícia", default=datetime.now, blank=True, null=True
