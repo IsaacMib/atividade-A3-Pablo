@@ -33,8 +33,7 @@
                 {% for imagem in page.images %}
                 {% if imagem.block_type == 'imagem' and imagem.value %}
                 <div class="swiper-slide swiper-slide-noticias">
-                    {% picture imagem.value original format-{avif,webp,jpeg} height-380 loading="lazy" sizes="100%"
-                    class="image-noticia-carrossel" %}
+                    {% picture imagem.value original format-{avif,webp,jpeg} height-380 loading="lazy" sizes="100%" class="image-noticia-carrossel" %}
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -47,8 +46,7 @@
                 {% for imagem in page.images %}
                 {% if imagem.block_type == 'imagem' and imagem.value %}
                 <div class="swiper-slide swiper-slide-noticias">
-                    {% picture imagem.value original format-{avif,webp,jpeg} height-380 loading="lazy" sizes="100%"
-                    class="image-noticia-carrossel" %}
+                    {% picture imagem.value original format-{avif,webp,jpeg} height-380 loading="lazy" sizes="100%" class="image-noticia-carrossel" %}
                 </div>
                 {% endif %}
                 {% endfor %}
