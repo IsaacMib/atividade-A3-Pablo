@@ -1,6 +1,6 @@
 @use '../variables.scss';
 @use  '../sprite';
-//TODOGABRIEL: Iniciar aqui!
+
 .header-layout {
   // display: grid;
   // grid-gap: 32px;
@@ -41,6 +41,8 @@
   border: 1px solid variables.$color-primary;
   padding: 8px 0px 8px 12px;
   min-width: 170px;
+  background-color: variables.$color-primary;
+  color: variables.$color-white;
 
   @media (max-width: 576px) {
     min-width: 54px;
@@ -85,6 +87,10 @@
   position: relative;
   // display: grid;
   // align-items: center;
+  color: variables.$color-black;
+  &:hover {
+    color: variables.$color-black;
+  }
   &:before {
     content: "";
     left: 0px;
@@ -103,6 +109,10 @@
   // display: grid;
   // align-items: center;
   border-right: 1px solid variables.$color-overlay-20;
+  color: variables.$color-black;
+  &:hover {
+    color: variables.$color-black;
+  }
   &:before {
     content: "";
     left: -5px;
@@ -123,5 +133,12 @@
 .header-btn-search-text {
   @media (max-width: 576px) {
     display: none;
+  }
+}
+
+.header-acessibilidade--fonts {
+  color: variables.$color-black;
+  &:hover {
+    color: variables.$color-black;
   }
 }

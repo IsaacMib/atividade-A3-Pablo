@@ -5,7 +5,7 @@
     <div class="header-layout row">
       <div class="col-10 col-lg-auto d-flex align-items-center justify-content-center mt-4" >
         <a href="/" aria-label="Inicio" >
-          <img src="{% static 'img/logo_site.svg' %}" alt="{{ settings.core.SiteSettings.title_suffix }}">
+          <img class="header-logo" src="{% static 'img/logo_site.svg' %}" alt="{{ settings.core.SiteSettings.title_suffix }}">
         </a>
       </div>
       <div class="col-12 col-lg-auto d-flex align-items-center justify-content-center mt-4" >
@@ -14,7 +14,7 @@
             <input class="header-input-search" type="text" 
                    placeholder="Qual serviço você procura hoje?" 
                    aria-label="Search" name="query" value="{{ request.GET.query }}">
-            <button class="header-btn-search tw:bg-primary tw:dark:bg-primary-escuro tw:text-white" type="submit">
+            <button class="header-btn-search" type="submit">
                 <div class="row">
                     <div class="col-auto" style="align-content: center;">
                         <svg width="17" height="18" viewBox="0 0 21 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="min-width: 18px;">
@@ -30,25 +30,25 @@
         </div>
       </div>
       <div class="header-acessibilidade col-12 col-lg-auto d-flex align-items-center justify-content-center mt-4" >
-        <div class="row">
+        <div class="header-acessibilidade--row row">
           <div class="col-auto" >
-            <a id="theme-toggle" class="header-acessibilidade--contraste tw:text-black" href="#">alto contraste</a>
+            <a id="theme-toggle" class="header-acessibilidade--contraste" href="#">alto contraste</a>
           </div>
           <div class="col-auto" >
-            <a class="header-acessibilidade--vlibras tw:text-black" href="https://www.vlibras.com.br/" >vlibras</a>
+            <a class="header-acessibilidade--vlibras" href="https://www.vlibras.com.br/" >vlibras</a>
           </div>
         </div>
       </div>
       <div class="col-12 col-lg-auto d-flex align-items-center justify-content-center mt-4">
         <div class="header-tools row">
           <div class="col-auto" >
-            <a class="header-acessibilidade--fonts tw:text-black tw:text-xl tw:font-bold" href="javascript:(function(){document.body.style.zoom = (parseFloat(document.body.style.zoom || 1) - 0.1)})()">A-</a>
+            <a class="header-acessibilidade--fonts tw:text-xl tw:font-bold" href="javascript:(function(){document.body.style.zoom = (parseFloat(document.body.style.zoom || 1) - 0.1)})()">A-</a>
           </div>
           <div class="col-auto" >
-            <a class="header-acessibilidade--fonts tw:text-black tw:text-xl tw:font-bold" href="javascript:(function(){document.body.style.zoom = (parseFloat(document.body.style.zoom || 1) + 0.1)})()">A+</a>
+            <a class="header-acessibilidade--fonts tw:text-xl tw:font-bold" href="javascript:(function(){document.body.style.zoom = (parseFloat(document.body.style.zoom || 1) + 0.1)})()">A+</a>
           </div>
           <div class="col-auto" >
-            <a class="header-acessibilidade--fonts tw:text-black tw:text-xl tw:font-bold" href="javascript:(function(){document.body.style.zoom = 1})()">A</a>
+            <a class="header-acessibilidade--fonts tw:text-xl tw:font-bold" href="javascript:(function(){document.body.style.zoom = 1})()">A</a>
           </div>
         </div>
       </div>

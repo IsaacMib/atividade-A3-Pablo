@@ -1,16 +1,18 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags %}
 {% block content %}
-<div class="container">
-    <div class="agenda-page--title">{{ page.title }}</div>
+<div class="agenda-page--wrapper">
+    <div class="container">
+        <div class="agenda-page--title">{{ page.title }}</div>
 
-    <!-- Calendário -->
-    <div id="calendar-agendas" data-datas-agenda='{{ datas_agenda }}'></div>
-    
-    <div id="compromissos-title" class="agenda-page--title">Compromissos</div>
-    <!-- Div para exibir os compromissos -->
-    <div id="compromissos">
-        <div id="compromissos-list" data-page-slug="{{ page.slug }}"></div>
+        <!-- Calendário -->
+        <div id="calendar-agendas" data-datas-agenda='{{ datas_agenda }}'></div>
+        
+        <div id="compromissos-title" class="agenda-page--title">Compromissos</div>
+        <!-- Div para exibir os compromissos -->
+        <div id="compromissos">
+            <div id="compromissos-list" data-page-slug="{{ page.slug }}"></div>
+        </div>
     </div>
 </div>
 {% endblock %}

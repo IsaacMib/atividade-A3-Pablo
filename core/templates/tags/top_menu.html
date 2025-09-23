@@ -20,7 +20,9 @@ Não há dropdown aninhado para submenus.
           <!-- Logo centralizada -->
           <div class="container d-flex justify-content-center align-items-center ml-6">
             <a class="navbar-brand" href="/" aria-label="Inicio">
-              <img src="{% static 'img/logo_site_mobile.svg' %}" alt="{{ settings.core.SiteSettings.title_suffix }}"
+              <img class="navbar-brand-mobile-light" src="{% static 'img/logo_site_mobile.svg' %}" alt="{{ settings.core.SiteSettings.title_suffix }}"
+                height="42px">
+              <img class="navbar-brand-mobile-dark" src="{% static 'img/logo_site_mobile_branco.svg' %}" alt="{{ settings.core.SiteSettings.title_suffix }}"
                 height="42px">
             </a>
           </div>
@@ -117,13 +119,13 @@ Não há dropdown aninhado para submenus.
           <!-- Acessibilidade -->
           <li class="site-menu-nav-tools nav-item d-lg-none">
             <div>
-              <a id="theme-toggle-mobile" class="nav-link header-acessibilidade--contraste tw:text-black" href="#">alto
+              <a id="theme-toggle-mobile" class="nav-link header-acessibilidade--contraste" href="#">alto
                 contraste</a>
             </div>
           </li>
           <li class="site-menu-nav-tools nav-item d-lg-none">
             <div>
-              <a class="nav-link header-acessibilidade--vlibras tw:text-black" href="https://www.vlibras.com.br/"
+              <a class="nav-link header-acessibilidade--vlibras" href="https://www.vlibras.com.br/"
                 target="_blank">vlibras</a>
             </div>
           </li>
@@ -132,11 +134,11 @@ Não há dropdown aninhado para submenus.
           <li class="site-menu-nav-tools nav-item d-lg-none">
             <div class="nav-link">
               <div class="d-flex gap-2 justify-content-start">
-                <a class="header-acessibilidade--fonts tw:text-black tw:text-xl tw:font-bold"
+                <a class="header-acessibilidade--fonts tw:text-xl tw:font-bold"
                   href="javascript:(function(){document.body.style.zoom = (parseFloat(document.body.style.zoom || 1) - 0.1)})()">A-</a>
-                <a class="header-acessibilidade--fonts tw:text-black tw:text-xl tw:font-bold"
+                <a class="header-acessibilidade--fonts tw:text-xl tw:font-bold"
                   href="javascript:(function(){document.body.style.zoom = (parseFloat(document.body.style.zoom || 1) + 0.1)})()">A+</a>
-                <a class="header-acessibilidade--fonts tw:text-black tw:text-xl tw:font-bold"
+                <a class="header-acessibilidade--fonts tw:text-xl tw:font-bold"
                   href="javascript:(function(){document.body.style.zoom = 1})()">A</a>
               </div>
             </div>
