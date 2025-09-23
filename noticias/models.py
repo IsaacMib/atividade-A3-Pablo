@@ -108,6 +108,12 @@ class NoticiasPage(Page):
         help_text="Marque para não exibir a lista de arquivos na página da notícia.",
     )
 
+    destaque = models.BooleanField(
+        verbose_name="Notícia em destaque",
+        default=False,
+        help_text="Marque se esta notícia deve ser exibida em destaque na página inicial ou em listas de notícias. Só pode ser cadastrado 6 noticias  em destaque.",
+    )
+
     # Painéis padrão
     content_panels = get_page_title_with_counter() + [
         FieldPanel("subtitle"),
