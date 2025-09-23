@@ -1,6 +1,14 @@
 @use '../variables.scss';
 
 [data-theme=dark] {
+  .agenda-do-dia--title {
+    color: variables.$color-white;
+  }
+
+  .agenda-do-dia--description {
+    color: variables.$color-warning;
+  }
+
   .agenda-page--wrapper {
     background-color: variables.$color-black;
   }

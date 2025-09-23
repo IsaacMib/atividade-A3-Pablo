@@ -1,5 +1,13 @@
 @use '../variables.scss';
 
+.agenda-do-dia--title {
+  color: variables.$color-primary;
+}
+
+.agenda-do-dia--description {
+  color: variables.$color-error;
+}
+
 .agenda-page--wrapper {
   background-color: variables.$color-white;
 }
