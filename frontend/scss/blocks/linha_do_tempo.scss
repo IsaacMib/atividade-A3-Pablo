@@ -162,6 +162,12 @@
 }
 
 .calendar-icon {
-  width: 48px;
+  width: 64px;
+  height: 64px;
   z-index: 100;
+  color: white;
+  font-size: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
