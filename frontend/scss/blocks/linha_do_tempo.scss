@@ -22,7 +22,7 @@
 }
 
 .row.block-linha-do-tempo {
-  
+
   @media (min-width: 1200px) {
     &:has(:first-child:nth-last-child(2)) {
       max-height: calc(360px + 0.5rem);
@@ -47,6 +47,15 @@
     width: 100%;
     padding: 0;
     margin: 0;
+
+    .linha-do-tempo-arrow-card-group {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+    }
   }
 
   .linha-do-tempo-calendar-icon {
@@ -61,15 +70,17 @@
   @media (min-width: 1200px) {
     &:nth-child(even) {
       .linha-do-tempo-item-row {
+
+        // background-color: red;
         justify-content: flex-end;
         transform: translateY(calc(-50%));
         .right {
-          visibility: hidden;
+          display: none;
         }
 
         .linha-do-tempo-calendar-icon.left {
           position: absolute;
-          left: 47%;
+          left: 48%;
           top: 50%;
           transform: translateY(-50%);
           margin: 0;
@@ -87,12 +98,12 @@
         }
 
         .left {
-          visibility: hidden;
+          display: none;
         }
 
         .linha-do-tempo-calendar-icon.right {
           position: absolute;
-          right: 48%;
+          right: 47%;
           top: 50%;
           transform: translateY(-50%);
           margin: 0;
@@ -104,12 +115,17 @@
 
 @media (max-width: 1200px) {
   .linha-do-tempo__item {
-    justify-content: flex-end;
+    justify-content: space-around;
     margin: 15rem auto;
   }
   .linha-do-tempo {
+
+    .left {
+      float: right;
+    }
+
     .right {
-      visibility: hidden;
+      display: none;
     }
   }
 }
