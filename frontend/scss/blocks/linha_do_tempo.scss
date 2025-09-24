@@ -58,7 +58,7 @@
     }
   }
 
-  .linha-do-tempo-calendar-icon {
+  .linha-do-tempo-calendar-group {
     fill: variables.$color-primary;
     display: flex;
     flex-direction: row;
@@ -77,7 +77,7 @@
           display: none;
         }
 
-        .linha-do-tempo-calendar-icon.left {
+        .linha-do-tempo-calendar-group.left {
           position: absolute;
           left: 48%;
           top: 50%;
@@ -100,7 +100,7 @@
           display: none;
         }
 
-        .linha-do-tempo-calendar-icon.right {
+        .linha-do-tempo-calendar-group.right {
           position: absolute;
           right: 47%;
           top: 50%;
@@ -147,16 +147,21 @@
   z-index: 10;
 }
 
-.right {
+.arrow.right {
   -webkit-transform: translateX(-75%) rotate(-45deg);
   transform: translateX(-75%) rotate(-45deg);
 }
 
-.left {
+.arrow.left {
   -webkit-transform: translateX(75%) rotate(135deg);
   transform: translateX(75%) rotate(135deg);
 }
 
 .card-linha-do-tempo {
   position: relative;
+}
+
+.calendar-icon {
+  width: 48px;
+  z-index: 100;
 }
