@@ -113,10 +113,19 @@
 }
 
 @media (max-width: 1200px) {
+
+  .linha-do-tempo {
+    .container {
+      --bs-gutter-x: 0;
+    }
+  }
+
+  
   .linha-do-tempo__item {
-    justify-content: space-around;
+    justify-content: space-between;
     margin: 15rem auto;
   }
+
   .linha-do-tempo {
 
     .arrow.left {
