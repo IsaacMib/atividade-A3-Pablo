@@ -71,7 +71,6 @@
     &:nth-child(even) {
       .linha-do-tempo-item-row {
 
-        // background-color: red;
         justify-content: flex-end;
         transform: translateY(calc(-50%));
         .right {
@@ -120,8 +119,8 @@
   }
   .linha-do-tempo {
 
-    .left {
-      float: right;
+    .arrow.left {
+      margin-left: auto;
     }
 
     .right {
