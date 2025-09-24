@@ -761,15 +761,15 @@ class CarrosselSolucoesBlock(StructBlock):
         template = 'blocks/carrossel_solucoes.html'
 
 
-class ProgramaItemBlock(StructBlock):
+class GridImageItemBlock(StructBlock):
     titulo = CharBlock(required=True, max_length=100,
-                       label="Título do Programa")
-    link = URLBlock(required=True, label="Link do Programa")
-    imagem = ImageChooserBlock(required=True, label="Imagem do Programa")
+                       label="Título da Imagem")
+    link = URLBlock(required=True, label="Link da Imagem")
+    imagem = ImageChooserBlock(required=True, label="Imagem da Imagem")
 
     class Meta:
         icon = 'imagem'
-        label = 'Item do Programa'
+        label = 'Imagem do Grid'
 
 
 class GridImagensBlock(StructBlock):
@@ -779,7 +779,7 @@ class GridImagensBlock(StructBlock):
     grid_type = ChoiceBlock(choices=GRID_IMAGENS_TYPES,
                              default=GRID_IMAGENS_DEFAULT_TYPE,
                              required=True, label="Tipo de Grid")
-    itens = ListBlock(ProgramaItemBlock, min_num=1, max_num=12)
+    itens = ListBlock(GridImageItemBlock, min_num=1, max_num=12)
     
     def get_column_classes(self, grid_type):
         """

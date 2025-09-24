@@ -1,7 +1,6 @@
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from wagtail import hooks
-from django.utils.html import format_html
 
 
 @hooks.register('register_permissions')
