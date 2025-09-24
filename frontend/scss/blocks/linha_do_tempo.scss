@@ -138,6 +138,15 @@
   }
 }
 
+.linha-do-tempo-calendar-group::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  background-color: variables.$color-primary;
+  width: 3px;
+  height: 200%;
+}
+
 .arrow {
   border: solid variables.$color-primary;
   background-color: variables.$color-primary;
