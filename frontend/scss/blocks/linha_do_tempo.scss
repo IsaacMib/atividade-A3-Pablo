@@ -72,6 +72,7 @@
       .linha-do-tempo-item-row {
 
         justify-content: flex-end;
+        position: relative;
         transform: translateY(calc(-50%));
         .right {
           display: none;
@@ -79,9 +80,9 @@
 
         .linha-do-tempo-calendar-group.left {
           position: absolute;
-          left: 48%;
+          left: 50%;
           top: 50%;
-          transform: translateY(-50%);
+          transform: translate(-50%, -50%);
           margin: 0;
         }
 
@@ -107,9 +108,9 @@
 
         .linha-do-tempo-calendar-group.right {
           position: absolute;
-          right: 47%;
+          left: 50%;
           top: 50%;
-          transform: translateY(-50%);
+          transform: translate(-50%, -50%);
           margin: 0;
         }
       }
