@@ -85,9 +85,9 @@
           margin: 0;
         }
 
-        // Linha deve ser mais longa para elementos pares
+        // Linha deve ser maior para elementos pares
         .linha-do-tempo-calendar-group::after {
-          height: 560px;
+          height: 360px;
         }
       }
     }
