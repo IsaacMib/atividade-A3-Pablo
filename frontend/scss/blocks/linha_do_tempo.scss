@@ -159,6 +159,12 @@
   }
 }
 
+@media (max-width: 1200px) {
+  .linha-do-tempo-calendar-group::after {
+    height: 560px;
+  }
+}
+
 .arrow {
   border: solid variables.$color-primary;
   background-color: variables.$color-primary;
