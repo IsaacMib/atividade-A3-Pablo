@@ -1,6 +1,9 @@
 @use './../../variables.scss';
 
 [data-theme=dark] {
+  .avisos-container {
+    background-color: variables.$color-black
+  }
   .aviso-card {
       background-color: variables.$color-black !important;
       box-shadow: none;

@@ -63,8 +63,15 @@ html, body {
     display: flex;
     flex-direction: column;
 }
-.site-conteudo-main {
+#site-conteudo-main {
     flex: 1;
+    background-color: variables.$color-white !important;
+}
+
+[data-theme=dark] {
+  #site-conteudo-main {
+      background-color: variables.$color-black !important;
+  }
 }
 
 .richtext-image.left,

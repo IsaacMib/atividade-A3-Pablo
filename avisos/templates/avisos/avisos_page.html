@@ -5,24 +5,26 @@
 
 {% block content %}
 
-<div class="container d-flex flex-column align-items-center justify-content-center">
-    <h2>{{ page.title }}</h2>
+<div class="avisos-page-container">
+    <div class="container d-flex flex-column align-items-center justify-content-center">
+        <h2 class="aviso-page--title">{{ page.title }}</h2>
 
-    {% if page.data_publicacao %}
-    <h5 class="meta align-self-start">Publicado em {{ page.data_publicacao|date:"d/m/Y H:i" }}</h5>
-    {% endif %}
+        {% if page.data_publicacao %}
+            <h5 class="aviso-page-publicacao meta align-self-start">Publicado em {{ page.data_publicacao|date:"d/m/Y H:i" }}</h5>
+        {% endif %}
 
 
-    <div class="intro align-self-start">
-        {{ page.descricao|richtext }}
-    </div>
+        <div class="aviso-page-descricao intro align-self-start">
+            {{ page.descricao|richtext }}
+        </div>
 
-    <hr>
+        <hr>
 
-    <div class="body-content">
-        {% for block in page.body %}
-        {% include_block block %}
-        {% endfor %}
+        <div class="aviso-page-content body-content">
+            {% for block in page.body %}
+            {% include_block block %}
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}

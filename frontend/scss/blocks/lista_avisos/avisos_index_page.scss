@@ -1,11 +1,18 @@
 @use './../../variables.scss';
 
+.avisos-container {
+    background-color: variables.$color-white;
+    display: flex;
+}
+
 .avisos-wrapper {
     // display: grid !important;
     // grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)) !important;
     // gap: 2rem !important;
     // max-width: 1020px !important;
-    margin: 0 auto 3rem !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+    padding-bottom: 3rem !important;
     // align-items: stretch !important;
     // justify-items: center !important;
 }
