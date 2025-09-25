@@ -144,7 +144,13 @@
   top: 100%;
   background-color: variables.$color-primary;
   width: 3px;
-  height: 200%;
+  height: 140px;
+}
+
+@media (min-width: 1200px) {
+  .linha-do-tempo-calendar-group::after {
+    height: 120px;
+  }
 }
 
 .arrow {
