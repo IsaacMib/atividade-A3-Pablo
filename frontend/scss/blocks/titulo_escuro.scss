@@ -18,11 +18,11 @@
   }
 
   .titulo-bg-cinza {
-    background-color: variables.$color-grey-100;
+    background-color: variables.$color-black;
     .titulo-linha {
       svg {
         line {
-          stroke: variables.$color-primary;
+          stroke: variables.$color-white;
         }
       }
     }
