@@ -44,9 +44,9 @@ class NoticiasPage(Page):
     """
     Página que representa uma notícia.
     """
-    subtitle = models.CharField(
+    subtitle = models.TextField(
         verbose_name="Subtítulo", blank=True, max_length=211)
-    descricao = models.CharField(
+    descricao = models.TextField(
         verbose_name="Descrição",
         blank=False,
         help_text="Breve descrição do conteúdo da página.",
