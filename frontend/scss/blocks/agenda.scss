@@ -35,7 +35,8 @@
 
 .agenda-item {
   background: variables.$color-agenda-item-bg;
-  width: 259px;
+  width: 100%;
+  max-width: 259px;
   height: 100%;
   min-height: 268px;
   border-radius: 6px;
