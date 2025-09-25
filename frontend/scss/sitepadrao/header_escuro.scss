@@ -1,0 +1,56 @@
+@use "../variables.scss";
+@use  '../sprite';
+
+[data-theme="dark"] {
+  .header-logo {
+    filter: brightness(0) invert(1);
+  }
+  
+  .header-input-search {
+    border: 1.5px solid variables.$color-white;
+    border-right: 0.5px solid variables.$color-white;
+    background-color: variables.$color-white;
+    color: variables.$color-black;
+  }
+
+  .header-btn-search {
+    border-top-right-radius: variables.$border-radius-search;
+    border-bottom-right-radius: variables.$border-radius-search;
+    border: 1.5px solid variables.$color-white;
+    border-left: 0.5px solid variables.$color-white;
+    background-color: variables.$color-black;
+    color: variables.$color-white;
+  }
+
+  .header-acessibilidade--vlibras {
+    color: variables.$color-white;
+    &:hover {
+      color: variables.$color-white;
+    }
+    &:before {
+      @include sprite.sprite(sprite.$vlibras);
+    }
+  }
+
+  .header-acessibilidade--contraste {
+    border-right: 1px solid variables.$color-white;
+    color: variables.$color-white;
+    &:hover {
+      color: variables.$color-white;
+    }
+    &:before {
+      @include sprite.sprite(sprite.$contraste);
+    }
+  }
+
+  .header-tools {
+    border-left: 1px solid variables.$color-white;
+  }
+
+  .header-acessibilidade--fonts {
+    color: variables.$color-white;
+    &:hover {
+      color: variables.$color-white;
+    }
+  }
+}

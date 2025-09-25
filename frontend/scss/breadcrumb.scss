@@ -1,6 +1,12 @@
+@use './variables.scss';
+
 .breadcrumb-content {
   padding-top: 32px;
   padding-bottom: 16px;
+
+  a {
+    color: variables.$color-primary;
+  }
 }
 
 @media screen and (max-width: 500px) {
@@ -9,9 +15,23 @@
   }
 }
 
+.icon-light {
+  display: inline;
+}
+
+.icon-dark {
+  display: none;
+}
+
 .breadcrumb-item {
   --bs-breadcrumb-divider: '';
-  
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 500px;
+  white-space: nowrap;
+  @media (max-width: 768px) {
+    max-width: 60%;
+  }
 }
 
 .breadcrumb-item + .breadcrumb-item::before {

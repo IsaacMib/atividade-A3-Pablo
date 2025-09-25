@@ -1,13 +1,19 @@
+@use './../variables.scss';
+
+.programas-wrapper {
+  background-color: variables.$color-white;
+}
+
 .programas img {
-    width: 100%;
-    height: auto;
-    border-radius: 6px;
-    transition: transform .2s ease-in-out;
-  }
-  .programas a:hover img {
-    transform: scale(1.03);
-  }
-  .programas .row {
-    --bs-gutter-x: 0.5rem; // diminui o espaçamento horizontal
-    --bs-gutter-y: 0.5rem; // diminui o espaçamento vertical
-  }
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  transition: transform .2s ease-in-out;
+}
+.programas a:hover img {
+  transform: scale(1.03);
+}
+.programas .row {
+  --bs-gutter-x: 0.5rem; // diminui o espaçamento horizontal
+  --bs-gutter-y: 0.5rem; // diminui o espaçamento vertical
+}

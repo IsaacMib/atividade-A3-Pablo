@@ -338,7 +338,7 @@ class TituloBlock(StructBlock):
         label = 'Título'
 
 
-_CACHE_TIMEOUT = 600  # 10 minutos em segundos
+_CACHE_TIMEOUT = 10*60  # 10 minutos em segundos
 
 
 class OdometerBlock(StructBlock):
@@ -399,7 +399,7 @@ class OdometerListBlock(StructBlock):
     odometers = ListBlock(OdometerBlock(), label="Central de Monitoramento")
 
     class Meta:
-        template = 'blocks/central_monitoramento_detran.html'
+        template = 'blocks/central_monitoramento.html'
         icon = 'list-ul'
         label = 'Central de Monitoramento'
 
@@ -761,25 +761,25 @@ class CarrosselSolucoesBlock(StructBlock):
         template = 'blocks/carrossel_solucoes.html'
 
 
-class ProgramaItemBlock(StructBlock):
+class GridImageItemBlock(StructBlock):
     titulo = CharBlock(required=True, max_length=100,
-                       label="Título do Programa")
-    link = URLBlock(required=True, label="Link do Programa")
-    imagem = ImageChooserBlock(required=True, label="Imagem do Programa")
+                       label="Título da Imagem")
+    link = URLBlock(required=True, label="Link da Imagem")
+    imagem = ImageChooserBlock(required=True, label="Imagem da Imagem")
 
     class Meta:
         icon = 'imagem'
-        label = 'Item do Programa'
+        label = 'Imagem do Grid'
 
 
 class GridImagensBlock(StructBlock):
-    titulo = CharBlock(required=True, label="Titulo do bloco Ex.: Programas, Soluções", default="Programas")
+    titulo = CharBlock(required=True, label="Titulo do bloco Ex.: Programas, Orgãos Vinculados", default="Programas")
     link_ver_todos = URLBlock(
         required=False, label="Link do botão 'Ver todos'")
     grid_type = ChoiceBlock(choices=GRID_IMAGENS_TYPES,
                              default=GRID_IMAGENS_DEFAULT_TYPE,
                              required=True, label="Tipo de Grid")
-    itens = ListBlock(ProgramaItemBlock, default=[], min_num=1, max_num=12)
+    itens = ListBlock(GridImageItemBlock, min_num=1, max_num=12)
     
     def get_column_classes(self, grid_type):
         """

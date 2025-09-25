@@ -1,48 +1,50 @@
 {% load wagtailimages_tags noticias_tags %}
 
-<div class="container py-5">
-    {% include 'include/titulo.html' with titulo=self.titulo_secao_localizacao bgClass='' %}
-    <div class="row justify-content-center picture-wrapper">
-        <div class="col-auto tw:mr-7">
-            {% picture self.imagem width-400 %}
-        </div>
-        <div class="col-auto">
-            <p class="text-center">
-                <h2 class="tw:mt-0 tw:mb-8 tw:font-bold">{{ self.nome_local }}</h2>
-            </p>
-            <p class="tw:max-w-80">
-                {{ self.endereco }}
-            </p>
-            <p>
-                CEP: {{ self.cep }}
-            </p>
-            <p>
-                Fone: {{ self.telefone }}
-            </p>
-            <p>
-                Horário de Atendimento: {{ self.horario_atendimento }}
-            </p>
+<div class="localizacao-wrapper">
+    <div class="container py-5">
+        {% include 'include/titulo.html' with titulo=self.titulo_secao_localizacao bgClass='' %}
+        <div class="row justify-content-center picture-wrapper">
+            <div class="col-auto tw:mr-7">
+                {% picture self.imagem width-400 %}
+            </div>
+            <div class="col-auto">
+                <p class="text-center">
+                    <h2 class="localizacao-titulo-local tw:mt-0 tw:mb-8 tw:font-bold">{{ self.nome_local }}</h2>
+                </p>
+                <p class="tw:max-w-80">
+                    {{ self.endereco }}
+                </p>
+                <p>
+                    CEP: {{ self.cep }}
+                </p>
+                <p>
+                    Fone: {{ self.telefone }}
+                </p>
+                <p>
+                    Horário de Atendimento: {{ self.horario_atendimento }}
+                </p>
+            </div>
         </div>
     </div>
-</div>
-{% if maps_src %}
-{% include 'include/titulo.html' with titulo=self.titulo_secao_mapa bgClass='' %}
-<div class="container google-maps-container">
     {% if maps_src %}
-        <div class="google-maps-embed">
-            <iframe
-                src="{{ maps_src }}"
-                width="{{ maps_width }}"
-                height="{{ maps_height }}"
-                style="border:0;"
-                allowfullscreen
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
-        </div>
-    {% else %}
-        <p>Mapa não incorporado: verifique o HTML do iframe.</p>
-    {% endif %}
+    {% include 'include/titulo.html' with titulo=self.titulo_secao_mapa bgClass='' %}
+    <div class="container google-maps-container">
+        {% if maps_src %}
+            <div class="google-maps-embed">
+                <iframe
+                    src="{{ maps_src }}"
+                    width="{{ maps_width }}"
+                    height="{{ maps_height }}"
+                    style="border:0;"
+                    allowfullscreen
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        {% else %}
+            <p>Mapa não incorporado: verifique o HTML do iframe.</p>
+        {% endif %}
+    </div>
 </div>
 {% endif %}
 {% ultimas_noticias quantidade=6 titulo="Notícias Recentes" %}

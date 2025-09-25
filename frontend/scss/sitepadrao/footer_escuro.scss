@@ -1,0 +1,8 @@
+@use "../variables.scss";
+
+[data-theme="dark"] {
+  .footer-wrapper {
+    background-color: variables.$color-black;
+    border-top: 1px solid variables.$color-white;
+  }
+}

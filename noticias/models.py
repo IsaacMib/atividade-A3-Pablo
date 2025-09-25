@@ -1,5 +1,6 @@
 from django import forms
 from django.db import models
+from django.core.exceptions import ValidationError
 
 from django.contrib import messages
 from django.shortcuts import redirect, render
@@ -23,6 +24,8 @@ from core.utils import (
     get_page_title_with_counter,
     get_widget_input_with_counter
 )
+
+MAX_NOTICIAS_DESTAQUE = 6
 
 
 class NoticiasPageTag(TaggedItemBase):
@@ -108,8 +111,15 @@ class NoticiasPage(Page):
         help_text="Marque para não exibir a lista de arquivos na página da notícia.",
     )
 
+    destaque = models.BooleanField(
+        verbose_name="Notícia em destaque",
+        default=False,
+        help_text="Marque se esta notícia deve ser exibida em destaque na página inicial ou em listas de notícias. Só pode ser cadastrado 6 noticias  em destaque.",
+    )
+
     # Painéis padrão
     content_panels = get_page_title_with_counter() + [
+        FieldPanel("destaque"),
         FieldPanel("subtitle"),
         FieldPanel(
             "descricao",
@@ -177,7 +187,21 @@ class NoticiasPage(Page):
     subpage_types = []
 
     def get_ultimas_noticias(self, quantidade=6):
-        return NoticiasPage.objects.live().order_by("-data_publicacao")[:quantidade]
+        # Busca notícias em destaque ordenadas por data de publicação
+        noticias_destaque = NoticiasPage.objects.live().filter(
+            destaque=True
+        ).order_by("-data_publicacao")
+        
+        # Busca notícias que não estão em destaque ordenadas por data de publicação
+        noticias_sem_destaque = NoticiasPage.objects.live().filter(
+            destaque=False
+        ).order_by("-data_publicacao")
+        
+        # Combina as listas: primeiro as em destaque, depois as sem destaque
+        noticias_combinadas = list(noticias_destaque) + list(noticias_sem_destaque)
+        
+        # Retorna apenas a quantidade solicitada
+        return noticias_combinadas[:quantidade]
 
     def get_context(self, request):
         context = super().get_context(request)
@@ -228,6 +252,33 @@ class NoticiasPage(Page):
         index.SearchField('subtitle'),
         index.SearchField('descricao'),
     ]
+
+    def clean(self):
+        super().clean()
+        
+        if self.destaque:
+            # Contar quantas notícias estão marcadas como destaque (excluindo a atual se já existe)
+            noticias_destaque = NoticiasPage.objects.filter(destaque=True).live()
+            
+            # Se estamos editando uma notícia existente, excluí-la da contagem
+            if self.pk:
+                noticias_destaque = noticias_destaque.exclude(pk=self.pk)
+            
+            # Verificar se já existem 6 notícias em destaque
+            if noticias_destaque.count() >= MAX_NOTICIAS_DESTAQUE:
+                raise ValidationError({
+                    'destaque': f'Só podem existir até {MAX_NOTICIAS_DESTAQUE} notícias em destaque. '
+                               'Desmarque o destaque de outra notícia antes de marcar esta.'
+                })
+
+    def get_admin_display_title(self):
+        """
+        Adiciona asterisco (*) no título quando a notícia está em destaque
+        """
+        title = super().get_admin_display_title()
+        if self.destaque:
+            return f"★ {title}"
+        return title
 
 
 class NoticiasIndexPages(RoutablePageMixin, Page):
@@ -317,4 +368,20 @@ class NoticiasIndexPages(RoutablePageMixin, Page):
         return tags
 
     def get_ultimas_noticias(self, quantidade=6):
-        return NoticiasPage.objects.live().descendant_of(self).order_by('-data_publicacao')[:quantidade]
+        # Busca notícias em destaque ordenadas por data de publicação
+        noticias_destaque = NoticiasPage.objects.live().descendant_of(self).filter(
+            destaque=True
+        ).order_by("-data_publicacao")
+        
+        # Busca notícias que não estão em destaque ordenadas por data de publicação
+        noticias_sem_destaque = NoticiasPage.objects.live().descendant_of(self).filter(
+            destaque=False
+        ).order_by("-data_publicacao")
+        
+        # Combina as listas: primeiro as em destaque, depois as sem destaque
+        noticias_combinadas = list(noticias_destaque) + list(noticias_sem_destaque)
+        
+        # Retorna apenas a quantidade solicitada
+        return noticias_combinadas[:quantidade]
+    
+        # return NoticiasPage.objects.live().descendant_of(self).order_by('-data_publicacao')[:quantidade]

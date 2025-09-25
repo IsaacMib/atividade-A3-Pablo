@@ -1,0 +1,27 @@
+@use './../../variables.scss';
+
+[data-theme=dark] {
+  .titulo-noticia {
+    color: variables.$color-white;
+  }
+  .noticias-conteudo {
+    border-top: 1px solid variables.$color-white;
+    border: 1px solid variables.$color-white;
+    background-color: variables.$color-black;
+  }
+
+  .noticias-conteudo--data {  
+    background-color: variables.$color-white;
+    color: variables.$color-black;
+  }
+
+  .noticias-conteudo--heading {
+    color: variables.$color-white;
+  }
+
+  @media screen and (max-width: 576px) {
+    .noticias-conteudo {
+      border: 2px solid variables.$color-white;
+    }
+  }
+}

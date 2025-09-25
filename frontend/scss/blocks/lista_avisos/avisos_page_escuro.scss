@@ -1,0 +1,19 @@
+@use './../../variables.scss';
+
+[data-theme=dark] {
+  .avisos-page-container {
+    background-color: variables.$color-black;
+  }
+  .aviso-page--title {
+    color: variables.$color-white !important;
+  }
+  .aviso-page-publicacao {
+    color: variables.$color-white !important;
+  }
+  .aviso-page-descricao {
+    color: variables.$color-white !important;
+  }
+  .aviso-page-content {
+    color: variables.$color-white !important;
+  }
+}

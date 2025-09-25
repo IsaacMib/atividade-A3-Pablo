@@ -1,0 +1,19 @@
+@use './../variables.scss';
+
+[data-theme=dark] {
+  .social-banner {
+    background-color: variables.$color-black;
+  }
+
+  .social-icons a {
+    color: variables.$color-white;
+  }
+
+  .social-text h5 {
+    color: variables.$color-white;
+  }
+
+  .social-title {
+    color: variables.$color-white;
+  }
+}

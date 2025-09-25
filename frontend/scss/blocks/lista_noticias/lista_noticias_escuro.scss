@@ -1,0 +1,9 @@
+@use './../../variables.scss';
+
+[data-theme=dark] {
+  .lista-noticias--wrapper {
+    background-color: variables.$color-black;
+    border-top: 0.5px solid variables.$color-white;
+    border-bottom: 0.5px solid variables.$color-white;
+  }
+}

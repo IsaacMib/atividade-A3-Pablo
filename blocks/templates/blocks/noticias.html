@@ -2,9 +2,9 @@
 
 <div class="noticias-wrap">
   <a href="{% pageurl noticias %}" class="text-decoration-none">
-    <div class="noticias-conteudo tw:shadow-neutral-400 tw:ring-0 tw:bg-white">
+    <div class="noticias-conteudo">
       <div class="col d-flex justify-content-center justify-content-md-start">
-          <p class="noticias-conteudo--data tw:text-white">{{ noticias.data_publicacao|date:"d/m/Y" }}</p>
+          <p class="noticias-conteudo--data">{{ noticias.data_publicacao|date:"d/m/Y" }}</p>
       </div>
       <div class="col d-flex justify-content-center mb-0 heading-mobile d-flex d-sm-none">
         <h2 class="noticias-conteudo--heading{% if not noticias.get_imagem_destaque %} semImagem{% endif %}">

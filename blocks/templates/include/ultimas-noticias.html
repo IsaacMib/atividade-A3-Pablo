@@ -18,7 +18,7 @@ Ou usando a template tag:
 {% ultimas_noticias quantidade=4 titulo="Notícias Recentes" %}
 {% endcomment %}
 
-<div class="lista-noticias--wrapper {{ classe_bg|default:'tw:bg-neutral-100' }}">
+<div class="lista-noticias--wrapper {{ classe_bg|default:'' }}">
     <div class="container">
         {% include 'include/titulo.html' with titulo=titulo|default:'Últimas Notícias' bgClass='' %}
         <div class="row">
@@ -35,10 +35,11 @@ Ou usando a template tag:
             {% endif %}
         </div>
     </div>
+    {% if mostrar_ver_todos|default:True and url_ver_todos %}
+        <div class="text-center tw:mb-8">
+            {% include "include/ver_todos_btn.html" with ver_todos_url=url_ver_todos texto_link="Ver todos" btn_class='btn-ver-todos-bg-cinza' %}
+        </div>
+    {% endif %}
 </div>
 
-{% if mostrar_ver_todos|default:True and url_ver_todos %}
-    <div class="text-center tw:mb-8">
-        {% include "include/ver_todos_btn.html" with ver_todos_url=url_ver_todos texto_link="Ver todos" btn_class='btn-ver-todos-bg-cinza' %}
-    </div>
-{% endif %}
+

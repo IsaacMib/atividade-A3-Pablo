@@ -1,23 +1,31 @@
+@use '../variables.scss';
+
+.agenda-do-dia--title {
+  color: variables.$color-primary;
+}
+
+.agenda-do-dia--description {
+  color: variables.$color-error;
+}
+
+.agenda-page--wrapper {
+  background-color: variables.$color-white;
+}
+
 .agenda-page--title {  
   font-weight: 600;
   font-size: 32px;
-  color: #30599B;
+  color: variables.$color-primary;
   text-align: center;
   padding: 60px 0px 10px 0px;
 
   &::after {
     content: "";
     display: block;
-    background-color: #30599B;
+    background-color: variables.$color-primary;
     width: 120px;
     height: 2px;
     margin: auto;
-  }
-
-  &.no-compromissos {
-    &::after {
-      display: none;
-    }
   }
 }
 
@@ -84,21 +92,27 @@
 
   .vc-column {
     border-radius: 10px;
-    border: 0.79px solid #00000033;
-    box-shadow: 0px 3.15px 3.15px 0px #00000040;
+    border: 0.79px solid variables.$color-agenda-column-border;
+    box-shadow: 0px 3.15px 3.15px 0px variables.$color-agenda-column-shadow;
+
+    @media (max-width: 767px) {
+      &:nth-child(2) {
+        display: none;
+      }
+    }
   }
 
   .vc-month,
   .vc-year {
     font-weight: 700;
     font-size: 29.67px;
-    color: #30599B;
+    color: variables.$color-primary;
   }
 
   .vc-header__content {
-    border: 0.79px solid #00000033;
+    border: 0.79px solid variables.$color-agenda-column-border;
     border-radius: 10px;
-    box-shadow: 0px 3.15px 3.15px 0px #00000040;
+    box-shadow: 0px 3.15px 3.15px 0px variables.$color-agenda-column-shadow;
     justify-content: start;
     padding: 1rem;
     @media (max-width: 375px) {
@@ -107,31 +121,31 @@
     }
   }
   .vc-week__day {
-    color: #000;
+    color: variables.$color-black;
   }
   .vc-week__day[data-vc-week-day-off] {
-    color: #000000;
+    color: variables.$color-black;
   }
   .vc-date[data-vc-date-holiday] .vc-date__btn, 
   .vc-date[data-vc-date-weekend] .vc-date__btn {
-    color: #000000;
+    color: variables.$color-black;
   }
 
   .vc-date[data-vc-date-holiday][data-vc-date-month=next] .vc-date__btn, 
   .vc-date[data-vc-date-holiday][data-vc-date-month=prev] .vc-date__btn, 
   .vc-date[data-vc-date-weekend][data-vc-date-month=next] .vc-date__btn, 
   .vc-date[data-vc-date-weekend][data-vc-date-month=prev] .vc-date__btn {
-    color: #94a3b8;
+    color: variables.$color-agenda-column-btn;
   }
 
   .vc-date[data-vc-date-holiday][data-vc-date-disabled] .vc-date__btn, 
   .vc-date[data-vc-date-weekend][data-vc-date-disabled] .vc-date__btn,
   .vc-date[data-vc-date-disabled] .vc-date__btn {
-    color: #94a3b8;
+    color: variables.$color-agenda-column-btn;
   }
 
   .bg-temcompromissos {
-    color: #30599B !important;
+    color: variables.$color-primary !important;
     font-weight: 700;
   }
 
@@ -140,8 +154,8 @@
   .vc-date[data-vc-date-selected] .vc-date__btn,
   .vc-months__month[data-vc-months-month-selected], 
   .vc-years__year[data-vc-years-year-selected] {
-    background-color: #30599B;
-    color: #fff !important;
+    background-color: variables.$color-primary;
+    color: variables.$color-white !important;
   }
 
   [data-vc-arrow] {

@@ -1,0 +1,27 @@
+@use './../variables.scss';
+
+[data-theme=dark] {
+
+  .central-monitoramento {
+    background-color: variables.$color-white;
+    color: variables.$color-black;
+  }
+
+  .dado-monitoramento--separator-horizontal {
+    svg {
+      path {
+        stroke: variables.$color-black;
+      }
+    }
+  }
+
+  .dado-odometer {
+    .dado-monitoramento--separator-vertical {
+      svg {
+        path {
+          stroke: variables.$color-black;
+        }
+      }
+    }
+  }
+}

@@ -1,18 +1,20 @@
 {% load wagtailimages_tags %}
 
-<div class="container programas">
-  {% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
-  <div class="row g-2 justify-content-center">
-    {% for item in value.itens %}
-      <div class="{{ column_classes }}">
-        <a href="{{ item.link }}" target="_blank" aria-label="{{ item.titulo }}">
-          {% image item.imagem fill-350x200 alt=item.titulo %}
-        </a>
-      </div>
-    {% endfor %}
-  </div>
+<div class="programas-wrapper">
+  <div class="container programas">
+    {% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
+    <div class="programas-content row g-2 justify-content-center">
+      {% for item in value.itens %}
+        <div class="{{ column_classes }}">
+          <a href="{{ item.link }}" target="_blank" aria-label="{{ item.titulo }}">
+            {% image item.imagem fill-350x200 alt=item.titulo %}
+          </a>
+        </div>
+      {% endfor %}
+    </div>
 
-  {% if value.link_ver_todos %}
-    {% include "include/ver_todos_btn.html" with ver_todos_url=value.link_ver_todos %}
-  {% endif %}
+    {% if value.link_ver_todos %}
+      {% include "include/ver_todos_btn.html" with ver_todos_url=value.link_ver_todos %}
+    {% endif %}
+  </div>
 </div>
