@@ -221,13 +221,13 @@
 }
 
 @media (max-width: 1200px) {
-  // Em telas menores que 1200px, o conector horizontal é inserido da esquerda até o card
+  // Em dispositivos móveis, o grupo (ícone) fica ~10% a partir da esquerda
   .linha-do-tempo-item-row { --group-x: 10%; }
-  // Insere linha horizontal do centro até o card
-  .linha-do-tempo-item-row::before {
-    left: 0;
-    right: calc(100% - var(--group-x));
-    display: block;
+  // Traçar da borda direita até a posição do grupo (direita → esquerda)
+  .linha-do-tempo__item .linha-do-tempo-item-row::before {
+    right: var(--group-x);
+    width: calc(90% - var(--group-x));
+    display: block !important;
   }
 }
 
