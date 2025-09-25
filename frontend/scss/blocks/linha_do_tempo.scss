@@ -143,13 +143,14 @@
   }
 }
 
-.linha-do-tempo-calendar-group::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  background-color: variables.$color-primary;
-  width: 3px;
-  height: 140px;
+.block-linha-do-tempo:not(:last-child), .linha-do-tempo__item:not(:last-child) {
+    .linha-do-tempo-calendar-group::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      background-color: variables.$color-primary;
+      width: 3px;
+    }
 }
 
 @media (min-width: 1200px) {
