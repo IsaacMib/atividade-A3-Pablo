@@ -18,11 +18,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='noticiaspage',
             name='descricao',
-            field=models.CharField(help_text='Breve descrição do conteúdo da página.', max_length=211, verbose_name='Descrição'),
+            field=models.CharField(help_text='Breve descrição do conteúdo da página.', verbose_name='Descrição'),
         ),
         migrations.AlterField(
             model_name='noticiaspage',
             name='subtitle',
-            field=models.CharField(blank=True, max_length=211, verbose_name='Subtítulo'),
+            field=models.CharField(blank=True, verbose_name='Subtítulo'),
         ),
     ]
