@@ -48,14 +48,18 @@
     padding: 0;
     margin: 0;
     position: relative;
+    --group-x: 50%;
 
-    .linha-do-tempo-arrow-card-group {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      width: 100%;
-      padding: 0;
-      margin: 0;
+    // Conector horizontal
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      height: 3px;
+      background-color: variables.$color-primary;
+      transform: translateY(-50%);
+      display: none;
+      z-index: 5;
     }
   }
 
@@ -75,6 +79,7 @@
     transform: translate(-50%, -50%);
     margin: 0;
   }
+
 
   @media (min-width: 1200px) {
     &:nth-child(even) {
@@ -183,6 +188,7 @@
   display: inline-block;
   padding: 5px;
   z-index: 10;
+  position: relative;
 }
 
 .arrow.right {
@@ -193,6 +199,36 @@
 .arrow.left {
   -webkit-transform: translateX(75%) rotate(135deg);
   transform: translateX(75%) rotate(135deg);
+}
+
+// Conector horizontal até o centro
+// Conector definido no container da linha (row)
+
+// Visibilidade e direção do conector simples
+@media (min-width: 1200px) {
+  // Itens pares: card à direita; traçar linha do centro até a borda direita
+  .linha-do-tempo__item:nth-child(even) .linha-do-tempo-item-row::before {
+    left: var(--group-x);
+    right: 0;
+    display: block;
+  }
+  // Itens ímpares: card à esquerda; traçar linha da borda esquerda até o centro
+  .linha-do-tempo__item:nth-child(odd) .linha-do-tempo-item-row::before {
+    left: 0;
+    right: var(--group-x);
+    display: block;
+  }
+}
+
+@media (max-width: 1200px) {
+  // Em telas menores que 1200px, o conector horizontal é inserido da esquerda até o card
+  .linha-do-tempo-item-row { --group-x: 10%; }
+  // Insere linha horizontal do centro até o card
+  .linha-do-tempo-item-row::before {
+    left: 0;
+    right: calc(100% - var(--group-x));
+    display: block;
+  }
 }
 
 .card-linha-do-tempo {
