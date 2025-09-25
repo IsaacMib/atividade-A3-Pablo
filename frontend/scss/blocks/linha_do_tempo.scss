@@ -47,6 +47,7 @@
     width: 100%;
     padding: 0;
     margin: 0;
+    position: relative;
 
     .linha-do-tempo-arrow-card-group {
       display: flex;
@@ -64,6 +65,15 @@
     flex-direction: row;
     align-items: center;
     padding: 0;
+    margin: 0;
+  }
+
+  .linha-do-tempo-calendar-group.left,
+  .linha-do-tempo-calendar-group.right {
+    position: absolute;
+    left: 10%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     margin: 0;
   }
 
@@ -144,6 +154,7 @@
   }
 }
 
+// Linha só deve aparecer se card não for o último
 .block-linha-do-tempo:not(:last-child), .linha-do-tempo__item:not(:last-child) {
     .linha-do-tempo-calendar-group::after {
       content: "";
