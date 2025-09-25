@@ -84,6 +84,11 @@
           transform: translateY(-50%);
           margin: 0;
         }
+
+        // Linha deve ser mais longa para elementos pares
+        .linha-do-tempo-calendar-group::after {
+          height: 560px;
+        }
       }
     }
 
