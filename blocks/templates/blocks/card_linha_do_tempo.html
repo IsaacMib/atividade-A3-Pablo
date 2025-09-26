@@ -11,8 +11,9 @@
                     {% image card.imagem width-400 alt=card.texto_alternativo|default:card.titulo %}
                 </div>
                 <div class="card-linha-do-tempo__content text-center">
-                    <h3 class="card-linha-do-tempo__title">{{ card.titulo }}</h3>
+                    <h3 class="card-linha-do-tempo__title"><a href="{{ card.link }}">{{ card.titulo }}</a></h3>
                     <p class="card-linha-do-tempo__date">{{ card.data|date:"d/m/Y" }}</p>
+                    <p class="card-linha-do-tempo__description">{{ card.descricao }}</p>
                 </div>
             </div>
             <div class="arrow right"></div>

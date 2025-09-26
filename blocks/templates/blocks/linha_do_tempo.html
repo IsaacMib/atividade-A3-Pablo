@@ -14,7 +14,7 @@
             {% if not forloop.counter|divisibleby:2 %}
                 <div class="row block-linha-do-tempo">
             {% endif %}
-                {% include 'blocks/card_linha_do_tempo.html' with cardlinhadotempo=card %}
+                {% include 'blocks/card_linha_do_tempo.html' with card=card %}
             {% if forloop.last or forloop.counter|divisibleby:2 %}
                 </div>
             {% endif %}

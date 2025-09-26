@@ -687,7 +687,8 @@ class CardLinhaDoTempoBlock(StructBlock):
     imagem = ImageChooserBlock(required=True, label="Imagem")
     texto_alternativo = CharBlock(required=False, label="Texto alternativo")
     titulo = CharBlock(required=False, label="Título")
-    descricao = RichTextBlock(required=False, label="Descrição")
+    link = URLBlock(required=False, label="Link", default="#")
+    descricao = CharBlock(required=False, label="Descrição")
     data = DateBlock(required=True, label="Data")
 
     class Meta:
