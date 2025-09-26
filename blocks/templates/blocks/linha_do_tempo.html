@@ -39,27 +39,72 @@
 
       if (!('IntersectionObserver' in window)) {
         // Fallback: reveal with small stagger on load
-        cards.forEach(function(el, i){ setTimeout(function(){ el.classList.add('is-visible'); }, i * 220); });
+        cards.forEach(function(el, i){ setTimeout(function(){ el.classList.add('is-visible'); }, i * 100); });
         return;
       }
 
-      var io = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            var el = entry.target;
-            var index = Array.prototype.indexOf.call(cards, el);
-            var delay = (index % 5) * 220;
-            setTimeout(function(){ el.classList.add('is-visible'); }, delay);
-            io.unobserve(el);
-          }
-        });
-      }, {
-        root: null,
-        rootMargin: '0px 0px -10% 0px',
-        threshold: 0.15
-      });
+      var indexMap = new Map();
+      cards.forEach(function(el, i){ indexMap.set(el, i); });
+      var visible = new Set();
+      var hideTimers = new Map();
 
-      cards.forEach(function(card){ io.observe(card); });
+      var io = new IntersectionObserver(function(entries) {
+        var entering = entries.filter(function(e){ return e.isIntersecting; });
+        var leaving = entries.filter(function(e){ return !e.isIntersecting; });
+
+        // Para cards que saem da tela
+        leaving.forEach(function(entry){
+          var el = entry.target;
+          visible.delete(el);
+          if (hideTimers.has(el)) { clearTimeout(hideTimers.get(el)); hideTimers.delete(el); }
+          var t = setTimeout(function(){ if (!visible.has(el)) { el.classList.remove('is-visible'); } hideTimers.delete(el); }, 1200);
+          hideTimers.set(el, t);
+        });
+
+        if (entering.length) {
+          // Marcar como visível
+          entering.forEach(function(entry){
+            var el = entry.target;
+            visible.add(el);
+            if (hideTimers.has(el)) { clearTimeout(hideTimers.get(el)); hideTimers.delete(el); }
+          });
+          // Revelar cards que entram na tela em ordem do DOM
+          entering
+            .sort(function(a, b){ return indexMap.get(a.target) - indexMap.get(b.target); })
+            .forEach(function(entry, i){
+              var el = entry.target;
+              if (!el.classList.contains('is-visible')) {
+                setTimeout(function(){ el.classList.add('is-visible'); }, i * 350);
+              }
+            });
+      }
+    }, {
+      root: null,
+      rootMargin: '0px 0px -10% 0px',
+      threshold: 0.15
+    });
+
+    // Start observing all cards
+    cards.forEach(function(card){ io.observe(card); });
+
+    function inView(el){
+      var r = el.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      return r.top < vh * 0.85 && r.bottom > vh * 0.15; // approximates threshold/rootMargin
+    }
+    var initial = Array.prototype.filter.call(cards, inView)
+      .sort(function(a, b){ return indexMap.get(a) - indexMap.get(b); });
+    if (initial.length) {
+      initial.forEach(function(el){
+        visible.add(el);
+        if (hideTimers.has(el)) { clearTimeout(hideTimers.get(el)); hideTimers.delete(el); }
+      });
+      initial.forEach(function(el, i){
+        if (!el.classList.contains('is-visible')) {
+          setTimeout(function(){ el.classList.add('is-visible'); }, i * 400);
+        }
+      });
+    }
     }
 
     if (document.readyState === 'loading') {
