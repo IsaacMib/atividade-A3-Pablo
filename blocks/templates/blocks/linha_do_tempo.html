@@ -39,7 +39,7 @@
 
       if (!('IntersectionObserver' in window)) {
         // Fallback: reveal with small stagger on load
-        cards.forEach(function(el, i){ setTimeout(function(){ el.classList.add('is-visible'); }, i * 120); });
+        cards.forEach(function(el, i){ setTimeout(function(){ el.classList.add('is-visible'); }, i * 220); });
         return;
       }
 
@@ -48,15 +48,15 @@
           if (entry.isIntersecting) {
             var el = entry.target;
             var index = Array.prototype.indexOf.call(cards, el);
-            var delay = (index % 4) * 320; // stagger up to ~360ms in groups
+            var delay = (index % 5) * 220;
             setTimeout(function(){ el.classList.add('is-visible'); }, delay);
             io.unobserve(el);
           }
         });
       }, {
         root: null,
-        rootMargin: '0px 0px 0px 0px',
-        threshold: 0
+        rootMargin: '0px 0px -10% 0px',
+        threshold: 0.15
       });
 
       cards.forEach(function(card){ io.observe(card); });
