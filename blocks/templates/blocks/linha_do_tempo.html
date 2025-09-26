@@ -25,39 +25,39 @@
     </div>
 </div>
 
-<script>
+  <script>
   (function() {
     function init() {
-      var cards = document.querySelectorAll('.card-linha-do-tempo');
+      const cards = document.querySelectorAll('.card-linha-do-tempo');
       if (!cards.length) return;
 
-      var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (prefersReduced) {
         cards.forEach(function(card){ card.classList.add('is-visible'); });
         return;
       }
 
       if (!('IntersectionObserver' in window)) {
-        // Fallback: reveal with small stagger on load
-        cards.forEach(function(el, i){ setTimeout(function(){ el.classList.add('is-visible'); }, i * 100); });
+        // Fallback: revelar cards com um certo delay
+        cards.forEach(function(el, i){ setTimeout(function(){ el.classList.add('is-visible'); }, i * 200); });
         return;
       }
 
-      var indexMap = new Map();
+      const indexMap = new Map();
       cards.forEach(function(el, i){ indexMap.set(el, i); });
-      var visible = new Set();
-      var hideTimers = new Map();
+      const visible = new Set();
+      const hideTimers = new Map();
 
-      var io = new IntersectionObserver(function(entries) {
-        var entering = entries.filter(function(e){ return e.isIntersecting; });
-        var leaving = entries.filter(function(e){ return !e.isIntersecting; });
+      const io = new IntersectionObserver(function(entries) {
+        const entering = entries.filter(function(e){ return e.isIntersecting; });
+        const leaving = entries.filter(function(e){ return !e.isIntersecting; });
 
         // Para cards que saem da tela
         leaving.forEach(function(entry){
-          var el = entry.target;
+          const el = entry.target;
           visible.delete(el);
           if (hideTimers.has(el)) { clearTimeout(hideTimers.get(el)); hideTimers.delete(el); }
-          var t = setTimeout(function(){ if (!visible.has(el)) { el.classList.remove('is-visible'); } hideTimers.delete(el); }, 1200);
+          const t = setTimeout(function(){ if (!visible.has(el)) { el.classList.remove('is-visible'); } hideTimers.delete(el); }, 1200);
           hideTimers.set(el, t);
         });
 
@@ -77,34 +77,34 @@
                 setTimeout(function(){ el.classList.add('is-visible'); }, i * 350);
               }
             });
-      }
-    }, {
-      root: null,
-      rootMargin: '0px 0px -10% 0px',
-      threshold: 0.15
-    });
-
-    // Start observing all cards
-    cards.forEach(function(card){ io.observe(card); });
-
-    function inView(el){
-      var r = el.getBoundingClientRect();
-      var vh = window.innerHeight || document.documentElement.clientHeight;
-      return r.top < vh * 0.85 && r.bottom > vh * 0.15; // approximates threshold/rootMargin
-    }
-    var initial = Array.prototype.filter.call(cards, inView)
-      .sort(function(a, b){ return indexMap.get(a) - indexMap.get(b); });
-    if (initial.length) {
-      initial.forEach(function(el){
-        visible.add(el);
-        if (hideTimers.has(el)) { clearTimeout(hideTimers.get(el)); hideTimers.delete(el); }
-      });
-      initial.forEach(function(el, i){
-        if (!el.classList.contains('is-visible')) {
-          setTimeout(function(){ el.classList.add('is-visible'); }, i * 400);
         }
+      }, {
+        root: null,
+        rootMargin: '0px 0px -10% 0px',
+        threshold: 0.15
       });
-    }
+
+      // Start observing all cards
+      cards.forEach(function(card){ io.observe(card); });
+
+      function inView(el){
+        const r = el.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        return r.top < vh * 0.85 && r.bottom > vh * 0.15; // approximates threshold/rootMargin
+      }
+      const initial = Array.prototype.filter.call(cards, inView)
+        .sort(function(a, b){ return indexMap.get(a) - indexMap.get(b); });
+      if (initial.length) {
+        initial.forEach(function(el){
+          visible.add(el);
+          if (hideTimers.has(el)) { clearTimeout(hideTimers.get(el)); hideTimers.delete(el); }
+        });
+        initial.forEach(function(el, i){
+          if (!el.classList.contains('is-visible')) {
+            setTimeout(function(){ el.classList.add('is-visible'); }, i * 400);
+          }
+        });
+      }
     }
 
     if (document.readyState === 'loading') {
