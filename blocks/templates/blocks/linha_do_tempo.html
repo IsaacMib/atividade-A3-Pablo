@@ -48,7 +48,7 @@
           if (entry.isIntersecting) {
             var el = entry.target;
             var index = Array.prototype.indexOf.call(cards, el);
-            var delay = (index % 4) * 90; // stagger up to ~360ms in groups
+            var delay = (index % 4) * 320; // stagger up to ~360ms in groups
             setTimeout(function(){ el.classList.add('is-visible'); }, delay);
             io.unobserve(el);
           }
