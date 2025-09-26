@@ -8,7 +8,11 @@
   // text-align: center;
   // align-items: center;
 
-  padding: 32px 0px; 
+  padding: 32px 0px;
+  
+  @media (max-width: 1400px) {
+    justify-content: center;
+  }
 }
 
 
