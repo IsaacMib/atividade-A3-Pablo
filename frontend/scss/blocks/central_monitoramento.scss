@@ -1,4 +1,8 @@
-.central-monitoramento-detran {
+@use './../variables.scss';
+
+.central-monitoramento {
+  background-color: variables.$color-primary;
+  color: variables.$color-white;
   padding: 8px 0 32px 0;
 }
 
@@ -62,7 +66,7 @@
       margin: auto;
 
       path {
-        stroke: white;
+        stroke: variables.$color-white;
       }
     }
   }

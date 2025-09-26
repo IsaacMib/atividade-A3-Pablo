@@ -7,7 +7,7 @@ register = template.Library()
 
 @register.inclusion_tag('include/ultimas-noticias.html', takes_context=True)
 def ultimas_noticias(context, quantidade=6, titulo="Últimas Notícias", mostrar_ver_todos=True, 
-                      url_ver_todos=None, classe_bg="tw:bg-neutral-100", categoria=None):
+                      url_ver_todos=None, classe_bg="", categoria=None):
     """
     Template tag para incluir as últimas notícias em qualquer template.
     
@@ -16,7 +16,7 @@ def ultimas_noticias(context, quantidade=6, titulo="Últimas Notícias", mostrar
     - titulo: título da seção (padrão: "Últimas Notícias")
     - mostrar_ver_todos: se deve mostrar o botão "Ver todos" (padrão: True)
     - url_ver_todos: URL para o botão "Ver todos" (opcional)
-    - classe_bg: classe CSS para background (padrão: "tw:bg-neutral-100")
+    - classe_bg: classe CSS para background (ex: "tw:bg-neutral-100")
     - categoria: filtro por categoria/tag (opcional)
     
     Exemplo de uso:

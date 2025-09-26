@@ -1,4 +1,4 @@
-<div class="lista-noticias--wrapper tw:bg-neutral-100">
+<div class="lista-noticias--wrapper ">
   <div class="container">  
     {% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
 
@@ -16,8 +16,9 @@
       {% endif %}
     </div>
   </div>
+  {% if noticias_index_page_url %}
+    {% include "include/ver_todos_btn.html" with ver_todos_url=noticias_index_page_url ver_todos_texto_link=texto_link btn_class='btn-ver-todos-bg-cinza' %}
+  {% endif %}
 </div>
 
-{% if noticias_index_page_url %}
-    {% include "include/ver_todos_btn.html" with ver_todos_url=noticias_index_page_url ver_todos_texto_link=texto_link btn_class='btn-ver-todos-bg-cinza' %}
-{% endif %}
+

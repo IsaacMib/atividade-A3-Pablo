@@ -1,8 +1,12 @@
+@use './../../variables.scss';
+
 .lista-noticias--wrapper {
    margin: 0px;
+   background-color: variables.$color-grey-100;
+
    .container {
-    border-radius: 5px;
-    padding: 8px 40px;
+      border-radius: 5px;
+      padding: 8px 40px;
    }
 }
 

@@ -8,7 +8,8 @@
                   {% if p.is_root == False %}
                     {% if forloop.counter0 == 1 %}
                       <li class="breadcrumb-item first-item"><a href="{{ p.url }}">
-                        <img src="{% static 'img/home.svg' %}" alt="home"/>
+                        <img class="icon-light" src="{% static 'img/home.svg' %}" alt="home"/>
+                        <img class="icon-dark" src="{% static 'img/home_escuro.svg' %}" alt="home"/>
                       </a></li>
                     {% else %}
                       <li class="breadcrumb-item"><a href="{{ p.url }}"><strong>{{ p.title }}</strong></a></li>

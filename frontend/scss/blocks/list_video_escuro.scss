@@ -1,0 +1,33 @@
+@use './../variables.scss';
+
+[data-theme=dark] {
+  .videos-container {
+    gap: 0px;
+  }
+  .videos-wrapper {
+    border-top: 0.5px solid variables.$color-white;
+    border-bottom: 0.5px solid variables.$color-white;
+    background-color: variables.$color-black;
+  }
+  .video-card {
+    background: variables.$color-black;
+    box-shadow: 0 2px 8px variables.$color-list-video-shadow;
+  }
+
+  .video-item {
+    background-color: variables.$color-white;
+    padding-right: 20px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    &:first-child {
+      padding-left: 1px;
+    }
+    &:last-child {
+      padding-right: 1px;
+    }
+  }
+
+  .video-title {
+    color: variables.$color-list-video-title;
+  }
+}

@@ -1,17 +1,42 @@
 
-@use './listvideo.scss';
-@use './banner.scss';
-@use './listaNoticias/index.scss' as listaNoticias;
-@use './listaAvisos/index.scss' as ListaAvisos;
-@use './servicos_online.scss';
-@use './carrossel_banner.scss';
-@use './titulo.scss';
-@use './acessorapido.scss';
-@use './rede_social.scss';
-@use './centralMonitoramentoDetran.scss';
-@use './carrosselsolucao.scss' as carrossel;
-@use './agenda.scss';
-@use './solucao.scss';
-@use './btnVerTodos.scss';
-@use './linha_do_tempo.scss';
+@use './list_video.scss';
+@use './list_video_escuro.scss';
 
+@use './banner.scss';
+@use './banner_escuro.scss';
+
+@use './lista_noticias/index.scss' as listaNoticias;
+@use './lista_avisos/index.scss';
+
+@use './servicos_online_escuro.scss';
+@use './servicos_online.scss';
+
+@use './carrossel_banner.scss';
+@use './carrossel_banner_escuro.scss';
+
+@use './titulo_escuro.scss';
+@use './titulo.scss';
+
+@use './acessorapido.scss';
+@use './acessorapido_escuro.scss';
+
+@use './rede_social.scss';
+@use './rede_social_escuro.scss';
+
+@use './central_monitoramento.scss';
+@use './central_monitoramento_escuro.scss';
+
+@use './carrossel_solucao.scss';
+@use './carrossel_solucao_escuro.scss';
+
+@use './agenda.scss';
+@use './agenda_escuro.scss';
+
+@use './btn_ver_todos.scss';
+@use './btn_ver_todos_escuro.scss';
+
+@use './programas.scss';
+@use './programas_escuro.scss';
+
+@use './solucao.scss';
+@use './linha_do_tempo.scss';

@@ -1,0 +1,97 @@
+@use "../variables.scss";
+
+[data-theme="dark"] {
+  .search-page-wrapper {
+    background-color: variables.$color-black;
+  }
+  
+  .search-page {
+    .search-header {
+      h2 {
+        color: variables.$color-white;
+      }
+    }
+
+    .search-filters {
+      h3 {
+        color: variables.$color-white;
+      }
+    }
+
+    .search-content {
+      .search-filters {
+        background: variables.$color-black;
+        border: 1px solid variables.$color-white;
+        box-shadow: none;
+
+        .search-bar {
+          .search-input {
+            border: 1px solid variables.$color-white;
+          }
+
+          .search-actions {
+            .search-submit {
+              background-color: variables.$color-black;
+              border: 1px solid variables.$color-white;
+              color: variables.$color-white;
+            }
+
+            .clear-filters {
+              color: variables.$color-white;
+            }
+          }
+        }
+      }
+
+      .search-results {
+        .results-header {
+          border-bottom: 1px solid variables.$color-white;
+
+          .results-count {
+            color: variables.$color-white;
+
+            strong {
+              color: variables.$color-warning;
+            }
+          }
+
+          .pagination-top {
+            .page-info {
+              color: variables.$color-white;
+            }
+
+            .page-nav {
+              a {
+                border: 1px solid variables.$color-white;
+                color: variables.$color-warning;
+
+                &:hover {
+                  background-color: variables.$color-grey-800;
+                }
+
+                &.current {
+                  background-color: variables.$color-warning;
+                  color: variables.$color-white;
+                  border-color: variables.$color-warning;
+                }
+              }
+            }
+          }
+        }
+
+        .search-result-item {
+          border-bottom: 1px solid variables.$color-white;
+          h3 {
+            a {
+              color: variables.$color-white;
+            }
+          }
+          .result-meta,
+          .result-type {
+            color: variables.$color-warning;
+          }
+        }
+      }
+    }
+  }
+}

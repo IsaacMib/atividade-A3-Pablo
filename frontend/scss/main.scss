@@ -8,10 +8,10 @@
 @use  './blocks/index.scss' as blocks;
 @use  './home/index.scss' as home;
 @use  './institucional/index.scss' as institucional;
-@use './search/search.scss' as search;
+@use './search/index.scss' as search;
 @use  './agenda/index.scss' as agenda;
-@use './navbar.scss';
 @use './breadcrumb.scss';
+@use './breadcrumb_escuro.scss';
 @use './cookieconsent.scss';
 
 /*Arquivo para customizar o bootstrap*/
@@ -43,6 +43,12 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
+[data-theme=dark] {
+    body {
+        background-color: variables.$color-black !important;
+    }
+}
+
 .row > * {
     @media (max-width: 375px) {
         padding-right: 0px;
@@ -56,8 +62,15 @@ html, body {
     display: flex;
     flex-direction: column;
 }
-.site-conteudo-main {
+#site-conteudo-main {
     flex: 1;
+    background-color: variables.$color-white !important;
+}
+
+[data-theme=dark] {
+  #site-conteudo-main {
+      background-color: variables.$color-black !important;
+  }
 }
 
 .richtext-image.left,

@@ -1,0 +1,7 @@
+@use './../variables.scss';
+
+[data-theme=dark] {
+  .banner-container {
+    background-color: variables.$color-black;
+  }
+}

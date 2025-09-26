@@ -1,19 +1,26 @@
 @use './../../variables.scss';
 
+.avisos-container {
+    background-color: variables.$color-white;
+    display: flex;
+}
+
 .avisos-wrapper {
     // display: grid !important;
     // grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)) !important;
     // gap: 2rem !important;
     // max-width: 1020px !important;
-    margin: 0 auto 3rem !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+    padding-bottom: 3rem !important;
     // align-items: stretch !important;
     // justify-items: center !important;
 }
 
 .aviso-card {
-    background-color: white !important;
+    background-color: variables.$color-white !important;
     border-radius: 8px !important;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important;
+    box-shadow: 0 1px 4px variables.$color-card-shadow !important;
     padding: 1.25rem !important;
     position: relative !important;
     display: flex !important;
@@ -26,7 +33,7 @@
     min-height: 240px !important;
 
     &:hover {
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important;
+        box-shadow: 0 4px 10px variables.$color-card-shadow-hover !important;
 
         &::before {
             transform: scaleY(1) !important;
@@ -40,7 +47,7 @@
         top: 0 !important;
         height: 100% !important;
         width: 4px !important;
-        background-color: #2f5597 !important;
+        background-color: variables.$color-primary !important;
         transform: scaleY(0) !important;
         transform-origin: top !important;
         transition: transform 0.3s ease !important;
@@ -63,7 +70,7 @@
 .aviso-title {
     font-size: 1.3rem !important;
     font-weight: 600 !important;
-    color: #2f5597 !important;
+    color: variables.$color-primary !important;
     margin-bottom: 0.15rem !important;
     text-align: left !important;
 }
@@ -71,7 +78,7 @@
 .aviso-subtitle {
     font-size: 1.05rem !important;
     font-weight: 600 !important;
-    color: #4a4a4a !important;
+    color: variables.$color-grey-800 !important;
     margin-bottom: 0.8rem !important;
     text-align: left !important;
 }
@@ -104,7 +111,7 @@
 
 .aviso-data {
     font-size: 0.85rem !important;
-    color: #2f5597 !important;
+    color: variables.$color-primary !important;
     margin-top: 0.5rem !important;
 }
 

@@ -1,0 +1,58 @@
+@use "./../variables.scss";
+
+[data-theme="dark"] {
+  .titulo-bg-azul {
+    background-color: variables.$color-white;
+
+    .titulo-1 {
+      color: variables.$color-black;
+    }
+
+    .titulo-linha {
+      svg {
+        line {
+          stroke: variables.$color-black;
+        }
+      }
+    }
+  }
+
+  .titulo-bg-cinza {
+    background-color: variables.$color-black;
+    .titulo-linha {
+      svg {
+        line {
+          stroke: variables.$color-white;
+        }
+      }
+    }
+  }
+
+  .titulo-bg-default {
+    background-color: variables.$color-white;
+
+    .titulo-1 {
+      color: variables.$color-black;
+    }
+
+    .titulo-linha {
+      svg {
+        line {
+          stroke: variables.$color-black;
+        }
+      }
+    }
+  }
+
+  .titulo-1 {
+    color: variables.$color-white;
+  }
+
+  .titulo-linha {
+    svg {
+      line {
+        stroke: variables.$color-white;
+      }
+    }
+  }
+}

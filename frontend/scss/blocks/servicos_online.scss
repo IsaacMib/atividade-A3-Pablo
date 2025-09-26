@@ -1,14 +1,20 @@
+@use '../variables.scss';
 // Serviços Online Component Styles
+.servicos-online-wrapper {
+    background-color: variables.$color-white;
+}
 
 // Card Styles
 .card {
+    background-color: variables.$color-grey-100 !important;
     min-height: 300px !important;
     max-width: 350px;
-    box-shadow: 0 0.25rem 0.25rem 0 rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0.25rem 0.25rem 0 variables.$color-card-shadow-hover;
 
     .card-header {
         border-radius: 0.75rem 0.75rem 0 0 !important;
-        background: linear-gradient(302.81deg, var(--tw-color-gradient-fim) -105%, var(--tw-color-gradient-inicio) 146.81%);
+        background: linear-gradient(302.81deg, variables.$color-gradient-fim -105%, variables.$color-gradient-inicio 146.81%);
+        color: variables.$color-white !important;
 
         .card-header--title {
             font-size: 12px;
@@ -22,9 +28,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 1px solid variables.$color-white;
 
             &:hover {
-                background-color: color-mix(in oklab, var(--tw-color-neutral-100) 10%, transparent);
+                background-color: color-mix(in oklab, variables.$color-grey-100 10%, transparent);
             }
 
             i {
@@ -33,7 +40,34 @@
         }
     }
 
+    .card-body {
+        background-color: variables.$color-grey-100;
+    }
+
     .card-footer {
-        border-radius: 0 0 0.75rem 0.75rem !important;
+        background-color: variables.$color-grey-100;
+        display: grid;
+        justify-content: center;
+        position: relative;
+        border-top: 0px !important;
+        
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 12px;
+            right: 12px;
+            height: 1px;
+            background-color: variables.$color-grey-700;
+            border-radius: 1px;
+        }
+        
+        .divider-line {
+            display: none; // Escondemos a div pois agora usamos ::before
+        }
+        
+        a {
+            min-width: 0px;
+        }
     }
 }

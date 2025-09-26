@@ -1,7 +1,7 @@
 @use '../variables.scss';
 
 .social-banner {
-  background-color: #fff;
+  background-color: variables.$color-white;
   padding: 40px 20px 0px;
 }
 
@@ -14,7 +14,7 @@
 .social-icons a {
   font-size: 1.8rem;
   margin: 0 12px;
-  color: variables.$color_title_redes_sociais;
+  color: variables.$color-title-redes-sociais;
   transition: transform 0.2s ease-in-out;
   display: inline-flex;
   align-items: center;
@@ -32,9 +32,9 @@
 .social-text h5 {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #0d6efd;
+  color: variables.$color-primary;
 }
 
 .social-title {
-  color: variables.$color_title_redes_sociais;
+  color: variables.$color-title-redes-sociais;
 }

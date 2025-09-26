@@ -23,6 +23,7 @@
   height: 100%;
   min-height: 190px;
   border-top: 2px solid variables.$color-primary;
+  background-color: variables.$color-white;
 }
 
 .noticias-conteudo--data {  
@@ -38,6 +39,7 @@
   font-weight: 500;
   line-height: 10px;
   background-color: variables.$color-primary;
+  color: variables.$color-white;
 }
 
 .noticias-conteudo--heading {
@@ -109,6 +111,10 @@
   text-overflow: ellipsis;
   max-height: 7em;
   line-height: 1.75em;
+}
+
+.titulo-noticia {
+  color: variables.$color-primary;
 }
 
 @media screen and (max-width: 576px) {

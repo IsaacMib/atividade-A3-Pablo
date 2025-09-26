@@ -1,5 +1,5 @@
 <!-- Serviços Online Card -->
-<div class="servicosOnline-wrapper">
+<div class="servicos-online-wrapper">
     <div class="container">
         {% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
         <div class="swiper-container">
@@ -26,11 +26,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const swiperServicosOnline = new Swiper('.swiperServicosOnline', {
         slidesPerView: 1,
         spaceBetween: 20,
-        autoplay: {
+        {% comment %} autoplay: {
             delay: 5000,
             disableOnInteraction: false,
             pauseOnMouseEnter: true
-        },
+        }, {% endcomment %}
         breakpoints: {
             768: {
                 slidesPerView: 2,

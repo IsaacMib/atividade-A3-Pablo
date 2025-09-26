@@ -1,0 +1,16 @@
+@use './../variables.scss';
+
+[data-theme=dark] {
+  .programas-wrapper {
+    background-color: variables.$color-black;
+  }
+
+  .programas-content {
+    img {
+      background-color: variables.$color-white;
+      padding: 8px;
+    }
+    
+  }
+
+}

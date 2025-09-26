@@ -1,0 +1,25 @@
+@use "./variables.scss";
+
+[data-theme="dark"] {
+  .breadcrumb-content {
+    a {
+      color: variables.$color-white;
+    }
+  }
+
+  .icon-light {
+    display: none;
+  }
+
+  .icon-dark {
+    display: inline;
+  }
+
+  .breadcrumb-item + .breadcrumb-item::before {
+    background-image: url('../img/next_branco.svg');
+  }
+
+  .breadcrumb-item.active {
+    color: variables.$color-white;
+  }
+}

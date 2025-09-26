@@ -34,14 +34,15 @@
 
 
 .agenda-item {
-  background: #D9D9D91A;
-  width: 259px;
+  background: variables.$color-agenda-item-bg;
+  width: 100%;
+  max-width: 259px;
   height: 100%;
   min-height: 268px;
   border-radius: 6px;
-  border: 0.57px solid #0000001A;
+  border: 0.57px solid variables.$color-agenda-item-border;
   padding: 10px;
-  box-shadow: 2px 3px 2.29px 0px rgba(0, 0, 0, 0.2509803922);
+  box-shadow: 2px 3px 2.29px 0px variables.$color-agenda-item-shadow;
   margin: 10px 0px;
   @media (max-width: 576px) {
     margin: 10px auto;
@@ -78,14 +79,14 @@
   line-height: 21.19px;
   letter-spacing: 0%;
   text-align: center;
-  color: #30599B;
+  color: variables.$color-primary;
 }
 
 .agenda-item--divider {
   margin: auto;
   width: 148px;
   height: 0px;
-  border: 1.15px solid #1010101A;
+  border: 1.15px solid variables.$color-agenda-item-divider;
   margin-top: 12px;
   margin-bottom: 12px;
 }
@@ -111,7 +112,7 @@
     padding-left: 8px;
     font-weight: 500;
     font-size: 12px;
-    color: #000000;
+    color: variables.$color-black;
   }
 }
 
@@ -177,7 +178,7 @@
       width: 70px;
     }
 
-    color: #DBDBDB;
+    color: variables.$color-agenda-day-text;
 
     align-items: center;
     justify-content: center;
@@ -187,7 +188,7 @@
   .day.has-appointment > a:link,
   .day.has-appointment > a:visited,
   .day.has-appointment > a:hover {
-    color: #222 !important;
+    color: variables.$color-agenda-has-appointment !important;
   }
   .day.is-selected,
   .day.is-selected > a:link,
@@ -259,7 +260,7 @@
   .daypicker li:nth-child(4) {
     background-color: variables.$color-primary;
     &.day {
-      color: #FFF !important;
+      color: variables.$color-white !important;
     }
   }
 
