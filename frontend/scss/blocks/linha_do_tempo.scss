@@ -195,16 +195,16 @@
   padding: 5px;
   z-index: 10;
   position: relative;
-}
 
-.arrow.right {
-  -webkit-transform: translateX(-75%) rotate(-45deg);
-  transform: translateX(-75%) rotate(-45deg);
-}
+  &.right {
+    -webkit-transform: translateX(-75%) rotate(-45deg);
+    transform: translateX(-75%) rotate(-45deg);
+  }
 
-.arrow.left {
-  -webkit-transform: translateX(75%) rotate(135deg);
-  transform: translateX(75%) rotate(135deg);
+  &.left {
+    -webkit-transform: translateX(75%) rotate(135deg);
+    transform: translateX(75%) rotate(135deg);
+  }
 }
 
 @media (min-width: 1200px) {
@@ -224,7 +224,9 @@
 
 @media (max-width: 1200px) {
   // Em dispositivos móveis, o grupo (ícone) fica ~10% a partir da esquerda
-  .linha-do-tempo-item-row { --group-x: 10%; }
+  .linha-do-tempo-item-row {
+    --group-x: 10%;
+  }
   // Traçar da borda direita até a posição do grupo (direita → esquerda)
   .linha-do-tempo__item .linha-do-tempo-item-row::before {
     right: var(--group-x);
