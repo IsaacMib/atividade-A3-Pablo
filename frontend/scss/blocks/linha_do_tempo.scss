@@ -10,7 +10,7 @@
 .card-linha-do-tempo {
   --card-max-height: 360px;
   --card-aspect-ratio: 1.3;
-  
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,7 +24,9 @@
   background-color: white;
 
   --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
-  
+}
+
+.animate {
   // Animação de entrada: fade in para cima
   opacity: 0;
   transform: translateY(12px);
@@ -34,7 +36,6 @@
 }
 
 .row.block-linha-do-tempo {
-
   @media (min-width: 1200px) {
     &:has(:first-child:nth-last-child(2)) {
       max-height: calc(360px + 0.5rem);
@@ -80,7 +81,6 @@
   }
 
   .linha-do-tempo-calendar-group {
-    fill: variables.$color-primary;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -89,7 +89,7 @@
     stroke: variables.$color-primary;
     stroke-width: 2;
   }
-
+  
   .calendar-circle .scrolled-to {
     fill: variables.$color-primary;
   }
@@ -124,7 +124,7 @@
 
         // Linha deve ser maior para elementos pares
         .linha-do-tempo-calendar-group::after {
-          height: 360px;
+          height: calc(var(--card-max-height) - 4.6rem);
         }
       }
     }
@@ -155,21 +155,18 @@
 }
 
 @media (max-width: 1200px) {
-
   .linha-do-tempo {
     .container {
       --bs-gutter-x: 0;
     }
   }
 
-  
   .linha-do-tempo__item {
     justify-content: space-between;
     margin: 15rem auto;
   }
 
   .linha-do-tempo {
-
     .arrow.left {
       margin-left: auto;
     }
@@ -257,15 +254,15 @@
   width: 64px;
   height: 64px;
   z-index: 100;
-  color: white;
-  font-size: 2.5rem;
+  color: variables.$color-primary;
+  font-size: 1.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 // Estado visível manipulado pelo script
-.card-linha-do-tempo.is-visible {
+.is-visible {
   opacity: 1;
   transform: translateY(0);
   filter: blur(0);
