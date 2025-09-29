@@ -26,25 +26,43 @@
 </div>
 
   <script>
+
+  const addVisibleToGroup = (row) => {
+    row.querySelector('.card-linha-do-tempo').classList.add('is-visible');
+    row.querySelectorAll('.arrow').forEach((arrow) => {
+      arrow.classList.add('is-visible');
+    });
+  };
+
+  const removeVisibleToGroup = (row) => {
+    row.querySelector('.card-linha-do-tempo').classList.remove('is-visible');
+    row.querySelectorAll('.arrow').forEach((arrow) => {
+      arrow.classList.remove('is-visible');
+    });
+  };
+
   (function() {
     function init() {
-      const cards = document.querySelectorAll('.card-linha-do-tempo');
-      if (!cards.length) return;
+      const rows = document.querySelectorAll('.linha-do-tempo-item-row');
+      console.log(rows);
+      if (!rows.length) return;
 
       const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (prefersReduced) {
-        cards.forEach(function(card){ card.classList.add('is-visible'); });
+        rows.forEach(function(el){ addVisibleToGroup(el); });
         return;
       }
 
       if (!('IntersectionObserver' in window)) {
         // Fallback: revelar cards com um certo delay
-        cards.forEach(function(el, i){ setTimeout(function(){ el.classList.add('is-visible'); }, i * 200); });
+        rows.forEach(function(el, i){ setTimeout(function(){
+          addVisibleToGroup(el); }, i * 200);
+        });
         return;
       }
 
       const indexMap = new Map();
-      cards.forEach(function(el, i){ indexMap.set(el, i); });
+      rows.forEach(function(el, i){ indexMap.set(el, i); });
       const visible = new Set();
       const hideTimers = new Map();
 
@@ -57,7 +75,7 @@
           const el = entry.target;
           visible.delete(el);
           if (hideTimers.has(el)) { clearTimeout(hideTimers.get(el)); hideTimers.delete(el); }
-          const t = setTimeout(function(){ if (!visible.has(el)) { el.classList.remove('is-visible'); } hideTimers.delete(el); }, 1200);
+          const t = setTimeout(function(){ if (!visible.has(el)) { removeVisibleToGroup(el); } hideTimers.delete(el); }, 1200);
           hideTimers.set(el, t);
         });
 
@@ -74,7 +92,7 @@
             .forEach(function(entry, i){
               var el = entry.target;
               if (!el.classList.contains('is-visible')) {
-                setTimeout(function(){ el.classList.add('is-visible'); }, i * 350);
+                setTimeout(function(){ addVisibleToGroup(el); }, i * 350);
               }
             });
         }
@@ -85,14 +103,14 @@
       });
 
       // Start observing all cards
-      cards.forEach(function(card){ io.observe(card); });
+      rows.forEach(function(el){ io.observe(el); });
 
       function inView(el){
         const r = el.getBoundingClientRect();
         const vh = window.innerHeight || document.documentElement.clientHeight;
         return r.top < vh * 0.85 && r.bottom > vh * 0.15; // approximates threshold/rootMargin
       }
-      const initial = Array.prototype.filter.call(cards, inView)
+      const initial = Array.prototype.filter.call(rows, inView)
         .sort(function(a, b){ return indexMap.get(a) - indexMap.get(b); });
       if (initial.length) {
         initial.forEach(function(el){
@@ -101,7 +119,7 @@
         });
         initial.forEach(function(el, i){
           if (!el.classList.contains('is-visible')) {
-            setTimeout(function(){ el.classList.add('is-visible'); }, i * 400);
+            setTimeout(function(){ addVisibleToGroup(el); }, i * 400);
           }
         });
       }
