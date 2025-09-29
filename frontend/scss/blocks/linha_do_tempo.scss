@@ -63,8 +63,8 @@
     position: relative;
     --group-x: 50%;
     // Dimensões do card usadas pelo conector
-    --card-max-height: 360px;
-    --card-aspect-ratio: 1.3;
+    --card-max-height: 380px;
+    --card-aspect-ratio: 1.5;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
 
