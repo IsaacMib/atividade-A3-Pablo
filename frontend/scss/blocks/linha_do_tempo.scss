@@ -90,11 +90,9 @@
     margin: 0;
   }
 
-
   @media (min-width: 1200px) {
     &:nth-child(even) {
       .linha-do-tempo-item-row {
-
         justify-content: flex-end;
         position: relative;
         transform: translateY(calc(-50%));
@@ -121,7 +119,7 @@
       .linha-do-tempo-item-row {
         justify-content: flex-start;
         position: relative;
-        
+
         &:not(:first-child) {
           transform: translateY(-50%);
         }
@@ -166,14 +164,15 @@
 }
 
 // Linha só deve aparecer se card não for o último
-.block-linha-do-tempo:not(:last-child), .linha-do-tempo__item:not(:last-child) {
-    .linha-do-tempo-calendar-group::after {
-      content: "";
-      position: absolute;
-      top: 100%;
-      background-color: variables.$color-primary;
-      width: 3px;
-    }
+.block-linha-do-tempo:not(:last-child),
+.linha-do-tempo__item:not(:last-child) {
+  .linha-do-tempo-calendar-group::after {
+    content: '';
+    position: absolute;
+    top: 98%;
+    background-color: #e8edf4;
+    width: 3px;
+  }
 }
 
 @media (min-width: 1200px) {
