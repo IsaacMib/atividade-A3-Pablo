@@ -41,10 +41,15 @@
     });
   };
 
+  const isStillVisible = (elm) => {
+    var rect = elm.getBoundingClientRect();
+    var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+    return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+  }
+
   (function() {
     function init() {
       const rows = document.querySelectorAll('.linha-do-tempo-item-row');
-      console.log(rows);
       if (!rows.length) return;
 
       const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -75,7 +80,9 @@
           const el = entry.target;
           visible.delete(el);
           if (hideTimers.has(el)) { clearTimeout(hideTimers.get(el)); hideTimers.delete(el); }
-          const t = setTimeout(function(){ if (!visible.has(el)) { removeVisibleToGroup(el); } hideTimers.delete(el); }, 1200);
+          const t = setTimeout(function(){ 
+            if (!visible.has(el) && !isStillVisible(el)) { removeVisibleToGroup(el); } hideTimers.delete(el);
+          }, 1200);
           hideTimers.set(el, t);
         });
 
