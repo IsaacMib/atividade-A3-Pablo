@@ -6,6 +6,8 @@ from django.core.exceptions import ValidationError
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
+from wagtail.models import Page
+from wagtail.images.blocks import ImageChooserBlock
 
 from blocks.models import ListRedeSocial
 
@@ -18,6 +20,44 @@ from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
 
 from blocks.models import ListRedeSocial
+
+
+class PageSitePadrao(Page):
+    """
+    Classe base para todas as páginas do site.
+    Herda de Page do Wagtail e adiciona campos comuns a todas as páginas.
+    """
+    descricao = models.TextField(
+        verbose_name="Descrição",
+        blank=True,
+        help_text="Descrição da página para SEO e redes sociais"
+    )
+    
+    images = StreamField(
+        [("image", ImageChooserBlock(label="Imagem"))],
+        verbose_name="Imagens",
+        blank=True,
+        use_json_field=True,
+        help_text="Imagens relacionadas à página"
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel("descricao"),
+        FieldPanel("images"),
+    ]
+
+    class Meta:
+        abstract = True
+
+
+class PageSitePadraoIndex(Page):
+    """
+    Classe base para páginas de índice do site.
+    Herda apenas de Page do Wagtail sem campos adicionais.
+    """
+    
+    class Meta:
+        abstract = True
 
 
 @register_setting(icon="site")
