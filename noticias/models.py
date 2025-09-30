@@ -11,7 +11,7 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList, TabbedInterface
 from wagtail.fields import StreamField
 from wagtail.search import index
-from wagtail.models import Page
+from core.models import PageSitePadrao, PageSitePadraoIndex
 
 from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
 from datetime import datetime
@@ -40,7 +40,7 @@ class NoticiasPageTag(TaggedItemBase):
     )
 
 
-class NoticiasPage(Page):
+class NoticiasPage(PageSitePadrao):
     """
     Página que representa uma notícia.
     """
@@ -144,14 +144,14 @@ class NoticiasPage(Page):
     ]
 
     # Painel de promoções
-    promote_panels = Page.promote_panels
+    promote_panels = PageSitePadrao.promote_panels
 
     # Painel para campos migrados
     migracao_panels = [
         FieldPanel("body_migrated"),
     ]
 
-    settings_panels = Page.settings_panels + [
+    settings_panels = PageSitePadrao.settings_panels + [
         FieldPanel("sensivel_periodo_eleitoral"),
     ]
 
@@ -247,7 +247,7 @@ class NoticiasPage(Page):
             tabs.append(ObjectList(self.migracao_panels, heading='Migração'))
         return TabbedInterface(tabs)
 
-    search_fields = Page.search_fields + [
+    search_fields = PageSitePadrao.search_fields + [
         index.SearchField('body'),
         index.SearchField('subtitle'),
         index.SearchField('descricao'),
@@ -281,14 +281,14 @@ class NoticiasPage(Page):
         return title
 
 
-class NoticiasIndexPages(RoutablePageMixin, Page):
+class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
 
     introduction = models.TextField(
         help_text="Texto para o topo da notícia",
         blank=False,
         default="Todas as Notícias")
 
-    content_panels = Page.content_panels + [
+    content_panels = PageSitePadraoIndex.content_panels + [
         FieldPanel("introduction"),
     ]
 

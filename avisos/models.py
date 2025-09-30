@@ -11,7 +11,7 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.admin.panels import ObjectList, FieldPanel, MultiFieldPanel, TabbedInterface
 from wagtail.fields import StreamField
 from wagtail.search import index
-from wagtail.models import Page
+from core.models import PageSitePadrao, PageSitePadraoIndex
 from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
 from datetime import datetime
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -30,7 +30,7 @@ class AvisosPageTag(TaggedItemBase):
     )
 
 
-class AvisosPage(Page):
+class AvisosPage(PageSitePadrao):
     subtitle = models.CharField(
         verbose_name="Subtítulo", blank=True, max_length=255)
     descricao = models.CharField(
@@ -94,13 +94,13 @@ class AvisosPage(Page):
     ]
 
     # Painel de promoções
-    promote_panels = Page.promote_panels
+    promote_panels = PageSitePadrao.promote_panels
 
     migracao_panels = [
         FieldPanel("body_migrated"),
     ]
 
-    settings_panels = Page.settings_panels + [
+    settings_panels = PageSitePadrao.settings_panels + [
         FieldPanel("sensivel_periodo_eleitoral"),
     ]
 
@@ -183,18 +183,18 @@ class AvisosPage(Page):
 
     icon = "warning"
 
-    search_fields = Page.search_fields + [
+    search_fields = PageSitePadrao.search_fields + [
         index.SearchField('body'),
         index.SearchField('subtitle'),
         index.SearchField('descricao'),
     ]
 
 
-class AvisosIndexPage(RoutablePageMixin, Page):
+class AvisosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
     introduction = models.TextField(
         help_text="Texto para o topo da página de avisos", blank=True)
 
-    content_panels = Page.content_panels + [
+    content_panels = PageSitePadraoIndex.content_panels + [
         FieldPanel("introduction"),
     ]
 

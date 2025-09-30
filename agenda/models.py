@@ -6,7 +6,7 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 
-from wagtail.models import Page
+from core.models import PageSitePadrao, PageSitePadraoIndex
 from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel
 from django.shortcuts import redirect
@@ -17,7 +17,7 @@ from django.utils.translation import gettext_lazy as _
 from blocks.agenda import CompromissoBlock
 
 
-class AgendaPage(RoutablePageMixin, Page):
+class AgendaPage(RoutablePageMixin, PageSitePadrao):
     """
     Página que representa uma agenda.
     """
@@ -65,7 +65,7 @@ class AgendaPage(RoutablePageMixin, Page):
     parent_page_types = ['agenda.AgendaIndexPage']
     subpage_types = ['agenda.AgendaDoDiaPage']
 
-    content_panels = Page.content_panels + [
+    content_panels = PageSitePadrao.content_panels + [
         FieldPanel("descricao"),
         FieldPanel("orgao"),
         FieldPanel("nome_autoridade"),
@@ -110,7 +110,7 @@ class AgendaPage(RoutablePageMixin, Page):
         return context
 
 
-class AgendaIndexPage(RoutablePageMixin, Page):
+class AgendaIndexPage(RoutablePageMixin, PageSitePadraoIndex):
     """
     Página que serve como índice para a aplicação de agenda.
     """
@@ -154,7 +154,7 @@ def get_parent_field(self, field_name):
     return ""
 
 
-class AgendaDoDiaPage(Page):
+class AgendaDoDiaPage(PageSitePadrao):
     """
     Página que representa a agenda de um único dia, contendo múltiplos compromissos.
     """

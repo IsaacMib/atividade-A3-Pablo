@@ -1,5 +1,5 @@
 from django.db import models
-from wagtail.models import Page
+from core.models import PageSitePadrao, PageSitePadraoIndex
 from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel
 from blocks.institucional import LocalizacaoBlock
@@ -8,7 +8,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 # Create your models here.
 
-class InstitucionalIndexPage(Page):
+class InstitucionalIndexPage(PageSitePadraoIndex):
     """
     Página de índice para o conteúdo institucional.
     """
@@ -37,7 +37,7 @@ class InstitucionalIndexPage(Page):
         verbose_name_plural = "Páginas Institucionais"
 
 
-class LocalizacaoPage(Page):
+class LocalizacaoPage(PageSitePadrao):
 
     parent_page_types = [ 'institucional.InstitucionalIndexPage' ]
     
@@ -49,7 +49,7 @@ class LocalizacaoPage(Page):
     verbose_name="Conteúdo da página"
     )
 
-    content_panels = Page.content_panels + [
+    content_panels = PageSitePadrao.content_panels + [
         FieldPanel('body'),
     ]
 
