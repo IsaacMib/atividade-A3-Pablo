@@ -41,10 +41,20 @@
     });
   };
 
-  const isStillVisible = (elm) => {
-    var rect = elm.getBoundingClientRect();
+  const isStillVisible = (el) => {
+    var rect = el.getBoundingClientRect();
     var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
     return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+  }
+
+  const getElementRevealedPercentage = (el) => {
+    const rect = el.getBoundingClientRect();
+    if (rect.height === 0) return 0;
+    const visualizedPortion = -rect.top + window.innerHeight; // A porção já visualizada considerando a parte do scroll de cima
+    const revealedPortion = -(1 - visualizedPortion) / rect.height; // 
+    const secureRevealedPortionAbove = Math.max(0, revealedPortion);  // Elemento ainda não atingiu a viewport
+    const secureRevealedPortionBelow = Math.min(1, secureRevealedPortionAbove);  // Elemento ultrapassou a viewport
+    return secureRevealedPortionBelow * 100;
   }
 
   (function() {
