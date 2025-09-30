@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.response import TemplateResponse
 from django.shortcuts import redirect
-from wagtail.models import Page
+from core.models import PageSitePadrao
 from django.contrib.contenttypes.models import ContentType
 from wagtail.contrib.search_promotions.models import Query
 from noticias.models import NoticiasPage  # ajuste conforme o nome do seu app/modelo
@@ -66,7 +66,7 @@ def search(request):
         search_terms = search_query.strip().split()
         
         # Busca nas páginas com múltiplos termos
-        pages_query = Page.objects.live()
+        pages_query = PageSitePadrao.objects.live()
         for term in search_terms:
             pages_query = pages_query.filter(
                 Q(title__icontains=term) |
@@ -76,7 +76,7 @@ def search(request):
         
         # Se não encontrou resultados com todos os termos, tenta com busca individual
         if not search_results:
-            search_results = list(Page.objects.live().search(search_query))
+            search_results = list(PageSitePadrao.objects.live().search(search_query))
         
         # Aplicar filtros de tipo
         if selected_types:
@@ -130,7 +130,7 @@ def search(request):
     # Obter todos os tipos de dados presentes no Wagtail (modelos de página)
     wagtail_types = list(
         ContentType.objects.filter(app_label__in=[
-            app for app in set(Page._meta.app_label for Page in Page.__subclasses__())
+            app for app in set(PageSitePadrao._meta.app_label for PageSitePadrao in PageSitePadrao.__subclasses__())
         ]).values_list('model', flat=True)
     )
 

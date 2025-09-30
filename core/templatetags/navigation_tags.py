@@ -1,5 +1,5 @@
 from django import template
-from wagtail.models import Page, Site
+from wagtail.models import Site
 from core.models import SiteSettings  # Import necessário
 
 register = template.Library()
