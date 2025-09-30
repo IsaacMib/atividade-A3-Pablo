@@ -57,6 +57,10 @@
     return secureRevealedPortionBelow * 100;
   }
 
+  const setElementRevealedPercentage = (el, percentage) => {
+    document.documentElement.style.setProperty('--reveal-percentage', `${percentage.toFixed(2)}%`);
+  }
+
   (function() {
     function init() {
       const rows = document.querySelectorAll('.linha-do-tempo-item-row');
@@ -141,6 +145,12 @@
         });
       }
     }
+
+    const linhaDoTempoCardsContainer = document.querySelector('.linha-do-tempo-cards-container');
+    const cardsRevealedPercentage = getElementRevealedPercentage(linhaDoTempoCardsContainer);
+    const verticalConnector = document.querySelector('.linha-do-tempo-calendar-group');
+
+    setElementRevealedPercentage(verticalConnector, cardsRevealedPercentage);
 
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
