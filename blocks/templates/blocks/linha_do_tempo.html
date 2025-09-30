@@ -57,8 +57,8 @@
     return secureRevealedPortionBelow * 100;
   }
 
-  const setElementRevealedPercentage = (el, percentage) => {
-    document.documentElement.style.setProperty('--reveal-percentage', `${percentage.toFixed(2)}%`);
+  const setElementRevealedPercentage = (percentage) => {
+    document.documentElement.style.setProperty('--reveal-percentage', `${percentage.toFixed(3)}%`);
   }
 
   (function() {
@@ -146,16 +146,29 @@
       }
     }
 
-    const linhaDoTempoCardsContainer = document.querySelector('.linha-do-tempo-cards-container');
-    const cardsRevealedPercentage = getElementRevealedPercentage(linhaDoTempoCardsContainer);
-    const verticalConnector = document.querySelector('.linha-do-tempo-calendar-group');
-
-    setElementRevealedPercentage(verticalConnector, cardsRevealedPercentage);
-
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {
       init();
     }
   })();
+
+  function updateTimelineGradient() {
+    const linhaDoTempoCardsContainer = document.querySelector('.linha-do-tempo-cards-container');
+    const cardsRevealedPercentage = getElementRevealedPercentage(linhaDoTempoCardsContainer);
+    setElementRevealedPercentage(cardsRevealedPercentage);
+  }
+
+  // Initialize the gradient on page load
+  updateTimelineGradient();
+
+  // Add scroll event listener with debounce to improve performance
+  let isScrolling;
+  window.addEventListener('scroll', function() {
+      window.clearTimeout(isScrolling);
+      isScrolling = setTimeout(updateTimelineGradient, 50);
+  }, { passive: true });
+
+  // Also update on window resize
+  window.addEventListener('resize', updateTimelineGradient, { passive: true });
 </script>
