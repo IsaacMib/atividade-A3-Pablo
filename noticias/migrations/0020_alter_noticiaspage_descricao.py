@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='noticiaspage',
             name='descricao',
-            field=models.CharField(help_text='Breve descrição do conteúdo da página.', max_length=220, verbose_name='Descrição'),
+            field=models.TextField(help_text='Breve descrição do conteúdo da página.', max_length=220, verbose_name='Descrição'),
         ),
     ]
