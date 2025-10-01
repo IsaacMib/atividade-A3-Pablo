@@ -61,7 +61,6 @@
 
             const index = parseInt(item.dataset.index, 10);
             const last = parseInt(item.dataset.last, 10);
-            console.log(last);
 
             // cálculo do índice dos card na linha do tempo pares avançam 1 enquanto ímpares avançam 2
             const isEven = index % 2 == 0;
@@ -70,9 +69,8 @@
             const position = isEven ? 3*(index / 2) : 3*(((index - 1) / 2)) + 1;
             //const next = position + segmentLength;
             const final = last % 2 == 0 ? 3*(last / 2) : 3*(((last - 1) / 2)) + 1;
-            console.log(final);
 
-            const offSet = ((final - segmentLength) - position)*3;
+            const offSet = ((final - segmentLength) - position);
 
             const percentageStart = ((position / final) * 100) + offSet;
             // const percentageEnd = ((next / final) * 100) + offSet;
@@ -80,7 +78,6 @@
 
             const percentageCorrectionFactor = segmentLength / final;
 
-            // Target calendar icons within this item
             const icons = item.querySelectorAll('.linha-do-tempo-calendar-group.calendar-icon');
             icons.forEach(icon => {
                 icon.setAttribute('data-percentage', `${percentage}%`);

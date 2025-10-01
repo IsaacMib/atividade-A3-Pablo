@@ -59,8 +59,9 @@
   const getElementRevealedPercentage = (el) => {
     const rect = el.getBoundingClientRect();
     if (rect.height === 0) return 0;
-    const visualizedPortion = -rect.top + window.innerHeight; // A porção já visualizada considerando a parte do scroll de cima
-    const revealedPortion = -(1 - visualizedPortion) / rect.height; // 
+    const offset = 300;  // Offset acima e abaixo do elemento
+    const visualizedPortion = -(rect.top + offset) + window.innerHeight;  // A porção já visualizada considerando a parte do scroll de cima
+    const revealedPortion = -(1 - visualizedPortion) / (rect.height - offset);
     const secureRevealedPortionAbove = Math.max(0, revealedPortion);  // Elemento ainda não atingiu a viewport
     const secureRevealedPortionBelow = Math.min(1, secureRevealedPortionAbove);  // Elemento ultrapassou a viewport
     return secureRevealedPortionBelow * 100;
