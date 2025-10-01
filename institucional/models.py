@@ -56,3 +56,10 @@ class LocalizacaoPage(PageSitePadrao):
     class Meta:
         verbose_name = "Página de Localização"
         verbose_name_plural = "Páginas de Localização"
+
+class SecretariadoIndex(PageSitePadraoIndex):
+    """
+    Página de índice para o conteúdo do Secretariado.
+    """
+
+    pass
