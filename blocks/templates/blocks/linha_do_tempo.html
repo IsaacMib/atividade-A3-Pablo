@@ -176,8 +176,8 @@
   let isScrolling;
   window.addEventListener('scroll', function() {
       window.clearTimeout(isScrolling);
-      isScrolling = setTimeout(updateTimelineGradient, 50);
-  });
+      isScrolling = setTimeout(updateTimelineGradient, 10);
+  }, { passive: true });
 
   // Also update on window resize
   window.addEventListener('resize', updateTimelineGradient, { passive: true });
