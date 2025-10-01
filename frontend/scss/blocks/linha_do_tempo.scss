@@ -80,10 +80,11 @@
     stroke: variables.$color-primary;
     stroke-width: 2;
     fill: none;
-  }
-  
-  .calendar-circle .scrolled-to {
-    fill: variables.$color-primary;
+    
+    .calendar-circle {
+      fill: variables.$color-primary;
+    }
+    color: white;
   }
 
   .linha-do-tempo-calendar-group {
