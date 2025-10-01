@@ -9,12 +9,15 @@
                 <h2 class="titulo-1">Linha do Tempo</h2>
             {% endif %}
         </div>
-        <div class="linha-do-tempo-cards-container">
+        <div
+            class="linha-do-tempo-cards-container"
+            ntotal-cards="{{ value.cards|length }}"
+        >
             {% for card in value.cards %}
             {% if not forloop.counter|divisibleby:2 %}
                 <div class="row block-linha-do-tempo">
             {% endif %}
-                {% include 'blocks/card_linha_do_tempo.html' with card=card index=forloop.counter %}
+                {% include 'blocks/card_linha_do_tempo.html' with card=card index=forloop.counter0 last_index=value.cards|length|add:'-1' %}
             {% if forloop.last or forloop.counter|divisibleby:2 %}
                 </div>
             {% endif %}
@@ -25,7 +28,13 @@
     </div>
 </div>
 
-  <script>
+<script>
+  calculateCardPosition = (index) => {
+    const isEven = index % 2 === 0;
+    // cálculo do índice dos card na linha do tempo pares avançam 1 enquanto ímpares avançam 2
+    const position = isEven ? 3*(index / 2) : 3*(((index - 1) / 2)) + 1;
+    return position;
+  }
 
   const addVisibleToGroup = (row) => {
     row.querySelector('.card-linha-do-tempo').classList.add('is-visible');

@@ -1,5 +1,5 @@
 {% load wagtailimages_tags %}
-<div class="linha-do-tempo__item">
+<div class="linha-do-tempo__item" data-index="{{ index }}" data-last="{{ last_index }}">
     <div class="linha-do-tempo-item-row">
         <svg class="linha-do-tempo-calendar-group left"
             viewBox="0 0 64 64"
@@ -14,7 +14,9 @@
             />
         </svg>
         <i class="bi-calendar3 linha-do-tempo-calendar-group calendar-icon left"
-            style="--index: {{ index }};"
+            {% comment %} data-percentage="{% if not position|divisibleby:2 %}{{ multiple|add:-2 }}{% else %}{{ multiple }}{% endif %}"
+            style="--index: {{ index }};
+            --percentageRange: {% if not position|divisibleby:2 %}{{ multiple|add:-2 }}{% else %}{{ multiple }}{% endif %};" {% endcomment %}
         ></i>
             <div class="arrow left animate"></div>
             <div class="card-linha-do-tempo animate">
@@ -33,7 +35,9 @@
             </div>
             <div class="arrow right animate"></div>
         <i class="bi-calendar3 linha-do-tempo-calendar-group calendar-icon right"
-            style="--index: {{ index }};"
+            {% comment %} data-percentage="{% if not position|divisibleby:2 %}{{ multiple|add:-2 }}{% else %}{{ multiple }}{% endif %}"
+            style="--index: {{ index }};
+            --percentageRange: {% if not position|divisibleby:2 %}{{ multiple|add:-2 }}{% else %}{{ multiple }}{% endif %};" {% endcomment %}
         ></i>
         <svg class="linha-do-tempo-calendar-group right"
             viewBox="0 0 64 64"
@@ -48,4 +52,42 @@
             />
         </svg>
     </div>
+    <script id="timeline-script-{{ index }}" class="timeline-script">
+
+        (function() {
+            const script = document.getElementById('timeline-script-{{ index }}');
+            const item = script.closest('.linha-do-tempo__item');
+            if (!item) return;
+
+            const index = parseInt(item.dataset.index, 10);
+            const last = parseInt(item.dataset.last, 10);
+            console.log(last);
+
+            // cálculo do índice dos card na linha do tempo pares avançam 1 enquanto ímpares avançam 2
+            const isEven = index % 2 == 0;
+            const segmentLength = isEven ? 1 : 2;
+
+            const position = isEven ? 3*(index / 2) : 3*(((index - 1) / 2)) + 1;
+            //const next = position + segmentLength;
+            const final = last % 2 == 0 ? 3*(last / 2) : 3*(((last - 1) / 2)) + 1;
+            console.log(final);
+
+            const offSet = ((final - segmentLength) - position)*3;
+
+            const percentageStart = ((position / final) * 100) + offSet;
+            // const percentageEnd = ((next / final) * 100) + offSet;
+            const percentage = percentageStart;
+
+            const percentageCorrectionFactor = segmentLength / final;
+
+            // Target calendar icons within this item
+            const icons = item.querySelectorAll('.linha-do-tempo-calendar-group.calendar-icon');
+            icons.forEach(icon => {
+                icon.setAttribute('data-percentage', `${percentage}%`);
+                icon.style.setProperty('--index', index);
+                icon.style.setProperty('--percentageRange', `${percentage}%`);
+                icon.style.setProperty('--percentageCorrectionFactor', percentageCorrectionFactor);
+            });
+        })();
+    </script>
 </div>

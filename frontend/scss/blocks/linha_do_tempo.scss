@@ -175,11 +175,13 @@
     position: absolute;
     top: 98%;
     --secondary-color: #e8edf4;
+    --percentageReminder: calc(var(--reveal-percentage, 0%) - var(--percentageRange, 0%));
+    --percentageAtElement: calc(var(--percentageReminder, 0%) / var(--percentageCorrectionFactor, 0%));
 
     background: linear-gradient(to bottom, 
         variables.$color-primary 0%,
-        variables.$color-primary calc(var(--reveal-percentage, 0%) * var(--index)),
-        var(--secondary-color) calc(var(--reveal-percentage, 0%) * var(--index)),
+        variables.$color-primary var(--percentageAtElement),
+        var(--secondary-color) var(--percentageAtElement),
         var(--secondary-color) 100%
     );
     width: 4px;
