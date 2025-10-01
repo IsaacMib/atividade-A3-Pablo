@@ -32,19 +32,31 @@ class PageSitePadrao(Page):
         blank=True,
         help_text="Descrição da página para SEO e redes sociais"
     )
-    
-    images = StreamField(
-        [("image", ImageChooserBlock(label="Imagem"))],
-        verbose_name="Imagens",
+
+    imagem_destaque = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
         blank=True,
-        use_json_field=True,
-        help_text="Imagens relacionadas à página"
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name="Imagem de Destaque",
+        help_text="Imagem usada em destaque para SEO e redes sociais"
     )
 
     content_panels = Page.content_panels + [
         FieldPanel("descricao"),
-        FieldPanel("images"),
+        
     ]
+
+    promote_panels = Page.promote_panels + [
+        FieldPanel("imagem_destaque"),
+    ]
+
+    def get_imagem_destaque(self):
+        """
+        Retorna a imagem de destaque da página ou None se não houver.
+        """
+        return self.imagem_destaque
 
     class Meta:
         abstract = True
