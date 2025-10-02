@@ -87,7 +87,7 @@
         .calendar-circle {
           fill: variables.$color-white !important;
         }
-        color: variables.$color-primary !important;
+        color: variables.$color-black;
       }
     }
 
@@ -179,15 +179,15 @@
       content: "";
       position: absolute;
       top: 98%;
-      --secondary-color: #e8edf4;
+      // --secondary-color: #e8edf4;
       --percentageReminder: calc(var(--reveal-percentage, 0%) - var(--percentageRange, 0%));
       --percentageAtElement: calc(var(--percentageReminder, 0%) / var(--percentageCorrectionFactor, 0%));
 
       background: linear-gradient(to bottom, 
           variables.$color-white 0%,
           variables.$color-white var(--percentageAtElement),
-          var(--secondary-color) var(--percentageAtElement),
-          var(--secondary-color) 100%
+          variables.$color-black var(--percentageAtElement),
+          variables.$color-black 100%
       );
       width: 4px;
       transition: height 0.2s ease-out;
