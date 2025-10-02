@@ -9,6 +9,12 @@
     margin-bottom: 2.5rem;
   }
 
+  .card-linha-do-tempo__title {
+    h3, a {
+      color: variables.$color-white;
+    }
+  }
+
   .card-linha-do-tempo {
     --card-max-height: 360px;
     --card-aspect-ratio: 1.3;
