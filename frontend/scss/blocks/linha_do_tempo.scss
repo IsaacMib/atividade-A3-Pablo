@@ -81,10 +81,12 @@
     stroke-width: 2;
     fill: none;
     
-    .calendar-circle {
-      fill: variables.$color-primary;
+    &.reached-by-line {
+      .calendar-circle {
+        fill: variables.$color-primary !important;
+      }
+      color: variables.$color-white;
     }
-    color: white;
   }
 
   .linha-do-tempo-calendar-group {
@@ -176,7 +178,7 @@
     position: absolute;
     top: 98%;
     --secondary-color: #e8edf4;
-    --percentageReminder: calc(var(--reveal-percentage, 0%) - var(--percentageRange, 0%));
+    --percentageReminder: calc(var(--reveal-percentage, 0%, 0%) - var(--percentageRange, 0%));
     --percentageAtElement: calc(var(--percentageReminder, 0%) / var(--percentageCorrectionFactor, 0%));
 
     background: linear-gradient(to bottom, 

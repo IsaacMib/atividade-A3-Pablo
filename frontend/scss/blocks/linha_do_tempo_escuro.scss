@@ -83,10 +83,12 @@
       stroke-width: 2;
       fill: none;
       
-      .calendar-circle {
-        fill: variables.$color-white;
+      &.reached-by-line {
+        .calendar-circle {
+          fill: variables.$color-white !important;
+        }
+        color: variables.$color-primary !important;
       }
-      color: white;
     }
 
     .linha-do-tempo-calendar-group {
