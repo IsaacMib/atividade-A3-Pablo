@@ -6,14 +6,14 @@ from blocks.institucional import LocalizacaoBlock
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
-# Create your models here.
+from paginas.models import CorpoTecnicoIndexPage, CorpoTecnicoGrupoPageIndex, CorpoTecnicoPage
 
 class InstitucionalIndexPage(PageSitePadraoIndex):
     """
     Página de índice para o conteúdo institucional.
     """
     
-    subpage_types = ['institucional.LocalizacaoPage']
+    subpage_types = ['institucional.LocalizacaoPage','institucional.SecretariadoIndex']
 
     parent_page_types = [ 'home.HomePage' ]
 
@@ -57,9 +57,31 @@ class LocalizacaoPage(PageSitePadrao):
         verbose_name = "Página de Localização"
         verbose_name_plural = "Páginas de Localização"
 
-class SecretariadoIndex(PageSitePadraoIndex):
+class SecretariadoIndex(CorpoTecnicoIndexPage):
     """
     Página de índice para o conteúdo do Secretariado.
     """
+
+    parent_page_types = [ 'institucional.InstitucionalIndexPage' ]
+    subpage_types = ['institucional.SecretariadoGrupoPageIndex']
+
+    pass
+
+class SecretariadoGrupoPageIndex(CorpoTecnicoGrupoPageIndex):
+    """
+    Página de índice para os grupos do Secretariado.
+    """
+
+    parent_page_types = [ 'institucional.SecretariadoIndex' ]
+    subpage_types = ['institucional.SecretariadoPage']
+
+    pass
+
+class SecretariadoPage(CorpoTecnicoPage):
+    """
+    Página para os membros do Secretariado.
+    """
+
+    parent_page_types = [ 'institucional.SecretariadoGrupoPageIndex' ]
 
     pass
