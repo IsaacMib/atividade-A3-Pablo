@@ -12,11 +12,7 @@
                 r="30"
             />
         </svg>
-        <i class="bi-calendar3 linha-do-tempo-calendar-group calendar-icon left"
-            {% comment %} data-percentage="{% if not position|divisibleby:2 %}{{ multiple|add:-2 }}{% else %}{{ multiple }}{% endif %}"
-            style="--index: {{ index }};
-            --percentageRange: {% if not position|divisibleby:2 %}{{ multiple|add:-2 }}{% else %}{{ multiple }}{% endif %};" {% endcomment %}
-        ></i>
+        <i class="bi-calendar3 linha-do-tempo-calendar-group calendar-icon left" ></i>
             <div class="arrow left animate"></div>
             <div class="card-linha-do-tempo animate">
                 <div class="card-linha-do-tempo__image">
@@ -33,11 +29,7 @@
                 </div>
             </div>
             <div class="arrow right animate"></div>
-        <i class="bi-calendar3 linha-do-tempo-calendar-group calendar-icon right"
-            {% comment %} data-percentage="{% if not position|divisibleby:2 %}{{ multiple|add:-2 }}{% else %}{{ multiple }}{% endif %}"
-            style="--index: {{ index }};
-            --percentageRange: {% if not position|divisibleby:2 %}{{ multiple|add:-2 }}{% else %}{{ multiple }}{% endif %};" {% endcomment %}
-        ></i>
+        <i class="bi-calendar3 linha-do-tempo-calendar-group calendar-icon right"></i>
         <svg class="linha-do-tempo-calendar-group right"
             viewBox="0 0 64 64"
             width="64"
@@ -78,7 +70,6 @@
 
             const icons = item.querySelectorAll('.linha-do-tempo-calendar-group.calendar-icon');
             icons.forEach(icon => {
-                // icon.setAttribute('data-percentage', `${percentage}%`);
                 icon.style.setProperty('--index', index);
                 icon.style.setProperty('--percentageRange', `${percentage}%`);
                 icon.style.setProperty('--percentageCorrectionFactor', percentageCorrectionFactor);
@@ -97,7 +88,7 @@
 
             const checkIcons = () => {
                 const current = getRevealedPercentage();
-                // Toggle class on icons and SVGs
+                // Muda propriedade de ícones e svg a fim de alterar seu estilo quando tocados pela linha central
                 [...icons, ...svgs].forEach(el => {
                     const target = parseFloat(el.getAttribute('data-percentage')) || 0;
                     el.classList.toggle('reached-by-line', current >= target);

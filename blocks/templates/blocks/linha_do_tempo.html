@@ -133,7 +133,7 @@
         threshold: 0.15
       });
 
-      // Start observing all cards
+      // Inicia observação de todos os cards
       rows.forEach(function(el){ io.observe(el); });
 
       function inView(el){
@@ -169,16 +169,16 @@
     setElementRevealedPercentage(cardsRevealedPercentage);
   }
 
-  // Initialize the gradient on page load
+  // Inicializa preenchimento da linha central
   updateTimelineGradient();
 
-  // Add scroll event listener with debounce to improve performance
+  // Adiciona listener de scroll com debounce para melhorar desempenho
   let isScrolling;
   window.addEventListener('scroll', function() {
       window.clearTimeout(isScrolling);
       isScrolling = setTimeout(updateTimelineGradient, 10);
   }, { passive: true });
 
-  // Also update on window resize
+  // Considera redimensionamento da janela
   window.addEventListener('resize', updateTimelineGradient, { passive: true });
 </script>
