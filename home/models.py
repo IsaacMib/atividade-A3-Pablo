@@ -16,7 +16,8 @@ from blocks.models import (
   CarrosselSolucoesBlock,
   AvisosListBlock,
   GridImagensBlock,
-  ServicoOnlineItemBlock
+  ServicoOnlineItemBlock,
+  SecaoInformativaBlock
 )
 
 
@@ -37,6 +38,7 @@ class HomePage(PageSitePadrao):
             ("list_agenda", ListAgendaBlock()),
             ("carrossel_solucoes", CarrosselSolucoesBlock()),
             ("programa", GridImagensBlock()),
+            ("secao_informativa", SecaoInformativaBlock()),
           
         ],
         use_json_field=True,

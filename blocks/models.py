@@ -797,3 +797,68 @@ class GridImagensBlock(StructBlock):
         icon = 'list-ul'
         label = "Grid de Imagens"
         template = 'blocks/grid_imagens.html'
+
+def validate_file_size(value):
+    if value and value.file.size > 10 * 1024 * 1024:
+        raise ValidationError("O tamanho do arquivo não pode exceder 10MB.")
+
+class ItemListaInformativaBlock(StructBlock):
+    texto = CharBlock(required=False, help_text="Use para um item de texto simples (um por linha).")
+    titulo_link = CharBlock(required=False, help_text="Texto que será exibido para o link.")
+    url_link = URLBlock(required=False, help_text="URL para onde o link aponta.")
+    arquivo = DocumentChooserBlock(required=False, help_text="Selecione um arquivo para download (máx 10MB).", validators=[validate_file_size])
+
+    def clean(self, value):
+        cleaned_data = super().clean(value)
+        is_texto = bool(cleaned_data.get('texto'))
+        is_link = bool(cleaned_data.get('titulo_link') or cleaned_data.get('url_link'))
+        is_arquivo = bool(cleaned_data.get('arquivo'))
+        tipos_preenchidos = sum([is_texto, is_link, is_arquivo])
+        if tipos_preenchidos > 1:
+            raise ValidationError("Escolha apenas um tipo de item: texto, link ou arquivo.")
+        if tipos_preenchidos == 0:
+            raise ValidationError("Você deve preencher um dos tipos de item: texto, link ou arquivo.")
+        if is_link and not (cleaned_data.get('titulo_link') and cleaned_data.get('url_link')):
+            raise ValidationError("Para um link, tanto o 'Título do link' quanto a 'URL' são obrigatórios.")
+        return cleaned_data
+
+    class Meta:
+        label = "Item da Lista"
+        icon = "dot-circle"
+
+class SecaoInformativaBlock(StructBlock):
+    titulo = CharBlock(equired=False,label="Título da Seção")
+    descricao = RichTextBlock(required=False, label="Descrição da Seção")
+
+    TEMAS = [
+        ('branco', 'Branco (Padrão)'),
+        ('azul', 'Azul com cinza'),
+    ]
+    tema = ChoiceBlock(
+        choices=TEMAS,
+        default='branco',
+        required=False,
+        label="Tema de Cores"
+    )
+
+    ESTILOS_LISTA = [
+        ('bolinhas', 'Bolinhas (•)'),
+        ('tracos', 'Traços (-)'),
+        ('numeros', 'Numerada (1, 2, 3)'),
+    ]
+    estilo_lista = ChoiceBlock(
+        choices=ESTILOS_LISTA,
+        default='bolinhas',
+        required=False,
+        label="Estilo da Lista de Itens"
+    )
+    itens_lista = ListBlock(
+        ItemListaInformativaBlock(),
+        label="Itens da Lista",
+        help_text="Adicione textos ou links a esta seção."
+    )
+ 
+    class Meta:
+        label = "Seção de Conteúdo"
+        icon = "collapse-down"
+        template = "blocks/bloco_informativo.html"

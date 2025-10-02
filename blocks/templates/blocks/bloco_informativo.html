@@ -1,0 +1,60 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="bloco-informativo">
+    <div class="bloco-informativo-content-wrapper" style="max-width: 1250px; margin: 0 auto;">
+        <div class="secoes-informativas">
+            <section class="secao tema-{{ self.tema|default:'branco' }}">
+                {% if self.titulo %}
+                    <div class="secao-header">
+                        <span>{{ self.titulo }}</span>
+                        <span class="seta">&gt;</span>
+                    </div>
+                {% endif %}
+
+                <div class="secao-conteudo">
+                    {% if self.descricao %}
+                        <div class="descricao-secao">
+                            {{ self.descricao|richtext }}
+                        </div>
+                    {% endif %}
+
+                    {% if self.itens_lista %}
+                        {% if self.estilo_lista == 'numeros' %}
+                            <ol class="secao-lista-itens lista-numeros">
+                        {% else %}
+                            <ul class="secao-lista-itens lista-{{ self.estilo_lista|default:'bolinhas' }}">
+                        {% endif %}
+                                {% for item in self.itens_lista %}
+                                    <li>
+                                        {% if item.url_link %}
+                                            <a href="{{ item.url_link }}">{{ item.titulo_link }}</a>
+                                        {% elif item.arquivo %}
+                                            <a href="{{ item.arquivo.url }}">{{ item.arquivo.title }}</a>
+                                        {% else %}
+                                            {{ item.texto }}
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                        {% if self.estilo_lista == 'numeros' %}</ol>{% else %}</ul>{% endif %}
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!window.blocoInformativoScriptLoaded) {
+            document.body.addEventListener('click', function(event) {
+                if (event.target.closest('.secao-header')) {
+                    const header = event.target.closest('.secao-header');
+                    const conteudo = header.nextElementSibling;
+                    header.classList.toggle("ativo");
+                    conteudo.style.display = (conteudo.style.display === "block") ? "none" : "block";
+                }
+            });
+            window.blocoInformativoScriptLoaded = true;
+        }
+    });
+</script>
