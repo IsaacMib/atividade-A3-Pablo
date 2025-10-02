@@ -10,7 +10,6 @@
                 cx="32"
                 cy="32"
                 r="30"
-                fill="none"
             />
         </svg>
         <i class="bi-calendar3 linha-do-tempo-calendar-group calendar-icon left"
@@ -48,7 +47,6 @@
                 cx="32"
                 cy="32"
                 r="30"
-                fill="none"
             />
         </svg>
     </div>
@@ -80,11 +78,35 @@
 
             const icons = item.querySelectorAll('.linha-do-tempo-calendar-group.calendar-icon');
             icons.forEach(icon => {
-                icon.setAttribute('data-percentage', `${percentage}%`);
+                // icon.setAttribute('data-percentage', `${percentage}%`);
                 icon.style.setProperty('--index', index);
                 icon.style.setProperty('--percentageRange', `${percentage}%`);
                 icon.style.setProperty('--percentageCorrectionFactor', percentageCorrectionFactor);
             });
+
+            const getRevealedPercentage = () => {
+                const raw = getComputedStyle(document.documentElement).getPropertyValue('--reveal-percentage');
+                return parseFloat(raw) || 0;
+            }
+
+            const svgs  = item.querySelectorAll('svg.linha-do-tempo-calendar-group');
+
+            [...icons, ...svgs].forEach(el => {
+                el.setAttribute('data-percentage', String(percentage)); // store as number string without %
+            });
+
+            const checkIcons = () => {
+                const current = getRevealedPercentage();
+                // Toggle class on icons and SVGs
+                [...icons, ...svgs].forEach(el => {
+                    const target = parseFloat(el.getAttribute('data-percentage')) || 0;
+                    el.classList.toggle('reached-by-line', current >= target);
+                });
+            };
+
+            window.addEventListener('load', checkIcons, { passive: true });
+            window.addEventListener('scroll', checkIcons, { passive: true });
+            window.addEventListener('resize', checkIcons, { passive: true });
         })();
     </script>
 </div>
