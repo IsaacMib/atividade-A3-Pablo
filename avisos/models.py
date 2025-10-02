@@ -1,5 +1,6 @@
 from django.forms import Textarea
 from django.db import models
+from django.urls import reverse
 from wagtail.models import Page
 from django.utils.text import slugify
 from django.contrib import messages
@@ -112,6 +113,9 @@ class AvisosPage(PageSitePadrao):
                    classname="migracao-only"),
     ])
 
+    def get_absolute_url(self):
+        return reverse("aviso_detail", args=[str(self.id)])
+
     def generate_unique_slug(self, base_slug):
         slug = base_slug
         counter = 1
@@ -169,6 +173,15 @@ class AvisosPage(PageSitePadrao):
                         'icon_class': self.get_arquivo_icon(doc)
                     })
         context['arquivos_com_icone'] = arquivos_com_icone
+
+        absolute_url = request.build_absolute_uri(self.url)
+        context["share_links"] = {
+            "facebook": f"https://www.facebook.com/sharer/sharer.php?u={absolute_url}",
+            "x": f"https://twitter.com/intent/tweet?url={absolute_url}&text={self.title}",
+            "linkedin": f"https://www.linkedin.com/shareArticle?mini=true&url={absolute_url}&title={self.title}",
+            "whatsapp": f"https://api.whatsapp.com/send?text={self.title} {absolute_url}",
+            "copy": absolute_url,
+        }
 
         return context
 

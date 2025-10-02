@@ -3,17 +3,32 @@
 [data-theme=dark] {
   .avisos-page-container {
     background-color: variables.$color-black;
-  }
-  .aviso-page--title {
-    color: variables.$color-white !important;
-  }
-  .aviso-page-publicacao {
-    color: variables.$color-white !important;
-  }
-  .aviso-page-descricao {
-    color: variables.$color-white !important;
-  }
-  .aviso-page-content {
-    color: variables.$color-white !important;
+
+    .separador {
+      background: variables.$color-grey-700;
+    }
+
+    .aviso-social {
+      h4 {
+        color: variables.$color-white;
+      }
+
+      .social li a {
+        background: variables.$color-grey-700;
+        color: variables.$color-white;
+
+        &:hover {
+          background: variables.$color-primary;
+          color: variables.$color-on-primary;
+        }
+      }
+    }
+
+    .aviso-page--title,
+    .aviso-page-publicacao,
+    .aviso-page-descricao,
+    .aviso-page-content {
+      color: variables.$color-white !important;
+    }
   }
 }
