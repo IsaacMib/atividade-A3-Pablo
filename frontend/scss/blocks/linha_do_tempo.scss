@@ -7,6 +7,12 @@
   margin-bottom: 2.5rem;
 }
 
+
+.card-linha-do-tempo__title {
+  font-weight: 500;
+  color: variables.$color-primary;
+}
+
 .card-linha-do-tempo {
   --card-max-height: 360px;
   --card-aspect-ratio: 1.3;
