@@ -10,9 +10,8 @@
   }
 
   .card-linha-do-tempo__title {
-    h3, a {
-      color: variables.$color-white;
-    }
+    font-weight: 500;
+    color: variables.$color-white !important;
   }
 
   .card-linha-do-tempo {
