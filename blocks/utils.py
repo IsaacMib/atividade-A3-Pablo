@@ -1,4 +1,5 @@
 # utils.py
+from django.core.exceptions import ValidationError
 
 ICONES_REDES_GERAL = [
     ('fa-brands fa-facebook', 'Facebook'),
@@ -136,3 +137,7 @@ GRID_IMAGENS_CLASSES = {
     'grid-imagens-4': 'col-6 col-md-3 d-flex justify-content-center',       # 4 colunas por linha
     'grid-imagens-6': 'col-6 col-md-2 d-flex justify-content-center',       # 6 colunas por linha
 }
+
+def validate_file_size(value):
+    if value and value.file.size > 10 * 1024 * 1024:
+        raise ValidationError("O tamanho do arquivo não pode exceder 10MB.")

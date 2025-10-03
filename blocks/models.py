@@ -6,7 +6,8 @@ from blocks.utils import (
     GRID_IMAGENS_TYPES,
     GRID_IMAGENS_CLASSES,
     GRID_IMAGENS_DEFAULT_TYPE,
-    get_metabase_card_text_by_id
+    get_metabase_card_text_by_id,
+    validate_file_size
 )
 
 import requests
@@ -797,10 +798,6 @@ class GridImagensBlock(StructBlock):
         icon = 'list-ul'
         label = "Grid de Imagens"
         template = 'blocks/grid_imagens.html'
-
-def validate_file_size(value):
-    if value and value.file.size > 10 * 1024 * 1024:
-        raise ValidationError("O tamanho do arquivo não pode exceder 10MB.")
 
 class ItemListaInformativaBlock(StructBlock):
     texto = CharBlock(required=False, help_text="Use para um item de texto simples (um por linha).")
