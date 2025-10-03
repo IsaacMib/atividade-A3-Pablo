@@ -179,7 +179,7 @@
   .linha-do-tempo-calendar-group::after {
     content: "";
     position: absolute;
-    top: 98%;
+    top: 99%;
     --secondary-color: #e8edf4;
     --percentageReminder: calc(var(--reveal-percentage, 0%, 0%) - var(--percentageRange, 0%));
     --percentageAtElement: calc(var(--percentageReminder, 0%) / var(--percentageCorrectionFactor, 0%));
@@ -205,7 +205,7 @@
 
 @media (max-width: 1200px) {
   .linha-do-tempo-calendar-group::after {
-    height: 560px;
+    height: 536px;
   }
 }
 
