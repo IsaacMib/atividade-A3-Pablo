@@ -1,0 +1,47 @@
+@use '../variables.scss';
+
+[data-theme="dark"] {
+    .secao {
+        border-color: #555;
+        background-color: #222;
+    }
+
+    .secoes-informativas > .secao:last-of-type {
+        border-bottom-color: #555;
+    }
+
+    .secao-header {
+        color: #eee;
+    }
+
+    .secao-header .seta {
+        color: #eee;
+    }
+
+    .secao-conteudo {
+        color: #eee;
+    }
+
+    .bloco-informativo .secao-lista-itens li {
+        color: #eee;
+    }
+
+    .bloco-informativo a {
+        color: #66bfff;
+    }
+
+    /* Tema Azul Escuro */
+    .tema-azul .secao-header {
+        background-color: #003366;
+        color: #fff;
+    }
+
+    .tema-azul .secao-header .seta {
+        color: #fff;
+    }
+
+    .tema-azul .secao-conteudo {
+        background-color: #333;
+        color: #ddd;
+    }
+}
