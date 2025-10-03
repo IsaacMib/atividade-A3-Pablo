@@ -85,6 +85,9 @@
       .calendar-circle {
         fill: variables.$color-primary !important;
       }
+      circle {
+        filter: drop-shadow(0 0 10px rgba(variables.$color-primary, 0.55));
+      }
       color: variables.$color-white;
     }
   }
