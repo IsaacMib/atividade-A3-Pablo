@@ -692,7 +692,7 @@ class CardLinhaDoTempoBlock(StructBlock):
     external_url = URLBlock(
         required=False, help_text="Ou insira uma URL externa")
     descricao = TextBlock(required=False, label="Descrição")
-    data = DateBlock(required=True, label="Data")
+    # data = DateBlock(required=True, label="Data")
 
     def clean(self, value):
         cleaned_data = super().clean(value)
