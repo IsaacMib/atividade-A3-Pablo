@@ -687,10 +687,6 @@ class CardLinhaDoTempoBlock(StructBlock):
     imagem = ImageChooserBlock(required=True, label="Imagem")
     texto_alternativo = CharBlock(required=False, label="Texto alternativo da imagem")
     titulo = CharBlock(required=False, label="Título")
-    internal_page = PageChooserBlock(
-        required=False, help_text="Link para uma página interna")
-    external_url = URLBlock(
-        required=False, help_text="Ou insira uma URL externa")
     descricao = TextBlock(required=False, label="Descrição")
     # data = DateBlock(required=True, label="Data")
 

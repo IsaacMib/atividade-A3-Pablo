@@ -20,9 +20,7 @@
                 </div>
                 <div class="card-linha-do-tempo__content text-center">
                     <h3 class="card-linha-do-tempo__title">
-                        <a href="{% if card.internal_page %}{{ card.internal_page.url }}{% else %}{{ card.external_url }}{% endif %}">
-                            {{ card.titulo }}
-                        </a>
+                        {{ card.titulo }}
                     </h3>
                     {% comment %} <p class="card-linha-do-tempo__date">{{ card.data|date:"d/m/Y" }}</p> {% endcomment %}
                     <p class="card-linha-do-tempo__description">{{ card.descricao }}</p>
