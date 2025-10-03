@@ -188,8 +188,9 @@
         var(--secondary-color) 100%
     );
     width: 4px;
+    box-shadow: 0 0 10px rgba(variables.$color-primary, 0.55);
     transition: height 0.2s ease-out;
-    will-change: background-color;
+    will-change: background-color, box-shadow;
   }
 }
 
