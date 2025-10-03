@@ -685,24 +685,11 @@ class EspecificDocumentChooserBlock(DocumentChooserBlock):
 
 class CardLinhaDoTempoBlock(StructBlock):
     imagem = ImageChooserBlock(required=True, label="Imagem")
-    texto_alternativo = CharBlock(required=False, label="Texto alternativo da imagem")
+    texto_alternativo = CharBlock(
+        required=False, label="Texto alternativo da imagem")
     titulo = CharBlock(required=False, label="Título")
     descricao = TextBlock(required=False, label="Descrição")
     # data = DateBlock(required=True, label="Data")
-
-    def clean(self, value):
-        cleaned_data = super().clean(value)
-        if not cleaned_data.get('internal_page') and not cleaned_data.get('external_url'):
-            raise ValidationError({
-                'internal_page': 'Você deve fornecer um link interno ou externo.',
-                'external_url': 'Você deve fornecer um link interno ou externo.'
-            })
-        if cleaned_data.get('internal_page') and cleaned_data.get('external_url'):
-            raise ValidationError({
-                'internal_page': 'Você deve fornecer apenas 1 link.',
-                'external_url': 'Você deve fornecer apenas 1 link.'
-            })
-        return cleaned_data
 
     class Meta:
         icon = 'title'
