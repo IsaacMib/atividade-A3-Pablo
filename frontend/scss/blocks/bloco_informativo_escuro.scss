@@ -1,6 +1,14 @@
 @use '../variables.scss';
 
 [data-theme="dark"] {
+    .titulo-geral-acordeao {
+        color: #fff;
+    }
+
+    .introducao-acordeao {
+        color: #eee;
+    }
+
     .secao {
         border-color: #555;
         background-color: #222;

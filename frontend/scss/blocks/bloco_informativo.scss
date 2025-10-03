@@ -1,3 +1,29 @@
+    .bloco-informativo-content-wrapper {
+        max-width: 1250px;
+        margin: 0 auto;
+    }
+
+    .titulo-geral-acordeao {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--w-color-primary, #004c9c);
+        margin-bottom: 1.5rem;
+        text-align: center;
+        text-decoration: underline;
+    }
+
+    .introducao-acordeao {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #333;
+    }
+
+    .lista-geral-acordeao {
+        margin-bottom: 2rem; 
+    }
+
     .secao {
         border: 1px solid #ccc;
         background-color: #fff;

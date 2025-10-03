@@ -1,60 +1,112 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 <div class="bloco-informativo">
-    <div class="bloco-informativo-content-wrapper" style="max-width: 1250px; margin: 0 auto;">
+    <div class="bloco-informativo-content-wrapper">
+        {% if self.titulo_geral %}
+            <h2 class="titulo-geral-acordeao">{{ self.titulo_geral }}</h2>
+        {% endif %}
+
         <div class="secoes-informativas">
-            <section class="secao tema-{{ self.tema|default:'branco' }}">
-                {% if self.titulo %}
-                    <div class="secao-header">
-                        <span>{{ self.titulo }}</span>
-                        <span class="seta">&gt;</span>
-                    </div>
-                {% endif %}
+            {# Se for AcordeonBlock com múltiplas seções #}
+            {% if self.secoes %}
+                {% for secao in self.secoes %}
+                    <section class="secao tema-{{ secao.tema|default:'branco' }}">
+                        {% if secao.titulo %}
+                            <div class="secao-header">
+                                <span>{{ secao.titulo }}</span>
+                                <span class="seta">&gt;</span>
+            </div>
+        {% endif %}
 
-                <div class="secao-conteudo">
-                    {% if self.descricao %}
-                        <div class="descricao-secao">
-                            {{ self.descricao|richtext }}
+                        <div class="secao-conteudo">
+                            {% if secao.descricao %}
+                                <div class="descricao-secao">
+                                    {{ secao.descricao|richtext }}
+                                </div>
+                            {% endif %}
+
+                            {% if secao.itens_lista %}
+                                {% if secao.estilo_lista == 'numeros' %}
+                                    <ol class="secao-lista-itens lista-numeros">
+            {% else %}
+                                    <ul class="secao-lista-itens lista-{{ secao.estilo_lista|default:'bolinhas' }}">
+            {% endif %}
+                                        {% for item in secao.itens_lista %}
+                        <li>
+                                                {% if item.url_link %}
+                                                    <a href="{{ item.url_link }}">{{ item.titulo_link }}</a>
+                            {% elif item.arquivo %}
+                                                    <a href="{{ item.arquivo.url }}">{{ item.arquivo.title }}</a>
+                            {% else %}
+                                {{ item.texto }}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                                {% if secao.estilo_lista == 'numeros' %}</ol>{% else %}</ul>{% endif %}
+                            {% endif %}
                         </div>
-                    {% endif %}
+                    </section>
+                {% endfor %}
+            {% else %}
+                {# Caso seja apenas um AcordeonItemBlock individual #}
+                <section class="secao tema-{{ self.tema|default:'branco' }}">
+                    {% if self.titulo %}
+                        <div class="secao-header">
+                            <span>{{ self.titulo }}</span>
+                            <span class="seta">&gt;</span>
+                        </div>
+        {% endif %}
 
-                    {% if self.itens_lista %}
-                        {% if self.estilo_lista == 'numeros' %}
-                            <ol class="secao-lista-itens lista-numeros">
-                        {% else %}
-                            <ul class="secao-lista-itens lista-{{ self.estilo_lista|default:'bolinhas' }}">
+                    <div class="secao-conteudo">
+                        {% if self.descricao %}
+                            <div class="descricao-secao">
+                                {{ self.descricao|richtext }}
+                            </div>
                         {% endif %}
-                                {% for item in self.itens_lista %}
-                                    <li>
-                                        {% if item.url_link %}
-                                            <a href="{{ item.url_link }}">{{ item.titulo_link }}</a>
-                                        {% elif item.arquivo %}
-                                            <a href="{{ item.arquivo.url }}">{{ item.arquivo.title }}</a>
-                                        {% else %}
-                                            {{ item.texto }}
-                                        {% endif %}
-                                    </li>
-                                {% endfor %}
-                        {% if self.estilo_lista == 'numeros' %}</ol>{% else %}</ul>{% endif %}
-                    {% endif %}
-                </div>
-            </section>
+
+                        {% if self.itens_lista %}
+                            {% if self.estilo_lista == 'numeros' %}
+                                <ol class="secao-lista-itens lista-numeros">
+                            {% else %}
+                                <ul class="secao-lista-itens lista-{{ self.estilo_lista|default:'bolinhas' }}">
+                            {% endif %}
+                                    {% for item in self.itens_lista %}
+                                        <li>
+                                            {% if item.url_link %}
+                                                <a href="{{ item.url_link }}">{{ item.titulo_link }}</a>
+                                            {% elif item.arquivo %}
+                                                <a href="{{ item.arquivo.url }}">{{ item.arquivo.title }}</a>
+                                            {% else %}
+                                                {{ item.texto }}
+                                            {% endif %}
+                                        </li>
+            {% endfor %}
+                            {% if self.estilo_lista == 'numeros' %}</ol>{% else %}</ul>{% endif %}
+                        {% endif %}
+                    </div>
+                </section>
+            {% endif %}
         </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        if (!window.blocoInformativoScriptLoaded) {
-            document.body.addEventListener('click', function(event) {
-                if (event.target.closest('.secao-header')) {
-                    const header = event.target.closest('.secao-header');
-                    const conteudo = header.nextElementSibling;
-                    header.classList.toggle("ativo");
-                    conteudo.style.display = (conteudo.style.display === "block") ? "none" : "block";
-                }
-            });
-            window.blocoInformativoScriptLoaded = true;
-        }
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    // Garante que o script seja carregado apenas uma vez
+    if (!window.blocoInformativoScriptLoaded) {
+        console.log("Inicializando script do acordeão.");
+        document.body.addEventListener('click', function(event) {
+            // Verifica se o clique foi no cabeçalho de uma seção
+            const header = event.target.closest('.secao-header');
+            if (header) {
+                const conteudo = header.nextElementSibling;
+                // Adiciona/remove a classe 'ativo' para a animação da seta
+                header.classList.toggle("ativo");
+                // Mostra ou esconde o conteúdo
+                conteudo.style.display = (conteudo.style.display === "block") ? "none" : "block";
+            }
+        });
+        window.blocoInformativoScriptLoaded = true;
+    }
+});
 </script>

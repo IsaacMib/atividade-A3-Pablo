@@ -823,10 +823,10 @@ class ItemListaInformativaBlock(StructBlock):
         label = "Item da Lista"
         icon = "dot-circle"
 
-class SecaoInformativaBlock(StructBlock):
-    titulo = CharBlock(equired=False,label="Título da Seção")
+class AcordeonItemBlock(StructBlock):
+    titulo = CharBlock(required=True, label="Título da Seção")
     descricao = RichTextBlock(required=False, label="Descrição da Seção")
-
+    
     TEMAS = [
         ('branco', 'Branco (Padrão)'),
         ('azul', 'Azul com cinza'),
@@ -852,10 +852,24 @@ class SecaoInformativaBlock(StructBlock):
     itens_lista = ListBlock(
         ItemListaInformativaBlock(),
         label="Itens da Lista",
-        help_text="Adicione textos ou links a esta seção."
+        help_text="Adicione textos, links ou arquivos a esta seção."
     )
- 
+
     class Meta:
-        label = "Seção de Conteúdo"
+        label = "Item do Acordeão"
+        icon = "collapse-down"
+        template = "blocks/bloco_informativo.html"
+
+
+class AcordeonBlock(StructBlock):
+    titulo_geral = CharBlock(required=False, label="Título Geral do Bloco de Acordeão")
+    secoes = ListBlock(
+        AcordeonItemBlock(),
+        label="Seções do Acordeão",
+        help_text="Adicione uma ou mais seções expansíveis."
+    )
+
+    class Meta:
+        label = "Acordeão"
         icon = "collapse-down"
         template = "blocks/bloco_informativo.html"
