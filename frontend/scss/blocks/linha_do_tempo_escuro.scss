@@ -11,7 +11,7 @@
 
   .card-linha-do-tempo__title {
     font-weight: 500;
-    color: variables.$color-white !important;
+    color: variables.$color-text-body-dark !important;
   }
 
   .card-linha-do-tempo {
@@ -28,7 +28,7 @@
     aspect-ratio: 1.3;
     overflow-y: scroll;
     z-index: 15;
-    background-color: variables.$color-black;
+    background-color: variables.$color-white;
 
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
@@ -91,6 +91,9 @@
       &.reached-by-line {
         .calendar-circle {
           fill: variables.$color-white !important;
+        }
+        circle {
+          filter: drop-shadow(0 0 10px rgba(variables.$color-white, 0.55));
         }
         color: variables.$color-black;
       }
@@ -195,6 +198,7 @@
           variables.$color-black 100%
       );
       width: 4px;
+      box-shadow: 0 0 10px rgba(variables.$color-white, 0.55);
       transition: height 0.2s ease-out;
       will-change: background-color;
     }
@@ -262,6 +266,10 @@
 
   .card-linha-do-tempo {
     position: relative;
+
+    .card-linha-do-tempo__description {
+      color: variables.$color-text-body-dark;
+    }
   }
 
   .calendar-icon {
