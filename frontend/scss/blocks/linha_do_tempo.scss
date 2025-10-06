@@ -1,5 +1,17 @@
 @use '../variables.scss';
 
+
+// Linha do tempo breakpoints
+$linha-do-tempo-breakpoints: (
+  xs: 576px,
+  sm: 768px,
+  md: 992px,
+  lg: 1200px,
+  xl: 1400px,
+  xxl: 1600px,
+);
+
+
 .linha-do-tempo {
   display: flex;
   flex-direction: row;
@@ -45,7 +57,7 @@
 }
 
 .row.block-linha-do-tempo {
-  @media (min-width: 1200px) {
+  @media (min-width: map-get($linha-do-tempo-breakpoints, 'lg')) {
     &:has(:first-child:nth-last-child(2)) {
       max-height: calc(360px + 0.5rem);
     }
@@ -106,7 +118,7 @@
     margin: 0;
   }
 
-  @media (min-width: 1200px) {
+  @media (min-width: map-get($linha-do-tempo-breakpoints, 'lg')) {
     &:nth-child(even) {
       .linha-do-tempo-item-row {
         justify-content: flex-end;
@@ -156,7 +168,7 @@
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: map-get($linha-do-tempo-breakpoints, 'lg')) {
   .linha-do-tempo {
     .container {
       --bs-gutter-x: 0;
@@ -203,13 +215,13 @@
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: map-get($linha-do-tempo-breakpoints, 'lg')) {
   .linha-do-tempo-calendar-group::after {
     height: 118px;
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: map-get($linha-do-tempo-breakpoints, 'lg')) {
   .linha-do-tempo-calendar-group::after {
     height: 536px;
   }
@@ -235,7 +247,7 @@
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: map-get($linha-do-tempo-breakpoints, 'lg')) {
   // Itens pares: card à direita; traçar linha do centro até a borda direita
   .linha-do-tempo__item:nth-child(even) .linha-do-tempo-item-row::before {
     left: var(--group-x);
@@ -250,7 +262,7 @@
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: map-get($linha-do-tempo-breakpoints, 'lg')) {
   // Em dispositivos móveis, o grupo (ícone) fica ~10% a partir da esquerda
   .linha-do-tempo-item-row {
     --group-x: 10%;
