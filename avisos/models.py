@@ -33,7 +33,7 @@ class AvisosPageTag(TaggedItemBase):
 class AvisosPage(PageSitePadrao):
     subtitle = models.CharField(
         verbose_name="Subtítulo", blank=True, max_length=255)
-    descricao = models.CharField(
+    descricao = models.TextField(
         verbose_name="Descrição",
         blank=False,
         help_text="Breve descrição do conteúdo da página.",

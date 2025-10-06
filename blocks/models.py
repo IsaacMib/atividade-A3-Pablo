@@ -26,7 +26,8 @@ from wagtail.blocks import (
     PageChooserBlock,
     URLBlock,
     IntegerBlock,
-    BooleanBlock
+    BooleanBlock,
+    DateBlock,
 )
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.embeds.blocks import EmbedBlock
@@ -689,6 +690,21 @@ class EspecificDocumentChooserBlock(DocumentChooserBlock):
                 )
         return value
 
+
+class CardLinhaDoTempoBlock(StructBlock):
+    imagem = ImageChooserBlock(required=True, label="Imagem")
+    texto_alternativo = CharBlock(
+        required=False, label="Texto alternativo da imagem")
+    titulo = CharBlock(required=False, label="Título")
+    descricao = TextBlock(required=False, label="Descrição")
+    # data = DateBlock(required=True, label="Data")
+
+    class Meta:
+        icon = 'title'
+        label = 'Card da Linha do Tempo'
+        template = 'blocks/card_linha_do_tempo.html'
+
+
 # StreamBlocks
 
 
@@ -738,6 +754,16 @@ class BaseStreamBlock(StreamBlock):
         # preview_template="blocks/preview/static_table_block.html",
         description="Uma tabela de dados",
     )
+
+
+class LinhaDoTempoBlock(StructBlock):
+    titulo = CharBlock(required=True, label="Título")
+    cards = ListBlock(CardLinhaDoTempoBlock(), min_num=1, max_num=12, icon='form', label="Card")
+
+    class Meta:
+        icon = 'title'
+        label = 'Linha do Tempo'
+        template = 'blocks/linha_do_tempo.html'
 
 
 class SolucaoItemBlock(StructBlock):
@@ -794,7 +820,7 @@ class GridImagensBlock(StructBlock):
         Retorna as classes de coluna Bootstrap baseadas no tipo de grid.
         """
         return GRID_IMAGENS_CLASSES.get(grid_type, GRID_IMAGENS_CLASSES[GRID_IMAGENS_DEFAULT_TYPE])
-    
+
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
         grid_type = value.get('grid_type', GRID_IMAGENS_DEFAULT_TYPE)

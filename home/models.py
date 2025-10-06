@@ -19,6 +19,7 @@ from blocks.models import (
   ServicoOnlineItemBlock,
   AcordeonBlock,
   FormularioBlock,
+  LinhaDoTempoBlock
 )
 
 
@@ -41,7 +42,8 @@ class HomePage(PageSitePadrao):
             ("programa", GridImagensBlock()),
             ("secao_informativa", AcordeonBlock()),
             ("formulario", FormularioBlock()),
-          
+            ("servico_online_item", ServicoOnlineItemBlock()),
+            ("linha_do_tempo", LinhaDoTempoBlock()),
         ],
         use_json_field=True,
         null=True,
