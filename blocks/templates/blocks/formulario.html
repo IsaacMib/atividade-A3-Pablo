@@ -1,0 +1,20 @@
+{% load wagtailcore_tags %}
+
+<div class="container my-5 formulario-bloco">
+    {% if self.titulo_geral %}
+        <h2 class="titulo-formulario">{{ self.titulo_geral }}</h2>
+    {% endif %}
+
+    {% if self.descricao %}
+        <div class="subtitulo-formulario">
+            {{ self.descricao|richtext }}
+        </div>
+    {% endif %}
+
+    {# A lógica para processar os dados do formulário (POST) precisará ser implementada na view da página. #}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary btn-enviar-sugestao">{{ self.texto_botao }}</button>
+    </form>
+</div>

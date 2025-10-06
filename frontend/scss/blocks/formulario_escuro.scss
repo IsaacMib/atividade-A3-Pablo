@@ -1,0 +1,37 @@
+@use '../variables.scss';
+
+[data-theme="dark"] {
+    .formulario-bloco {
+        background-color: transparent;
+
+        .titulo-formulario {
+            color: #fff;
+        }
+
+        .subtitulo-formulario {
+            color: #adb5bd;
+        }
+
+        form {
+            label {
+                color: #f8f9fa;
+            }
+
+            .form-control, .form-select {
+                background-color: #343a40;
+                border-color: #6c757d;
+                color: #f8f9fa;
+
+                &:focus {
+                    background-color: #495057;
+                }
+            }
+
+            .btn.btn-primary.btn-enviar-sugestao {
+                background-color: #fff;
+                border-color: #fff;
+                color: #000;
+            }
+        }
+    }
+}

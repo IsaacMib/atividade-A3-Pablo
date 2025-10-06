@@ -36,6 +36,13 @@ from django.conf import settings
 import uuid
 
 import magic
+from django.db import models
+from .forms import (
+    SingleLineFieldBlock,
+    MultiLineFieldBlock,
+    EmailFieldBlock,
+    NumberFieldBlock,
+)
 
 from django.core.exceptions import ValidationError
 
@@ -858,7 +865,7 @@ class AcordeonItemBlock(StructBlock):
     class Meta:
         label = "Item do Acordeão"
         icon = "collapse-down"
-        template = "blocks/bloco_informativo.html"
+        template = "blocks/acordeon_item.html"
 
 
 class AcordeonBlock(StructBlock):
@@ -868,8 +875,36 @@ class AcordeonBlock(StructBlock):
         label="Seções do Acordeão",
         help_text="Adicione uma ou mais seções expansíveis."
     )
-
     class Meta:
         label = "Acordeão"
         icon = "collapse-down"
         template = "blocks/bloco_informativo.html"
+class FormularioBlock(StructBlock):
+    titulo_geral = CharBlock(default="Formulário", label="Título Principal do Formulário")
+    descricao = RichTextBlock(required=False, label="Descrição/Introdução")
+    campos_customizados = StreamBlock([
+        ('texto_simples', SingleLineFieldBlock()),
+        ('texto_longo', MultiLineFieldBlock()),
+        ('email', EmailFieldBlock()),
+        ('numero', NumberFieldBlock()),
+    ], label="Campos Customizados", required=False)
+    texto_botao = CharBlock(default="Enviar", label="Texto do Botão de Envio")
+
+    def get_context(self, value, parent_context=None):
+        from .forms import CustomForm
+        context = super().get_context(value, parent_context)
+        request = context.get('request')
+        initial_data = {}
+        if request and request.user.is_authenticated:
+            initial_data['nome_completo'] = request.user.get_full_name() or request.user.username
+        form = CustomForm(
+            fields_config=value.get('campos_customizados'),
+            initial=initial_data
+        )
+        context['form'] = form
+        return context
+
+    class Meta:
+        label = "Formulário Customizado"
+        icon = "form"
+        template = "blocks/formulario.html"
