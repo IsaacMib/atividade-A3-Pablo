@@ -1,5 +1,6 @@
 from django import forms
 from wagtail.blocks import (
+    StructBlock,
     CharBlock,
     EmailBlock,
     ChoiceBlock,
@@ -14,6 +15,7 @@ from wagtail.blocks import (
     IntegerBlock,
     BooleanBlock
 )
+from .utils import validate_file_size
 
 #CAMPOS DE FORMULÁRIO
 
@@ -47,6 +49,11 @@ class DropdownFieldBlock(BaseFieldBlock):
 
     class Meta:
         label = "Menu de Opções"
+
+class FileFieldBlock(BaseFieldBlock):
+    class Meta:
+        label = "Campo de Arquivo"
+        icon = "doc-full-inverse"
 
 #FIM CAMPOS DE FORMULÁRIO
 
@@ -82,6 +89,9 @@ class CustomForm(forms.Form):
                 elif field_type == 'numero':
                     field_class = forms.IntegerField
                     widget = forms.NumberInput(attrs={'class': 'form-control'})
+                elif field_type == 'arquivo':
+                    self.fields[field_name] = forms.FileField(label=field_label, required=is_required, help_text=help_text, validators=[validate_file_size], widget=forms.FileInput(attrs={'class': 'form-control'}))
+                    continue
                 elif field_type == 'menu_opcoes':
                     field_class = forms.ChoiceField
                     choices_str = block.value.get('choices', '')

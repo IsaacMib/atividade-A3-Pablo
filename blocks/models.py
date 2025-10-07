@@ -43,6 +43,7 @@ from .forms import (
     MultiLineFieldBlock,
     EmailFieldBlock,
     NumberFieldBlock,
+    FileFieldBlock,
 )
 
 from django.core.exceptions import ValidationError
@@ -913,6 +914,7 @@ class CustomFormBlock(StructBlock):
         ('texto_longo', MultiLineFieldBlock()),
         ('email', EmailFieldBlock()),
         ('numero', NumberFieldBlock()),
+        ('arquivo', FileFieldBlock()),
     ], label="Campos Customizados", required=False)
     texto_botao = CharBlock(default="Enviar", label="Texto do Botão de Envio")
 
