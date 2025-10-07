@@ -50,9 +50,10 @@
       max-height: calc(360px + 0.5rem);
     }
     &:has(:first-child:nth-last-child(1)) {
-      max-height: calc(540px + 0.5rem);
+      max-height: calc(580px + 0.5rem);
     }
   }
+  @include linha-do-tempo-item-row;
 }
 
 .linha-do-tempo__item {
@@ -126,7 +127,7 @@
 
         // Linha deve ser maior para elementos pares
         .linha-do-tempo-calendar-group::after {
-          height: calc(var(--card-max-height) - 4.6rem);
+          height: calc(var(--card-max-height) - 35px);
         }
       }
     }
@@ -205,7 +206,7 @@
 
 @media (min-width: $layout-change-breakpoint) {
   .linha-do-tempo-calendar-group::after {
-    height: 118px;
+    height: calc((var(--card-max-height) / 2) - 74px);
   }
 }
 
