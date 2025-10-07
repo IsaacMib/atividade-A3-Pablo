@@ -2,6 +2,7 @@
     background-color: #fff;
     padding: 2rem;
     border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 
     .titulo-formulario {
         color: var(--w-color-primary, #004c9c);
@@ -41,5 +42,13 @@
             font-weight: 600;
             padding: 0.75rem 1.5rem;
         }
+          .formulario-sucesso {
+        background-color: #d1e7dd;
+        border-color: #badbcc;
+        color: #0f5132;
+        .alert-heading {
+            color: inherit;
+        }
     }
 }
+    }

@@ -1,6 +1,7 @@
 from wagtail.search import index
 from django.db import models
 from core.models import PageSitePadrao
+from django.shortcuts import redirect
 from django.contrib import messages
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
@@ -73,19 +74,18 @@ class HomePage(PageSitePadrao):
                 if bound_form.is_valid():
                     from blocks.models import FormularioSubmissao
                     cleaned_data = bound_form.cleaned_data.copy()
-                    
-                    # Extrai os campos padrão e remove-os do dicionário
                     nome_completo = cleaned_data.pop('nome_completo', '')
                     titulo = cleaned_data.pop('titulo', '')
 
                     FormularioSubmissao.objects.create(
                         nome_completo=nome_completo,
                         titulo=titulo,
-                        dados_adicionais=cleaned_data, # Salva apenas os campos customizados restantes
+                        dados_adicionais=cleaned_data,
                         pagina=self,
                         usuario=request.user if request.user.is_authenticated else None
                     )
-                    messages.success(request, "Formulário enviado com sucesso!")
+                    messages.success(request, "Formulário Enviado Com Sucesso!")
+                    return redirect(request.path)
                 else:
                     messages.error(request, "Ocorreu um erro. Por favor, verifique os campos do formulário.")
 
