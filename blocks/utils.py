@@ -139,5 +139,6 @@ GRID_IMAGENS_CLASSES = {
 }
 
 def validate_file_size(value):
-    if value and value.file.size > 10 * 1024 * 1024:
+    file_obj = getattr(value, 'file', value)
+    if file_obj and hasattr(file_obj, 'size') and file_obj.size > 10 * 1024 * 1024:
         raise ValidationError("O tamanho do arquivo não pode exceder 10MB.")

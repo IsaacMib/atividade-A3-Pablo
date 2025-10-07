@@ -37,6 +37,7 @@ from django.conf import settings
 import uuid
 
 import magic
+from django.utils.html import format_html_join
 from django.db import models
 from .forms import (
     SingleLineFieldBlock,
@@ -917,6 +918,7 @@ class CustomFormBlock(StructBlock):
         ('arquivo', FileFieldBlock()),
     ], label="Campos Customizados", required=False)
     texto_botao = CharBlock(default="Enviar", label="Texto do Botão de Envio")
+    captcha_habilitado = BooleanBlock(required=False, default=False, label="Habilitar reCAPTCHA")
 
     def get_context(self, value, parent_context=None):
         from .forms import CustomForm
@@ -925,11 +927,51 @@ class CustomFormBlock(StructBlock):
         initial_data = {}
         if request and request.user.is_authenticated:
             initial_data['nome_completo'] = request.user.get_full_name() or request.user.username
+        show_recaptcha = bool(value.get('captcha_habilitado'))
+
+        recaptcha_site_key = None
+        recaptcha_secret_key = None
+        try:
+            from core.models import SiteSettings
+            site_settings = SiteSettings.for_site(request.site) if request and hasattr(request, 'site') else SiteSettings.objects.first()
+            if site_settings:
+                recaptcha_site_key = site_settings.get_captcha_site_key()
+                recaptcha_secret_key = site_settings.get_captcha_secret()
+                if not (recaptcha_site_key and recaptcha_secret_key):
+                    show_recaptcha = False
+        except Exception:
+            show_recaptcha = False
+
         form = CustomForm(
             fields_config=value.get('campos_customizados'),
-            initial=initial_data
+            initial=initial_data,
+            request=request,
+            show_recaptcha=show_recaptcha,
+            recaptcha_secret_key=recaptcha_secret_key
         )
+        if request and hasattr(request, '_form_errors') and getattr(request, '_form_errors') is not None:
+            try:
+                form = getattr(request, '_form_errors')
+            except Exception:
+                pass
+        else:
+            if request and getattr(request, 'method', '').upper() == 'POST':
+                try:
+                    bound_form = CustomForm(
+                        request.POST,
+                        request.FILES if hasattr(request, 'FILES') else None,
+                        fields_config=value.get('campos_customizados'),
+                        request=request,
+                        show_recaptcha=show_recaptcha,
+                        recaptcha_secret_key=recaptcha_secret_key,
+                        initial=initial_data
+                    )
+                    form = bound_form
+                except Exception:
+                    pass
         context['form'] = form
+        context['show_recaptcha'] = show_recaptcha
+        context['recaptcha_site_key'] = recaptcha_site_key
         return context
 
     class Meta:
@@ -937,6 +979,14 @@ class CustomFormBlock(StructBlock):
         icon = "form"
         template = "blocks/formulario.html"
 
+
+class ArquivoSubmetido(models.Model):
+    submissao = models.ForeignKey('FormularioSubmissao', on_delete=models.CASCADE, related_name='arquivos_submetidos')
+    nome_campo = models.CharField(max_length=255)
+    arquivo = models.FileField(upload_to='formularios_submetidos/')
+
+    def __str__(self):
+        return f"Arquivo do campo '{self.nome_campo}' para a submissão {self.submissao.id}"
 
 class FormularioSubmissao(models.Model):
     nome_completo = models.CharField(max_length=255, verbose_name="Nome Completo")
@@ -957,6 +1007,26 @@ class FormularioSubmissao(models.Model):
         blank=True,
         verbose_name="Usuário da Intranet?"
     )
+
+    def dados_adicionais_formatados(self):
+        """Formata o JSON de dados_adicionais para uma exibição mais legível."""
+        if not self.dados_adicionais:
+            return "Nenhum dado adicional."
+        return format_html_join(
+            '<br>', '<strong>{}:</strong> {}',
+            ((key, value) for key, value in self.dados_adicionais.items())
+        )
+    dados_adicionais_formatados.short_description = "Dados Adicionais"
+    
+    def arquivos_para_download(self):
+        """Retorna uma lista de links HTML para os arquivos associados."""
+        return format_html_join(
+            '<br>',
+            '<a href="{}" target="_blank">{}</a>',
+            ((arquivo.arquivo.url, arquivo.arquivo.name.split('/')[-1]) for arquivo in self.arquivos_submetidos.all())
+        )
+    arquivos_para_download.short_description = "Arquivos Anexados"
+
 
     def __str__(self):
         return f"Envio de {self.nome_completo} em {self.pagina.title if self.pagina else 'N/A'}"
