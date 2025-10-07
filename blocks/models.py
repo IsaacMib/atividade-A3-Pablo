@@ -905,7 +905,7 @@ class AcordeonBlock(StructBlock):
         label = "Acordeão"
         icon = "collapse-down"
         template = "blocks/bloco_informativo.html"
-class FormularioBlock(StructBlock):
+class CustomFormBlock(StructBlock):
     titulo_geral = CharBlock(default="Formulário", label="Título Principal do Formulário")
     descricao = RichTextBlock(required=False, label="Descrição/Introdução")
     campos_customizados = StreamBlock([
@@ -934,3 +934,32 @@ class FormularioBlock(StructBlock):
         label = "Formulário Customizado"
         icon = "form"
         template = "blocks/formulario.html"
+
+
+class FormularioSubmissao(models.Model):
+    nome_completo = models.CharField(max_length=255, verbose_name="Nome Completo")
+    titulo = models.CharField(max_length=255, verbose_name="Título")
+    dados_adicionais = models.JSONField(verbose_name="Dados Adicionais", help_text="Campos customizados do formulário.")
+    pagina = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name="Página de origem"
+    )
+    data_envio = models.DateTimeField(auto_now_add=True, verbose_name="Data de envio")
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Usuário da Intranet?"
+    )
+
+    def __str__(self):
+        return f"Envio de {self.nome_completo} em {self.pagina.title if self.pagina else 'N/A'}"
+
+    class Meta:
+        verbose_name = "Envio do Formulário"
+        verbose_name_plural = "Envios dos Formulários"
+        ordering = ['-data_envio']
