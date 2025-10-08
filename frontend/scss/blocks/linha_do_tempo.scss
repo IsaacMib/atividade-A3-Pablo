@@ -76,6 +76,8 @@
     --card-max-height: 380px;
     --card-aspect-ratio: 1.5;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
+
+    @include group-icon-mixin;
   }
 
   .linha-do-tempo-calendar-group {
@@ -206,7 +208,7 @@
 
 @media (min-width: $layout-change-breakpoint) {
   .linha-do-tempo-calendar-group::after {
-    height: calc((var(--card-max-height) / 2) - 74px);
+    height: 117px;
   }
 }
 

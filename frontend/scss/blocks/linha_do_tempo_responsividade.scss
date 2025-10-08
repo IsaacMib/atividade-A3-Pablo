@@ -8,26 +8,48 @@ $linha-do-tempo-breakpoints: (
   xxl: 1600px,
 );
 
+$layout-change-breakpoint: map-get($linha-do-tempo-breakpoints, 'xxs');
+$icon-resize-breakpoint: map-get($linha-do-tempo-breakpoints, 'md');
+$icon-resize-breakpoint1: map-get($linha-do-tempo-breakpoints, 'xs');
+
 $row-height-per-breakpoint: (
   'lg': (
     'two-items': 340px,
-    'one-item': 520px
+    'one-item': 520px,
   ),
   'md': (
     'two-items': 320px,
-    'one-item': 500px
+    'one-item': 500px,
   ),
   'sm': (
     'two-items': 290px,
-    'one-item': 465px
+    'one-item': 465px,
   ),
   'xs': (
     'two-items': 260px,
-    'one-item': 420px
-  )
+    'one-item': 420px,
+  ),
 );
 
-$layout-change-breakpoint: map-get($linha-do-tempo-breakpoints, 'xxs');
+@function calculate-connector-heights($heights) {
+  $result: ();
+  @each $breakpoint, $values in $row-height-per-breakpoint {
+    $result: map-merge(
+      $result,
+      (
+        $breakpoint: (
+          'odd': map-get($values, 'one-item') - 20px,
+          'even': map-get($values, 'two-items') - 20px,
+        ),
+      )
+    );
+  }
+  @return $result;
+}
+
+$connector-line-height-per-breakpoint: calculate-connector-heights(
+  $row-height-per-breakpoint
+);
 
 @mixin card-aspect-ratio {
   --card-aspect-ratio: 1.3;
@@ -82,7 +104,7 @@ $layout-change-breakpoint: map-get($linha-do-tempo-breakpoints, 'xxs');
   @each $breakpoint, $heights in $row-height-per-breakpoint {
     $height-two-items: map-get($heights, 'two-items');
     $height-one-item: map-get($heights, 'one-item');
-    
+
     @media (max-width: map-get($linha-do-tempo-breakpoints, $breakpoint)) {
       @media (min-width: $layout-change-breakpoint) {
         &:has(:first-child:nth-last-child(2)) {
@@ -96,46 +118,34 @@ $layout-change-breakpoint: map-get($linha-do-tempo-breakpoints, 'xxs');
   }
 }
 
-@mixin linha-do-tempo-calendar-group {
-  @media (max-width: map-get($linha-do-tempo-breakpoints, 'lg')) {
-    @media (min-width: $layout-change-breakpoint) {
-      &:has(:first-child:nth-last-child(2)) {
-        max-height: calc(340px + 0.5rem);
-      }
-      &:has(:first-child:nth-last-child(1)) {
-        max-height: calc(500px + 0.5rem);
-      }
-    }
-  }
-  @media (max-width: map-get($linha-do-tempo-breakpoints, 'md')) {
-    @media (min-width: $layout-change-breakpoint) {
-      &:has(:first-child:nth-last-child(2)) {
-        max-height: calc(320px + 0.5rem);
-      }
-      &:has(:first-child:nth-last-child(1)) {
-        max-height: calc(475px + 0.5rem);
+@mixin group-icon-mixin {
+  @media (max-width: $icon-resize-breakpoint) {
+    svg {
+      width: 80px;
+      height: 80px;
+
+      circle {
+        r: 36px;
       }
     }
-  }
-  @media (max-width: map-get($linha-do-tempo-breakpoints, 'sm')) {
-    // @media (min-width: $layout-change-breakpoint) {
-    //   &:has(:first-child:nth-last-child(2)) {
-    //     max-height: calc(290px + 0.5rem);
-    //   }
-    //   &:has(:first-child:nth-last-child(1)) {
-    //     max-height: calc(415px + 0.5rem);
-    //   }
-    // }
-    @media (min-width: $layout-change-breakpoint) {
-      &:has(:first-child:nth-last-child(2)) {
-        max-height: calc(65dvw + 0.5rem);
-      }
-      &:has(:first-child:nth-last-child(1)) {
-        max-height: calc(65dvw);
-      }
+
+    .calendar-icon {
+      font-size: 1.5rem ;
     }
   }
-  @media (max-width: map-get($linha-do-tempo-breakpoints, 'xs')) {
+
+  @media (max-width: $icon-resize-breakpoint1) {
+    svg {
+      width: 72px;
+      height: 72px;
+
+      circle {
+        r: 34px;
+      }
+    }
+
+    .calendar-icon {
+      font-size: 1.4rem ;
+    }
   }
 }
-
