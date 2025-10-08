@@ -1035,12 +1035,18 @@ class FormularioSubmissao(models.Model):
     dados_adicionais_formatados.short_description = "Dados Adicionais"
     
     def arquivos_para_download(self):
-        """Retorna uma lista de links HTML para os arquivos associados."""
+        try:
+            form_block_value = next(block.value for block in self.pagina.specific.body if isinstance(block.block, CustomFormBlock))
+            field_map = {f"custom_field_{i}_{block.block_type}": block.value.get('label') for i, block in enumerate(form_block_value.get('campos_customizados', []))}
+        except (StopIteration, AttributeError):
+            field_map = {}
+
         return format_html_join(
-            '<br>',
+            ' / ',
             '<a href="{}" target="_blank">{}</a>',
-            ((arquivo.arquivo.url, arquivo.arquivo.name.split('/')[-1]) for arquivo in self.arquivos_submetidos.all())
+            ((arquivo.arquivo.url, field_map.get(arquivo.nome_campo, arquivo.nome_campo)) for arquivo in self.arquivos_submetidos.all())
         )
+
     arquivos_para_download.short_description = "Arquivos Anexados"
 
 

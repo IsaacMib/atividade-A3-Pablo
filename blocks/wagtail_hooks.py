@@ -6,7 +6,7 @@ from .models import FormularioSubmissao
 
 class FormularioSubmissaoViewSet(SnippetViewSet):
     model = FormularioSubmissao
-    menu_label = "Formulário Contato"
+    menu_label = "Formulário"
     icon = "form"
     menu_order = 200
     add_to_admin_menu = True
