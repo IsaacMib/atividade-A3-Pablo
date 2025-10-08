@@ -858,42 +858,46 @@ class ItemListaInformativaBlock(StructBlock):
         label = "Item da Lista"
         icon = "dot-circle"
 
+class TextoSimplesBlock(StructBlock):
+    texto = RichTextBlock(required=True, label="Texto", features=['bold', 'italic', 'ol', 'ul', 'link', 'document-link'])
+
+    class Meta:
+        label = "Texto Simples"
+        icon = "pilcrow"
+        template = "blocks/texto_simples_block.html"
+
+class LinkBlock(StructBlock):
+    titulo_link = CharBlock(required=True, label="Texto do Link")
+    url_link = URLBlock(required=True, label="URL do Link")
+
+    class Meta:
+        label = "Link"
+        icon = "link"
+        template = "blocks/link_block.html"
+
+class ArquivoDownloadBlock(StructBlock):
+    titulo_arquivo = CharBlock(required=True, label="Texto de exibição para o arquivo")
+    arquivo = DocumentChooserBlock(required=True, label="Arquivo para Download")
+
+    class Meta:
+        label = "Arquivo para Download"
+        icon = "doc-full-inverse"
+        template = "blocks/arquivo_download_block.html"
+
+class ConteudoAcordeonStreamBlock(StreamBlock):
+    texto = TextoSimplesBlock()
+    link = LinkBlock()
+    arquivo = ArquivoDownloadBlock()
+
+    class Meta:
+        label = "Conteúdo da Seção"
+
 class AcordeonItemBlock(StructBlock):
     titulo = CharBlock(required=True, label="Título da Seção")
-    descricao = RichTextBlock(required=False, label="Descrição da Seção")
-    
-    TEMAS = [
-        ('branco', 'Branco (Padrão)'),
-        ('azul', 'Azul com cinza'),
-    ]
-    tema = ChoiceBlock(
-        choices=TEMAS,
-        default='branco',
-        required=False,
-        label="Tema de Cores"
-    )
-
-    ESTILOS_LISTA = [
-        ('bolinhas', 'Bolinhas (•)'),
-        ('tracos', 'Traços (-)'),
-        ('numeros', 'Numerada (1, 2, 3)'),
-    ]
-    estilo_lista = ChoiceBlock(
-        choices=ESTILOS_LISTA,
-        default='bolinhas',
-        required=False,
-        label="Estilo da Lista de Itens"
-    )
-    itens_lista = ListBlock(
-        ItemListaInformativaBlock(),
-        label="Itens da Lista",
-        help_text="Adicione textos, links ou arquivos a esta seção."
-    )
-
+    conteudo = ConteudoAcordeonStreamBlock(required=False, label="Conteúdo da Seção")
     class Meta:
         label = "Item do Acordeão"
         icon = "collapse-down"
-        template = "blocks/acordeon_item.html"
 
 
 class AcordeonBlock(StructBlock):
@@ -903,6 +907,18 @@ class AcordeonBlock(StructBlock):
         label="Seções do Acordeão",
         help_text="Adicione uma ou mais seções expansíveis."
     )
+    TEMAS = [
+        ('branco', 'Branco (Padrão)'),
+        ('azul', 'Azul com cinza'),
+    ]
+    tema = ChoiceBlock(
+        choices=TEMAS,
+        default='branco',
+        required=False,
+        label="Tema de Cores do Acordeão",
+        help_text="A cor escolhida será aplicada a todas as seções do acordeão."
+    )
+
     class Meta:
         label = "Acordeão"
         icon = "collapse-down"

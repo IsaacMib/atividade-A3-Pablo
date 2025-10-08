@@ -1,5 +1,5 @@
     .bloco-informativo-content-wrapper {
-        max-width: 1250px;
+        max-width: 960px;
         margin: 0 auto;
     }
 
@@ -66,48 +66,32 @@
         color: #000;
     }
 
-    .bloco-informativo .secao-lista-itens {
-        list-style: none;
-        padding-left: 0;
-        counter-reset: item-counter;
-    }
-
-    .bloco-informativo .secao-lista-itens li {
-        margin-bottom: 0.5rem;
-        padding-left: 25px;
-        position: relative;
-        color: #000;
-    }
-
-    .bloco-informativo .lista-bolinhas li::before { content: "•"; position: absolute; left: 0; }
-    .bloco-informativo .lista-tracos li::before { content: "–"; position: absolute; left: 0; }
-    .bloco-informativo .lista-numeros li::before {
-        counter-increment: item-counter;
-        content: counter(item-counter) ". ";
-        position: absolute;
-        left: 0;
-    }
-
-    .bloco-informativo a {
-        color: #007BFF;
-        text-decoration: none;
-    }
-
-    .bloco-informativo a:hover {
-        text-decoration: underline;
-    }
-
-    /* Tema Azul */
-    .tema-azul .secao-header {
+    .bloco-informativo.tema-azul .secao-header {
         background-color: #004c9c;
         color: #ffffff;
     }
 
-    .tema-azul .secao-header .seta {
+    .bloco-informativo.tema-azul .secao-header .seta {
         color: #ffffff;
     }
 
-    .tema-azul .secao-conteudo {
+    .bloco-informativo.tema-azul .secao-conteudo {
         background-color: #f0f0f0;
         color: #333;
+    }
+
+    .acordeon-texto-simples,
+    .acordeon-link,
+    .acordeon-arquivo {
+        margin-bottom: 1rem;
+    }
+
+    .acordeon-texto-simples:last-child,
+    .acordeon-link:last-child,
+    .acordeon-arquivo:last-child {
+        margin-bottom: 0;
+    }
+
+    .acordeon-link a, .acordeon-arquivo a {
+        color: var(--w-color-primary, #004c9c);
     }

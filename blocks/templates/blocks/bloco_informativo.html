@@ -1,6 +1,6 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-<div class="bloco-informativo">
+<div class="bloco-informativo tema-{{ self.tema|default:'branco' }}">
     <div class="bloco-informativo-content-wrapper">
         {% if self.titulo_geral %}
             <h2 class="titulo-geral-acordeao">{{ self.titulo_geral }}</h2>
@@ -10,7 +10,7 @@
             {# Se for AcordeonBlock com múltiplas seções #}
             {% if self.secoes %}
                 {% for secao in self.secoes %}
-                    <section class="secao tema-{{ secao.tema|default:'branco' }}">
+                    <section class="secao">
                         {% if secao.titulo %}
                             <div class="secao-header">
                                 <span>{{ secao.titulo }}</span>
@@ -19,37 +19,17 @@
         {% endif %}
 
                         <div class="secao-conteudo">
-                            {% if secao.descricao %}
-                                <div class="descricao-secao">
-                                    {{ secao.descricao|richtext }}
-                                </div>
-                            {% endif %}
-
-                            {% if secao.itens_lista %}
-                                {% if secao.estilo_lista == 'numeros' %}
-                                    <ol class="secao-lista-itens lista-numeros">
-            {% else %}
-                                    <ul class="secao-lista-itens lista-{{ secao.estilo_lista|default:'bolinhas' }}">
-            {% endif %}
-                                        {% for item in secao.itens_lista %}
-                        <li>
-                                                {% if item.url_link %}
-                                                    <a href="{{ item.url_link }}">{{ item.titulo_link }}</a>
-                            {% elif item.arquivo %}
-                                                    <a href="{{ item.arquivo.url }}">{{ item.arquivo.title }}</a>
-                            {% else %}
-                                {{ item.texto }}
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                                {% if secao.estilo_lista == 'numeros' %}</ol>{% else %}</ul>{% endif %}
+                            {% if secao.conteudo %}
+                                {% for block in secao.conteudo %}
+                                    {% include_block block %}
+                                {% endfor %}
                             {% endif %}
                         </div>
                     </section>
                 {% endfor %}
             {% else %}
                 {# Caso seja apenas um AcordeonItemBlock individual #}
-                <section class="secao tema-{{ self.tema|default:'branco' }}">
+                <section class="secao">
                     {% if self.titulo %}
                         <div class="secao-header">
                             <span>{{ self.titulo }}</span>
@@ -58,30 +38,10 @@
         {% endif %}
 
                     <div class="secao-conteudo">
-                        {% if self.descricao %}
-                            <div class="descricao-secao">
-                                {{ self.descricao|richtext }}
-                            </div>
-                        {% endif %}
-
-                        {% if self.itens_lista %}
-                            {% if self.estilo_lista == 'numeros' %}
-                                <ol class="secao-lista-itens lista-numeros">
-                            {% else %}
-                                <ul class="secao-lista-itens lista-{{ self.estilo_lista|default:'bolinhas' }}">
-                            {% endif %}
-                                    {% for item in self.itens_lista %}
-                                        <li>
-                                            {% if item.url_link %}
-                                                <a href="{{ item.url_link }}">{{ item.titulo_link }}</a>
-                                            {% elif item.arquivo %}
-                                                <a href="{{ item.arquivo.url }}">{{ item.arquivo.title }}</a>
-                                            {% else %}
-                                                {{ item.texto }}
-                                            {% endif %}
-                                        </li>
-            {% endfor %}
-                            {% if self.estilo_lista == 'numeros' %}</ol>{% else %}</ul>{% endif %}
+                        {% if self.conteudo %}
+                            {% for block in self.conteudo %}
+                                {% include_block block %}
+                            {% endfor %}
                         {% endif %}
                     </div>
                 </section>
