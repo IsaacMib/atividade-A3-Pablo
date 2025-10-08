@@ -1025,11 +1025,10 @@ class FormularioSubmissao(models.Model):
     )
 
     def dados_adicionais_formatados(self):
-        """Formata o JSON de dados_adicionais para uma exibição mais legível."""
         if not self.dados_adicionais:
             return "Nenhum dado adicional."
         return format_html_join(
-            '<br>', '<strong>{}:</strong> {}',
+            '', '<h4>{}:</h4> {}',
             ((key, value) for key, value in self.dados_adicionais.items())
         )
     dados_adicionais_formatados.short_description = "Dados Adicionais"
