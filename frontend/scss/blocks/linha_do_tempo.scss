@@ -53,7 +53,7 @@
       max-height: calc(580px + 0.5rem);
     }
   }
-  @include linha-do-tempo-item-row;
+  @include linha-do-tempo-row-height-mixin;
 }
 
 .linha-do-tempo__item {
