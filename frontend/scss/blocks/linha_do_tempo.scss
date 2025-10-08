@@ -270,6 +270,10 @@
   position: relative;
 }
 
+.linha-do-tempo__item {
+  @include connector-line-mixin;
+}
+
 .calendar-icon {
   width: 64px;
   height: 64px;
