@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">{{ page.title }}</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            {% if editais_por_ano %}
+                <div class="accordion" id="accordionEditais">
+                    {% for ano, editais_do_ano in editais_por_ano %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading-{{ ano }}">
+                                <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ ano }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="collapse-{{ ano }}">
+                                    Editais de {{ ano }}
+                                </button>
+                            </h2>
+                            <div id="collapse-{{ ano }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading-{{ ano }}" data-bs-parent="#accordionEditais">
+                                <div class="accordion-body">
+                                    <ul class="list-group list-group-flush">
+                                        {% for edital in editais_do_ano %}
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <a href="{% pageurl edital %}">
+                                                    {{ edital.title }}
+                                                </a>
+                                                <span class="badge bg-primary rounded-pill">{{ edital.get_situacao_display }}</span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Nenhum edital encontrado.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
