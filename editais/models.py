@@ -120,11 +120,11 @@ class EditaisIndexPage(RoutablePageMixin, PageSitePadraoIndex):
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
-        editais = EditalPage.objects.live().descendant_of(self).order_by('-data_publicacao')
+        editais = EditalPage.objects.live().descendant_of(self).order_by('-ano', '-data_publicacao')
 
         editais_por_ano = defaultdict(list)
         for edital in editais:
-            editais_por_ano[edital.data_publicacao.year].append(edital)
+            editais_por_ano[edital.ano].append(edital)
 
         context['editais_por_ano'] = sorted(editais_por_ano.items(), key=lambda x: x[0], reverse=True)
         return context
