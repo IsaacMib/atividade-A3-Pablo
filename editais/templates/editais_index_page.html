@@ -3,21 +3,43 @@
 
 {% block content %}
 <div class="container my-5">
+    <style>
+        :root {
+            --accordion-btn-bg: #003e9b;
+            --accordion-btn-color: #fff;
+        }
+        body.dark-theme {
+            --accordion-btn-bg: #000; 
+            --accordion-btn-color: #FFFF00; 
+        }
+
+        .accordion-button.custom-blue-title,
+        .accordion-button.custom-blue-title:not(.collapsed),
+        .accordion-button.custom-blue-title:focus {
+            color: var(--accordion-btn-color);
+            background-color: var(--accordion-btn-bg);
+            box-shadow: none; 
+            border-bottom: 1px solid var(--accordion-btn-color); 
+            --bs-accordion-btn-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+            --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+        }
+    </style>
+
     <div class="row">
         <div class="col-12">
-            <h1 class="mb-4">{{ page.title }}</h1>
+            <h1 class="mb-4 text-center">{{ page.title }}</h1>
         </div>
     </div>
 
     <div class="row">
         <div class="col-12">
-            {% if editais_por_ano %}
+            {% if anos_paginados %}
                 <div class="accordion" id="accordionEditais">
-                    {% for ano, editais_do_ano in editais_por_ano %}
+                    {% for ano, editais_do_ano in anos_paginados %}
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="heading-{{ ano }}">
-                                <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ ano }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="collapse-{{ ano }}">
-                                    Editais de {{ ano }}
+                                <button class="accordion-button custom-blue-title {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ ano }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="collapse-{{ ano }}">
+                                    {{ ano }}
                                 </button>
                             </h2>
                             <div id="collapse-{{ ano }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading-{{ ano }}" data-bs-parent="#accordionEditais">
@@ -25,9 +47,9 @@
                                     <ul class="list-group list-group-flush">
                                         {% for edital in editais_do_ano %}
                                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                <a href="{% pageurl edital %}">
-                                                    {{ edital.title }}
-                                                </a>
+                                                <div>
+                                                    <a href="{% pageurl edital %}">{{ edital.title }}</a>{% if edital.descricao %}<span class="ms-2 text-muted">- {{ edital.descricao|striptags|truncatewords:25 }}</span>{% endif %}
+                                                </div>
                                                 <span class="badge bg-primary rounded-pill">{{ edital.get_situacao_display }}</span>
                                             </li>
                                         {% endfor %}

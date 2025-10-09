@@ -9,6 +9,7 @@ from blocks.models import EspecificDocumentChooserBlock
 
 from datetime import datetime
 from collections import defaultdict
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from wagtail.blocks import (
     CharBlock,
@@ -92,6 +93,8 @@ class EditalPage(PageSitePadrao):
         FieldPanel('descricao', classname="full"),
         FieldPanel('fases_edital'),
     ]
+    list_display = ("title", "ano", "situacao", "live")
+    list_filter = ("ano", "situacao")
 
     parent_page_types = ['editais.EditaisIndexPage']
     subpage_types = []
@@ -115,18 +118,30 @@ class EditalPage(PageSitePadrao):
 class EditaisIndexPage(RoutablePageMixin, PageSitePadraoIndex):
     parent_page_types = ['home.HomePage']
     subpage_types = ['editais.EditalPage']
-
     template = "editais_index_page.html"
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
         editais = EditalPage.objects.live().descendant_of(self).order_by('-ano', '-data_publicacao')
-
+ 
         editais_por_ano = defaultdict(list)
         for edital in editais:
             editais_por_ano[edital.ano].append(edital)
-
-        context['editais_por_ano'] = sorted(editais_por_ano.items(), key=lambda x: x[0], reverse=True)
+ 
+        # Transforma o dicionário em uma lista ordenada para paginação
+        lista_de_anos = sorted(editais_por_ano.items(), key=lambda x: x[0], reverse=True)
+ 
+        # Paginação: 10 anos por página
+        paginator = Paginator(lista_de_anos, 10)
+        page = request.GET.get("page")
+        try:
+            anos_paginados = paginator.page(page)
+        except PageNotAnInteger:
+            anos_paginados = paginator.page(1)
+        except EmptyPage:
+            anos_paginados = paginator.page(paginator.num_pages)
+ 
+        context['anos_paginados'] = anos_paginados
         return context
 
     class Meta:
