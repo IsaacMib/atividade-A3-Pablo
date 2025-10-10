@@ -1,0 +1,72 @@
+@use '../variables.scss' as variables;
+
+.edital-page-wrapper {
+    .titulo-acompanhamento,
+    .titulo-azul {
+        color: variables.$color-primary;
+    }
+
+    .titulo-azul {
+        text-decoration: underline;
+        text-underline-offset: 8px;
+    }
+
+    .fases-edital-header {
+        background-color: rgb(43, 80, 140);
+        color: variables.$color-white;
+
+        th {
+            color: variables.$color-white;
+        }
+    }
+
+    @media (forced-colors: active) {
+        .titulo-acompanhamento,
+        .titulo-azul {
+            color: CanvasText;
+        }
+
+        .fases-edital-header {
+            background-color: Canvas;
+            color: CanvasText;
+
+            th {
+                color: CanvasText;
+                forced-color-adjust: none;
+            }
+        }
+    }
+
+    body.dark-theme & {
+        color: variables.$color-white;
+
+        .titulo-acompanhamento,
+        .titulo-azul {
+            color: variables.$color-white;
+        }
+
+        .fases-edital-header {
+            background-color: variables.$color-black;
+            color: variables.$color-warning;
+
+            th {
+                color: variables.$color-warning;
+            }
+        }
+
+        .text-muted {
+            color: variables.$color-grey-400 !important;
+        }
+
+        .badge.bg-info {
+            background-color: variables.$color-warning !important;
+            color: variables.$color-black !important;
+        }
+
+        .table {
+            --bs-table-border-color: #{variables.$color-grey-700};
+            --bs-table-hover-color: #{variables.$color-grey-800};
+            --bs-table-hover-bg: #{rgba(variables.$color-white, 0.075)};
+        }
+    }
+}

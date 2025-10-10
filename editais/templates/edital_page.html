@@ -2,38 +2,40 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
-<div class="container my-5">
+<div class="container my-5 edital-page-wrapper">
     <div class="row">
-        <div class="col-12">
-            <h1 class="mb-2">Edital Nº {{ page.numero }}/{{ page.ano }}</h1>
+        <div class="col-12 text-center">
+            <h1 class="mb-2 titulo-azul">Edital Nº {{ page.numero }}/{{ page.ano }}</h1>
             <h2 class="h4 text-muted mb-4">{{ page.title }}</h2>
 
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Informações Gerais</h5>
-                    <p><strong>Situação:</strong> <span class="badge bg-info text-dark">{{ page.get_situacao_display }}</span></p>
-                    <p><strong>Data de Publicação:</strong> {{ page.data_publicacao|date:"d/m/Y" }}</p>
-                    <div class="card-text">
-                        <strong>Descrição:</strong>
-                        {{ page.descricao|richtext }}
+            <div class="mb-5">
+                <div class="row justify-content-center mb-3">
+                    <div class="col-auto">
+                        <p><strong>Data de Publicação:</strong> {{ page.data_publicacao|date:"d/m/Y" }}</p>
                     </div>
+                    <div class="col-auto">
+                        <p><strong>Situação:</strong> <span class="badge bg-info text-dark">{{ page.get_situacao_display }}</span></p>
+                    </div>
+                </div>
+                <div class="text-start">
+                    {{ page.descricao|richtext }}
                 </div>
             </div>
 
-            <h3 class="mt-5 mb-3">Andamento do Edital</h3>
+            <h3 class="mb-3 titulo-acompanhamento">Acompanhe o Andamento do Edital</h3>
 
-            {% if page.fases_edital %}
+            {% if fases_ordenadas %}
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-dark">
+                    <table class="table table-bordered table-hover">
+                        <thead class="fases-edital-header">
                             <tr>
-                                <th scope="col">Data</th>
-                                <th scope="col">Fase</th>
-                                <th scope="col">Descrição e Documentos</th>
+                                <th scope="col" style="width: 15%;">Data/Hora</th>
+                                <th scope="col" style="width: 35%;">Fase</th>
+                                <th scope="col">Anexos</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for fase in page.fases_edital %}
+                            {% for fase in fases_ordenadas %}
                                 {% include_block fase %}
                             {% endfor %}
                         </tbody>

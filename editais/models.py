@@ -103,10 +103,8 @@ class EditalPage(PageSitePadrao):
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
-
-        # Ordena as fases do edital pela data da fase (da mais antiga para a mais nova)
         if self.fases_edital:
-            context['fases_ordenadas'] = sorted(self.fases_edital, key=lambda fase: fase.value['data_fase'])
+            context['fases_ordenadas'] = sorted(self.fases_edital, key=lambda fase: fase.value['data_fase'], reverse=True)
 
         return context
 
