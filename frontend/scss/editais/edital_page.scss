@@ -83,6 +83,57 @@
     }
 }
 
+.edital-page-wrapper {
+    .text-start, .richtext, .richtext * {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        hyphens: auto;
+    }
+
+    .richtext img,
+    .text-start img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0.5rem 0;
+    }
+
+    .richtext iframe,
+    .text-start iframe {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .text-start a, .richtext a {
+        word-break: break-all;
+        overflow-wrap: anywhere;
+    }
+}
+
+@media (max-width: 768px) {
+    .edital-page-wrapper {
+        .titulo-azul { font-size: 1.4rem; }
+        .titulo-acompanhamento { font-size: 1.05rem; }
+
+        .table th, .table td { padding: 0.45rem 0.5rem; }
+
+        .table td a { font-size: 0.95rem; }
+    }
+}
+
+@media (max-width: 360px) {
+    .edital-page-wrapper {
+        .titulo-azul { font-size: 1.15rem; }
+        .titulo-acompanhamento { font-size: 1rem; }
+
+        .table { font-size: 0.9rem; }
+
+        .fases-edital-header th { font-size: 0.9rem; }
+
+        .table tbody tr td { padding: 0.5rem 0.4rem; }
+    }
+}
+
 [data-theme=dark] .edital-page-wrapper {
     .titulo-acompanhamento,
     .titulo-azul {

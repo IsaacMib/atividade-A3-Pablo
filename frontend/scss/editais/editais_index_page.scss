@@ -122,3 +122,22 @@ $accordion-btn-color: #fff;
         }
     }
 }
+
+/* Tablet (<= 768px) ajustes */
+@media (max-width: 768px) {
+    .editais-index-page-wrapper {
+        .titulo-pagina-editais { font-size: 1.5rem; }
+        .accordion-button.custom-blue-title { font-size: 1.05rem; padding: 0.5rem 0.75rem; }
+        .list-group .list-group-item { padding: 0.5rem 0.75rem; }
+    }
+}
+
+/* Micro-mobile (<= 360px) ajustes */
+@media (max-width: 360px) {
+    .editais-index-page-wrapper {
+        .titulo-pagina-editais { font-size: 1.15rem; }
+        .accordion-button.custom-blue-title { font-size: 0.95rem; padding: 0.4rem 0.6rem; }
+        .list-group .list-group-item { padding: 0.4rem 0.6rem; }
+        .pagination .page-link { padding: 0.35rem 0.45rem; }
+    }
+}
