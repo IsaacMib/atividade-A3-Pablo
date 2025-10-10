@@ -1,7 +1,11 @@
 @use '../variables.scss';
 @use './linha_do_tempo_responsividade.scss' as *;
 
-[data-theme=dark] {
+[data-theme='dark'] {
+  .card-linha-do-tempo__title {
+    font-weight: 500;
+    color: variables.$color-text-body-dark !important;
+  }
 
   .linha-do-tempo {
     display: flex;
@@ -50,9 +54,10 @@
         max-height: calc(360px + 0.5rem);
       }
       &:has(:first-child:nth-last-child(1)) {
-        max-height: calc(540px + 0.5rem);
+        max-height: calc(580px + 0.5rem);
       }
     }
+    @include linha-do-tempo-row-height-mixin;
   }
 
   .linha-do-tempo__item {
@@ -75,6 +80,8 @@
       --card-max-height: 380px;
       --card-aspect-ratio: 1.5;
       --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
+
+      @include group-icon-mixin;
     }
 
     .linha-do-tempo-calendar-group {
@@ -86,7 +93,7 @@
       stroke: variables.$color-white;
       stroke-width: 2;
       fill: none;
-      
+
       &.reached-by-line {
         .calendar-circle {
           fill: variables.$color-white !important;
@@ -126,7 +133,7 @@
 
           // Linha deve ser maior para elementos pares
           .linha-do-tempo-calendar-group::after {
-            height: calc(var(--card-max-height) - 4.6rem);
+            height: calc(var(--card-max-height) - 35px);
           }
         }
       }
@@ -165,7 +172,7 @@
 
     .linha-do-tempo__item {
       justify-content: space-between;
-      margin: 15rem auto;
+      margin: 7rem auto;
     }
 
     .linha-do-tempo {
@@ -185,7 +192,7 @@
     .linha-do-tempo-calendar-group::after {
       content: "";
       position: absolute;
-      top: 98%;
+      top: 99%;
       // --secondary-color: #e8edf4;
       --percentageReminder: calc(var(--reveal-percentage, 0%) - var(--percentageRange, 0%));
       --percentageAtElement: calc(var(--percentageReminder, 0%) / var(--percentageCorrectionFactor, 0%));
@@ -199,19 +206,20 @@
       width: 4px;
       box-shadow: 0 0 10px rgba(variables.$color-white, 0.55);
       transition: height 0.2s ease-out;
-      will-change: background-color;
+      will-change: background-color, box-shadow;
     }
   }
 
   @media (min-width: $layout-change-breakpoint) {
     .linha-do-tempo-calendar-group::after {
-      height: 118px;
+      height: 117px;
     }
   }
 
+  // Tamanho da linha para telas mobile
   @media (max-width: $layout-change-breakpoint) {
     .linha-do-tempo-calendar-group::after {
-      height: 560px;
+      height: 426px;
     }
   }
 
@@ -255,20 +263,18 @@
     .linha-do-tempo-item-row {
       --group-x: 10%;
     }
-    // Traçar da borda direita até a posição do grupo (direita → esquerda)
-    .linha-do-tempo__item .linha-do-tempo-item-row::before {
-      right: var(--group-x);
-      width: calc(90% - var(--group-x));
-      display: block !important;
+
+    .calendar-icon {
+      margin-right: 2px;
     }
   }
 
   .card-linha-do-tempo {
     position: relative;
+  }
 
-    .card-linha-do-tempo__description {
-      color: variables.$color-text-body-dark;
-    }
+  .linha-do-tempo__item {
+    @include connector-line-mixin;
   }
 
   .calendar-icon {
