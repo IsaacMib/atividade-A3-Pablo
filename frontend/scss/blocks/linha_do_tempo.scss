@@ -168,7 +168,7 @@
 
   .linha-do-tempo__item {
     justify-content: space-between;
-    margin: 15rem auto;
+    margin: 7rem auto;
   }
 
   .linha-do-tempo {
@@ -212,9 +212,10 @@
   }
 }
 
+// Tamanho da linha para telas mobile
 @media (max-width: $layout-change-breakpoint) {
   .linha-do-tempo-calendar-group::after {
-    height: 536px;
+    height: 426px;
   }
 }
 
@@ -258,11 +259,15 @@
   .linha-do-tempo-item-row {
     --group-x: 10%;
   }
-  // Traçar da borda direita até a posição do grupo (direita → esquerda)
-  .linha-do-tempo__item .linha-do-tempo-item-row::before {
-    right: var(--group-x);
-    width: calc(90% - var(--group-x));
-    display: block !important;
+  // // Traçar da borda direita até a posição do grupo (direita → esquerda)
+  // .linha-do-tempo__item .linha-do-tempo-item-row::before {
+  //   right: var(--group-x);
+  //   width: calc(90% - var(--group-x));
+  //   display: block !important;
+  // }
+
+  .calendar-icon {
+    margin-right: 2px;
   }
 }
 
