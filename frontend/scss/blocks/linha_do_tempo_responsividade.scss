@@ -6,7 +6,7 @@ $linha-do-tempo-breakpoints: (
   sm: 900px,
   xs: 810px,
   xxs: 772px,
-  brkp: 590px,
+  brkp: 592px,
 );
 
 $layout-change-breakpoint: map-get($linha-do-tempo-breakpoints, 'brkp');
