@@ -275,6 +275,10 @@
 
   .linha-do-tempo__item {
     @include connector-line-mixin;
+
+    .card-linha-do-tempo__description {
+      color: variables.$color-text-body-dark;
+    }
   }
 
   .calendar-icon {
