@@ -10,19 +10,31 @@ $linha-do-tempo-breakpoints: (
 );
 
 $layout-change-breakpoint: map-get($linha-do-tempo-breakpoints, 'brkp');
+$layout-change-breakpoint-max: calc($layout-change-breakpoint - 1px);
 
 $icon-resize-breakpoint: map-get($linha-do-tempo-breakpoints, 'md');
 $icon-resize-breakpoint1: map-get($linha-do-tempo-breakpoints, 'xs');
 $icon-resize-breakpoint2: map-get($linha-do-tempo-breakpoints, 'brkp');
 
+
+$card-height-per-breakpoint: (
+  lg: 340px,
+  md: 330px,
+  sm: 300px,
+  xs: 33dvw,
+  xxs: 36dvw,
+  brkp: 65dvw,
+);
+
 $icon-size-per-breakpoint: (
-  xxl: 52px,
-  xl: 52px,
-  lg: 52px,
-  md: 54px,
-  sm: 54px,
+  xxl: 61px,
+  xl: 61px,
+  lg: 63px,
+  md: 61px,
+  sm: 61px,
   xs: 42px,
-  xxs: 80px,
+  xxs: 42px,
+  brkp: 80px,
 );
 
 $row-height-per-breakpoint: (
@@ -42,17 +54,23 @@ $row-height-per-breakpoint: (
     'two-items': 280px,
     'one-item': 420px,
   ),
+  'xxs': (
+    'two-items': 280px,
+    'one-item': 420px,
+  ),
 );
+
 
 @function calculate-connector-heights($heights-per-breakpoint) {
   $result: ();
   @each $breakpoint, $values in $heights-per-breakpoint {
     $icon-size: map-get($icon-size-per-breakpoint, $breakpoint);
+    $card-height: map-get($card-height-per-breakpoint, $breakpoint);
     $result: map-merge(
       $result,
       (
         $breakpoint: (
-          'odd': ((map-get($values, 'one-item') / 2) - 36px - (2 * $icon-size)),
+          'odd': (calc(($card-height / 2) - $icon-size)),
           'even':(map-get($values, 'two-items') + 64px - (2 * $icon-size)),
         ),
       )
@@ -99,7 +117,6 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'md')) {
-    --card-aspect-ratio: 1.1;
     max-height: 330px;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
     h3 {
@@ -115,19 +132,16 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'xs')) {
-    --card-aspect-ratio: 1.1;
     max-height: 33dvw;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'xxs')) {
-    --card-aspect-ratio: 1.1;
     max-height: 36dvw;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
 
-  @media (max-width: map-get($linha-do-tempo-breakpoints, 'brkp')) {
-    --card-aspect-ratio: 1.1;
+  @media (max-width: $layout-change-breakpoint-max) {
     max-height: 65dvw;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
@@ -171,7 +185,7 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
         }
       }
       .calendar-icon {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
       }
     }
     
@@ -184,8 +198,8 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
         }
       }
       .calendar-icon {
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
         font-size: 1.2rem;
       }
     }

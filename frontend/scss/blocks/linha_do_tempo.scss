@@ -159,7 +159,7 @@
   }
 }
 
-@media (max-width: $layout-change-breakpoint) {
+@media (max-width: $layout-change-breakpoint-max) {
   .linha-do-tempo {
     .container {
       --bs-gutter-x: 0;
@@ -213,7 +213,7 @@
 }
 
 // Tamanho da linha para telas mobile
-@media (max-width: $layout-change-breakpoint) {
+@media (max-width: $layout-change-breakpoint-max) {
   .linha-do-tempo-calendar-group::after {
     height: 426px;
   }
@@ -254,7 +254,7 @@
   }
 }
 
-@media (max-width: $layout-change-breakpoint) {
+@media (max-width: $layout-change-breakpoint-max) {
   // Em dispositivos móveis, o grupo (ícone) fica ~10% a partir da esquerda
   .linha-do-tempo-item-row {
     --group-x: 10%;
@@ -284,7 +284,7 @@
   height: 64px;
   z-index: 100;
   color: variables.$color-primary;
-  font-size: 1.8rem;
+  font-size: 1.9rem;
   display: flex;
   align-items: center;
   justify-content: center;
