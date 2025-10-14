@@ -22,7 +22,7 @@
     }
 
     .fases-edital-header {
-        background-color: rgb(43, 80, 140);
+        background-color: variables.$color-primary;
         color: variables.$color-white;
 
         th {
@@ -173,21 +173,17 @@
 
 @media (forced-colors: active) {
     .edital-page-wrapper {
-        .fase-titulo {
-            color: CanvasText !important;
-        }
-
         .titulo-acompanhamento,
         .titulo-azul {
-            color: CanvasText !important;
+            color: variables.$color-on-background !important;
         }
 
         .fases-edital-header {
-                background-color: Canvas !important;
-                color: CanvasText !important;
+                background-color: variables.$color-background !important;
+                color: variables.$color-on-background !important;
 
                 th {
-                    color: CanvasText !important;
+                    color: variables.$color-on-background !important;
                 }
             }
 
@@ -195,17 +191,17 @@
             &.aberto, &.em_andamento, &.encerrado, &.suspenso, &.cancelado {
                 background-color: variables.$color-warning !important;
                 color: variables.$color-on-warning !important;
-                border: 1px solid variables.$color-on-warning;
+                border: 1px solid variables.$color-on-warning !important;
                 forced-color-adjust: none;
             }
         }
         .edital-fases-table, .edital-fases-table th, .edital-fases-table td {
-            background-color: Canvas !important;
-            color: CanvasText !important;
+            background-color: variables.$color-background !important;
+            color: variables.$color-on-background !important;
             forced-color-adjust: none;
         }
         .edital-fases-table a, .edital-fases-table a:visited, .edital-fases-table i {
-            color: CanvasText !important;
+            color: variables.$color-on-background !important;
             forced-color-adjust: none;
         }
         .edital-page-wrapper .titulo-acompanhamento,
@@ -217,8 +213,8 @@
 
         .edital-page-wrapper .edital-fases-table thead.fases-edital-header,
         .edital-page-wrapper .edital-fases-table thead.fases-edital-header th {
-            background-color: Canvas !important;
-            color: CanvasText !important;
+            background-color: variables.$color-background !important;
+            color: variables.$color-on-background !important;
             forced-color-adjust: none;
         }
     }
