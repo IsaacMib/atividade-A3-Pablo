@@ -184,6 +184,7 @@
         display: none;
       }
     }
+    @include connector-line-mixin-mobile;
   }
 
   // Linha só deve aparecer se card não for o último
