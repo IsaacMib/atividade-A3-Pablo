@@ -1,11 +1,13 @@
+@use '../variables.scss' as variables;
+
 .formulario-bloco {
-    background-color: #fff;
+    background-color: variables.$color-white;
     padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px variables.$color-card-shadow-hover;
 
     .titulo-formulario {
-        color: var(--w-color-primary, #004c9c);
+        color: variables.$color-primary;
         font-weight: 700;
         font-size: 2rem;
         text-align: center;
@@ -15,7 +17,7 @@
     }
 
     .subtitulo-formulario {
-        color: #6c757d;
+        color: variables.$color-grey-600;
         margin-bottom: 2rem;
         text-align: center;
     }
@@ -28,7 +30,7 @@
         label {
             display: block;
             font-weight: 600;
-            color: var(--w-color-primary, #004c9c);
+            color: variables.$color-primary;
             margin-bottom: 0.5rem;
         }
 
@@ -37,18 +39,20 @@
         }
 
         .btn-enviar-sugestao {
-            background-color: var(--w-color-primary, #004c9c);
-            border-color: var(--w-color-primary, #004c9c);
+            background-color: variables.$color-primary;
+            border-color: variables.$color-primary;
             font-weight: 600;
             padding: 0.75rem 1.5rem;
         }
-          .formulario-sucesso {
-        background-color: #d1e7dd;
-        border-color: #badbcc;
-        color: #0f5132;
-        .alert-heading {
-            color: inherit;
+
+        .formulario-sucesso {
+            background-color: variables.$color-success;
+            border-color: darken(variables.$color-success, 8%);
+            color: variables.$color-on-success;
+
+            .alert-heading {
+                color: inherit;
+            }
         }
     }
 }
-    }

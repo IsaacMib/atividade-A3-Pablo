@@ -1,4 +1,6 @@
-    .bloco-informativo-content-wrapper {
+@use '../variables.scss' as variables;
+
+.bloco-informativo-content-wrapper {
         max-width: 960px;
         margin: 0 auto;
     }
@@ -6,7 +8,7 @@
     .titulo-geral-acordeao {
         font-size: 2rem;
         font-weight: 700;
-        color: var(--w-color-primary, #004c9c);
+        color: variables.$color-primary;
         margin-bottom: 1.5rem;
         text-align: center;
         text-decoration: underline;
@@ -17,7 +19,7 @@
         margin-bottom: 1.5rem;
         font-size: 1rem;
         line-height: 1.5;
-        color: #333;
+        color: variables.$color-list-video-title;
     }
 
     .lista-geral-acordeao {
@@ -25,8 +27,8 @@
     }
 
     .secao {
-        border: 1px solid #ccc;
-        background-color: #fff;
+        border: 1px solid variables.$color-grey-300;
+        background-color: variables.$color-white;
         overflow: hidden;
         transition: all 0.3s ease;
     }
@@ -36,7 +38,7 @@
     }
 
     .secoes-informativas > .secao:last-of-type {
-        border-bottom: 1px solid #ccc;
+        border-bottom: 1px solid variables.$color-grey-300;
         margin-bottom: 0; 
     }
 
@@ -47,12 +49,12 @@
         cursor: pointer;
         font-weight: bold;
         font-size: 1.1rem;
-        color: #000;
+        color: variables.$color-black;
         padding: 12px 16px;
     }
 
     .secao-header .seta {
-        color: #000;
+        color: variables.$color-black;
         transition: transform 0.3s ease;
     }
 
@@ -63,21 +65,21 @@
     .secao-conteudo {
         display: none;
         padding: 12px 16px;
-        color: #000;
+        color: variables.$color-black;
     }
 
     .bloco-informativo.tema-azul .secao-header {
-        background-color: #004c9c;
-        color: #ffffff;
+        background-color: variables.$color-primary;
+        color: variables.$color-white;
     }
 
     .bloco-informativo.tema-azul .secao-header .seta {
-        color: #ffffff;
+        color: variables.$color-white;
     }
 
     .bloco-informativo.tema-azul .secao-conteudo {
-        background-color: #f0f0f0;
-        color: #333;
+        background-color: variables.$color-grey-100;
+        color: variables.$color-list-video-title;
     }
 
     .acordeon-texto-simples,
@@ -93,5 +95,5 @@
     }
 
     .acordeon-link a, .acordeon-arquivo a {
-        color: var(--w-color-primary, #004c9c);
+        color: variables.$color-primary;
     }

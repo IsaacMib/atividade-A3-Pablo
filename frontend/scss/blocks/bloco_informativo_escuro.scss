@@ -1,54 +1,54 @@
-@use '../variables.scss';
+@use '../variables.scss' as variables;
 
 [data-theme="dark"] {
     .titulo-geral-acordeao {
-        color: #fff;
+        color: variables.$color-white;
     }
 
     .introducao-acordeao {
-        color: #eee;
+        color: variables.$color-grey-100;
     }
 
     .secao {
-        border-color: #555;
-        background-color: #222;
+        border-color: variables.$color-grey-600;
+        background-color: variables.$color-agenda-item-bg-escuro;
     }
 
     .secoes-informativas > .secao:last-of-type {
-        border-bottom-color: #555;
+        border-bottom-color: variables.$color-grey-600;
     }
 
     .secao-header {
-        color: #eee;
+        color: variables.$color-grey-100;
     }
 
     .secao-header .seta {
-        color: #eee;
+        color: variables.$color-grey-100;
     }
 
     .secao-conteudo {
-        color: #eee;
+        color: variables.$color-grey-100;
     }
 
     .bloco-informativo .secao-lista-itens li {
-        color: #eee;
+        color: variables.$color-grey-100;
     }
 
     .bloco-informativo a {
-        color: #66bfff;
+        color: variables.$color-primary;
     }
 
     .bloco-informativo.tema-azul .secao-header {
-        background-color: #003366;
-        color: #fff;
+        background-color: variables.$top-background-busca;
+        color: variables.$color-white;
     }
 
     .bloco-informativo.tema-azul .secao-header .seta {
-        color: #fff;
+        color: variables.$color-white;
     }
 
     .bloco-informativo.tema-azul .secao-conteudo {
-        background-color: #333;
-        color: #ddd;
+        background-color: variables.$color-grey-800;
+        color: variables.$color-grey-200;
     }
 }
