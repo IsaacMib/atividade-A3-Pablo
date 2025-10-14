@@ -5,7 +5,7 @@ from blocks.corpo_tecnico import ListGrupoCorpoTecnicoBlock
 from wagtail.admin.panels import FieldPanel, TitleFieldPanel
 from wagtail.images.blocks import ImageChooserBlock
 from blocks.models import BaseStreamCorpoTecnicoBlock
-    
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from wagtail.models.panels import PanelPlaceholder
 
@@ -44,6 +44,33 @@ class CorpoTecnicoGrupoPageIndex(PageSitePadraoIndex):
     
     parent_page_types = [ 'paginas.CorpoTecnicoIndexPage' ]
     subpage_types = ['paginas.CorpoTecnicoPage']
+
+    def get_context(self, request):
+        context = super(CorpoTecnicoGrupoPageIndex, self).get_context(request)
+        all_posts = CorpoTecnicoPage.objects.descendant_of(
+            self).live().order_by("title")
+        paginator = Paginator(all_posts, 6)  # 6 membros por página
+        page = request.GET.get("page")
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)
+        context["posts"] = posts
+        return context
+    
+    def get_corpo_tecnico(self, quantidade=6):
+        """
+        Retorna os filhos (CorpoTecnicoPage) ordenados por título.
+        
+        Args:
+            quantidade (int): Número de itens a retornar. Padrão é 6.
+        
+        Returns:
+            QuerySet: Lista de páginas CorpoTecnicoPage limitada pela quantidade especificada.
+        """
+        return CorpoTecnicoPage.objects.descendant_of(self).live().order_by('title')[:quantidade]
 
 class CorpoTecnicoPage(PageSitePadrao):
 
