@@ -39,24 +39,24 @@ $icon-size-per-breakpoint: (
 
 $row-height-per-breakpoint: (
   'lg': (
-    'two-items': 340px,
-    'one-item': 520px,
+    'one-item': 340px,
+    'two-items': 520px,
   ),
   'md': (
-    'two-items': 320px,
-    'one-item': 500px,
+    'one-item': 320px,
+    'two-items': 500px,
   ),
   'sm': (
-    'two-items': 300px,
-    'one-item': 465px,
+    'one-item': 300px,
+    'two-items': 465px,
   ),
   'xs': (
-    'two-items': 280px,
-    'one-item': 420px,
+    'one-item': 280px,
+    'two-items': 420px,
   ),
   'xxs': (
-    'two-items': 280px,
-    'one-item': 420px,
+    'one-item': 280px,
+    'two-items': 420px,
   ),
 );
 
@@ -66,12 +66,13 @@ $row-height-per-breakpoint: (
   @each $breakpoint, $values in $heights-per-breakpoint {
     $icon-size: map-get($icon-size-per-breakpoint, $breakpoint);
     $card-height: map-get($card-height-per-breakpoint, $breakpoint);
+
     $result: map-merge(
       $result,
       (
         $breakpoint: (
           'odd': (calc(($card-height / 2) - $icon-size)),
-          'even':(map-get($values, 'two-items') + 64px - (2 * $icon-size)),
+          'even':(calc(map-get($values, 'two-items') + .5rem - ($card-height / 2) - $icon-size)),
         ),
       )
     );
@@ -111,13 +112,13 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
   aspect-ratio: var(--card-aspect-ratio);
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'lg')) {
+    max-height: map-get($card-height-per-breakpoint, 'lg');
     --card-aspect-ratio: 1.1;
-    max-height: 340px;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'md')) {
-    max-height: 330px;
+    max-height: map-get($card-height-per-breakpoint, 'md');
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
     h3 {
       font-size: 1.1rem;
@@ -126,18 +127,18 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'sm')) {
+    max-height: map-get($card-height-per-breakpoint, 'sm');
     --card-aspect-ratio: 1.0;
-    max-height: 300px;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'xs')) {
-    max-height: 33dvw;
+    max-height: map-get($card-height-per-breakpoint, 'xs');
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'xxs')) {
-    max-height: 36dvw;
+    max-height: map-get($card-height-per-breakpoint, 'xxs');
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
 
@@ -163,11 +164,11 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
 
     @media (min-width: $layout-change-breakpoint) {
       @media (max-width: map-get($linha-do-tempo-breakpoints, $breakpoint)) {
-        &:has(:first-child:nth-last-child(2)) {
-          max-height: calc(#{$height-two-items} + 0.5rem);
-        }
         &:has(:first-child:nth-last-child(1)) {
           max-height: calc(#{$height-one-item} + 0.5rem);
+        }
+        &:has(:first-child:nth-last-child(2)) {
+          max-height: calc(#{$height-two-items} + 0.5rem);
         }
       }
     }
