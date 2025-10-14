@@ -1,0 +1,296 @@
+@use '../variables.scss';
+
+.linha-do-tempo {
+  display: flex;
+  flex-direction: row;
+  height: min-content;
+  margin-bottom: 2.5rem;
+}
+
+
+.card-linha-do-tempo__title {
+  font-weight: 500;
+  color: variables.$color-primary;
+}
+
+.card-linha-do-tempo {
+  --card-max-height: 360px;
+  --card-aspect-ratio: 1.3;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  border: solid 4px variables.$color-primary;
+  padding: 2rem;
+  max-height: 360px;
+  aspect-ratio: 1.3;
+  overflow-y: scroll;
+  z-index: 15;
+  background-color: variables.$color-white;
+
+  --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
+}
+
+.animate {
+  // Animação de entrada: fade in para cima
+  opacity: 0;
+  transform: translateY(12px);
+  filter: blur(4px);
+  transition:
+    opacity 520ms ease-out,
+    transform 640ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    filter 640ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity, transform, filter;
+}
+
+.row.block-linha-do-tempo {
+  @media (min-width: 1200px) {
+    &:has(:first-child:nth-last-child(2)) {
+      max-height: calc(360px + 0.5rem);
+    }
+    &:has(:first-child:nth-last-child(1)) {
+      max-height: calc(540px + 0.5rem);
+    }
+  }
+}
+
+.linha-do-tempo__item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+
+  .linha-do-tempo-item-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    --group-x: 50%;
+    // Dimensões do card usadas pelo conector
+    --card-max-height: 380px;
+    --card-aspect-ratio: 1.5;
+    --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
+  }
+
+  .linha-do-tempo-calendar-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    stroke: variables.$color-primary;
+    stroke-width: 2;
+    fill: none;
+    
+    &.reached-by-line {
+      .calendar-circle {
+        fill: variables.$color-primary !important;
+      }
+      circle {
+        filter: drop-shadow(0 0 10px rgba(variables.$color-primary, 0.55));
+      }
+      color: variables.$color-white;
+    }
+  }
+
+  .linha-do-tempo-calendar-group {
+    position: absolute;
+    left: 10%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+  }
+
+  @media (min-width: 1200px) {
+    &:nth-child(even) {
+      .linha-do-tempo-item-row {
+        justify-content: flex-end;
+        position: relative;
+        transform: translateY(calc(-50%));
+        .right {
+          display: none;
+        }
+
+        .linha-do-tempo-calendar-group.left {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          margin: 0;
+        }
+
+        // Linha deve ser maior para elementos pares
+        .linha-do-tempo-calendar-group::after {
+          height: calc(var(--card-max-height) - 4.6rem);
+        }
+      }
+    }
+
+    &:nth-child(odd) {
+      .linha-do-tempo-item-row {
+        justify-content: flex-start;
+        position: relative;
+
+        &:not(:first-child) {
+          transform: translateY(-50%);
+        }
+
+        .left {
+          display: none;
+        }
+
+        .linha-do-tempo-calendar-group.right {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .linha-do-tempo {
+    .container {
+      --bs-gutter-x: 0;
+    }
+  }
+
+  .linha-do-tempo__item {
+    justify-content: space-between;
+    margin: 15rem auto;
+  }
+
+  .linha-do-tempo {
+    .arrow.left {
+      margin-left: auto;
+    }
+
+    .right {
+      display: none;
+    }
+  }
+}
+
+// Linha só deve aparecer se card não for o último
+.block-linha-do-tempo:not(:last-child),
+.linha-do-tempo__item:not(:last-child) {
+  .linha-do-tempo-calendar-group::after {
+    content: "";
+    position: absolute;
+    top: 99%;
+    --secondary-color: #e8edf4;
+    --percentageReminder: calc(var(--reveal-percentage, 0%, 0%) - var(--percentageRange, 0%));
+    --percentageAtElement: calc(var(--percentageReminder, 0%) / var(--percentageCorrectionFactor, 0%));
+
+    background: linear-gradient(to bottom, 
+        variables.$color-primary 0%,
+        variables.$color-primary var(--percentageAtElement),
+        var(--secondary-color) var(--percentageAtElement),
+        var(--secondary-color) 100%
+    );
+    width: 4px;
+    box-shadow: 0 0 10px rgba(variables.$color-primary, 0.55);
+    transition: height 0.2s ease-out;
+    will-change: background-color, box-shadow;
+  }
+}
+
+@media (min-width: 1200px) {
+  .linha-do-tempo-calendar-group::after {
+    height: 118px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .linha-do-tempo-calendar-group::after {
+    height: 536px;
+  }
+}
+
+.arrow {
+  border: solid variables.$color-primary;
+  background-color: variables.$color-primary;
+  border-width: 0 5px 5px 0;
+  display: inline-block;
+  padding: 5px;
+  z-index: 10;
+  position: relative;
+
+  &.right {
+    -webkit-transform: translateX(-75%) rotate(-45deg);
+    transform: translateX(-75%) rotate(-45deg);
+  }
+
+  &.left {
+    -webkit-transform: translateX(75%) rotate(135deg);
+    transform: translateX(75%) rotate(135deg);
+  }
+}
+
+@media (min-width: 1200px) {
+  // Itens pares: card à direita; traçar linha do centro até a borda direita
+  .linha-do-tempo__item:nth-child(even) .linha-do-tempo-item-row::before {
+    left: var(--group-x);
+    right: var(--card-width);
+    display: block;
+  }
+  // Itens ímpares: card à esquerda; traçar linha da borda esquerda até o centro
+  .linha-do-tempo__item:nth-child(odd) .linha-do-tempo-item-row::before {
+    left: var(--card-width);
+    right: var(--group-x);
+    display: block;
+  }
+}
+
+@media (max-width: 1200px) {
+  // Em dispositivos móveis, o grupo (ícone) fica ~10% a partir da esquerda
+  .linha-do-tempo-item-row {
+    --group-x: 10%;
+  }
+  // Traçar da borda direita até a posição do grupo (direita → esquerda)
+  .linha-do-tempo__item .linha-do-tempo-item-row::before {
+    right: var(--group-x);
+    width: calc(90% - var(--group-x));
+    display: block !important;
+  }
+}
+
+.card-linha-do-tempo {
+  position: relative;
+}
+
+.calendar-icon {
+  width: 64px;
+  height: 64px;
+  z-index: 100;
+  color: variables.$color-primary;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Estado visível manipulado pelo script
+.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+// Respeitar opções de usuário
+@media (prefers-reduced-motion: reduce) {
+  .card-linha-do-tempo,
+  .arrow {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
