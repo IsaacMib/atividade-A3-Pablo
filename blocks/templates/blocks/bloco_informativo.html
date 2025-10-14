@@ -3,7 +3,7 @@
 <div class="bloco-informativo tema-{{ self.tema|default:'branco' }}">
     <div class="bloco-informativo-content-wrapper">
         {% if self.titulo_geral %}
-            <h2 class="titulo-geral-acordeao">{{ self.titulo_geral }}</h2>
+                    {% include 'include/titulo.html' with titulo=self.titulo_geral classe_css="titulo-formulario" %}
         {% endif %}
 
         <div class="secoes-informativas">
