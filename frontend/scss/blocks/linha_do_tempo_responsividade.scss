@@ -239,6 +239,7 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
 // Limitação de texto nos cards
 .card-linha-do-tempo__description {
   display: -webkit-box;
+  text-align: justify;
   -webkit-line-clamp: 5;
   line-clamp: 5;
   -webkit-box-orient: vertical;
