@@ -2,7 +2,7 @@
 
 <tr>
     <td>{{ value.data_fase|date:"d/m/Y H:i" }}</td>
-    <td><strong>{{ value.titulo_fase }}</strong></td>
+    <td><strong class="fase-titulo">{{ value.titulo_fase }}</strong></td>
     <td>
         {% for block in value.anexo %}
             {% if block.block_type == 'arquivo' %}

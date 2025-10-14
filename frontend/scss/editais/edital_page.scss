@@ -1,7 +1,17 @@
 @use '../variables.scss' as variables;
 
 .edital-page-wrapper {
-    .titulo-acompanhamento,
+    .fase-titulo {
+        color: variables.$color-primary;
+    }
+
+    .tr {
+        color: variables.$color-primary;
+    }
+
+    .titulo-acompanhamento {
+        color: variables.$color-primary;
+    }
     .titulo-azul {
         color: variables.$color-primary;
     }
@@ -9,11 +19,6 @@
     .titulo-azul {
         text-decoration: underline;
         text-underline-offset: 8px;
-    }
-
-    .titulo-acompanhamento {
-        color: variables.$color-primary !important;
-        forced-color-adjust: auto;
     }
 
     .fases-edital-header {
@@ -25,34 +30,28 @@
         }
     }
 
+    .badge-situacao {
+        &.aberto { background-color: var(--bs-success); }
+        &.em_andamento { background-color: var(--bs-info); color: var(--bs-black); }
+        &.encerrado { background-color: var(--bs-secondary); }
+        &.suspenso { background-color: var(--bs-warning); color: var(--bs-black); }
+        &.cancelado { background-color: var(--bs-danger); }
+    }
+
     .th-fase {
         background-color: variables.$color-primary;
         color: variables.$color-white;
-        forced-color-adjust: none;
     }
 
-    @media (forced-colors: active) {
-        .titulo-acompanhamento,
-        .titulo-azul {
-            color: CanvasText;
-        }
-
-        .fases-edital-header {
-            background-color: Canvas;
-            color: CanvasText;
-
-            th {
-                color: CanvasText;
-                forced-color-adjust: none;
-            }
-        }
-    }
-
-    body.dark-theme & {
+    body.dark-theme &,
+    [data-theme=dark] & {
         color: variables.$color-white;
 
         .titulo-acompanhamento,
         .titulo-azul {
+            color: variables.$color-white;
+        }
+        .fase-titulo {
             color: variables.$color-white;
         }
 
@@ -62,7 +61,6 @@
 
             th {
                 color: variables.$color-white !important;
-                forced-color-adjust: none;
             }
         }
 
@@ -70,9 +68,11 @@
             color: variables.$color-grey-400 !important;
         }
 
-        .badge.bg-info {
-            background-color: variables.$color-warning !important;
-            color: variables.$color-black !important;
+        .badge-situacao {
+            &.aberto, &.em_andamento, &.encerrado, &.suspenso, &.cancelado {
+                background-color: variables.$color-warning !important;
+                color: variables.$color-on-warning !important;
+            }
         }
 
         .table {
@@ -80,8 +80,45 @@
             --bs-table-hover-color: #{variables.$color-grey-800};
             --bs-table-hover-bg: #{rgba(variables.$color-white, 0.075)};
         }
+
+        .edital-fases-table {
+            background-color: variables.$color-black !important;
+            color: variables.$color-white !important;
+
+            thead.fases-edital-header {
+                background-color: variables.$color-black !important;
+                color: variables.$color-white !important;
+
+                th { color: variables.$color-white !important; }
+            }
+
+            tbody tr td {
+                background-color: transparent !important;
+                color: variables.$color-white !important;
+            }
+
+            a, a:visited {
+                color: variables.$color-white !important;
+                text-decoration: underline !important;
+            }
+        }
     }
+
 }
+
+        .edital-page-wrapper 
+        .edital-page-wrapper {
+            color: CanvasText !important;
+            forced-color-adjust: none;
+            background-color: transparent !important;
+        }
+        .edital-page-wrapper .edital-fases-table thead.fases-edital-header,
+        .edital-page-wrapper .edital-fases-table thead.fases-edital-header th {
+            background-color: Canvas !important;
+            color: CanvasText !important;
+            forced-color-adjust: none;
+        }
+    
 
 .edital-page-wrapper {
     .text-start, .richtext, .richtext * {
@@ -134,47 +171,55 @@
     }
 }
 
-[data-theme=dark] .edital-page-wrapper {
-    .titulo-acompanhamento,
-    .titulo-azul {
-        color: variables.$color-white !important;
-    }
+@media (forced-colors: active) {
+    .edital-page-wrapper {
+        .fase-titulo {
+            color: CanvasText !important;
+        }
 
-    .fases-edital-header {
-        background-color: variables.$color-primary !important;
-        color: variables.$color-white !important;
+        .titulo-acompanhamento,
+        .titulo-azul {
+            color: CanvasText !important;
+        }
 
-        th {
-            color: variables.$color-white !important;
+        .fases-edital-header {
+                background-color: Canvas !important;
+                color: CanvasText !important;
+
+                th {
+                    color: CanvasText !important;
+                }
+            }
+
+        .badge-situacao {
+            &.aberto, &.em_andamento, &.encerrado, &.suspenso, &.cancelado {
+                background-color: variables.$color-warning !important;
+                color: variables.$color-on-warning !important;
+                border: 1px solid variables.$color-on-warning;
+                forced-color-adjust: none;
+            }
+        }
+        .edital-fases-table, .edital-fases-table th, .edital-fases-table td {
+            background-color: Canvas !important;
+            color: CanvasText !important;
             forced-color-adjust: none;
         }
-    }
+        .edital-fases-table a, .edital-fases-table a:visited, .edital-fases-table i {
+            color: CanvasText !important;
+            forced-color-adjust: none;
+        }
+        .edital-page-wrapper .titulo-acompanhamento,
+        .edital-page-wrapper .titulo-acompanhamento * {
+            color: CanvasText !important;
+            forced-color-adjust: none;
+            background-color: transparent !important;
+        }
 
-    .fases-edital-header th.th-fase {
-        background-color: variables.$color-primary !important;
-        color: variables.$color-white !important;
-        forced-color-adjust: none;
-    }
-
-    .table tbody tr td:nth-child(2) {
-        background-color: variables.$color-black !important;
-        color: variables.$color-white !important;
-        vertical-align: middle;
-        forced-color-adjust: none;
-    }
-
-    .text-muted {
-        color: variables.$color-grey-400 !important;
-    }
-
-    .badge.bg-info {
-        background-color: variables.$color-warning !important;
-        color: variables.$color-black !important;
-    }
-
-    .table {
-        --bs-table-border-color: #{variables.$color-grey-700};
-        --bs-table-hover-color: #{variables.$color-grey-800};
-        --bs-table-hover-bg: #{rgba(variables.$color-white, 0.075)};
+        .edital-page-wrapper .edital-fases-table thead.fases-edital-header,
+        .edital-page-wrapper .edital-fases-table thead.fases-edital-header th {
+            background-color: Canvas !important;
+            color: CanvasText !important;
+            forced-color-adjust: none;
+        }
     }
 }

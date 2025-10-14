@@ -14,7 +14,7 @@
                         <p><strong>Data de Publicação:</strong> {{ page.data_publicacao|date:"d/m/Y" }}</p>
                     </div>
                     <div class="col-auto">
-                        <p><strong>Situação:</strong> <span class="badge bg-info text-dark">{{ page.get_situacao_display }}</span></p>
+                        <p><strong>Situação:</strong> <span class="badge rounded-pill badge-situacao {{ page.situacao }}">{{ page.get_situacao_display }}</span></p>
                     </div>
                 </div>
                 <div class="text-start">
@@ -22,11 +22,11 @@
                 </div>
             </div>
 
-            <h3 class="mb-3 titulo-acompanhamento">Acompanhe o Andamento do Edital</h3>
+            <div ><h2 class="mb-2 titulo-acompanhamento">Andamento do Edital</h2></div>
 
             {% if fases_ordenadas %}
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover">
+                    <table class="table table-bordered table-hover edital-fases-table">
                         <thead class="fases-edital-header">
                             <tr>
                                 <th scope="col" class="th-fase" style="width: 15%;">Data/Hora</th>

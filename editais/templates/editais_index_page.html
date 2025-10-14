@@ -29,7 +29,7 @@
                                                 <div>
                                                     <a href="{% pageurl edital %}">{{ edital.title }}</a>{% if edital.descricao %}<span class="ms-2 text-muted">- {{ edital.descricao|striptags|truncatechars:100 }}</span>{% endif %}
                                                 </div>
-                                                <span class="badge bg-primary rounded-pill">{{ edital.get_situacao_display }}</span>
+                                                <span class="badge rounded-pill badge-situacao {{ edital.situacao }}">{{ edital.get_situacao_display }}</span>
                                             </li>
                                         {% endfor %}
                                     </ul>
