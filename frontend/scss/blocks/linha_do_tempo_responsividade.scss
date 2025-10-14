@@ -34,7 +34,7 @@ $icon-size-per-breakpoint: (
   sm: 61px,
   xs: 42px,
   xxs: 42px,
-  brkp: 80px,
+  brkp: 46px,
 );
 
 $row-height-per-breakpoint: (
@@ -103,6 +103,15 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
         }
       }
     }
+  }
+}
+
+@mixin connector-line-mixin-mobile {
+  $block-height: 7rem;
+  $card-height: map-get($card-height-per-breakpoint, 'brkp');
+  $icon-size: map-get($icon-size-per-breakpoint, 'brkp');
+  .linha-do-tempo-calendar-group::after {
+    height: calc(#{$block-height} + $card-height - $icon-size - 1rem) !important;
   }
 }
 
