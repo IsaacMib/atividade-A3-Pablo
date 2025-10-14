@@ -107,11 +107,11 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
 }
 
 @mixin connector-line-mixin-mobile {
-  $block-height: 7rem;
+  $block-margin: 7rem;
   $card-height: map-get($card-height-per-breakpoint, 'brkp');
   $icon-size: map-get($icon-size-per-breakpoint, 'brkp');
   .linha-do-tempo-calendar-group::after {
-    height: calc(#{$block-height} + $card-height - $icon-size - 1rem) !important;
+    height: calc($block-margin + $card-height - $icon-size - 1rem) !important;
   }
 }
 
@@ -122,12 +122,14 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'lg')) {
     max-height: map-get($card-height-per-breakpoint, 'lg');
+    padding: calc(map-get($card-height-per-breakpoint, 'lg') * 0.08);
     --card-aspect-ratio: 1.1;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'md')) {
     max-height: map-get($card-height-per-breakpoint, 'md');
+    padding: calc(map-get($card-height-per-breakpoint, 'md') * 0.08);
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
     h3 {
       font-size: 1.1rem;
@@ -137,17 +139,20 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'sm')) {
     max-height: map-get($card-height-per-breakpoint, 'sm');
+    padding: calc(map-get($card-height-per-breakpoint, 'sm') * 0.08);
     --card-aspect-ratio: 1.0;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'xs')) {
     max-height: map-get($card-height-per-breakpoint, 'xs');
+    padding: calc(map-get($card-height-per-breakpoint, 'xs') * 0.08);
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'xxs')) {
     max-height: map-get($card-height-per-breakpoint, 'xxs');
+    padding: calc(map-get($card-height-per-breakpoint, 'xxs') * 0.08);
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
 
@@ -228,5 +233,40 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
       height: 60px;
       font-size: 1.4rem;
     }
+  }
+}
+
+// Limitação de texto nos cards
+.card-linha-do-tempo__description {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: $layout-change-breakpoint-max) {
+    -webkit-line-clamp: 8;
+    line-clamp: 8;
+  }
+
+  @media (max-width: 500px) {
+    -webkit-line-clamp: 7;
+    line-clamp: 7;
+  }
+
+  @media (max-width: 450px) {
+    -webkit-line-clamp: 6;
+    line-clamp: 6;
+  }
+
+  @media (max-width: 400px) {
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+  }
+
+  @media (max-width: 352px) {
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
   }
 }

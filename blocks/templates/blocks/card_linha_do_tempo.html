@@ -19,11 +19,11 @@
                     {% image card.imagem width-400 alt=card.texto_alternativo|default:card.titulo %}
                 </div>
                 <div class="card-linha-do-tempo__content text-center">
-                    <h3 class="card-linha-do-tempo__title mt-3">
+                    <h3 class="card-linha-do-tempo__title mt-3 mb-1">
                         {{ card.titulo }}
                     </h3>
                     {% comment %} <p class="card-linha-do-tempo__date">{{ card.data|date:"d/m/Y" }}</p> {% endcomment %}
-                    <p class="card-linha-do-tempo__description">{{ card.descricao }}</p>
+                    <p class="card-linha-do-tempo__description mt-2">{{ card.descricao }}</p>
                 </div>
             </div>
             <div class="arrow right animate"></div>
