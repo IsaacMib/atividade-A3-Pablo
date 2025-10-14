@@ -4,9 +4,8 @@ from wagtail.fields import StreamField
 from blocks.corpo_tecnico import ListGrupoCorpoTecnicoBlock
 from wagtail.admin.panels import FieldPanel, TitleFieldPanel
 from wagtail.images.blocks import ImageChooserBlock
-from wagtail.blocks import (
-    PageChooserBlock,
-)
+from blocks.models import BaseStreamCorpoTecnicoBlock
+    
 
 from wagtail.models.panels import PanelPlaceholder
 
@@ -58,13 +57,10 @@ class CorpoTecnicoPage(PageSitePadrao):
         null=True,
         help_text="Função ou cargo do membro do corpo técnico."
     )
-    bio = models.TextField(
-        verbose_name="Biografia",
-        blank=True,
-        null=True,
-        help_text="Breve biografia do membro do corpo técnico."
+    bio = StreamField(
+        BaseStreamCorpoTecnicoBlock(), verbose_name="Biografia", blank=True, null=True, use_json_field=True
     )
-    
+
     imagem = models.ForeignKey(
         'wagtailimages.Image',
         on_delete=models.SET_NULL,

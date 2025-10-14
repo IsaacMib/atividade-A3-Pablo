@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load wagtailimages_tags static %}
+
+{% block content %}
+  <div class="corpo-tecnico--wrapper">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-5">
+          <div class="caixa-eliptica-sombra">
+            <div class="caixa-eliptica-conteudo">
+              {% if page.imagem %}
+                {% picture page.imagem width-400 %}
+              {% else %}
+                <div class="caixa-eliptica-imagem-default">
+                  <img src="{% static 'img/pessoa-default.svg' %}" alt="Imagem padrão de pessoa" width="205" height="205">
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-7">
+          <div class="corpo-tecnico-header">
+            <span class="corpo-tecnico-header--title">{{ page.title }}</span>
+            <span class="corpo-tecnico-header--function">{{ page.funcao }}</span>
+          </div>
+          <div class="corpo-tecnico-bio">
+            {% if page.bio %}
+              {{ page.bio }}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

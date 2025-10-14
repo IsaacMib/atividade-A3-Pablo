@@ -64,8 +64,8 @@ class SecretariadoIndex(CorpoTecnicoIndexPage):
 
     parent_page_types = [ 'institucional.InstitucionalIndexPage' ]
     subpage_types = ['institucional.SecretariadoGrupoPageIndex']
-
-    pass
+    
+    template = 'paginas/corpo_tecnico_index_page.html'
 
 class SecretariadoGrupoPageIndex(CorpoTecnicoGrupoPageIndex):
     """
@@ -75,7 +75,7 @@ class SecretariadoGrupoPageIndex(CorpoTecnicoGrupoPageIndex):
     parent_page_types = [ 'institucional.SecretariadoIndex' ]
     subpage_types = ['institucional.SecretariadoPage']
 
-    pass
+    template = 'paginas/corpo_tecnico_grupo_page_index.html'
 
 class SecretariadoPage(CorpoTecnicoPage):
     """
@@ -84,4 +84,4 @@ class SecretariadoPage(CorpoTecnicoPage):
 
     parent_page_types = [ 'institucional.SecretariadoGrupoPageIndex' ]
 
-    pass
+    template = 'paginas/corpo_tecnico_page.html'

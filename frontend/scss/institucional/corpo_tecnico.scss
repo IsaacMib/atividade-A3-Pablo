@@ -1,0 +1,74 @@
+@use '../variables.scss';
+
+.corpo-tecnico--wrapper {
+  background-color: variables.$color-white;
+  margin: 16px 0px 48px 0px;
+}
+
+.caixa-eliptica-sombra {
+  display: block;
+  margin: 0 auto 3rem;
+  position: relative;
+  z-index: 2;
+  aspect-ratio: 1/1;
+  max-height: 380px;
+
+  .caixa-eliptica-conteudo {
+    background-color: variables.$caixa-eliptica-background-default;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    border-top-left-radius: 174.07px;
+    border-bottom-right-radius: 174.07px;
+    overflow: hidden;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: variables.$shadow-offset;
+    left: variables.$shadow-offset;
+    right: -#{variables.$shadow-offset};
+    bottom: -#{variables.$shadow-offset};
+    background: variables.$caixa-eliptica-box-shadow;
+    border-top-left-radius: 174.07px;
+    border-bottom-right-radius: 174.07px;
+    z-index: -1;
+  }
+}
+
+.corpo-tecnico-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  color: variables.$color-primary;
+}
+
+
+.corpo-tecnico-header--title {
+  font-weight: 700;
+  font-size: 24px;
+  color: variables.$color-primary;
+  max-width: 400px;
+}
+
+.corpo-tecnico-header--function {
+  display: grid;
+  text-align: start;
+  font-weight: 300;
+  font-size: 20px;
+}
+
+.corpo-tecnico-bio {
+  margin-top: 8px;
+}

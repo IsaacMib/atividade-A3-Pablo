@@ -45,6 +45,12 @@ $company-info-bg: linear-gradient(to right, #e3f6fa, #fdfeff);
 $company-info-img-box-shadow: 22px 22px 0px #cceef7;
 $company-info-img-box-shadow-dark: 21px 21px 0px $color-black, 21px 21px 0px 1px $color-white;
 
+$caixa-eliptica-box-shadow: linear-gradient(157.66deg, rgba(75, 193, 219, 0) 14.56%, rgba(75, 193, 219, 0.8) 148.92%);
+$caixa-eliptica-box-shadow-dark: 21px 21px 0px $color-black, 21px 21px 0px 1px $color-white;
+$caixa-eliptica-background-default: #31B0FF;
+$caixa-eliptica-background-default-dark: #0A0A0A;
+$shadow-offset: 28px;
+
 // Other (Material Design Guide)
 $color-primary-variant: #3700b3;
 $color-secondary-variant: #018786;
@@ -130,3 +136,5 @@ $border-radius-search: 36px;
 $color-site-menu-navbar-collapse-border: #00000033;
 $color-site-menu-navbar-collapse-shadow: #0000004D;
 $color-site-menu-nav-tools-border: #00000026;
+
+
