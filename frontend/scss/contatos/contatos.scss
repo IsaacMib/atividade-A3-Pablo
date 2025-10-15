@@ -1,0 +1,151 @@
+@use './variables.scss' as variables;
+
+.contatos-block-wrapper {
+  color: variables.$color-primary;
+
+  h2,
+  h3,
+  h4 {
+    color: variables.$color-primary;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    color: variables.$color-primary;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+
+    /* estilos de lista */
+    &.list-none {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    &.list-dot {
+      list-style-type: disc;
+      padding-left: 1.5rem;
+    }
+
+    &.list-diamond,
+    &.list-arrow,
+    &.list-triangle,
+    &.list-chevron,
+    &.list-black_diamond {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      color: variables.$color-primary;
+      margin-bottom: 0.25rem;
+
+      &.has-icon {
+        position: relative;
+        padding-left: 1.2rem;
+
+        span.icon {
+          position: absolute;
+          left: 0;
+          color: variables.$color-primary;
+        }
+      }
+
+      strong,
+      span {
+        color: variables.$color-primary;
+      }
+    }
+  }
+}
+
+/* -----------------------
+   NOVA ESTRUTURA UNIFICADA
+-------------------------- */
+
+.contatos {
+  color: variables.$color-primary;
+
+  .section-title {
+    color: variables.$color-primary;
+    font-weight: bold;
+    margin-bottom: 1rem;
+
+    /* tamanhos adaptáveis */
+    &.small {
+      font-size: 1.4rem;
+    }
+
+    &.medium {
+      font-size: 1.8rem;
+    }
+
+    &.large {
+      font-size: 2rem;
+    }
+  }
+
+  .contatos-list {
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+    padding-left: 0;
+    color: variables.$color-primary;
+
+    /* tipos de lista */
+    &.none {
+      list-style: none;
+    }
+
+    &.dot {
+      list-style-type: disc;
+      padding-left: 1.5rem;
+    }
+
+    &.diamond,
+    &.arrow,
+    &.triangle,
+    &.chevron,
+    &.black_diamond {
+      list-style: none;
+      padding-left: 0;
+
+      li {
+        position: relative;
+        padding-left: 1.2rem;
+
+        &::before {
+          position: absolute;
+          left: 0;
+          color: variables.$color-primary;
+        }
+      }
+    }
+
+    /* ícones */
+    &.diamond li::before {
+      content: "♦";
+    }
+
+    &.arrow li::before {
+      content: "➤";
+    }
+
+    &.triangle li::before {
+      content: "▲";
+    }
+
+    &.chevron li::before {
+      content: "›";
+    }
+
+    &.black_diamond li::before {
+      content: "◆";
+    }
+
+    strong,
+    span {
+      color: variables.$color-primary;
+    }
+  }
+}

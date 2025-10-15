@@ -1,0 +1,28 @@
+@use './variables.scss';
+
+[data-theme=dark] {
+    .contatos {
+        color: variables.$color-white;
+        
+        .section-title {
+            color: variables.$color-white;
+        }
+        
+        .contatos-list {
+            color: variables.$color-white;
+            
+            &.diamond li::before,
+            &.arrow li::before,
+            &.triangle li::before,
+            &.chevron li::before,
+            &.black_diamond li::before {
+                color: variables.$color-white;
+            }
+            
+            strong,
+            span {
+                color: variables.$color-white;
+            }
+        }
+    }
+}

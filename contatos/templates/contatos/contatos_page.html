@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+{% load static %}
+
+{% block content %}
+<div class="container my-4">
+  <div class="row">
+
+    {% include 'include/titulo.html' with titulo=page.introduction|default:"Telefones" bgClass='' %}
+
+    {# --- Layout: 2 colunas (50 / 50) --- #}
+    {% if layout == "50_50" %}
+      <div class="col-md-6 col-12">
+        {% for bloco in col1_blocks %}
+          {% for content_block in bloco.value.conteudo %}
+            {% if content_block.block_type == "contatos_section" %}
+              {% with section=content_block.value %}
+              <div class="contatos-block-wrapper my-3">
+                {% if section.section_title %}
+                  {% if section.title_size == "small" %}
+                    <h4 class="fw-bold mb-3">{{ section.section_title }}</h4>
+                  {% elif section.title_size == "large" %}
+                    <h2 class="fw-bold mb-3">{{ section.section_title }}</h2>
+                  {% else %}
+                    <h3 class="fw-bold mb-3">{{ section.section_title }}</h3>
+                  {% endif %}
+                {% endif %}
+                {% if section.contatos %}
+                  <ul class="fw-bold mb-4">
+                    {% for contato in section.contatos %}
+                      <li class="mb-1">
+                        {% if section.list_style == 'diamond' %}
+                          <span>♦</span>
+                        {% elif section.list_style == 'arrow' %}
+                          <span>➤</span>
+                        {% elif section.list_style == 'triangle' %}
+                          <span>▲</span>
+                        {% elif section.list_style == 'chevron' %}
+                          <span>›</span>
+                        {% elif section.list_style == 'black_diamond' %}
+                          <span>◆</span>
+                        {% endif %}
+                        {% if contato.title %}
+                          <strong>{{ contato.title }}:</strong>
+                        {% endif %}
+                        <span>{{ contato.phone }}</span>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
+              {% endwith %}
+            {% else %}
+              <div class="contatos-block-wrapper my-3">
+                {% include_block content_block %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% empty %}
+          <p>Nenhum bloco na Coluna 1</p>
+        {% endfor %}
+      </div>
+
+      <div class="col-md-6 col-12">
+        {% for bloco in col2_blocks %}
+          {% for content_block in bloco.value.conteudo %}
+            {% if content_block.block_type == "contatos_section" %}
+              {% with section=content_block.value %}
+              <div class="contatos-block-wrapper my-3">
+                {% if section.section_title %}
+                  {% if section.title_size == "small" %}
+                    <h4 class="fw-bold mb-3">{{ section.section_title }}</h4>
+                  {% elif section.title_size == "large" %}
+                    <h2 class="fw-bold mb-3">{{ section.section_title }}</h2>
+                  {% else %}
+                    <h3 class="fw-bold mb-3">{{ section.section_title }}</h3>
+                  {% endif %}
+                {% endif %}
+                {% if section.contatos %}
+                  <ul class="fw-bold mb-4">
+                    {% for contato in section.contatos %}
+                      <li class="mb-1">
+                        {% if section.list_style == 'diamond' %}
+                          <span>♦</span>
+                        {% elif section.list_style == 'arrow' %}
+                          <span>➤</span>
+                        {% elif section.list_style == 'triangle' %}
+                          <span>▲</span>
+                        {% elif section.list_style == 'chevron' %}
+                          <span>›</span>
+                        {% elif section.list_style == 'black_diamond' %}
+                          <span>◆</span>
+                        {% endif %}
+                        {% if contato.title %}
+                          <strong>{{ contato.title }}:</strong>
+                        {% endif %}
+                        <span>{{ contato.phone }}</span>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
+              {% endwith %}
+            {% else %}
+              <div class="contatos-block-wrapper my-3">
+                {% include_block content_block %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% empty %}
+          <p>Nenhum bloco na Coluna 2</p>
+        {% endfor %}
+      </div>
+
+    {% elif layout == "100_col1" %}
+      <div class="col-12">
+        {% for bloco in col1_blocks %}
+          {% for content_block in bloco.value.conteudo %}
+            {% if content_block.block_type == "contatos_section" %}
+              {% with section=content_block.value %}
+              <div class="contatos-block-wrapper my-3">
+                {% if section.section_title %}
+                  {% if section.title_size == "small" %}
+                    <h4 class="fw-bold mb-3">{{ section.section_title }}</h4>
+                  {% elif section.title_size == "large" %}
+                    <h2 class="fw-bold mb-3">{{ section.section_title }}</h2>
+                  {% else %}
+                    <h3 class="fw-bold mb-3">{{ section.section_title }}</h3>
+                  {% endif %}
+                {% endif %}
+                {% if section.contatos %}
+                  <ul class="fw-bold mb-4">
+                    {% for contato in section.contatos %}
+                      <li class="mb-1">
+                        {% if section.list_style == 'diamond' %}
+                          <span>♦</span>
+                        {% elif section.list_style == 'arrow' %}
+                          <span>➤</span>
+                        {% elif section.list_style == 'triangle' %}
+                          <span>▲</span>
+                        {% elif section.list_style == 'chevron' %}
+                          <span>›</span>
+                        {% elif section.list_style == 'black_diamond' %}
+                          <span>◆</span>
+                        {% endif %}
+                        {% if contato.title %}
+                          <strong>{{ contato.title }}:</strong>
+                        {% endif %}
+                        <span>{{ contato.phone }}</span>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
+              {% endwith %}
+            {% else %}
+              <div class="contatos-block-wrapper my-3">
+                {% include_block content_block %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% empty %}
+          <p>Nenhum bloco na Coluna 1</p>
+        {% endfor %}
+      </div>
+
+    {% else %}
+      <div class="col-12 text-center">
+        <p>Nenhum layout detectado.</p>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock content %}
