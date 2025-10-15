@@ -31,7 +31,7 @@ class FaseEditalBlock(StructBlock):
 
     class Meta:
         icon = 'date'
-        label = "Fase do Edital"
+        label = "Fase da Publicação"
         template = 'fase_edital_block.html'
 
 

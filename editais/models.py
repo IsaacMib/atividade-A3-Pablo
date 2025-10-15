@@ -11,37 +11,50 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .blocks import FaseEditalBlock, SITUACAO_EDITAL_CHOICES
 
 class EditalPage(PageSitePadrao):
-    numero = models.CharField(max_length=50, verbose_name="Número do Edital")
-    ano = models.IntegerField(verbose_name="Ano do Edital", default=datetime.now().year)
+    tipo_publicacao = models.CharField(
+        max_length=100,
+        verbose_name="Tipo de Publicação",
+        default="Edital",
+        help_text="Ex: Edital, Chamada Pública, Aviso de Licitação."
+    )
+    rotulo_numero = models.CharField(
+        max_length=20,
+        verbose_name="Rótulo do Número",
+        default="Nº", help_text="Texto que precede o número. Ex: Nº, Processo."
+    )
+    numero = models.CharField(max_length=50, verbose_name="Número")
+    ano = models.IntegerField(verbose_name="Ano", default=datetime.now().year)
     descricao = RichTextField(
-        verbose_name="Descrição do Edital",
-        help_text="Breve descrição sobre o objetivo do edital."
+        verbose_name="Descrição da Publicação",
+        help_text="Breve descrição sobre o objeto."
     )
     data_publicacao = models.DateField(
-        "Data de publicação do edital", default=datetime.today
+        "Data de publicação", default=datetime.today
     )
     situacao = models.CharField(
         max_length=20,
         choices=SITUACAO_EDITAL_CHOICES,
         default='aberto',
-        verbose_name="Situação do Edital"
+        verbose_name="Situação da Publicação"
     )
 
     fases_edital = StreamField(
         [("fase", FaseEditalBlock())],
-        verbose_name="Fases do Edital (Ciclo de Vida)",
-        help_text="Adicione as fases do edital, como abertura, inscrições, retificações, resultados, etc.",
+        verbose_name="Fases (Ciclo de Vida)",
+        help_text="Adicione as fases da publicação, como abertura, inscrições, retificações, resultados, etc.",
         use_json_field=True,
         blank=True
     )
 
     content_panels = Page.content_panels + [
         MultiFieldPanel([
+            FieldPanel('tipo_publicacao'),
+            FieldPanel('rotulo_numero'),
             FieldPanel('numero'),
             FieldPanel('ano'),
             FieldPanel('situacao'),
             FieldPanel('data_publicacao'),
-        ], heading="Informações Principais do Edital"),
+        ], heading="Informações Principais"),
         FieldPanel('descricao', classname="full"),
         FieldPanel('fases_edital'),
     ]

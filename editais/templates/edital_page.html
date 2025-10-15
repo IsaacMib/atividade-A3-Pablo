@@ -5,7 +5,7 @@
 <div class="container my-5 edital-page-wrapper">
     <div class="row">
         <div class="col-12 text-center">
-            <h1 class="mb-2 titulo-azul">Edital Nº {{ page.numero }}/{{ page.ano }}</h1>
+            <h2 class="mb-2 titulo-azul">{{ page.tipo_publicacao }} {{ page.rotulo_numero }} {{ page.numero }}/{{ page.ano }}</h>
             <h2 class="h4 text-muted mb-4">{{ page.title }}</h2>
 
             <div class="mb-5">
@@ -17,12 +17,14 @@
                         <p><strong>Situação:</strong> <span class="badge rounded-pill badge-situacao {{ page.situacao }}">{{ page.get_situacao_display }}</span></p>
                     </div>
                 </div>
-                <div class="text-start">
-                    {{ page.descricao|richtext }}
+                <div class="row justify-content-center">
+                    <div class="col-md-10 col-lg-8 text-start">
+                        {{ page.descricao|richtext }}
+                    </div>
                 </div>
             </div>
 
-            <div ><h2 class="mb-2 titulo-acompanhamento">Andamento do Edital</h2></div>
+            <div ><h3 class="mb-2 titulo-acompanhamento">Acompanhamento das Publicações</h3></div>
 
             {% if fases_ordenadas %}
                 <div class="table-responsive">
