@@ -240,34 +240,39 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
 .card-linha-do-tempo__description {
   display: -webkit-box;
   text-align: justify;
-  -webkit-line-clamp: 5;
-  line-clamp: 5;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
 
   @media (max-width: $layout-change-breakpoint-max) {
-    -webkit-line-clamp: 8;
-    line-clamp: 8;
+    --max-lines: 7;
+    -webkit-line-clamp: var(--max-lines);
+    line-clamp: var(--max-lines);
   }
 
   @media (max-width: 500px) {
-    -webkit-line-clamp: 7;
-    line-clamp: 7;
+    --max-lines: 6;
+    -webkit-line-clamp: var(--max-lines);
+    line-clamp: var(--max-lines);
   }
 
   @media (max-width: 450px) {
-    -webkit-line-clamp: 6;
-    line-clamp: 6;
+    --max-lines: 5;
+    -webkit-line-clamp: var(--max-lines);
+    line-clamp: var(--max-lines);
   }
 
   @media (max-width: 400px) {
-    -webkit-line-clamp: 5;
-    line-clamp: 5;
+    --max-lines: 4;
+    -webkit-line-clamp: var(--max-lines);
+    line-clamp: var(--max-lines);
   }
 
   @media (max-width: 352px) {
-    -webkit-line-clamp: 4;
-    line-clamp: 4;
+    --max-lines: 3;
+    -webkit-line-clamp: var(--max-lines);
+    line-clamp: var(--max-lines);
   }
 }
