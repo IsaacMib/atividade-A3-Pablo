@@ -9,6 +9,8 @@ from blocks.utils import (
     get_metabase_card_text_by_id
 )
 
+from django.db import models
+
 import requests
 from django.core.cache import cache
 from wagtail.images.blocks import ImageChooserBlock
@@ -26,12 +28,15 @@ from wagtail.blocks import (
     URLBlock,
     IntegerBlock,
     BooleanBlock,
+    PageChooserBlock,
     DateBlock,
 )
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.embeds.blocks import EmbedBlock
 from django.utils.functional import cached_property
 from wagtail.images import get_image_model
+from wagtail.models import Page
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from django.conf import settings
 import uuid
 
@@ -689,6 +694,14 @@ class CardLinhaDoTempoBlock(StructBlock):
         required=False, label="Texto alternativo da imagem")
     titulo = CharBlock(required=False, label="Título")
     descricao = TextBlock(required=False, label="Descrição")
+    detail_page = PageChooserBlock(
+        required=False,
+        target_model='paginas.CardLinhaDoTempoPage',
+        label="Link",
+        help_text="Se as informações do link ultrapassarem o limite de exibição estabelecido, \
+        você poderá criar uma nova página com as informações completas, a qual estará disponível\
+        no card através do link 'Ver mais'."
+    )
     # data = DateBlock(required=True, label="Data")
 
     class Meta:
@@ -750,7 +763,8 @@ class BaseStreamBlock(StreamBlock):
 
 class LinhaDoTempoBlock(StructBlock):
     titulo = CharBlock(required=True, label="Título")
-    cards = ListBlock(CardLinhaDoTempoBlock(), min_num=1, max_num=12, icon='form', label="Card")
+    cards = ListBlock(CardLinhaDoTempoBlock(), min_num=1,
+                      max_num=12, icon='form', label="Card")
 
     class Meta:
         icon = 'title'
@@ -799,14 +813,15 @@ class GridImageItemBlock(StructBlock):
 
 
 class GridImagensBlock(StructBlock):
-    titulo = CharBlock(required=True, label="Titulo do bloco Ex.: Programas, Orgãos Vinculados", default="Programas")
+    titulo = CharBlock(
+        required=True, label="Titulo do bloco Ex.: Programas, Orgãos Vinculados", default="Programas")
     link_ver_todos = URLBlock(
         required=False, label="Link do botão 'Ver todos'")
     grid_type = ChoiceBlock(choices=GRID_IMAGENS_TYPES,
-                             default=GRID_IMAGENS_DEFAULT_TYPE,
-                             required=True, label="Tipo de Grid")
+                            default=GRID_IMAGENS_DEFAULT_TYPE,
+                            required=True, label="Tipo de Grid")
     itens = ListBlock(GridImageItemBlock, min_num=1, max_num=12)
-    
+
     def get_column_classes(self, grid_type):
         """
         Retorna as classes de coluna Bootstrap baseadas no tipo de grid.
