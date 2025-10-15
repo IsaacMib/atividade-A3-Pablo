@@ -16,6 +16,14 @@ class CorpoTecnicoIndexPage(PageSitePadraoIndex):
     parent_page_types = [ 'institucional.InstitucionalIndexPage' ]
     subpage_types = ['paginas.CorpoTecnicoGrupoPageIndex']
 
+    sub_titulo = models.CharField(
+        verbose_name="Subtítulo",
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text="Subtítulo da página do corpo técnico."
+    )
+
     tecnico_em_destaque = models.ForeignKey(
         'paginas.CorpoTecnicoPage',
         on_delete=models.SET_NULL,
@@ -49,7 +57,7 @@ class CorpoTecnicoGrupoPageIndex(PageSitePadraoIndex):
         context = super(CorpoTecnicoGrupoPageIndex, self).get_context(request)
         all_posts = CorpoTecnicoPage.objects.descendant_of(
             self).live().order_by("title")
-        paginator = Paginator(all_posts, 6)  # 6 membros por página
+        paginator = Paginator(all_posts, 8)  # 8 membros por página
         page = request.GET.get("page")
         try:
             posts = paginator.page(page)
@@ -60,7 +68,7 @@ class CorpoTecnicoGrupoPageIndex(PageSitePadraoIndex):
         context["posts"] = posts
         return context
     
-    def get_corpo_tecnico(self, quantidade=6):
+    def get_corpo_tecnico(self, quantidade=8):
         """
         Retorna os filhos (CorpoTecnicoPage) ordenados por título.
         

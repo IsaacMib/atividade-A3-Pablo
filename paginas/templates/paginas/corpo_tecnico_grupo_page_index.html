@@ -9,10 +9,10 @@
     {% if posts %}
       <div class="row">
         {% for post in posts %}
-          <div class="col-12 col-md-6 col-lg-4 mb-4">
-            <div class="corpo-tecnico-card">
-              <a href="{{ post.url }}" class="corpo-tecnico-card-link">
-                <div class="caixa-eliptica-sombra">
+          <div class="col-12 col-md-6 col-lg-3 mb-3">
+            <div class="corpo-tecnico-grupo-card">
+              <a href="{{ post.url }}" class="corpo-tecnico-grupo-card-link">
+                <div class="caixa-eliptica small">
                   <div class="caixa-eliptica-conteudo">
                     {% if post.imagem %}
                       {% picture post.imagem width-300 %}
@@ -24,10 +24,13 @@
                   </div>
                 </div>
                 <div class="corpo-tecnico-info">
-                  <h3 class="corpo-tecnico-nome">{{ post.title }}</h3>
-                  {% if post.funcao %}
-                    <p class="corpo-tecnico-funcao">{{ post.funcao }}</p>
-                  {% endif %}
+                  <span class="corpo-tecnico-nome">{{ post.title }}</span>
+                  <span class="corpo-tecnico-funcao">{{ post.funcao }}</span>
+                </div>
+                <div class="corpo-tecnico-bio">
+                  <span class="corpo-tecnico-bio-text">
+                    {{ post.bio }}
+                  </span>
                 </div>
               </a>
             </div>
