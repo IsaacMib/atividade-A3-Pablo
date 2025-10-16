@@ -1,4 +1,7 @@
-{% load wagtailimages_tags %}
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block content %}
 <div class="linha-do-tempo__item">
     {% include 'blocks/banner.html' with banner=self %}
 </div>
+{% endblock %}
