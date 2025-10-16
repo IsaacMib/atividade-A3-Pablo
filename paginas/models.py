@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 from wagtail.admin.panels import FieldPanel
 from core.models import PageSitePadrao, PageSitePadraoIndex
 
@@ -25,6 +26,9 @@ class CardLinhaDoTempoPage(PageSitePadrao):
         null=True,
         verbose_name='Título'
     )
+    data_publicacao = models.DateTimeField(
+        "Data de publicação do aviso", default=datetime.now, blank=True, null=True
+    )
     descricao_completa = models.TextField(
         max_length=255,
         blank=True,
@@ -36,6 +40,7 @@ class CardLinhaDoTempoPage(PageSitePadrao):
         FieldPanel("imagem"),
         FieldPanel("texto_alternativo"),
         FieldPanel("titulo"),
+        FieldPanel("data_publicacao"),
         FieldPanel("descricao_completa"),
     ]
 
