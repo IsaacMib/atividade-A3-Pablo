@@ -42,31 +42,7 @@
                 <p>Nenhum edital encontrado.</p>
             {% endif %}
         </div>
-        {% if anos_paginados.paginator.num_pages > 1 %}
-        <div class="col-12 mt-4">
-            <nav aria-label="Paginação de editais">
-                <ul class="pagination justify-content-center">
-                    {% if anos_paginados.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ anos_paginados.previous_page_number }}">Anterior</a>
-                        </li>
-                    {% endif %}
-
-                    {% for i in anos_paginados.paginator.page_range %}
-                        <li class="page-item {% if anos_paginados.number == i %}active{% endif %}">
-                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
-                        </li>
-                    {% endfor %}
-
-                    {% if anos_paginados.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ anos_paginados.next_page_number }}">Próximo</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </div>
-        {% endif %}
+        {% include "include/paginator.html" with posts=anos_paginados %}
     </div>
 </div>
 {% endblock %}

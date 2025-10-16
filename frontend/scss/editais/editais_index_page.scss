@@ -19,19 +19,6 @@ $accordion-btn-color: #fff;
         text-decoration: underline;
         text-underline-offset: 8px;
     }
-    .pagination {
-        .page-link {
-            color: variables.$color-primary;
-            &:hover {
-                color: variables.$color-primary;
-            }
-        }
-        .page-item.active .page-link {
-            background-color: variables.$color-primary;
-            border-color: variables.$color-primary;
-            color: variables.$color-white;
-        }
-    }
     .badge-situacao {
         &.aberto { background-color: var(--bs-success); }
         &.em_andamento { background-color: var(--bs-info); color: var(--bs-black); }
@@ -65,14 +52,6 @@ $accordion-btn-color: #fff;
             color: variables.$color-white !important;
             border-color: #{variables.$color-grey-700} !important;
         }
-        .pagination {
-            .page-link { color: variables.$color-white !important; }
-            .page-item.active .page-link {
-                background-color: variables.$color-warning !important;
-                border-color: variables.$color-warning !important;
-                color: variables.$color-on-warning !important;
-            }
-        }
     }
 }
 
@@ -89,7 +68,6 @@ $accordion-btn-color: #fff;
         .titulo-pagina-editais { font-size: 1.15rem; }
         .accordion-button.custom-blue-title { font-size: 0.95rem; padding: 0.4rem 0.6rem; }
         .list-group .list-group-item { padding: 0.4rem 0.6rem; }
-        .pagination .page-link { padding: 0.35rem 0.45rem; }
     }
 }
 
@@ -108,15 +86,6 @@ $accordion-btn-color: #fff;
             --bs-accordion-btn-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='CanvasText'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
             --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='CanvasText'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
             forced-color-adjust: auto;
-        }
-        .pagination .page-link {
-            color: LinkText;
-        }
-        .pagination .page-item.active .page-link {
-            background-color: variables.$color-warning;
-            border-color: variables.$color-warning;
-            color: variables.$color-on-warning;
-            forced-color-adjust: none;
         }
         .badge-situacao {
             &.aberto, &.em_andamento, &.encerrado, &.suspenso, &.cancelado {
