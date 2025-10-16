@@ -12,14 +12,6 @@
     .titulo-acompanhamento {
         color: variables.$color-primary;
     }
-    .titulo-azul {
-        color: variables.$color-primary;
-    }
-
-    .titulo-azul {
-        text-decoration: underline;
-        text-underline-offset: 8px;
-    }
 
     .fases-edital-header {
         background-color: variables.$color-primary;
@@ -47,8 +39,7 @@
     [data-theme=dark] & {
         color: variables.$color-white;
 
-        .titulo-acompanhamento,
-        .titulo-azul {
+        .titulo-acompanhamento {
             color: variables.$color-white;
         }
         .fase-titulo {
@@ -149,7 +140,6 @@
 
 @media (max-width: 768px) {
     .edital-page-wrapper {
-        .titulo-azul { font-size: 1.4rem; }
         .titulo-acompanhamento { font-size: 1.05rem; }
 
         .table th, .table td { padding: 0.45rem 0.5rem; }
@@ -160,7 +150,6 @@
 
 @media (max-width: 360px) {
     .edital-page-wrapper {
-        .titulo-azul { font-size: 1.15rem; }
         .titulo-acompanhamento { font-size: 1rem; }
 
         .table { font-size: 0.9rem; }
@@ -173,8 +162,7 @@
 
 @media (forced-colors: active) {
     .edital-page-wrapper {
-        .titulo-acompanhamento,
-        .titulo-azul {
+        .titulo-acompanhamento {
             color: variables.$color-on-background !important;
         }
 

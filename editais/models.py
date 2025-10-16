@@ -73,6 +73,14 @@ class EditalPage(PageSitePadrao):
 
         return context
 
+    @property
+    def titulo_publicacao(self) -> str:
+        """
+        Retorna o título no padrão:
+        '<tipo_publicacao> <rotulo_numero> <numero>/<ano>'
+        """
+        return f"{self.tipo_publicacao} {self.rotulo_numero} {self.numero}/{self.ano}"
+
     class Meta:
         verbose_name = "Página de Edital"
         verbose_name_plural = "Páginas de Editais"

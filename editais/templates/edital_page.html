@@ -5,7 +5,7 @@
 <div class="container my-5 edital-page-wrapper">
     <div class="row">
         <div class="col-12 text-center">
-            <h2 class="mb-2 titulo-azul">{{ page.tipo_publicacao }} {{ page.rotulo_numero }} {{ page.numero }}/{{ page.ano }}</h>
+            {% include 'include/titulo.html' with titulo=page.titulo_publicacao bgClass='titulo-padding-menor' classes='mb-2 titulo-azul titulo-normal' remover_svg=1 %}
             <h2 class="h4 text-muted mb-4">{{ page.title }}</h2>
 
             <div class="mb-5">
