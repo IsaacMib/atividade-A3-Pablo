@@ -1,5 +1,15 @@
 @use '../../variables.scss';
 
+[data-theme='dark'] {
+    .linha-do-tempo-page {
+        .linha-do-tempo-page__content {
+            .linha-do-tempo-page__titulo {
+                color: variables.$color-white;
+            }
+        }
+    }
+}
+
 .linha-do-tempo-page {
     .linha-do-tempo-page__content {
         max-width: 900px;
