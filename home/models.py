@@ -69,14 +69,14 @@ class HomePage(PageSitePadrao):
 
             if form_block:
                 form = form_block.block.get_context(form_block.value, parent_context={'request': request})['form']
-                kwargs = {
-                    'request': request,
+                form_kwargs = {
                     'show_recaptcha': getattr(form, 'show_recaptcha', False),
                     'recaptcha_secret_key': getattr(form, 'recaptcha_secret_key', None),
                     'fields_config': form.fields_config if hasattr(form, 'fields_config') else None,
-                    'initial': form.initial if hasattr(form, 'initial') else {}
+                    'initial': form.initial if hasattr(form, 'initial') else {},
+                    'request': request,
                 }
-                bound_form = type(form)(request.POST, request.FILES, **kwargs)
+                bound_form = type(form)(request.POST, request.FILES, **form_kwargs)
 
                 if bound_form.is_valid():
                     from blocks.models import FormularioSubmissao, ArquivoSubmetido
