@@ -1,6 +1,24 @@
 @use "./../variables.scss";
 
 [data-theme="dark"] {
+  .titulo-container {
+    .titulo-azul {
+      color: variables.$color-white;
+      @media (max-width: 768px) {
+        font-size: 1.4rem;
+      }
+      @media (max-width: 360px) {
+        font-size: 1.15rem;
+      }
+      @media (forced-colors: active) {
+        color: variables.$color-on-background !important;
+      }
+    }
+  }
+
+  
+
+
   .titulo-bg-azul {
     background-color: variables.$color-white;
 
