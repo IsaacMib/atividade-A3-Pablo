@@ -25,13 +25,15 @@
                     </h3>
                     {% comment %} <p class="card-linha-do-tempo__date">{{ card.data|date:"d/m/Y" }}</p> {% endcomment %}
                     <span>
-                        <p class="card-linha-do-tempo__description mt-2 mb-0">{{ card.descricao }}</p>
                         {% comment %} Adiciona link para página com detalhes do card caso texto ultrapasse um certo limite {% endcomment %}
                         {% with card.descricao|length as text_length %}
                             {% if text_length > 200 and card.detail_page %}
                                 {{ text_length|add_link_to_trimmed_text:card.detail_page.url }}
                             {% endif %}
                         {% endwith %}
+                        <p class="card-linha-do-tempo__description mt-2 mb-0">
+                            {{ card.descricao }}
+                        </p>
                     </span>
                 </div>
             </div>
