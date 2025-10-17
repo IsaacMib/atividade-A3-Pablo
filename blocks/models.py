@@ -924,7 +924,7 @@ class AcordeonBlock(StructBlock):
         icon = "collapse-down"
         template = "blocks/bloco_informativo.html"
 class CustomFormBlock(StructBlock):
-    titulo_geral = CharBlock(default="Formulário", label="Título Principal do Formulário")
+    titulo_geral = CharBlock(default="Formulário", label="Título Principal do Formulário", help_text="Título que será exibido acima do formulário.")
     descricao = RichTextBlock(required=False, label="Descrição/Introdução")
     campos_customizados = StreamBlock([
         ('texto_simples', SingleLineFieldBlock()),
@@ -965,26 +965,10 @@ class CustomFormBlock(StructBlock):
             show_recaptcha=show_recaptcha,
             recaptcha_secret_key=recaptcha_secret_key
         )
+        # Se um formulário com erros foi passado pelo `serve`, use-o.
         if request and hasattr(request, '_form_errors') and getattr(request, '_form_errors') is not None:
-            try:
-                form = getattr(request, '_form_errors')
-            except Exception:
-                pass
-        else:
-            if request and getattr(request, 'method', '').upper() == 'POST':
-                try:
-                    bound_form = CustomForm(
-                        request.POST,
-                        request.FILES if hasattr(request, 'FILES') else None,
-                        fields_config=value.get('campos_customizados'),
-                        request=request,
-                        show_recaptcha=show_recaptcha,
-                        recaptcha_secret_key=recaptcha_secret_key,
-                        initial=initial_data
-                    )
-                    form = bound_form
-                except Exception:
-                    pass
+            form = getattr(request, '_form_errors')
+
         context['form'] = form
         context['show_recaptcha'] = show_recaptcha
         context['recaptcha_site_key'] = recaptcha_site_key

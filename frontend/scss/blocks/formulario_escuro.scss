@@ -5,32 +5,32 @@
         background-color: transparent;
 
         .titulo-formulario {
-            color: #fff;
+            color: variables.$color-white;
         }
 
         .subtitulo-formulario {
-            color: #adb5bd;
+            color: variables.$color-grey-500;
         }
 
         form {
             label {
-                color: #6ea8fe;
+                color: variables.$color-white;
             }
 
             .form-control, .form-select {
-                background-color: #343a40;
-                border-color: #6c757d;
-                color: #f8f9fa;
+                background-color: variables.$color-grey-800;
+                border-color: variables.$color-grey-600;
+                color: variables.$color-grey-100;
 
                 &:focus {
-                    background-color: #495057;
+                    background-color: variables.$color-grey-700;
                 }
             }
 
             .btn.btn-primary.btn-enviar-sugestao {
-                background-color: #fff;
-                border-color: #fff;
-                color: #000;
+                background-color: variables.$color-white;
+                border-color: variables.$color-white;
+                color: variables.$color-black;
             }
         }
     }

@@ -116,5 +116,4 @@ class HomePage(PageSitePadrao):
                 else:
                     messages.error(request, "Ocorreu um erro. Por favor, verifique os campos do formulário.")
                     setattr(request, '_form_errors', bound_form)
-
         return super().serve(request, *args, **kwargs)

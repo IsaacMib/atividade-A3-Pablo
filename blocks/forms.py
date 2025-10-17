@@ -88,7 +88,7 @@ class CustomForm(forms.Form):
 
                 field_class = forms.CharField
                 widget = forms.TextInput(attrs={'class': 'form-control'})
-                field_error_messages = {'required': 'Este campo é obrigatório.'}
+                field_error_messages = {'required': 'Por favor, preencha este campo.'}
 
                 if field_type == 'texto_longo':
                     widget = forms.Textarea(attrs={'class': 'form-control'})
@@ -135,7 +135,7 @@ class CustomForm(forms.Form):
                     'required': is_required,
                     'help_text': help_text,
                     'widget': widget,
-                    'error_messages': field_error_messages if 'field_error_messages' in locals() else {'required': 'Este campo é obrigatório.'}
+                    'error_messages': field_error_messages
                 }
 
                 self.fields[field_name] = field_class(**field_kwargs)
