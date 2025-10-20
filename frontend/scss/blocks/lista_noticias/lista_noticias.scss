@@ -1,23 +1,42 @@
 @use './../../variables.scss';
 
 .lista-noticias--wrapper {
-   margin: 0px;
-   background-color: variables.$color-grey-100;
+  margin: 0px;
+  background-color: variables.$color-white;
+  transition: background-color 0.3s ease;
 
-   .container {
-      border-radius: 5px;
-      padding: 8px 40px;
-   }
+  &.noticias-bg {
+    background-color: variables.$color-grey-100; // fundo alternativo claro
+  }
+
+  .container {
+    border-radius: 5px;
+    padding: 8px 40px;
+  }
+
+  &.modo-blocos .row {
+    row-gap: 24px;
+  }
+
+  &.modo-lista .noticia-item-lista {
+    border-bottom: 1px solid variables.$color-grey-300;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: variables.$color-grey-800;
+  }
 }
 
 @media screen and (max-width: 576px) {
-   .lista-noticias--wrapper .container {
-       padding: 8px 16px;
-   }
-   .lista-noticias--wrapper .row {
-      display: flex;
-      margin: 0;
-      padding: 0;
-   }
+  .lista-noticias--wrapper .container {
+    padding: 8px 16px;
+  }
+  .lista-noticias--wrapper .row {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+  }
 }
-

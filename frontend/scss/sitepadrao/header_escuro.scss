@@ -53,4 +53,18 @@
       color: variables.$color-white;
     }
   }
+
+  .header-acessibilidade--intranet {
+    color: variables.$color-white;
+    &:hover {
+      color: variables.$color-grey-200;
+    }
+  }
+
+  .header-acessibilidade--sair {
+    color: variables.$color-white;
+    &:hover {
+      color: variables.$color-grey-200;
+    }
+  }
 }

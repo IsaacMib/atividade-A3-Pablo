@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load render_bundle from webpack_loader %}
+{% load static wagtailcore_tags wagtailuserbar navigation_tags wagtailsettings_tags %}
+
+{% block body_class %}template-intranetpage{% endblock %}
+
+{% block title_suffix %}
+    {% get_settings %}
+    {% if settings.core.SiteSettings.title_suffix %}
+        - {{ settings.core.SiteSettings.title_suffix }}
+    {% endif %}
+{% endblock %}
+
+{% block header %}
+    {% include "intranet/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div id="site-conteudo-main">
+    <div class="container">
+        {% block intranet_content %}
+        {% endblock intranet_content %}
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+    {% include 'footer.html' %}
+{% endblock %}
+
+{% block extra_js %}
+    {% render_bundle 'main' 'js' %}
+{% endblock %}

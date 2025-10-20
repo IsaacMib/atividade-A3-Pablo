@@ -1,0 +1,58 @@
+@use '../variables.scss';
+
+[data-theme="high-contrast"] {
+  .intranet-block-wrapper {
+    background-color: variables.$color-black;
+    border: 2px solid variables.$global-link-color;
+    box-shadow: none;
+
+    &:hover {
+      background-color: variables.$color-grey-900;
+      border-color: variables.$color-white;
+    }
+
+    h1, h2, h3, h4, h5, p, a {
+      color: variables.$color-white !important;
+    }
+  }
+
+  .intranet-widgets {
+    .intranet-widget {
+      background-color: variables.$color-black;
+      border: 2px solid variables.$global-link-color;
+
+      &:hover {
+        background-color: variables.$color-grey-900;
+      }
+
+      h1, h2, h3, h4, h5, p, a {
+        color: variables.$color-white !important;
+      }
+    }
+  }
+
+  .banner-wrapper {
+    border: 2px solid variables.$global-link-color;
+
+    .banner-image {
+      filter: contrast(150%) brightness(120%);
+    }
+  }
+
+  body {
+    background-color: variables.$color-grey-50;
+    color: variables.$color-grey-900;
+
+    &.dark-mode {
+      background-color: variables.$color-grey-900;
+      color: variables.$color-grey-100;
+
+      .intranet-block-wrapper,
+      .intranet-widget,
+      .banner-wrapper {
+        background-color: variables.$color-grey-800;
+        border-color: variables.$color-grey-700;
+      }
+    }
+  }
+}

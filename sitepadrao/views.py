@@ -49,4 +49,8 @@ def wagtail_logout_with_sso(request):
     logout(request)
     
     # Redireciona para a página de login
-    return redirect('/admin/login/')
+    next_url = request.GET.get('next')
+    if next_url:
+        return redirect(next_url)
+    
+    return redirect('/')

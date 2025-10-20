@@ -5,14 +5,18 @@ from wagtail.models import Page
 from django.utils.text import slugify
 from django.contrib import messages
 from django.shortcuts import redirect, render
+
 from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import Tag, TaggedItemBase
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
+from wagtail.contrib.settings.models import BaseSiteSetting
+from django.utils.html import escape
 from wagtail.admin.panels import ObjectList, FieldPanel, MultiFieldPanel, TabbedInterface
 from wagtail.fields import StreamField
 from wagtail.search import index
-from core.models import PageSitePadrao, PageSitePadraoIndex
+
+from core.models import PageSitePadrao, PageSitePadraoIndex, SiteSettings
 from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
 from datetime import datetime
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -63,6 +67,12 @@ class AvisosPage(PageSitePadrao):
         default=False,
         help_text="Marque se este aviso deve ser ocultado ou tratado de forma especial durante o período eleitoral."
     )
+    destaque = models.BooleanField(
+
+        verbose_name="Exibir em Destaques",
+        default=False,
+        help_text="Marcar este aviso como destaque?"
+    )
     arquivos = StreamField(
         [
             ('arquivo', EspecificDocumentChooserBlock(
@@ -82,6 +92,7 @@ class AvisosPage(PageSitePadrao):
     content_panels = get_page_title_with_counter(50) + [
         FieldPanel("subtitle"),
         FieldPanel("descricao", widget=get_widget_input_with_counter()),
+        FieldPanel('destaque'),
         MultiFieldPanel(
             [
                 FieldPanel("nao_exibir_lista_de_arquivos"),
@@ -113,8 +124,26 @@ class AvisosPage(PageSitePadrao):
                    classname="migracao-only"),
     ])
 
+    parent_page_types = ["AvisosIndexPage"]
+    subpage_types = []
+    icon = "warning"
+
+    search_fields = PageSitePadrao.search_fields + [
+            
+            index.SearchField('body'),
+            index.SearchField('subtitle'),
+            index.SearchField('descricao'),
+            ]
+
+
+    class Meta:
+        verbose_name = "Aviso"
+        verbose_name_plural = "Avisos"
+        
+
     def get_absolute_url(self):
         return reverse("aviso_detail", args=[str(self.id)])
+
 
     def generate_unique_slug(self, base_slug):
         slug = base_slug
@@ -152,8 +181,10 @@ class AvisosPage(PageSitePadrao):
             tag.url = f"{base_url}tags/{tag.slug}/"
         return tags
 
-    parent_page_types = ["AvisosIndexPage"]
-    subpage_types = []
+    @staticmethod
+    def get_arquivo_icon(arquivo):
+        file_info = get_file_type(arquivo)
+        return get_fontawesome_file_icon(file_info)
 
     def get_ultimos_avisos(self, quantidade=6):
         return AvisosPage.objects.live().order_by("-data_publicacao")[:quantidade]
@@ -162,89 +193,132 @@ class AvisosPage(PageSitePadrao):
         context = super().get_context(request)
         context["ultimos_avisos"] = self.get_ultimos_avisos()
 
-        # Prepara uma lista de arquivos com seus ícones para o template
-        arquivos_com_icone = []
-        if self.arquivos:
-            for block in self.arquivos:
-                doc = block.value
-                if doc:
-                    arquivos_com_icone.append({
-                        'documento': doc,
-                        'icon_class': self.get_arquivo_icon(doc)
-                    })
-        context['arquivos_com_icone'] = arquivos_com_icone
+        return context
+    
+    def get_context(self, request):
+        context = super().get_context(request)
 
+        # URL absoluta da página (para os links de compartilhamento)
         absolute_url = request.build_absolute_uri(self.url)
-        context["share_links"] = {
-            "facebook": f"https://www.facebook.com/sharer/sharer.php?u={absolute_url}",
-            "x": f"https://twitter.com/intent/tweet?url={absolute_url}&text={self.title}",
-            "linkedin": f"https://www.linkedin.com/shareArticle?mini=true&url={absolute_url}&title={self.title}",
-            "whatsapp": f"https://api.whatsapp.com/send?text={self.title} {absolute_url}",
-            "copy": absolute_url,
-        }
+        site_settings = SiteSettings.for_request(request)
+
+        # Se o compartilhamento estiver habilitado, gera as redes
+        redes_ativas = []
+        if site_settings and site_settings.compartilhar_redes_sociais:
+            redes_ativas = site_settings.get_redes_ativas(
+                absolute_url=absolute_url,
+                page_title=self.title
+            )
+
+        # Adiciona ao contexto
+        context["redes_ativas"] = redes_ativas
+        context["compartilhar_redes_sociais"] = site_settings.compartilhar_redes_sociais
 
         return context
 
-    @staticmethod
-    def get_arquivo_icon(arquivo):
-        file_info = get_file_type(arquivo)
-        return get_fontawesome_file_icon(file_info)
-
-    class Meta:
-        verbose_name = "Página de Aviso"
-        verbose_name_plural = "Páginas de Avisos"
-
-    icon = "warning"
-
-    search_fields = PageSitePadrao.search_fields + [
-        index.SearchField('body'),
-        index.SearchField('subtitle'),
-        index.SearchField('descricao'),
-    ]
 
 
+    
 class AvisosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
     introduction = models.TextField(
-        help_text="Texto para o topo da página de avisos", blank=True)
+        help_text="Texto para o topo da página de avisos", blank=True
+    )
 
-    content_panels = PageSitePadraoIndex.content_panels + [
-        FieldPanel("introduction"),
-    ]
+    mostrar_destaque_primeiro = models.BooleanField(
+        default=True,
+        help_text="Marcar para exibir os avisos em destaque primeiro."
+    )
 
     parent_page_types = ["home.HomePage"]
     subpage_types = ["AvisosPage"]
+    icon = "list-ul"
+
+    content_panels = PageSitePadraoIndex.content_panels + [
+        FieldPanel("introduction"),
+        FieldPanel("mostrar_destaque_primeiro"),
+    ]
+
+    def get_posts_queryset(self, tag=None, somente_destaques=None):
+
+        qs = AvisosPage.objects.live().descendant_of(self)
+
+        if somente_destaques is True:
+            qs = qs.filter(destaque=True)
+        elif somente_destaques is False:
+            qs = qs.filter(destaque=False)
+
+        if tag:
+            qs = qs.filter(tags=tag)
+
+        qs = qs.order_by("-data_publicacao")
+        return qs
+
+    def paginate_queryset(self, request, queryset, per_page=12):
+        paginator = Paginator(queryset, per_page)
+        page_number = request.GET.get("page")
+        try:
+            page_obj = paginator.page(page_number)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(paginator.num_pages)
+        return page_obj
+
+    def get_avisos_destaque(self, quantidade=6):
+
+        destaques = list(
+            self.get_posts_queryset(somente_destaques=True)[:quantidade]
+        )
+        if len(destaques) < quantidade:
+            faltam = quantidade - len(destaques)
+            extras = list(
+                self.get_posts_queryset(somente_destaques=False)
+                .exclude(id__in=[a.id for a in destaques])[:faltam]
+            )
+            destaques += extras
+        return destaques
+    
+    def get_ultimos_avisos(self, quantidade=6):
+
+        return list(self.get_posts_queryset(somente_destaques=False)[:quantidade])
 
     def get_context(self, request):
-        context = super(AvisosIndexPage, self).get_context(request)
-        all_posts = AvisosPage.objects.descendant_of(
-            self).live().order_by("-data_publicacao")
-        paginator = Paginator(all_posts, 12)
-        page = request.GET.get("page")
-        try:
-            posts = paginator.page(page)
-        except PageNotAnInteger:
-            posts = paginator.page(1)
-        except EmptyPage:
-            posts = paginator.page(paginator.num_pages)
-        context["posts"] = posts
-        context["tag"] = None  # Garante que a variável tag exista no contexto
+        context = super().get_context(request)
+        all_qs = self.get_posts_queryset()
+
+        if self.mostrar_destaque_primeiro:
+            all_list = list(all_qs)
+            all_list = sorted(
+                all_list,
+                key=lambda p: (not p.destaque, -p.data_publicacao.toordinal() if p.data_publicacao else 0)
+            )
+            posts_page = self.paginate_queryset(request, all_list, per_page=12)
+        else:
+            posts_page = self.paginate_queryset(request, all_qs, per_page=12)
+
+        context["posts"] = posts_page
+        context["tag"] = None
+        context["mostrar_destaque_primeiro"] = self.mostrar_destaque_primeiro
         return context
+    
 
     @route(r"^tags/$", name="tag_archive")
     @route(r"^tags/([\w-]+)/$", name="tag_archive")
     def tag_archive(self, request, tag=None):
-        try:
-            tag_obj = Tag.objects.get(slug=tag)
-        except Tag.DoesNotExist:
-            if tag:
-                msg = f'Não há avisos com a tag "{tag}"'
-                messages.add_message(request, messages.INFO, msg)
-            return redirect(self.url)
+        tag_obj = None
+        if tag:
+            try:
+                tag_obj = Tag.objects.get(slug=tag)
+            except Tag.DoesNotExist:
+                messages.add_message(request, messages.INFO, f'Não há avisos com a tag "{tag}"')
+                return redirect(self.url)
 
-        posts = self.get_posts(tag=tag_obj)
-        context = self.get_context(request)
+        posts_qs = self.get_posts_queryset(tag=tag_obj)
+        posts_page = self.paginate_queryset(request, posts_qs, per_page=12)
+
+        context = super().get_context(request)
+        context["posts"] = posts_page
         context["tag"] = tag_obj
-        context["posts"] = posts
         return render(request, "avisos/avisos_index_page.html", context)
 
     def get_posts(self, tag=None):

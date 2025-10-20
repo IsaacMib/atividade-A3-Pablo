@@ -1,41 +1,82 @@
 @use './../../variables.scss';
 
-[data-theme=dark] {
+[data-theme='dark'] {
+  // Fundo geral e contexto
   .avisos-container {
-    background-color: variables.$color-black
-  }
-  .aviso-card {
-      background-color: variables.$color-black !important;
-      box-shadow: none;
-      border: 1px solid variables.$color-white !important;
-
-      &:hover {
-        box-shadow: none;
-        border: 1px solid variables.$color-white !important;
-      }
-
-      &::before {
-          background-color: variables.$color-white !important;
-      }
-  }
-
-  .aviso-title {
-    color: variables.$color-white !important;
-  }
-
-  .aviso-descricao {
-    color: variables.$color-white !important;
-  }
-
-  .aviso-subtitle {
-      color: variables.$color-grey-800 !important;
-  }
-
-  .aviso-desc-row {
+    background-color: variables.$color-black;
     color: variables.$color-white;
   }
 
-  .aviso-data {
-      color: variables.$color-white !important;
+  .avisos-wrapper {
+    padding-bottom: 3rem;
+  }
+
+  // Cartões
+  .aviso-card {
+    background-color: variables.$color-grey-900;
+    border: 1px solid variables.$color-grey-700;
+    box-shadow: 0 1px 4px variables.$color-black-80;
+    transition: all 0.3s ease;
+    color: variables.$color-white;
+
+    &::before {
+      background-color: variables.$color-dark-theme-border;
+      opacity: 0.8;
+    }
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px variables.$color-black-80;
+      border-color: variables.$color-primary;
+
+      &::before {
+        opacity: 1;
+        transform: scaleY(1);
+      }
+    }
+
+    .aviso-title {
+      color: variables.$color-grey-100;
+      margin-bottom: 0.5rem;
+    }
+
+    .aviso-subtitle {
+      color: variables.$color-grey-300;
+    }
+
+    .aviso-desc-row {
+      color: variables.$color-grey-300;
+
+      .icon-col .aviso-icon {
+        color: variables.$color-grey-400;
+      }
+
+      .desc-col {
+        .aviso-descricao {
+          color: variables.$color-grey-300;
+        }
+
+        .aviso-data {
+          color: variables.$color-primary;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  // Links
+  .aviso-link {
+    color: variables.$color-white;
+    text-decoration: none;
+
+    &:hover {
+      color: variables.$color-primary-light;
+    }
+  }
+
+  // Estado vazio
+  .aviso-empty {
+    color: variables.$color-grey-400;
+    text-align: center;
   }
 }

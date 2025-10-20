@@ -9,6 +9,11 @@
   }
 }
 
+.header-logo {
+  max-width: 150px;
+  height: auto;
+}
+
 
 
 .header-input-search,
@@ -40,19 +45,8 @@
   }
 }
 
-.header-acessibilidade {
-  // display: grid;
-  // grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  // justify-self: end;
-  // grid-gap: 8px;
-
-  // @media (max-width: 960px) {
-  //   justify-self: center;
-  // }
-
-  // @media (max-width: 540px) {
-  //   grid-template-columns: 1fr 1fr 1fr;
-  // }
+.header-btn-search-icon {
+  min-width: 18px;
 }
 
 .header-acessibilidade {
@@ -115,4 +109,42 @@
   &:hover {
     color: variables.$color-black;
   }
+}
+
+.header-acessibilidade--intranet {
+  color: variables.$color-primary;
+  font-weight: 700;
+  text-decoration: none;
+  &:hover {
+    color: darken(variables.$color-primary, 10%);
+    text-decoration: underline;
+  }
+}
+
+.header-acessibilidade--sair {
+  color: variables.$color-primary;
+  font-weight: 700;
+  text-decoration: none;
+  &:hover .dropdown-menu {
+    color: darken(variables.$color-primary, 10%);
+    text-decoration: underline;
+  }
+}
+
+.header-intranet-user-icon-wrapper {
+  width: 38px;
+  height: 38px;
+  border: 2px solid variables.$color-primary;
+}
+
+.header-intranet-user-icon {
+  fill: variables.$color-primary;
+}
+
+.header-intranet-user-text {
+  color: variables.$color-primary;
+}
+
+.header-intranet-user-text--bold {
+  font-weight: 600;
 }

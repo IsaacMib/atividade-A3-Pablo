@@ -1,54 +1,177 @@
 @use '../../variables.scss';
 
-.avisos-page-container {
-  background-color: variables.$color-white;
-  padding: 2rem 1rem;
+// Mixin para o efeito de hover nos ícones sociais
+@mixin social-icon-hover {
+  background-color: variables.$color-primary;
+  box-shadow: 0 4px 10px variables.$color-card-shadow-hover;
 
-  .separador {
-    width: 100%;
-    height: 6px;
-    background: variables.$color-grey-200;
-    margin: 2rem 0;
-    border-radius: 4px;
+  i {
+    color: variables.$color-on-primary;
+    transform: scale(1.15);
   }
+}
 
-  .aviso-social {
-    text-align: center;
-    margin-bottom: 2rem;
+.avisos-page-container {
+background-color: variables.$color-white;
+color: variables.$color-on-background;
+padding: 4rem 3rem;
+display: flex;
+flex-direction: column;
+align-items: center;
+text-align: center;
+font-family: 'Roboto', sans-serif;
 
-    h4 {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: variables.$color-title-redes-sociais;
+.aviso-page-title { // Renomeado para consistência (sem --)
+font-weight: 900;
+font-size: 3rem;
+color: variables.$color-primary;
+margin-bottom: 3rem;
+letter-spacing: 0.5px;
+}
+
+.aviso-page-publicacao {
+color: variables.$color-grey-700;
+font-size: 1rem;
+font-weight: 500;
+}
+
+.linha-divisao {
+width: 100%;
+border: none;
+border-top: 1px solid variables.$color-primary;
+opacity: 1;
+margin: 1.5rem 0;
+}
+
+.aviso-page-content {
+margin-bottom: 5rem;
+font-size: 1.25rem;
+line-height: 2;
+text-indent: 2rem;
+max-width: 800px;
+text-align: justify;
+white-space: pre-line;
+
+
+p {
+  margin-bottom: 1.5rem;
+}
+
+strong {
+  color: variables.$color-primary-dark;
+}
+
+a {
+  color: variables.$color-primary;
+  text-decoration: underline;
+
+  &:hover {
+    color: variables.$color-primary-dark;
+  }
+}
+
+// Classe de modificador para texto secundário, seguindo BEM
+&__text--secondary {
+  color: variables.$color-text-secondary;
+}
+
+}
+
+// --- Seção de compartilhamento ---
+.aviso-social {
+display: flex;
+align-items: center;
+justify-content: flex-end;
+gap: 0.75rem;
+
+span {
+  color: variables.$color-grey-800;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+ul {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    position: relative;
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background-color: variables.$color-grey-100;
+      border-radius: 50%;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 6px variables.$color-card-shadow;
+
+      i {
+        font-size: 1.25rem;
+        color: variables.$color-primary;
+        transition: transform 0.2s ease, color 0.2s ease;
+      }
+
+      &:hover {
+        @include social-icon-hover;
+      }
     }
 
-    .social {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      list-style: none;
-      padding: 0;
-      margin: 0;
+    // Tooltip
+    &[data-tooltip]:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: variables.$color-black;
+      color: variables.$color-white;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+  }
+}
 
-      li a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background: variables.$color-grey-200;
-        color: variables.$color-on-surface;
-        font-size: 18px;
-        transition: transform .2s ease, background .2s ease, color .2s ease;
+}
 
-        &:hover {
-          background: variables.$color-primary;
-          color: variables.$color-on-primary;
-          transform: scale(1.05);
-        }
+// --- Responsividade ---
+@media (max-width: 768px) {
+padding: 2rem 1.5rem;
+
+.aviso-page-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.aviso-page-content {
+  font-size: 1.125rem;
+  text-indent: 1.5rem;
+}
+
+.aviso-social {
+  justify-content: center;
+
+  ul {
+    gap: 0.5rem;
+
+    a {
+      width: 36px;
+      height: 36px;
+
+      i {
+        font-size: 1.125rem;
       }
     }
   }
+}
+}
 }

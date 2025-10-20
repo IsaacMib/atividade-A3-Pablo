@@ -24,6 +24,7 @@ from core.utils import (
     get_page_title_with_counter,
     get_widget_input_with_counter
 )
+from core.models import SiteSettings
 
 MAX_NOTICIAS_DESTAQUE = 6
 
@@ -123,7 +124,7 @@ class NoticiasPage(PageSitePadrao):
         FieldPanel("subtitle"),
         FieldPanel(
             "descricao",
-            widget=get_widget_input_with_counter(char_limit=220)),
+            widget=get_widget_input_with_counter(char_limit=211)),
         MultiFieldPanel(
             [
                 FieldPanel("slideshow_imagens"),
@@ -206,7 +207,22 @@ class NoticiasPage(PageSitePadrao):
     def get_context(self, request):
         context = super().get_context(request)
         context["ultimas_noticias"] = self.get_ultimas_noticias()
+        
+        # URL absoluta da página (para os links de compartilhamento)
+        absolute_url = request.build_absolute_uri(self.url)
+        site_settings = SiteSettings.for_request(request)
 
+        # Se o compartilhamento estiver habilitado, gera as redes
+        redes_ativas = []
+        if site_settings and site_settings.compartilhar_redes_sociais:
+            redes_ativas = site_settings.get_redes_ativas(
+                absolute_url=absolute_url,
+                page_title=self.title
+            )
+
+        context["redes_ativas"] = redes_ativas
+        context["compartilhar_redes_sociais"] = site_settings.compartilhar_redes_sociais if site_settings else False
+        
         return context
 
     def get_imagem_destaque(self):

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+{% block body_class %}template-curso-page{% endblock %}
+
+{% block content %}
+<div class="curso-page-container">
+  <div class="container d-flex flex-column align-items-center justify-content-center">
+
+    <!-- Título -->
+    <h2 class="curso-page--title mb-2">{{ page.title }}</h2>
+
+    {% if page.subtitle %}
+      <h5 class="curso-subtitle mb-3">{{ page.subtitle }}</h5>
+    {% endif %}
+
+    <!-- Informações principais -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start w-100 mb-3 gap-3">
+
+      <!-- Data e tags -->
+      <div class="curso-info">
+        {% if page.data_publicacao %}
+        <p class="text-muted mb-1">
+          <i class="bi bi-calendar3 me-1"></i>
+          Publicado em {{ page.data_publicacao|date:"d/m/Y" }}
+        </p>
+        {% endif %}
+        {% if page.get_tags %}
+          <div class="curso-tags mb-2">
+            {% for tag in page.get_tags %}
+              <a href="{{ tag.url }}" class="badge border me-1">#{{ tag.name }}</a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Compartilhamento -->
+      <div class="curso-social d-flex align-items-center gap-2">
+        <span class="fw-bold curso-share-text">Compartilhe:</span>
+        {% if compartilhar_redes_sociais %}
+          <ul class="social d-flex gap-2 list-unstyled m-0">
+            {% for rede in redes_ativas %}
+              <li>
+                <a href="{{ rede.url }}" target="_blank" rel="noopener noreferrer" title="Compartilhar no {{ rede.nome|capfirst }}" aria-label="{{ rede.nome|capfirst }}"><i class="{{ rede.icone }}"></i></a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+
+    <hr class="linha-divisao mb-4 w-100">
+
+    <!-- Descrição curta -->
+    {% if page.descricao %}
+    <div class="curso-descricao mb-4 text-start w-100">
+      <p class="lead">{{ page.descricao }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Corpo do conteúdo -->
+    <div class="curso-page-content body-content w-100 mb-5">
+      {% for block in page.body %}
+        {% include_block block %}
+      {% endfor %}
+    </div>
+
+    <!-- Arquivos relacionados -->
+    {% if not page.nao_exibir_lista_de_arquivos and arquivos_com_icone %}
+      <div class="curso-arquivos w-100 mb-5">
+        <h4 class="fw-bold mb-3"><i class="bi bi-folder2-open me-2"></i>Materiais do Curso</h4>
+        <ul class="list-group list-group-flush">
+          {% for item in arquivos_com_icone %}
+          <li class="list-group-item d-flex align-items-center">
+            <i class="fa {{ item.icon_class }} curso-file-icon me-2"></i>
+            <a href="{{ item.documento.url }}" target="_blank" class="text-decoration-none curso-file-link">{{ item.documento.title }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <!-- Seção de cursos relacionados -->
+    {% if ultimos_cursos %}
+    <div class="curso-relacionados w-100 mt-5">
+      <hr class="linha-divisao mb-4">
+      <h4 class="fw-bold mb-4 text-center">Outros Cursos</h4>
+      <div class="row justify-content-start">
+        {% for curso in ultimos_cursos %}
+          {% if curso.id != page.id %}
+          <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <a href="{% pageurl curso %}" class="text-decoration-none">
+              <div class="curso-card-related p-3 rounded-4 shadow-sm h-100">
+                <h5 class="fw-bold mb-2">{{ curso.title }}</h5>
+                <p class="small text-muted mb-1">{{ curso.descricao|striptags|truncatechars:100 }}</p>
+                {% if curso.data_publicacao %}
+                  <p class="curso-related-date small mb-0">Publicado em {{ curso.data_publicacao|date:"d/m/Y" }}</p>
+                {% endif %}
+              </div>
+            </a>
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

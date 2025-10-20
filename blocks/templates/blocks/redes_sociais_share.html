@@ -1,0 +1,14 @@
+{% if redes %}
+<div class="redes-sociais-compartilhar">
+  <h3>Compartilhe:</h3>
+  <ul>
+    {% for rede in redes %}
+      <li>
+        <a href="{{ rede.url }}" target="_blank" rel="noopener noreferrer">
+          <i class="{{ rede.icone }}"></i>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}

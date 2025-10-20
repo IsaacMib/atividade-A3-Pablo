@@ -1,28 +1,43 @@
-{% load navigation_tags wagtailcore_tags static %}
+{% load static wagtailcore_tags wagtailsettings_tags navigation_tags %}
 
 {% comment %}
 Renderização de submenus Bootstrap: todos os níveis a partir do 2 são exibidos juntos no mesmo dropdown.
 Não há dropdown aninhado para submenus.
 {% endcomment %}
+
 <div class="menu-wrapper">
   <nav class="site-menu-navbar navbar navbar-expand-lg">
     <div id="container-top-menu" class="container container-top-menu">
-      <!-- Layout mobile: duas linhas -->
+
+      <!-- ============================ LAYOUT MOBILE ============================ -->
       <div class="site-menu-navbar-mobile d-lg-none w-100">
         <!-- Primeira linha: Hambúrguer e Logo -->
         <div class="site-menu-navbar-toggler-brand d-flex justify-content-between align-items-center">
-          <!-- Botão do menu hamburger (lado esquerdo) -->
+
+          <!-- Botão do menu hamburger -->
           <button
             class="site-menu-navbar-toggler navbar-toggler uk-navbar-toggle uk-navbar-toggle-animate flex-shrink-0"
-            type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" uk-navbar-toggle-icon
-            aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar"
+            uk-navbar-toggle-icon
+            aria-controls="mainNavbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
           </button>
+
           <!-- Logo centralizada -->
           <div class="container d-flex justify-content-center align-items-center ml-6">
             <a class="navbar-brand" href="/" aria-label="Inicio">
-              <img class="navbar-brand-mobile-light" src="{% static 'img/logo_site_mobile.svg' %}" alt="{{ settings.core.SiteSettings.title_suffix }}"
+              <img
+                class="navbar-brand-mobile-light"
+                src="{% static 'img/logo_site_mobile_branco.svg' %}"
+                alt="{{ settings.core.SiteSettings.title_suffix }}"
                 height="42px">
-              <img class="navbar-brand-mobile-dark" src="{% static 'img/logo_site_mobile_branco.svg' %}" alt="{{ settings.core.SiteSettings.title_suffix }}"
+              <img
+                class="navbar-brand-mobile-dark"
+                src="{% static 'img/logo_site_mobile_branco.svg' %}"
+                alt="{{ settings.core.SiteSettings.title_suffix }}"
                 height="42px">
             </a>
           </div>
@@ -48,70 +63,141 @@ Não há dropdown aninhado para submenus.
         </div>
       </div>
 
-      <!-- Menu de navegação (colapsa no mobile) -->
+      <!-- ============================ MENU PRINCIPAL ============================ -->
       <div class="site-menu-navbar-collapse collapse navbar-collapse" id="mainNavbar">
         <ul class="site-menu-navbar-nav navbar-nav me-auto mb-2 mb-lg-0">
           {% for menuitem in menuitems %}
-          {% if menuitem.children %}
-          <li class="nav-item site-menu-dropdown-item dropdown{% if menuitem.active %} active{% endif %}">
-            <a class="nav-link dropdown-toggle" href="{% pageurl menuitem %}" id="dropdownMenu{{ forloop.counter }}"
-              role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              {{ menuitem.title }}
-            </a>
-            <ul class="dropdown-menu site-menu-dropdown-menu" aria-labelledby="dropdownMenu{{ forloop.counter }}"
-              data-bs-auto-close="false">
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="accordion accordion-flush sub-menu-accordion" id="accordionNivel2{{ menuitem.index }}">
-                    {% for child in menuitem.children %}
-                    {% if child.children %}
-                    <div class="site-menu-accordion-item accordion-item site-menu-submenu-item-div">
-                      <h2 class="accordion-header sub-menu-accordion-header" id="heading{{ child.index }}">
-                        <button class="site-menu-accordion-button accordion-button collapsed" type="button"
-                          data-bs-toggle="collapse" data-bs-target="#collapse{{ child.index }}{{ forloop.counter }}"
-                          aria-expanded="false" aria-controls="collapse{{ child.index }}{{ forloop.counter }}">
-                          {{ child.title }}
-                        </button>
-                      </h2>
-                      <div id="collapse{{ child.index }}{{ forloop.counter }}"
-                        class="site-menu-accordion-collapse accordion-collapse collapse"
-                        aria-labelledby="heading{{ child.index }}"
-                        data-bs-parent="#accordionNivel2{{ menuitem.index }}">
-                        <div class="site-menu-accordion-body accordion-body">
-                          <ul class="list-unstyled">
-                            {% for subchild in child.children %}
+            {% if menuitem.children %}
+              <li class="nav-item site-menu-dropdown-item dropdown{% if menuitem.active %} active{% endif %}">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="{% pageurl menuitem %}"
+                  id="dropdownMenu{{ forloop.counter }}"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  {{ menuitem.title }}
+                </a>
+
+                <ul
+                  class="dropdown-menu site-menu-dropdown-menu"
+                  aria-labelledby="dropdownMenu{{ forloop.counter }}"
+                  data-bs-auto-close="false">
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="accordion accordion-flush sub-menu-accordion" id="accordionNivel2{{ menuitem.index }}">
+                        {% for child in menuitem.children %}
+                          {% if child.children %}
+                            <div class="site-menu-accordion-item accordion-item site-menu-submenu-item-div">
+                              <h2 class="accordion-header sub-menu-accordion-header" id="heading{{ child.index }}">
+                                <button
+                                  class="site-menu-accordion-button accordion-button collapsed"
+                                  type="button"
+                                  data-bs-toggle="collapse"
+                                  data-bs-target="#collapse{{ child.index }}{{ forloop.counter }}"
+                                  aria-expanded="false"
+                                  aria-controls="collapse{{ child.index }}{{ forloop.counter }}">
+                                  {{ child.title }}
+                                </button>
+                              </h2>
+
+                              <div
+                                id="collapse{{ child.index }}{{ forloop.counter }}"
+                                class="site-menu-accordion-collapse accordion-collapse collapse"
+                                aria-labelledby="heading{{ child.index }}"
+                                data-bs-parent="#accordionNivel2{{ menuitem.index }}">
+                                <div class="site-menu-accordion-body accordion-body">
+                                  <ul class="list-unstyled">
+                                    {% for subchild in child.children %}
+                                      <li class="site-menu-submenu-item-li">
+                                        <a
+                                          class="site-submenu-dropdown-item site-submenu-dropdown-item-accordion dropdown-item"
+                                          href="{% pageurl subchild %}">
+                                          {{ subchild.title }}
+                                        </a>
+                                      </li>
+                                    {% endfor %}
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          {% else %}
                             <li class="site-menu-submenu-item-li">
-                              <a class="site-submenu-dropdown-item site-submenu-dropdown-item-accordion dropdown-item"
-                                href="{% pageurl subchild %}">
-                                {{ subchild.title }}
+                              <a
+                                class="site-submenu-dropdown-item dropdown-item"
+                                href="{% pageurl child %}">
+                                {{ child.title }}
                               </a>
                             </li>
-                            {% endfor %}
-                          </ul>
-                        </div>
+                          {% endif %}
+                        {% endfor %}
                       </div>
                     </div>
-                    {% else %}
-                    <li class="site-menu-submenu-item-li">
-                      <a class="site-submenu-dropdown-item dropdown-item" href="{% pageurl child %}">
-                        {{ child.title }}
-                      </a>
-                    </li>
-                    {% endif %}
-                    {% endfor %}
                   </div>
-                </div>
-              </div>
-            </ul>
-          </li>
-          {% else %}
-          <li class="nav-item{% if menuitem.active %} active{% endif %}">
-            <a class="site-menu-nav-link nav-link" href="{% pageurl menuitem %}">{{ menuitem.title }}</a>
-          </li>
-          {% endif %}
+                </ul>
+              </li>
+            {% else %}
+              <li class="nav-item{% if menuitem.active %} active{% endif %}">
+                <a class="site-menu-nav-link nav-link" href="{% pageurl menuitem %}">
+                  {{ menuitem.title }}
+                </a>
+              </li>
+            {% endif %}
           {% endfor %}
 
-          <!-- Divisor e Acessibilidade/Tools (apenas mobile) -->
+          {% get_settings %}
+          {% if settings.core.SiteSettings.intranet_habilitada %}
+            <li class="nav-item site-menu-nav-login mt-3 d-lg-none">
+              {% if user.is_authenticated %}
+                <div class="dropdown">
+                  <a
+                    href="#"
+                    class="d-flex align-items-center text-decoration-none dropdown-toggle"
+                    id="dropdownUser"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <div class="header-user-icon-wrapper rounded-circle d-flex align-items-center justify-content-center me-2">
+                      <svg class="header-user-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 16 16">
+                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                      </svg>
+                    </div>
+                    <span class="header-user-text">
+                      Olá, {{ user.first_name|default:user.username }}
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser">
+                    <li><a class="dropdown-item" href="/intranet/">Intranet</a></li>
+                    <li><a class="dropdown-item text-danger" href="{% url 'intranet_logout' %}">Sair</a></li>
+                  </ul>
+                </div>
+              {% else %}
+                <div class="dropdown">
+                  <a
+                    href="#"
+                    class="d-flex align-items-center text-decoration-none dropdown-toggle"
+                    id="dropdownGuest"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <div class="header-user-icon-wrapper rounded-circle d-flex align-items-center justify-content-center me-2">
+                      <svg class="header-user-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 16 16">
+                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                      </svg>
+                    </div>
+                    <span class="header-user-text header-user-text--bold">Intranet</span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownGuest">
+                    <li>
+                      <a class="dropdown-item" href="{% url 'wagtailadmin_login' %}?next=/intranet/">
+                        Entrar
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              {% endif %}
+            </li>
+          {% endif %}
+
+          <!-- ============================ TOOLS MOBILE ============================ -->
           <li class="site-menu-nav-tools nav-item d-lg-none">
             <hr class="dropdown-divider">
           </li>
@@ -119,14 +205,20 @@ Não há dropdown aninhado para submenus.
           <!-- Acessibilidade -->
           <li class="site-menu-nav-tools nav-item d-lg-none">
             <div>
-              <a id="theme-toggle-mobile" class="nav-link header-acessibilidade--contraste" href="#">alto
-                contraste</a>
+              <a id="theme-toggle-mobile" class="nav-link header-acessibilidade--contraste" href="#">
+                alto contraste
+              </a>
             </div>
           </li>
+
           <li class="site-menu-nav-tools nav-item d-lg-none">
             <div>
-              <a class="nav-link header-acessibilidade--vlibras" href="https://www.vlibras.com.br/"
-                target="_blank">vlibras</a>
+              <a
+                class="nav-link header-acessibilidade--vlibras"
+                href="https://www.vlibras.com.br/"
+                target="_blank">
+                vlibras
+              </a>
             </div>
           </li>
 
@@ -147,4 +239,37 @@ Não há dropdown aninhado para submenus.
       </div>
     </div>
   </nav>
+
+  <!-- ============================ PESQUISA (MOBILE) ============================ -->
+  <div class="site-menu-search-mobile d-lg-none w-100">
+    <form
+      action="{% url 'search' %}"
+      class="d-flex w-100"
+      role="search"
+      method="get">
+      <input
+        class="navbar-input-search form-control flex-grow-1"
+        type="text"
+        placeholder="O que você está procurando?"
+        aria-label="Search"
+        name="query"
+        value="{{ request.GET.query }}">
+      <button
+        class="navbar-button-search btn btn-primary flex-shrink-0"
+        type="submit"
+        aria-label="Pesquisar">
+        <svg
+          width="17"
+          height="18"
+          viewBox="0 0 21 22"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M14.3924 8.70761C14.3156 10.2344 13.661 11.7221 12.4371 12.8283C11.2163 13.9352 9.67372 14.4368 8.14879 14.3606C6.62386 14.282 5.13854 13.6274 4.03293 12.4041C2.92976 11.1791 2.4312 9.63403 2.50556 8.10422C2.58357 6.57868 3.23755 5.09092 4.45896 3.98532C5.68098 2.87971 7.2242 2.37688 8.74852 2.45429C10.2747 2.53108 11.7582 3.18506 12.8632 4.40952C13.9676 5.63276 14.4667 7.17963 14.3924 8.70761ZM20.3842 19.5632L14.9799 13.5725C16.0776 12.1835 16.6822 10.5178 16.7681 8.82951C16.8785 6.69936 16.1684 4.5174 14.6301 2.81023C13.0899 1.10367 10.9927 0.179077 8.86859 0.0724167C6.74271 -0.0372907 4.5644 0.672151 2.86394 2.21537C1.15799 3.7592 0.236445 5.85705 0.129784 7.98476C0.0188581 10.1137 0.72769 12.2963 2.26725 14.0028C3.80803 15.7094 5.90405 16.6352 8.02933 16.7419C9.71456 16.8278 11.4321 16.3908 12.9217 15.4369L18.3235 21.427C18.8386 21.9974 19.7168 22.0407 20.2849 21.5263C20.8541 21.0113 20.898 20.1318 20.3842 19.5632Z"
+            fill="white"/>
+        </svg>
+      </button>
+    </form>
+  </div>
 </div>
+

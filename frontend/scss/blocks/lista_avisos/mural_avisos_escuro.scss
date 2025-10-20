@@ -1,37 +1,61 @@
 @use './../../variables.scss';
-[data-theme=dark] {
+
+[data-theme='dark'] {
+  
+  .texto-secundario {
+    color: var(variables.$color-grey-700);
+  }
   .mural-avisos {
     background-color: variables.$color-black;
-    border-top: 0.5px solid variables.$color-white;
-    border-bottom: 0.5px solid variables.$color-white;
-    .aviso-card {
+    border-top: 0.5px solid variables.$color-grey-700;
+    border-bottom: 0.5px solid variables.$color-grey-700;
+    color: variables.$color-white;
+
+    &.modo-blocos {
       background-color: variables.$color-black;
-      box-shadow: 0 1px 4px variables.$color-white;
+    }
+
+    .aviso-card {
+      background-color: variables.$color-white !important;
+      box-shadow: 0 1px 4px variables.$color-dark-theme-border !important;
+      border: 1px solid variables.$color-white !important;
 
       &:hover {
-        box-shadow: 0 4px 10px variables.$color-white;
+        box-shadow: 0 4px 10px variables.$color-dark-theme-border !important;
+        background-color: variables.$color-grey-100 !important;
       }
-
+      
       &::before {
-        background-color:  variables.$color-white; //#2f5597;
+        background-color: variables.$color-dark-theme-border !important;
       }
-    }
-
-    .aviso-title {
-      color: variables.$color-white; //#2f5597;
-    }
-
-    .aviso-data {
-      color: variables.$color-white;//#2f5597;
+      
+      .aviso-title,
+      h3 {
+        color: variables.$color-text-body-dark !important;
+        margin-bottom: 0.5rem;
+      }
+      
+      .aviso-descricao,
+      .aviso-data,
+      p {
+        color: variables.$color-text-body-dark !important;
+      }
+      
+      .icon-col i,
+      > i { // Para o modo lista
+        color: variables.$color-text-body-dark !important;
+      }
+      
     }
 
     .ver-todos-btn {
       a {
-        border: 1px solid variables.$color-white;//#2f5597;
-        color: variables.$color-white;//#2f5597;
+        border: 1px solid variables.$color-white;
+        color: variables.$color-white;
+        transition: all 0.2s ease;
 
         &:hover {
-          background-color: variables.$color-white;//#2f5597;
+          background-color: variables.$color-white;
           color: variables.$color-black;
         }
       }

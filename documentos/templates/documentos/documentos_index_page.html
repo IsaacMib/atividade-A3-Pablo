@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-documentos-index-page{% endblock %}
+
+{% block content %}
+<div class="documentos-container container py-5">
+
+  <!-- TÍTULO PRINCIPAL -->
+  {% include 'include/titulo.html' with titulo=page.title|default:"Documentos" bgClass='' %}
+
+  {% if page.introduction %}
+    <p class="text-muted mb-4">{{ page.introduction }}</p>
+  {% endif %}
+
+  <!-- SUBTÍTULO E FILTROS -->
+  <div class="d-flex justify-content-between align-items-center flex-wrap border-bottom pb-3 mb-4">
+    <h4 class="mb-2 mb-sm-0 fw-semibold documentos-subtitle">
+      {{ page.subtitulo|default:"Documentos para Download" }}
+    </h4>
+
+    <form method="get" class="d-flex gap-3 align-items-center flex-wrap mt-2 mt-sm-0">
+      <select name="ano" class="form-select w-auto">
+        <option value="">Todos os anos</option>
+        {% for ano_item in anos_disponiveis %}
+          <option value="{{ ano_item.year }}" {% if ano_item.year|stringformat:"s" == ano %}selected{% endif %}>
+            {{ ano_item.year }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <select name="tag" class="form-select w-auto">
+        <option value="">Todas as tags</option>
+        {% for t in tags %}
+          <option value="{{ t.slug }}" {% if t.slug == tag.slug %}selected{% endif %}>
+            {{ t.name }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <button class="btn btn-primary px-4">Filtrar</button>
+    </form>
+  </div>
+
+  <!-- LISTA DE DOCUMENTOS -->
+  <div class="documentos-list mt-3">
+    {% for doc in documentos %}
+      {% if doc.arquivo %}
+        <div class="documento-item d-flex align-items-center justify-content-between flex-wrap py-2">
+          <div class="d-flex align-items-center flex-wrap">
+            <!-- Dot antes do título -->
+            <span class="documento-dot fs-5 me-2">•</span>
+
+            <a href="{{ doc.arquivo.url }}" target="_blank" class="fw-semibold text-decoration-none documento-link hover-text-primary">
+              {{ doc.title }}
+            </a>
+
+            {% if doc.destaque %}
+              <span class="badge bg-warning text-dark ms-2">Importante</span>
+            {% endif %}
+
+            <span class="text-muted ms-2 small">• {{ doc.data_publicacao|date:"d/m/Y" }}</span>
+          </div>
+        </div>
+      {% endif %}
+    {% empty %}
+      <p class="text-muted fst-italic">Nenhum documento encontrado.</p>
+    {% endfor %}
+  </div>
+
+  <!-- PAGINAÇÃO -->
+  {% include "include/paginator.html" with posts=documentos %}
+
+</div>
+{% endblock %}

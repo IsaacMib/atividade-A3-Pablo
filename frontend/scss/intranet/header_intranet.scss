@@ -1,0 +1,46 @@
+@use '../variables.scss';
+
+.header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+
+  .header-logo,
+  .header-logo-dark {
+    height: 40px;
+    object-fit: contain;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .search-field {
+      max-width: 250px;
+      width: 100%;
+    }
+
+    .contrast-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      background-color: variables.$color-primary;
+      color: variables.$color-white;
+      transition: background 0.2s;
+
+      &:hover {
+        background-color: variables.$color-primary-hover;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 0.5rem;
+    .header-actions { width: 100%; justify-content: space-between; }
+    .header-logo, .header-logo-dark { height: 30px; }
+  }
+}

@@ -1,41 +1,44 @@
+
 {% load wagtailcore_tags wagtailimages_tags static %}
 
-<section class="mural-avisos">
-  <div class="container text-center">
-    {% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
-
-    <div class="avisos-wrapper row justify-content-start">
-      {% for aviso in avisos|slice:":6" %}
-        <a class="col-12 col-lg-4 col-md-6" href="{% pageurl aviso %}" style="text-decoration: none; color: inherit;">
-          <div class="aviso-card">
-            <h3 class="aviso-title">
-              {{ aviso.title }}
-            </h3>
-
-            <div class="aviso-desc-row">
-              <div class="icon-col">
-                <i class="bi bi-calendar3"></i>
-              </div>
-              <div class="desc-col">
-                <p class="aviso-descricao">
-                  {{ aviso.descricao|striptags|truncatechars:120}}
-                </p>
-                {% if aviso.data_publicacao %}
-                  <p class="aviso-data fw-bold">Data: {{ aviso.data_publicacao|date:"d/m/Y" }}</p>
-                {% endif %}
-              </div>
-            </div>
-
-            {% if aviso.data_publicacao %}
-              <p class="aviso-data fw-bold"></p>
-            {% endif %}
-          </div>
-        </a>
-      {% endfor %}
-    </div>
-
-    {% if avisos_index_page_url %}
-      {% include "include/ver_todos_btn.html" with ver_todos_url=avisos_index_page_url %}
+<section class="mural-avisos {{ self.layout }}">
+  <div class="container">
+    {% if self.mostrar_titulo %}
+      {% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
     {% endif %}
+
+    {% if self.layout == 'blocos' %}
+      <div class="row justify-content-center">
+        {% for aviso in avisos_destaque|add:ultimos_avisos %}
+          <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <a href="{% pageurl aviso %}" class="text-decoration-none h-100" style="color: inherit;">
+              <div class="aviso-card h-100">
+                <h3 class="aviso-title">{{ aviso.title }}</h3>
+                <div class="aviso-desc-row">
+                  <div class="icon-col"><i class="bi bi-calendar3"></i></div>
+                  <div class="desc-col">
+                    <p class="aviso-descricao">{{ aviso.descricao|striptags|truncatechars:120 }}</p>
+                    {% if aviso.data_publicacao %}<p class="aviso-data">Data: {{ aviso.data_publicacao|date:"d/m/Y" }}</p>{% endif %}
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% elif self.layout == 'lista' %}
+      <div class="avisos-wrapper">
+        {% for aviso in avisos_destaque|add:ultimos_avisos %}
+          <a href="{% pageurl aviso %}" class="aviso-lista-item">
+            <div class="aviso-card"><i class="bi bi-megaphone-fill"></i><div><h3>{{ aviso.title }}</h3><p>{{ aviso.descricao|striptags|truncatechars:150 }}</p></div></div>
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if avisos_index_page.url %}
+      {% include "include/ver_todos_btn.html" with ver_todos_url=avisos_index_page.url ver_todos_texto_link=self.texto_link|default:"Ver todos os avisos" %}
+    {% endif %}
+
   </div>
 </section>

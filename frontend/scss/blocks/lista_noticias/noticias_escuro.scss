@@ -7,16 +7,24 @@
   .noticias-conteudo {
     border-top: 1px solid variables.$color-white;
     border: 1px solid variables.$color-white;
-    background-color: variables.$color-black;
+    background-color: variables.$color-white;
   }
 
   .noticias-conteudo--data {  
-    background-color: variables.$color-white;
-    color: variables.$color-black;
+    background-color: variables.$color-dark-theme-border;
+    color: variables.$color-white;
   }
 
   .noticias-conteudo--heading {
     color: variables.$color-white;
+  }
+
+  .noticias-title-wrapper {
+    color: variables.$color-text-body-dark !important;
+  }
+
+  .noticias-descricao {
+    color: variables.$color-dark-theme-text-secondary !important;
   }
 
   @media screen and (max-width: 576px) {
