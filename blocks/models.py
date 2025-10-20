@@ -698,7 +698,7 @@ class CardLinhaDoTempoBlock(StructBlock):
         required=False,
         target_model='paginas.CardLinhaDoTempoPage',
         label="Link",
-        help_text="Se as informações do link ultrapassarem o limite de exibição estabelecido, \
+        help_text="Se as informações da descrição ultrapassarem o limite de exibição estabelecido, \
         você poderá criar uma nova página com as informações completas, a qual estará disponível\
         no card através do link 'Ver mais'."
     )
@@ -710,8 +710,7 @@ class CardLinhaDoTempoBlock(StructBlock):
         template = 'blocks/card_linha_do_tempo.html'
         form_attrs = {
             'data-controller': 'char-count',
-            'data-char-count-fields-value': 'titulo:100,descricao:220',
-            'data-char-count-limit-value': '255',
+            'data-char-count-fields-value': 'titulo:50,descricao:220',
         }
 
 

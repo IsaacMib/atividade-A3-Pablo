@@ -63,9 +63,10 @@ class CharCountController extends window.StimulusModule.Controller {
       const remaining = maxLength - length;
       
       counter.textContent = `${length} / ${maxLength}`;
-      counter.style.color = remaining < 0 ? '#dc3545' :
-                          remaining < maxLength * 0.2 ? '#fd7e14' :
-                          '#6c757d';
+      
+      counter.style.color = remaining <= 0 ? 'red' :
+                          remaining < maxLength * 0.2 ? 'orange' :
+                          'grey';
     };
     
     field.addEventListener('input', update);
