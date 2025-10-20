@@ -1,0 +1,138 @@
+@use '../variables.scss';
+
+.menu-wrapper {
+  background-color: variables.$color-primary;
+
+  .site-menu-navbar {
+    padding: 0;
+  }
+
+  .container-top-menu {
+    position: relative;
+  }
+
+  // Estilos comuns para links do menu
+  .site-menu-nav-link,
+  .dropdown-toggle {
+    color: variables.$color-white;
+    font-weight: 500;
+    padding: 1rem;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      color: variables.$color-white;
+      background-color: darken(variables.$color-primary, 5%);
+    }
+  }
+
+  .nav-item.active > .nav-link {
+    background-color: darken(variables.$color-primary, 8%);
+  }
+
+  // Dropdown (Mega Menu)
+  .site-menu-dropdown-menu {
+    background-color: variables.$color-white;
+    border: none;
+    border-top: 3px solid variables.$color-primary-darker;
+    border-radius: 0;
+    width: 100%;
+    left: 0;
+    box-shadow: 0 4px 8px variables.$color-overlay-20;
+    padding: 1rem;
+  }
+
+  // Acordeão dentro do Dropdown
+  .sub-menu-accordion {
+    .site-menu-accordion-item {
+      border: none;
+      background-color: transparent;
+    }
+
+    .site-menu-accordion-button {
+      background-color: variables.$color-grey-100;
+      color: variables.$color-primary-darker;
+      font-weight: 700;
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid variables.$color-grey-300;
+
+      &:not(.collapsed) {
+        background-color: variables.$color-grey-200;
+        box-shadow: none;
+      }
+
+      &::after {
+        filter: brightness(0) saturate(100%) invert(18%) sepia(58%) saturate(2476%) hue-rotate(206deg) brightness(93%) contrast(93%);
+      }
+    }
+
+    .site-menu-accordion-body {
+      padding: 0.5rem 0;
+      background-color: variables.$color-white;
+    }
+
+    .site-submenu-dropdown-item {
+      color: variables.$color-black;
+      padding: 0.5rem 1.25rem;
+
+      &:hover {
+        background-color: variables.$color-grey-100;
+        color: variables.$color-primary;
+      }
+    }
+  }
+
+  // Itens de lista sem subnível
+  .site-menu-submenu-item-li > .dropdown-item {
+    color: variables.$color-primary;
+    font-weight: 500;
+    padding: 0.6rem 1rem;
+
+    &:hover {
+      background-color: variables.$color-grey-100;
+    }
+  }
+
+  // ============================
+  // ESTILOS MOBILE
+  // ============================
+  .site-menu-navbar-mobile {
+    .navbar-brand-mobile-dark {
+      display: none;
+    }
+  }
+
+  .site-menu-navbar-collapse {
+    @media (max-width: 991.98px) {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: variables.$color-white;
+      padding: 1rem;
+      box-shadow: 0 4px 8px variables.$color-overlay-20;
+      max-height: calc(100vh - 150px);
+      overflow-y: auto;
+
+      .site-menu-nav-link,
+      .dropdown-toggle {
+        color: variables.$color-primary;
+        &:hover {
+          background-color: variables.$color-grey-100;
+        }
+      }
+
+      .site-menu-dropdown-menu {
+        box-shadow: none;
+        border-top: none;
+        width: auto;
+        position: static;
+      }
+
+      .site-menu-nav-tools .nav-link {
+        color: variables.$color-black;
+      }
+    }
+  }
+}

@@ -1,18 +1,53 @@
-{% extends "base.html" %}
+{% load static wagtailcore_tags wagtailuserbar navigation_tags wagtailsettings_tags socialaccount %}
 {% load render_bundle from webpack_loader %}
-{% load static wagtailcore_tags wagtailuserbar navigation_tags wagtailsettings_tags %}
 
-{% block body_class %}template-intranetpage{% endblock %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <title>
+        {% block title %}
+            {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
+        {% endblock %}
+        {% get_settings %}
+        {% if settings.core.SiteSettings.title_suffix %}
+            - {{ settings.core.SiteSettings.title_suffix }}
+        {% endif %}
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-{% block title_suffix %}
-    {% get_settings %}
-    {% if settings.core.SiteSettings.title_suffix %}
-        - {{ settings.core.SiteSettings.title_suffix }}
+    {% block branding_favicon %}
+        <link rel="shortcut icon" href="{% static 'img/favicon/favicon.ico' %}" />
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicon/apple-touch-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicon/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/favicon/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'img/favicon/site.webmanifest' %}">
+    {% endblock %}
+
+    {% if request.in_preview_panel %}
+    <base target="_blank">
     {% endif %}
-{% endblock %}
+
+    {# Global stylesheets #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    {% block extra_css %}{% endblock %}
+
+    {% render_bundle 'main' 'css' %}
+</head>
+
+<body class="tw:font-inter template-intranetpage">
+    {% wagtailuserbar %}
+
+    {% include 'barra_identidade.html' %}
+
+{% load static %}
 
 {% block header %}
-    {% include "intranet/header.html" %}
+    {% include "intranet/header_intranet.html" %}
 {% endblock %}
 
 {% block content %}
@@ -28,6 +63,9 @@
     {% include 'footer.html' %}
 {% endblock %}
 
-{% block extra_js %}
-    {% render_bundle 'main' 'js' %}
-{% endblock %}
+{# Global javascript #}
+{% render_bundle 'main' 'js' %}
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>
