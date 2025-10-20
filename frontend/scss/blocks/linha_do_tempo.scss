@@ -1,4 +1,6 @@
 @use '../variables.scss';
+@use './linha_do_tempo_responsividade.scss' as *;
+
 
 .linha-do-tempo {
   display: flex;
@@ -14,8 +16,8 @@
 }
 
 .card-linha-do-tempo {
+  @include card-aspect-ratio;
   --card-max-height: 360px;
-  --card-aspect-ratio: 1.3;
 
   display: flex;
   flex-direction: column;
@@ -23,8 +25,6 @@
   justify-content: flex-start;
   border: solid 4px variables.$color-primary;
   padding: 2rem;
-  max-height: 360px;
-  aspect-ratio: 1.3;
   overflow-y: scroll;
   z-index: 15;
   background-color: variables.$color-white;
@@ -45,14 +45,15 @@
 }
 
 .row.block-linha-do-tempo {
-  @media (min-width: 1200px) {
+  @media (min-width: $layout-change-breakpoint) {
     &:has(:first-child:nth-last-child(2)) {
       max-height: calc(360px + 0.5rem);
     }
     &:has(:first-child:nth-last-child(1)) {
-      max-height: calc(540px + 0.5rem);
+      max-height: calc(580px + 0.5rem);
     }
   }
+  @include linha-do-tempo-row-height-mixin;
 }
 
 .linha-do-tempo__item {
@@ -75,6 +76,8 @@
     --card-max-height: 380px;
     --card-aspect-ratio: 1.5;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
+
+    @include group-icon-mixin;
   }
 
   .linha-do-tempo-calendar-group {
@@ -106,7 +109,7 @@
     margin: 0;
   }
 
-  @media (min-width: 1200px) {
+  @media (min-width: $layout-change-breakpoint) {
     &:nth-child(even) {
       .linha-do-tempo-item-row {
         justify-content: flex-end;
@@ -126,7 +129,7 @@
 
         // Linha deve ser maior para elementos pares
         .linha-do-tempo-calendar-group::after {
-          height: calc(var(--card-max-height) - 4.6rem);
+          height: calc(var(--card-max-height) - 35px);
         }
       }
     }
@@ -156,7 +159,7 @@
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: $layout-change-breakpoint-max) {
   .linha-do-tempo {
     .container {
       --bs-gutter-x: 0;
@@ -165,7 +168,7 @@
 
   .linha-do-tempo__item {
     justify-content: space-between;
-    margin: 15rem auto;
+    margin: 7rem auto;
   }
 
   .linha-do-tempo {
@@ -177,6 +180,7 @@
       display: none;
     }
   }
+  @include connector-line-mixin-mobile;
 }
 
 // Linha só deve aparecer se card não for o último
@@ -203,15 +207,16 @@
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: $layout-change-breakpoint) {
   .linha-do-tempo-calendar-group::after {
-    height: 118px;
+    height: 117px;
   }
 }
 
-@media (max-width: 1200px) {
+// Tamanho da linha para telas mobile
+@media (max-width: $layout-change-breakpoint-max) {
   .linha-do-tempo-calendar-group::after {
-    height: 536px;
+    height: 426px;
   }
 }
 
@@ -235,7 +240,7 @@
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: $layout-change-breakpoint) {
   // Itens pares: card à direita; traçar linha do centro até a borda direita
   .linha-do-tempo__item:nth-child(even) .linha-do-tempo-item-row::before {
     left: var(--group-x);
@@ -250,16 +255,20 @@
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: $layout-change-breakpoint-max) {
   // Em dispositivos móveis, o grupo (ícone) fica ~10% a partir da esquerda
   .linha-do-tempo-item-row {
     --group-x: 10%;
   }
-  // Traçar da borda direita até a posição do grupo (direita → esquerda)
-  .linha-do-tempo__item .linha-do-tempo-item-row::before {
-    right: var(--group-x);
-    width: calc(90% - var(--group-x));
-    display: block !important;
+  // // Traçar da borda direita até a posição do grupo (direita → esquerda)
+  // .linha-do-tempo__item .linha-do-tempo-item-row::before {
+  //   right: var(--group-x);
+  //   width: calc(90% - var(--group-x));
+  //   display: block !important;
+  // }
+
+  .calendar-icon {
+    margin-right: 2px;
   }
 }
 
@@ -267,12 +276,16 @@
   position: relative;
 }
 
+.linha-do-tempo__item {
+  @include connector-line-mixin;
+}
+
 .calendar-icon {
   width: 64px;
   height: 64px;
   z-index: 100;
   color: variables.$color-primary;
-  font-size: 1.8rem;
+  font-size: 1.9rem;
   display: flex;
   align-items: center;
   justify-content: center;
