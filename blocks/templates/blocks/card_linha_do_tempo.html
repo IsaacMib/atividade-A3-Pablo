@@ -27,7 +27,7 @@
                     <span>
                         {% comment %} Adiciona link para página com detalhes do card caso texto ultrapasse um certo limite {% endcomment %}
                         {% with card.descricao|length as text_length %}
-                            {% if text_length > 200 and card.detail_page %}
+                            {% if text_length > 180 and card.detail_page %}
                                 {{ text_length|add_link_to_trimmed_text:card.detail_page.url }}
                             {% endif %}
                         {% endwith %}

@@ -708,6 +708,11 @@ class CardLinhaDoTempoBlock(StructBlock):
         icon = 'title'
         label = 'Card da Linha do Tempo'
         template = 'blocks/card_linha_do_tempo.html'
+        form_attrs = {
+            'data-controller': 'char-count',
+            'data-char-count-fields-value': 'titulo:100,descricao:220',
+            'data-char-count-limit-value': '255',
+        }
 
 
 # StreamBlocks
