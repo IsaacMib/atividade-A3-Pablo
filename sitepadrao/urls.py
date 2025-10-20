@@ -13,6 +13,7 @@ from django.shortcuts import render
 
 from search import views as search_views
 from sitepadrao import views as sitepadrao_views
+from api.views import SharedContentByTagAPIView
 from . import views
 
 handler403 = 'sitepadrao.views.erro_403'
@@ -36,6 +37,7 @@ urlpatterns = [
         ),
     path("acesso_negado/", sitepadrao_views.acesso_negado, name="acesso_negado"),
     path("404/", sitepadrao_views.erro_404, name="erro_404"),
+    path('api/shared-content/<slug:tag_slug>/', SharedContentByTagAPIView.as_view(), name='shared-content-by-tag'),
 ]
 
 if settings.HABILITAR_SSO_LOGIN:

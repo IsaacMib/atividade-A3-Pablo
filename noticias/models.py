@@ -11,6 +11,7 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList, TabbedInterface
 from wagtail.fields import StreamField
 from wagtail.search import index
+from wagtail.api import APIField
 from core.models import PageSitePadrao, PageSitePadraoIndex
 
 from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
@@ -18,6 +19,7 @@ from datetime import datetime
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.images.api.fields import ImageRenditionField
 from core.utils import (
     get_file_type,
     get_fontawesome_file_icon,
@@ -165,6 +167,19 @@ class NoticiasPage(PageSitePadrao):
                        classname="migracao-only"),
         ]
     )
+
+    # Campos expostos na API
+    api_fields = [
+        APIField('title'),
+        APIField('subtitle'),
+        APIField('descricao'),
+        APIField('data_publicacao'),
+        APIField('body'),
+        APIField('tags'),
+        # Usamos 'get_imagem_destaque' para garantir que pegamos a imagem correta
+        APIField('get_imagem_destaque', serializer=ImageRenditionField('fill-800x450', source='get_imagem_destaque')),
+        APIField('url'),
+    ]
 
     @property
     def get_tags(self):

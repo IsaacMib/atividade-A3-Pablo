@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     "agenda",
     "avisos",
     'editais',
+    "api",
 
     "plone_migration",
     "auth_keycloak",
@@ -348,6 +349,19 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 HABILITAR_SSO_LOGIN = get_bool("HABILITAR_SSO_LOGIN", False)
+
+# Define se o portal atua como um provedor de conteúdo (cria notícias)
+# ou como um consumidor (importa notícias de uma API).
+# Se True, o site é um PROVEDOR.
+# Se False (padrão), o site é um CONSUMIDOR e as configurações de sincronização
+# estarão disponíveis no painel do Wagtail.
+PORTAL_PROVEDOR_CONTEUDO = get_bool("PORTAL_PROVEDOR_CONTEUDO", False)
+
+# Define se a API de conteúdo compartilhado deve retornar os dados agrupados por tipo
+# (ex: {"noticias": [...], "avisos": [...]}) ou em uma lista única ordenada por data.
+# Se True, o conteúdo é AGRUPADO.
+# Se False (padrão), o conteúdo é uma LISTA ÚNICA.
+API_CONTEUDO_AGRUPADO = get_bool("API_CONTEUDO_AGRUPADO", False)
 
 # URL para redirecionar após login bem-sucedido
 LOGIN_REDIRECT_URL = "/admin/"
