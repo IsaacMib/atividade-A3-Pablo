@@ -1,0 +1,58 @@
+@use '../variables.scss' as variables;
+
+.formulario-bloco {
+    background-color: variables.$color-white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px variables.$color-card-shadow-hover;
+
+    .titulo-formulario {
+        color: variables.$color-primary;
+        font-weight: 700;
+        font-size: 2rem;
+        text-align: center;
+        text-decoration: underline;
+        text-underline-offset: 8px;
+        margin-bottom: 1rem;
+    }
+
+    .subtitulo-formulario {
+        color: variables.$color-grey-600;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    form {
+        p {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: variables.$color-primary;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            width: 100%;
+        }
+
+        .btn-enviar-sugestao {
+            background-color: variables.$color-primary;
+            border-color: variables.$color-primary;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .formulario-sucesso {
+            background-color: variables.$color-success;
+            border-color: darken(variables.$color-success, 8%);
+            color: variables.$color-on-success;
+
+            .alert-heading {
+                color: inherit;
+            }
+        }
+    }
+}
