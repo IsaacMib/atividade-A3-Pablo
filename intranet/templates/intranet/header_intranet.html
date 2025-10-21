@@ -1,4 +1,4 @@
-{% load static navigation_tags wagtailsettings_tags socialaccount %}
+{% load static navigation_tags wagtailcore_tags wagtailsettings_tags socialaccount %}
 
 <div class="header-wrapper d-none d-lg-block"> {# Cabeçalho para Desktop (LG e acima) #}
   <div class="container">
@@ -119,4 +119,4 @@
 
 <!-- ============================ MENU PRINCIPAL ============================ -->
 {% get_site_root as site_root %}
-{% top_menu parent=site_root calling_page=self %}
+{% top_menu_intranet parent=site_root calling_page=self %}

@@ -72,3 +72,23 @@ def top_menu(context, parent, calling_page=None, max_levels=None):
         "request": context["request"],
         "max_levels": max_levels,
     }
+
+
+# Retrieves the top menu items for the intranet
+@register.inclusion_tag("intranet/top_menu_intranet.html", takes_context=True)
+def top_menu_intranet(context, parent, calling_page=None, max_levels=None):
+    """
+    Retorna os itens do menu da intranet até max_levels níveis, usando SiteSettings se não informado.
+    """
+    if max_levels is None:
+        site = Site.find_for_request(context["request"])
+        site_settings = SiteSettings.for_site(site)
+        max_levels = site_settings.menu_max_levels
+
+    menuitems, _ = get_menuitems_with_children(parent, calling_page, max_levels)
+    return {
+        "calling_page": calling_page,
+        "menuitems": menuitems,
+        "request": context["request"],
+        "max_levels": max_levels,
+    }

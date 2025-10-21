@@ -71,6 +71,22 @@
         .site-menu-nav-link, .dropdown-toggle, .site-menu-nav-tools .nav-link {
           color: variables.$color-white;
         }
+
+        .header-user-icon-wrapper {
+          border-color: variables.$color-white;
+        }
+
+        .header-user-icon {
+          fill: variables.$color-white;
+        }
+
+        .header-user-text {
+          color: variables.$color-white;
+        }
+
+        .dropdown-menu .dropdown-item {
+          color: variables.$color-white;
+        }
       }
     }
   }

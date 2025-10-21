@@ -140,14 +140,12 @@ Não há dropdown aninhado para submenus.
                     id="dropdownUser"
                     data-bs-toggle="dropdown"
                     aria-expanded="false">
-                    <div
-                      class="rounded-circle d-flex align-items-center justify-content-center me-2"
-                      style="width: 38px; height: 38px; border: 2px solid rgb(48, 89, 155);">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="rgb(48, 89, 155)" viewBox="0 0 16 16">
+                    <div class="header-user-icon-wrapper rounded-circle d-flex align-items-center justify-content-center me-2">
+                      <svg class="header-user-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 16 16">
                         <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                       </svg>
                     </div>
-                    <span style="color: rgb(48, 89, 155);">
+                    <span class="header-user-text">
                       Olá, {{ user.first_name|default:user.username }}
                     </span>
                   </a>
@@ -164,14 +162,12 @@ Não há dropdown aninhado para submenus.
                     id="dropdownGuest"
                     data-bs-toggle="dropdown"
                     aria-expanded="false">
-                    <div
-                      class="rounded-circle d-flex align-items-center justify-content-center me-2"
-                      style="width: 38px; height: 38px; border: 2px solid rgb(48,89,155);">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="rgb(48,89,155)" viewBox="0 0 16 16">
+                    <div class="header-user-icon-wrapper rounded-circle d-flex align-items-center justify-content-center me-2">
+                      <svg class="header-user-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 16 16">
                         <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                       </svg>
                     </div>
-                    <span style="color: rgb(48, 89, 155); font-weight: 600;">Intranet</span>
+                    <span class="header-user-text header-user-text--bold">Intranet</span>
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownGuest">
                     <li>

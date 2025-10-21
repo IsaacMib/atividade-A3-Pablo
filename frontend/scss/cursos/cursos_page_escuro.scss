@@ -7,11 +7,11 @@
 
     .curso-page-container {
       .curso-page--title {
-        color: variables.$color-primary-light;
+        color: variables.$color-on-primary;
       }
 
       .curso-subtitle {
-        color: variables.$color-secondary-light;
+        color: variables.$color-dark-theme-text;
       }
 
       .linha-divisao {
@@ -24,7 +24,7 @@
           color: variables.$color-grey-400;
 
           i {
-            color: variables.$color-primary-light;
+            color: variables.$color-on-primary;
           }
         }
 
@@ -47,7 +47,7 @@
       .curso-share-text,
       .curso-social {
         span {
-          color: variables.$color-secondary-light;
+          color: variables.$color-dark-theme-text;
         }
 
         ul.social {
@@ -77,7 +77,7 @@
         color: variables.$color-grey-200;
 
         h2, h3, h4, h5 {
-          color: variables.$color-primary-light;
+          color: variables.$color-on-primary;
         }
 
         p {
@@ -85,7 +85,7 @@
         }
 
         a {
-          color: variables.$color-primary-light;
+          color: variables.$color-on-primary;
 
           &:hover {
             color: variables.$color-primary;
@@ -107,15 +107,15 @@
         padding: 1.5rem;
 
         h4 {
-          color: variables.$color-primary-light;
+          color: variables.$color-on-primary;
         }
 
         .curso-file-icon {
-          color: variables.$color-secondary-light;
+          color: variables.$color-dark-theme-text;
         }
 
         .curso-file-link {
-          color: variables.$color-primary-light;
+          color: variables.$color-on-primary;
         }
 
         ul.list-group {
@@ -125,7 +125,7 @@
             border-bottom: 1px solid variables.$color-grey-700;
 
             a {
-              color: variables.$color-primary-light;
+              color: variables.$color-on-primary;
 
               &:hover {
                 color: variables.$color-primary;
@@ -134,7 +134,7 @@
             }
 
             i {
-              color: variables.$color-primary-light;
+              color: variables.$color-on-primary;
             }
           }
         }
@@ -157,7 +157,7 @@
           }
 
           h5 {
-            color: variables.$color-primary-light;
+            color: variables.$color-on-primary;
           }
 
           p {
@@ -165,7 +165,7 @@
           }
 
           .curso-related-date {
-            color: variables.$color-secondary-light;
+            color: variables.$color-dark-theme-text;
           }
         }
       }

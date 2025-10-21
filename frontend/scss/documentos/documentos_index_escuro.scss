@@ -20,7 +20,7 @@
             }
             
             .documentos-subtitle {
-                color: variables.$color-primary-light;
+                color: variables.$color-dark-theme-text;
             }
 
             form {
@@ -49,7 +49,7 @@
                     border-radius: 10px;
                     font-weight: 500;
                     color: variables.$color-on-primary;
-                    background-color: variables.$color-primary;
+                    background-color: variables.$color-dark-theme-text-secondary;
                     border: none;
                     transition: all 0.25s ease;
 
@@ -71,7 +71,7 @@
                     }
 
                     .documento-dot {
-                        color: variables.$color-primary-light;
+                        color: variables.$color-dark-theme-text;
                     }
 
                     .documento-link {
@@ -79,7 +79,7 @@
                         color: variables.$color-grey-100;
 
                         &:hover {
-                            color: variables.$color-primary-light;
+                            color: variables.$color-dark-theme-text;
                         }
                     }
 

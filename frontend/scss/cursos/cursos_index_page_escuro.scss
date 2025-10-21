@@ -16,7 +16,7 @@
 
       .titulo-section {
         h1, h2, h3 {
-          color: variables.$color-primary-light;
+          color: variables.$color-dark-theme-text;
         }
         p {
           color: variables.$color-grey-400;
@@ -46,17 +46,17 @@
           }
 
           .curso-icon-default {
-            color: variables.$color-primary-light;
+            color: variables.$color-dark-theme-text;
           }
 
           .curso-icon-calendar {
-            color: variables.$color-secondary-light;
+            color: variables.$color-on-primary;
           }
 
           .curso-title {
             font-size: 1.3rem;
             font-weight: 700;
-            color: variables.$color-primary-light;
+            color: variables.$color-dark-theme-text;
             margin-bottom: 0.75rem;
           }
 
@@ -66,7 +66,7 @@
 
             .icon-col {
               i {
-                color: variables.$color-primary-light;
+                color: variables.$color-dark-theme-text;
                 font-size: 1.5rem;
               }
             }
@@ -78,7 +78,7 @@
               }
 
               p.curso-data {
-                color: variables.$color-secondary-light;
+                color: variables.$color-on-primary;
               }
 
               .curso-tags {

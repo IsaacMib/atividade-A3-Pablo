@@ -134,5 +134,27 @@
         color: variables.$color-black;
       }
     }
+
+    .header-user-icon-wrapper {
+      width: 38px;
+      height: 38px;
+      border: 2px solid variables.$color-primary;
+    }
+
+    .header-user-icon {
+      fill: variables.$color-primary;
+    }
+
+    .header-user-text {
+      color: variables.$color-primary;
+    }
+
+    .header-user-text--bold {
+      font-weight: 600;
+    }
+
+    .dropdown-menu .dropdown-item {
+      color: variables.$color-black;
+    }
   }
 }
