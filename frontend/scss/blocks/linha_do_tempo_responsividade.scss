@@ -237,16 +237,58 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
 }
 
 // Limitação de texto nos cards
-.card-linha-do-tempo__description {
-  display: -webkit-box;
-  text-align: justify;
-  -webkit-line-clamp: 4;
-  line-clamp: 4;
+
+.mouse-pointer {
+  cursor: pointer !important;
+}
+
+.card-description-wrapper {
+  display: inline-flex !important;
+}
+
+.card-linha-do-tempo__title {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: clip;
+}
+
+.card-linha-do-tempo__description {
+  font-size: 0.9rem;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  text-overflow: clip;
+
+  @media (max-width: map-get($linha-do-tempo-breakpoints, 'sm')) {
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: map-get($linha-do-tempo-breakpoints, 'xs')) {
+    font-size: 0.65rem;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+  }
+
+  @media (max-width: 715px) {
+    font-size: 0.63rem;
+  }
+
+  @media (max-width: 670px) {
+    font-size: 0.61rem;
+  }
 
   @media (max-width: $layout-change-breakpoint-max) {
+    font-size: 0.8rem;
     --max-lines: 7;
     -webkit-line-clamp: var(--max-lines);
     line-clamp: var(--max-lines);

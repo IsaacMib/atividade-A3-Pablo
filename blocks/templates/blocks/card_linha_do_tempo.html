@@ -1,6 +1,13 @@
 {% load wagtailimages_tags %}
 {% load text_filters %}
-<div class="linha-do-tempo__item" data-index="{{ index }}" data-last="{{ last_index }}">
+{% comment %} {% if card.detail_page %}
+    <a class="" href="{{ card.detail_page.url }}">
+{% endif %} {% endcomment %}
+<div
+    class="linha-do-tempo__item"
+    data-index="{{ index }}"
+    data-last="{{ last_index }}"
+>
     <div class="linha-do-tempo-item-row">
         <svg class="linha-do-tempo-calendar-group left"
             viewBox="0 0 104 104"
@@ -15,7 +22,14 @@
         </svg>
         <i class="bi-calendar3 linha-do-tempo-calendar-group calendar-icon left" ></i>
             <div class="arrow left animate"></div>
-            <div class="card-linha-do-tempo animate">
+            <div
+                {% if card.detail_page %}
+                    onClick="window.location.href = '{{ card.detail_page.url }}'"
+                    class="card-linha-do-tempo animate mouse-pointer"
+                {% else %}
+                    class="card-linha-do-tempo animate"
+                {% endif %}
+            >
                 <div class="card-linha-do-tempo__image">
                     {% image card.imagem width-400 alt=card.texto_alternativo|default:card.titulo %}
                 </div>
@@ -24,16 +38,15 @@
                         {{ card.titulo }}
                     </h3>
                     {% comment %} <p class="card-linha-do-tempo__date">{{ card.data|date:"d/m/Y" }}</p> {% endcomment %}
-                    <span>
+                    <span class="card-description-wrapper inline">
                         {% comment %} Adiciona link para página com detalhes do card caso texto ultrapasse um certo limite {% endcomment %}
-                        {% with card.descricao|length as text_length %}
-                            {% if text_length > 180 and card.detail_page %}
-                                {{ text_length|add_link_to_trimmed_text:card.detail_page.url }}
+                        {% with card.descricao as text_content %}
+                            {% if text_content|length > 180 and card.detail_page %}
+                                {{ text_content|truncatechars:160|add_link_to_trimmed_text:card.detail_page.url }}
+                            {% else %}
+                                <p lang="pt-BR" class="card-linha-do-tempo__description">{{ text_content }}</p>
                             {% endif %}
                         {% endwith %}
-                        <p class="card-linha-do-tempo__description mt-2 mb-0">
-                            {{ card.descricao }}
-                        </p>
                     </span>
                 </div>
             </div>
@@ -110,3 +123,6 @@
         })();
     </script>
 </div>
+{% comment %} {% if card.detail_page %}
+</a>
+{% endif %} {% endcomment %}
