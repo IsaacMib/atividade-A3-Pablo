@@ -231,9 +231,6 @@ class SiteSettings(BaseSiteSetting):
             heading="Rodapé",
             classname="collapsible collapsed"
         ),
-    ]
-
-    # --- Funções auxiliares ---
         MultiFieldPanel(
             [
                 FieldPanel("captcha_site_key"),
@@ -243,7 +240,6 @@ class SiteSettings(BaseSiteSetting):
         ),
     ]
 
-    # ----------------- Métodos utilitários -----------------
     def is_periodo_eleitoral(self):
         """
         Retorna True se o período eleitoral está habilitado e a data atual está entre o início e o fim.

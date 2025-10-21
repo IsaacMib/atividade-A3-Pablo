@@ -1,10 +1,10 @@
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.conf import settings
-from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel, TabbedInterface, ObjectList
 from wagtail.fields import StreamField
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
-from wagtail import (blocks)
+from wagtail import blocks
 from blocks.agenda import ( 
 
     ListAgendaBlock, 
@@ -29,9 +29,24 @@ from blocks.models import (
 
 )
 
-# -------------------------------------------------------------
-# MODELOS AUXILIARES
-# -------------------------------------------------------------
+CONTENT_BLOCKS = [
+    ('titulo', TituloBlock()),
+    ('lista_avisos', AvisosListBlock()),
+    ('banner_com_link', BannerComLinkBlock()),
+    ('lista_videos', ListaVideosBlock()),
+    ('noticias', NoticiasListBlock()),
+    ("carrossel_banners", CarrosselBannersBlock()),
+    ("carrossel_solucoes", CarrosselSolucoesBlock()),
+    ('compromisso', CompromissoBlock()),
+]
+
+WIDGET_BLOCKS = [
+    ("acessos_rapidos", AcessosRapidosBlock()),
+    ("central_monitoramento", OdometerListBlock()),
+    ("servicos_online", ServicosOnlineBlock()),
+    ('agenda_do_dia', AgendaDoDiaBlock()),
+    ('listar_agenda', ListAgendaBlock()),
+]
 
 class GrupoIntranet(models.Model):
     nome = models.CharField(max_length=255, verbose_name="Nome do Grupo")
@@ -45,108 +60,69 @@ class GrupoIntranet(models.Model):
         verbose_name = "Grupo da Intranet"
         verbose_name_plural = "Grupos da Intranet"
 
-
-class IntranetColumnBlock(blocks.StructBlock):
-    coluna = blocks.ChoiceBlock(
-        choices=[
-            ('coluna_1', 'Primeira Coluna'),
-            ('coluna_2', 'Segunda Coluna'),
-            ('coluna_3', 'Widgets'),
-        ],
-        default='coluna_1',
-        label="Posição do bloco na página"
-    )
-
-    conteudo = blocks.StreamBlock(
-        [
-            ('titulo', TituloBlock()),
-            ('lista_avisos', AvisosListBlock()),
-            ("acessos_rapidos", AcessosRapidosBlock()),
-            ('banner_com_link', BannerComLinkBlock()),
-            ('lista_videos', ListaVideosBlock()),
-            ("central_monitoramento", OdometerListBlock()),
-            ('noticias', NoticiasListBlock()),
-            ("carrossel_banners", CarrosselBannersBlock()),
-            ("servicos_online", ServicosOnlineBlock()),
-            ("carrossel_solucoes", CarrosselSolucoesBlock()),
-            ('agenda_do_dia', AgendaDoDiaBlock()),
-            ('listar_agenda', ListAgendaBlock()),
-            ('compromisso', CompromissoBlock()),
-        ],
-        required=True,
-        label="Conteúdo do bloco"
-    )
-
-
-# -------------------------------------------------------------
-# PÁGINAS
-# -------------------------------------------------------------
-
 class IntranetBase(PageSitePadrao):
     """Página base para todas as páginas internas da Intranet."""
+    
+    LAYOUT_CHOICES = [
+        ('100', 'Layout 1: 100%'),
+        ('50_50', 'Layout 2: 50% / 50%'),
+        ('60_40', 'Layout 3: 60% / 40%'),
+        ('70_30', 'Layout 4: 70% / 30%'),
+        ('80_20', 'Layout 5: 80% / 20%'),
+        ('35_35_30', 'Layout 6: 35% / 35% / 30%'),
+        ('40_40_20', 'Layout 7: 40% / 40% / 20%'),
+    ]
 
-    body = StreamField(
-        [
-            ('coluna', IntranetColumnBlock()),
-        ],
-        use_json_field=True,
-        blank=True,
-        verbose_name="Conteúdo da Página"
+    layout = models.CharField(
+        max_length=20,
+        choices=LAYOUT_CHOICES,
+        default='100',
+        verbose_name="Layout da Página",
+        help_text="Escolha a proporção das colunas de conteúdo."
     )
 
-    content_panels = PageSitePadrao.content_panels + [FieldPanel('body')]
+    coluna_1 = StreamField(
+        CONTENT_BLOCKS,
+        use_json_field=True,
+        blank=True,
+        verbose_name="Coluna 1"
+    )
 
-    def get_layout_context(self):
-        
-        """Determina o layout da página com base nos blocos presentes."""
-        
-        col1_blocks = []
-        col2_blocks = []
-        widget_blocks = []
-        
-        # percorre o StreamField principal
-        for block in self.body:
+    coluna_2 = StreamField(
+        CONTENT_BLOCKS,
+        use_json_field=True,
+        blank=True,
+        verbose_name="Coluna 2"
+    )
 
-            if block.block_type == 'coluna' and block.value['conteudo']:
-                coluna = block.value['coluna']
-                if coluna == 'coluna_1':
-                    col1_blocks.append(block)
-                elif coluna == 'coluna_2':
-                    col2_blocks.append(block)
-                elif coluna == 'coluna_3':
-                    widget_blocks.append(block)
-            
-        has_col1 = bool(col1_blocks)
-        has_col2 = bool(col2_blocks)
-        has_widget = bool(widget_blocks)
-        
-        if has_col1 and has_col2 and has_widget:
-            layout = "40_40_20"
-        elif has_col1 and has_col2:
-            layout = "50_50"
-        elif (has_col1 or has_col2) and has_widget:
-            layout = "70_30"
-        elif has_col1:
-            layout = "100_col1"
-        elif has_col2:
-            layout = "100_col2"
-        elif has_widget:
-            layout = "100_widget"
-        else:
-            layout = "100_default"
+    widgets = StreamField(
+        WIDGET_BLOCKS,
+        use_json_field=True,
+        blank=True,
+        verbose_name="Widgets (Coluna Lateral)"
+    )
 
-            
-        return {
-            "col1_blocks": col1_blocks,
-            "col2_blocks": col2_blocks,
-            "widget_blocks": widget_blocks,
-            "layout": layout,
-       }
+    # Painéis para a aba de Conteúdo
+    content_panels = PageSitePadrao.content_panels + [
+        FieldPanel('coluna_1'),
+        FieldPanel('coluna_2'),
+        FieldPanel('widgets'),
+    ]
+
+    layout_panels = [
+        FieldPanel('layout'),
+    ]
+
+    edit_handler = TabbedInterface([
+        ObjectList(content_panels, heading='Conteúdo'),
+        ObjectList(layout_panels, heading='Layout'),
+        ObjectList(PageSitePadrao.promote_panels, heading='Promover'),
+        ObjectList(PageSitePadrao.settings_panels, heading='Configurações', classname="settings"),
+    ])
     
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
-        layout_context = self.get_layout_context()
-        context.update(layout_context)
+        context['layout'] = self.layout
         return context
 
     def serve(self, request, *args, **kwargs):
@@ -162,7 +138,6 @@ class IntranetBase(PageSitePadrao):
 
 
 class IntranetIndexPage(IntranetBase, PageSitePadraoIndex):
-    """Página inicial da Intranet, com suporte a colunas e modo reduzido."""
     parent_page_types = None
     subpage_types = ['intranet.IntranetPage']
     max_count = 1
@@ -172,7 +147,6 @@ class IntranetIndexPage(IntranetBase, PageSitePadraoIndex):
 
 
 class IntranetPage(IntranetBase):
-    """Páginas internas da Intranet."""
     parent_page_types = ['intranet.IntranetIndexPage']
     subpage_types = ['intranet.IntranetPage']
 
