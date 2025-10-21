@@ -44,8 +44,8 @@ class CharCountController extends window.StimulusModule.Controller {
       if (maxLength === undefined) {
         maxLength = field.getAttribute('maxlength');
       }
-      else if (field.getAttribute('maxlength') !== maxLength) {
-        console.log('O limite de caracteres do campo ' + field.name + ' já havia sido estabelecido e não coincide com o valor definido no controller.');
+      else if (field.getAttribute('maxlength') != maxLength) {
+        console.log(`O limite de caracteres do campo ${field.name} já havia sido estabelecido em ${field.getAttribute('maxlength')} e não coincide com o valor definido no controller ${maxLength}.`);
       }
     }
     field.setAttribute('maxlength', maxLength);
