@@ -1,64 +1,4 @@
-@use './variables.scss' as variables;
-
-.contatos-block-wrapper {
-  color: variables.$color-primary;
-
-  h2,
-  h3,
-  h4 {
-    color: variables.$color-primary;
-    font-size: 1.8rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }
-
-  ul {
-    color: variables.$color-primary;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
-
-    /* estilos de lista */
-    &.list-none {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    &.list-dot {
-      list-style-type: disc;
-      padding-left: 1.5rem;
-    }
-
-    &.list-diamond,
-    &.list-arrow,
-    &.list-triangle,
-    &.list-chevron,
-    &.list-black_diamond {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    li {
-      color: variables.$color-primary;
-      margin-bottom: 0.25rem;
-
-      &.has-icon {
-        position: relative;
-        padding-left: 1.2rem;
-
-        span.icon {
-          position: absolute;
-          left: 0;
-          color: variables.$color-primary;
-        }
-      }
-
-      strong,
-      span {
-        color: variables.$color-primary;
-      }
-    }
-  }
-}
+@use '../variables.scss';
 
 /* -----------------------
    NOVA ESTRUTURA UNIFICADA
@@ -86,9 +26,17 @@
     }
   }
 
+  .contato-simples {
+    font-size: 1rem;
+    font-weight: normal;
+
+    .contato-info-details span {
+      margin-right: 0.5rem;
+    }
+  }
+
   .contatos-list {
-    margin-bottom: 1.5rem;
-    font-weight: bold;
+    margin-bottom: 0;
     padding-left: 0;
     color: variables.$color-primary;
 
@@ -147,5 +95,14 @@
     span {
       color: variables.$color-primary;
     }
+
+    strong {
+      /* Espaçamento entre itens na mesma linha */
+      font-weight: bold;
+    }
+  }
+
+  hr {
+    border-top: 1px solid rgba(0, 0, 0, 0.1); /* Linha suave para tema claro */
   }
 }

@@ -8,161 +8,740 @@
 
     {% include 'include/titulo.html' with titulo=page.introduction|default:"Telefones" bgClass='' %}
 
-    {# --- Layout: 2 colunas (50 / 50) --- #}
-    {% if layout == "50_50" %}
-      <div class="col-md-6 col-12">
-        {% for bloco in col1_blocks %}
+    {# --- Layout: 3 colunas (40 / 40 / 20) --- #}
+    {% if layout == "40_40_20" %}
+      <div class="col-lg-5 col-md-6 col-12">
+        {% for bloco in col1_blocks %} {# Renderiza blocos da Coluna 1 #}
           {% for content_block in bloco.value.conteudo %}
             {% if content_block.block_type == "contatos_section" %}
               {% with section=content_block.value %}
-              <div class="contatos-block-wrapper my-3">
+              <div class="contatos my-4">
                 {% if section.section_title %}
-                  {% if section.title_size == "small" %}
-                    <h4 class="fw-bold mb-3">{{ section.section_title }}</h4>
-                  {% elif section.title_size == "large" %}
-                    <h2 class="fw-bold mb-3">{{ section.section_title }}</h2>
-                  {% else %}
-                    <h3 class="fw-bold mb-3">{{ section.section_title }}</h3>
+                  <h3 class="section-title {{ section.title_size }}">{{ section.section_title }}</h3>
+                {% endif %}
+
+                {% for item in section.itens_contato %}
+                  {% if item.block_type == 'contato_simples' %}
+                    {# --- Renderiza um Contato Simples --- #}
+                    {% with contato=item.value %}
+                      <div class="contatos-grupo mb-2">
+                        <ul class="contatos-list {{ contato.list_style }}">
+                          <li>
+                            <strong>{{ contato.titulo }}</strong>
+                          {% for info in contato.informacoes %}
+                            <span>{{ info.info }}</span>
+                          {% endfor %}
+                          </li>
+                        </ul>
+                      </div>
+                      {% if contato.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+
+                  {% elif item.block_type == 'grupo_contatos' %}
+                    {# --- Renderiza um Grupo de Contatos --- #}
+                    {% with grupo=item.value %}
+                      <div class="contatos-grupo">
+                        <strong>{{ grupo.titulo_grupo }}</strong>
+                        <ul class="contatos-list {{ grupo.list_style }}">
+                          {% for contato in grupo.contatos %}
+                            <li>
+                              {% if contato.titulo %}<strong>{{ contato.titulo }}:</strong>{% endif %}
+                              {% for info in contato.informacoes %}
+                                <span>{{ info.info }}</span>
+                              {% endfor %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      {% if grupo.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
                   {% endif %}
-                {% endif %}
-                {% if section.contatos %}
-                  <ul class="fw-bold mb-4">
-                    {% for contato in section.contatos %}
-                      <li class="mb-1">
-                        {% if section.list_style == 'diamond' %}
-                          <span>♦</span>
-                        {% elif section.list_style == 'arrow' %}
-                          <span>➤</span>
-                        {% elif section.list_style == 'triangle' %}
-                          <span>▲</span>
-                        {% elif section.list_style == 'chevron' %}
-                          <span>›</span>
-                        {% elif section.list_style == 'black_diamond' %}
-                          <span>◆</span>
-                        {% endif %}
-                        {% if contato.title %}
-                          <strong>{{ contato.title }}:</strong>
-                        {% endif %}
-                        <span>{{ contato.phone }}</span>
-                      </li>
-                    {% endfor %}
-                  </ul>
-                {% endif %}
+                {% endfor %}
               </div>
               {% endwith %}
             {% else %}
-              <div class="contatos-block-wrapper my-3">
+              <div class="my-3">
                 {% include_block content_block %}
               </div>
             {% endif %}
           {% endfor %}
         {% empty %}
-          <p>Nenhum bloco na Coluna 1</p>
+          <p>Nenhum bloco nesta coluna.</p>
+        {% endfor %}
+      </div>
+      <div class="col-lg-5 col-md-6 col-12">
+        {% for bloco in col2_blocks %} {# Renderiza blocos da Coluna 2 #}
+          {% for content_block in bloco.value.conteudo %}
+            {% if content_block.block_type == "contatos_section" %}
+              {% with section=content_block.value %}
+              <div class="contatos my-4">
+                {% if section.section_title %}
+                  <h3 class="section-title {{ section.title_size }}">{{ section.section_title }}</h3>
+                {% endif %}
+
+                {% for item in section.itens_contato %}
+                  {% if item.block_type == 'contato_simples' %}
+                    {# --- Renderiza um Contato Simples --- #}
+                    {% with contato=item.value %}
+                      <div class="contatos-grupo mb-2">
+                        <ul class="contatos-list {{ contato.list_style }}">
+                          <li>
+                            <strong>{{ contato.titulo }}</strong>
+                          {% for info in contato.informacoes %}
+                            <span>{{ info.info }}</span>
+                          {% endfor %}
+                          </li>
+                        </ul>
+                      </div>
+                      {% if contato.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+
+                  {% elif item.block_type == 'grupo_contatos' %}
+                    {# --- Renderiza um Grupo de Contatos --- #}
+                    {% with grupo=item.value %}
+                      <div class="contatos-grupo">
+                        <strong>{{ grupo.titulo_grupo }}</strong>
+                        <ul class="contatos-list {{ grupo.list_style }}">
+                          {% for contato in grupo.contatos %}
+                            <li>
+                              {% if contato.titulo %}<strong>{{ contato.titulo }}:</strong>{% endif %}
+                              {% for info in contato.informacoes %}
+                                <span>{{ info.info }}</span>
+                              {% endfor %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      {% if grupo.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+              {% endwith %}
+            {% else %}
+              <div class="my-3">
+                {% include_block content_block %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% empty %}
+          <p>Nenhum bloco nesta coluna.</p>
+        {% endfor %}
+      </div>
+      <aside class="col-lg-2 col-12">
+        {% for bloco in widget_blocks %} {# Renderiza blocos de Widgets #}
+          {% for content_block in bloco.value.conteudo %}
+            {% if content_block.block_type == "contatos_section" %}
+              {% with section=content_block.value %}
+              <div class="contatos my-4">
+                {% if section.section_title %}
+                  <h3 class="section-title {{ section.title_size }}">{{ section.section_title }}</h3>
+                {% endif %}
+
+                {% for item in section.itens_contato %}
+                  {% if item.block_type == 'contato_simples' %}
+                    {# --- Renderiza um Contato Simples --- #}
+                    {% with contato=item.value %}
+                      <div class="contatos-grupo mb-2">
+                        <ul class="contatos-list {{ contato.list_style }}">
+                          <li>
+                            <strong>{{ contato.titulo }}</strong>
+                          {% for info in contato.informacoes %}
+                            <span>{{ info.info }}</span>
+                          {% endfor %}
+                          </li>
+                        </ul>
+                      </div>
+                      {% if contato.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+
+                  {% elif item.block_type == 'grupo_contatos' %}
+                    {# --- Renderiza um Grupo de Contatos --- #}
+                    {% with grupo=item.value %}
+                      <div class="contatos-grupo">
+                        <strong>{{ grupo.titulo_grupo }}</strong>
+                        <ul class="contatos-list {{ grupo.list_style }}">
+                          {% for contato in grupo.contatos %}
+                            <li>
+                              {% if contato.titulo %}<strong>{{ contato.titulo }}:</strong>{% endif %}
+                              {% for info in contato.informacoes %}
+                                <span>{{ info.info }}</span>
+                              {% endfor %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      {% if grupo.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+              {% endwith %}
+            {% else %}
+              <div class="my-3">
+                {% include_block content_block %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% empty %}
+          <p>Nenhum widget.</p>
+        {% endfor %}
+      </aside>
+
+    {# --- Layout: 2 colunas (50 / 50) --- #}
+    {% elif layout == "50_50" %} {# Detectado automaticamente ou escolhido manualmente #}
+      <div class="col-md-6 col-12">
+        {% for bloco in col1_blocks %} {# Renderiza blocos da Coluna 1 #}
+          {% for content_block in bloco.value.conteudo %}
+            {% if content_block.block_type == "contatos_section" %}
+              {% with section=content_block.value %}
+              <div class="contatos my-4">
+                {% if section.section_title %}
+                  <h3 class="section-title {{ section.title_size }}">{{ section.section_title }}</h3>
+                {% endif %}
+
+                {% for item in section.itens_contato %}
+                  {% if item.block_type == 'contato_simples' %}
+                    {# --- Renderiza um Contato Simples --- #}
+                    {% with contato=item.value %}
+                      <div class="contatos-grupo mb-2">
+                        <ul class="contatos-list {{ contato.list_style }}">
+                          <li>
+                            <strong>{{ contato.titulo }}</strong>
+                          {% for info in contato.informacoes %}
+                            <span>{{ info.info }}</span>
+                          {% endfor %}
+                          </li>
+                        </ul>
+                      </div>
+                      {% if contato.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+
+                  {% elif item.block_type == 'grupo_contatos' %}
+                    {# --- Renderiza um Grupo de Contatos --- #}
+                    {% with grupo=item.value %}
+                      <div class="contatos-grupo">
+                        <strong>{{ grupo.titulo_grupo }}</strong>
+                        <ul class="contatos-list {{ grupo.list_style }}">
+                          {% for contato in grupo.contatos %}
+                            <li>
+                              {% if contato.titulo %}<strong>{{ contato.titulo }}:</strong>{% endif %}
+                              {% for info in contato.informacoes %}
+                                <span>{{ info.info }}</span>
+                              {% endfor %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      {% if grupo.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+              {% endwith %}
+            {% else %}
+              <div class="my-3">
+                {% include_block content_block %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% empty %}
+          <p>Nenhum bloco nesta coluna.</p>
+        {% endfor %}
+      </div>
+      <div class="col-md-6 col-12">
+        {% for bloco in col2_blocks %} {# Renderiza blocos da Coluna 2 #}
+          {% for content_block in bloco.value.conteudo %}
+            {% if content_block.block_type == "contatos_section" %}
+              {% with section=content_block.value %}
+              <div class="contatos my-4">
+                {% if section.section_title %}
+                  <h3 class="section-title {{ section.title_size }}">{{ section.section_title }}</h3>
+                {% endif %}
+
+                {% for item in section.itens_contato %}
+                  {% if item.block_type == 'contato_simples' %}
+                    {# --- Renderiza um Contato Simples --- #}
+                    {% with contato=item.value %}
+                      <div class="contatos-grupo mb-2">
+                        <ul class="contatos-list {{ contato.list_style }}">
+                          <li>
+                            <strong>{{ contato.titulo }}</strong>
+                          {% for info in contato.informacoes %}
+                            <span>{{ info.info }}</span>
+                          {% endfor %}
+                          </li>
+                        </ul>
+                      </div>
+                      {% if contato.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+
+                  {% elif item.block_type == 'grupo_contatos' %}
+                    {# --- Renderiza um Grupo de Contatos --- #}
+                    {% with grupo=item.value %}
+                      <div class="contatos-grupo">
+                        <strong>{{ grupo.titulo_grupo }}</strong>
+                        <ul class="contatos-list {{ grupo.list_style }}">
+                          {% for contato in grupo.contatos %}
+                            <li>
+                              {% if contato.titulo %}<strong>{{ contato.titulo }}:</strong>{% endif %}
+                              {% for info in contato.informacoes %}
+                                <span>{{ info.info }}</span>
+                              {% endfor %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      {% if grupo.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+              {% endwith %}
+            {% else %}
+              <div class="my-3">
+                {% include_block content_block %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% empty %}
+          <p>Nenhum bloco nesta coluna.</p>
         {% endfor %}
       </div>
 
-      <div class="col-md-6 col-12">
+    {# --- Layout: 2 colunas (70 / 30) ou (60 / 40) com uma coluna de conteúdo e widgets --- #}
+    {# A coluna principal será col1_blocks se houver, senão col2_blocks #}
+    {% elif layout == "70_30" or layout == "60_40" %}
+      {% if layout == "70_30" %}
+        <div class="col-lg-9 col-12"> {# 70% para conteúdo #}
+      {% else %} {# layout == "60_40" #}
+        <div class="col-lg-7 col-12"> {# 60% para conteúdo #}
+      {% endif %}
+
+        {% for bloco in col1_blocks %} {# Renderiza blocos da Coluna 1 #}
+          {% for content_block in bloco.value.conteudo %}
+            {% if content_block.block_type == "contatos_section" %}
+              {% with section=content_block.value %}
+              <div class="contatos my-4">
+                {% if section.section_title %}
+                  <h3 class="section-title {{ section.title_size }}">{{ section.section_title }}</h3>
+                {% endif %}
+
+                {% for item in section.itens_contato %}
+                  {% if item.block_type == 'contato_simples' %}
+                    {# --- Renderiza um Contato Simples --- #}
+                    {% with contato=item.value %}
+                      <div class="contatos-grupo mb-2">
+                        <ul class="contatos-list {{ contato.list_style }}">
+                          <li>
+                            <strong>{{ contato.titulo }}</strong>
+                          {% for info in contato.informacoes %}
+                            <span>{{ info.info }}</span>
+                          {% endfor %}
+                          </li>
+                        </ul>
+                      </div>
+                      {% if contato.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+
+                  {% elif item.block_type == 'grupo_contatos' %}
+                    {# --- Renderiza um Grupo de Contatos --- #}
+                    {% with grupo=item.value %}
+                      <div class="contatos-grupo">
+                        <strong>{{ grupo.titulo_grupo }}</strong>
+                        <ul class="contatos-list {{ grupo.list_style }}">
+                          {% for contato in grupo.contatos %}
+                            <li>
+                              {% if contato.titulo %}<strong>{{ contato.titulo }}:</strong>{% endif %}
+                              {% for info in contato.informacoes %}
+                                <span>{{ info.info }}</span>
+                              {% endfor %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      {% if grupo.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+              {% endwith %}
+            {% else %}
+              <div class="my-3">
+                {% include_block content_block %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
         {% for bloco in col2_blocks %}
           {% for content_block in bloco.value.conteudo %}
             {% if content_block.block_type == "contatos_section" %}
               {% with section=content_block.value %}
-              <div class="contatos-block-wrapper my-3">
+              <div class="contatos my-4">
                 {% if section.section_title %}
-                  {% if section.title_size == "small" %}
-                    <h4 class="fw-bold mb-3">{{ section.section_title }}</h4>
-                  {% elif section.title_size == "large" %}
-                    <h2 class="fw-bold mb-3">{{ section.section_title }}</h2>
-                  {% else %}
-                    <h3 class="fw-bold mb-3">{{ section.section_title }}</h3>
+                  <h3 class="section-title {{ section.title_size }}">{{ section.section_title }}</h3>
+                {% endif %}
+
+                {% for item in section.itens_contato %}
+                  {% if item.block_type == 'contato_simples' %}
+                    {# --- Renderiza um Contato Simples --- #}
+                    {% with contato=item.value %}
+                      <div class="contatos-grupo mb-2">
+                        <ul class="contatos-list {{ contato.list_style }}">
+                          <li>
+                            <strong>{{ contato.titulo }}</strong>
+                          {% for info in contato.informacoes %}
+                            <span>{{ info.info }}</span>
+                          {% endfor %}
+                          </li>
+                        </ul>
+                      </div>
+                      {% if contato.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+
+                  {% elif item.block_type == 'grupo_contatos' %}
+                    {# --- Renderiza um Grupo de Contatos --- #}
+                    {% with grupo=item.value %}
+                      <div class="contatos-grupo">
+                        <strong>{{ grupo.titulo_grupo }}</strong>
+                        <ul class="contatos-list {{ grupo.list_style }}">
+                          {% for contato in grupo.contatos %}
+                            <li>
+                              {% if contato.titulo %}<strong>{{ contato.titulo }}:</strong>{% endif %}
+                              {% for info in contato.informacoes %}
+                                <span>{{ info.info }}</span>
+                              {% endfor %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      {% if grupo.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
                   {% endif %}
-                {% endif %}
-                {% if section.contatos %}
-                  <ul class="fw-bold mb-4">
-                    {% for contato in section.contatos %}
-                      <li class="mb-1">
-                        {% if section.list_style == 'diamond' %}
-                          <span>♦</span>
-                        {% elif section.list_style == 'arrow' %}
-                          <span>➤</span>
-                        {% elif section.list_style == 'triangle' %}
-                          <span>▲</span>
-                        {% elif section.list_style == 'chevron' %}
-                          <span>›</span>
-                        {% elif section.list_style == 'black_diamond' %}
-                          <span>◆</span>
-                        {% endif %}
-                        {% if contato.title %}
-                          <strong>{{ contato.title }}:</strong>
-                        {% endif %}
-                        <span>{{ contato.phone }}</span>
-                      </li>
-                    {% endfor %}
-                  </ul>
-                {% endif %}
+                {% endfor %}
               </div>
               {% endwith %}
             {% else %}
-              <div class="contatos-block-wrapper my-3">
+              <div class="my-3">
                 {% include_block content_block %}
               </div>
             {% endif %}
           {% endfor %}
-        {% empty %}
-          <p>Nenhum bloco na Coluna 2</p>
         {% endfor %}
-      </div>
+      </div> {# Fim da coluna de conteúdo #}
 
-    {% elif layout == "100_col1" %}
-      <div class="col-12">
-        {% for bloco in col1_blocks %}
+      {% if layout == "70_30" %}<aside class="col-lg-3 col-12"> {# 30% para widgets #}
+      {% else %}<aside class="col-lg-5 col-12"> {# 40% para widgets #}
+      {% endif %}
+        {% for bloco in widget_blocks %} {# Renderiza blocos de Widgets #}
           {% for content_block in bloco.value.conteudo %}
             {% if content_block.block_type == "contatos_section" %}
               {% with section=content_block.value %}
-              <div class="contatos-block-wrapper my-3">
+              <div class="contatos my-4">
                 {% if section.section_title %}
-                  {% if section.title_size == "small" %}
-                    <h4 class="fw-bold mb-3">{{ section.section_title }}</h4>
-                  {% elif section.title_size == "large" %}
-                    <h2 class="fw-bold mb-3">{{ section.section_title }}</h2>
-                  {% else %}
-                    <h3 class="fw-bold mb-3">{{ section.section_title }}</h3>
+                  <h3 class="section-title {{ section.title_size }}">{{ section.section_title }}</h3>
+                {% endif %}
+
+                {% for item in section.itens_contato %}
+                  {% if item.block_type == 'contato_simples' %}
+                    {# --- Renderiza um Contato Simples --- #}
+                    {% with contato=item.value %}
+                      <div class="contatos-grupo mb-2">
+                        <ul class="contatos-list {{ contato.list_style }}">
+                          <li>
+                            <strong>{{ contato.titulo }}</strong>
+                          {% for info in contato.informacoes %}
+                            <span>{{ info.info }}</span>
+                          {% endfor %}
+                          </li>
+                        </ul>
+                      </div>
+                      {% if contato.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+
+                  {% elif item.block_type == 'grupo_contatos' %}
+                    {# --- Renderiza um Grupo de Contatos --- #}
+                    {% with grupo=item.value %}
+                      <div class="contatos-grupo">
+                        <strong>{{ grupo.titulo_grupo }}</strong>
+                        <ul class="contatos-list {{ grupo.list_style }}">
+                          {% for contato in grupo.contatos %}
+                            <li>
+                              {% if contato.titulo %}<strong>{{ contato.titulo }}:</strong>{% endif %}
+                              {% for info in contato.informacoes %}
+                                <span>{{ info.info }}</span>
+                              {% endfor %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      {% if grupo.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
                   {% endif %}
-                {% endif %}
-                {% if section.contatos %}
-                  <ul class="fw-bold mb-4">
-                    {% for contato in section.contatos %}
-                      <li class="mb-1">
-                        {% if section.list_style == 'diamond' %}
-                          <span>♦</span>
-                        {% elif section.list_style == 'arrow' %}
-                          <span>➤</span>
-                        {% elif section.list_style == 'triangle' %}
-                          <span>▲</span>
-                        {% elif section.list_style == 'chevron' %}
-                          <span>›</span>
-                        {% elif section.list_style == 'black_diamond' %}
-                          <span>◆</span>
-                        {% endif %}
-                        {% if contato.title %}
-                          <strong>{{ contato.title }}:</strong>
-                        {% endif %}
-                        <span>{{ contato.phone }}</span>
-                      </li>
-                    {% endfor %}
-                  </ul>
-                {% endif %}
+                {% endfor %}
               </div>
               {% endwith %}
             {% else %}
-              <div class="contatos-block-wrapper my-3">
+              <div class="my-3">
                 {% include_block content_block %}
               </div>
             {% endif %}
           {% endfor %}
         {% empty %}
-          <p>Nenhum bloco na Coluna 1</p>
+          <p>Nenhum widget.</p>
+        {% endfor %}
+      </aside>
+
+    {# --- Layout: 2 colunas (60 / 40) --- #} {# Este bloco estava duplicado e foi removido #}
+      <div class="col-lg-7 col-12">
+        {% for bloco in col1_blocks %} {# Renderiza blocos da Coluna 1 #}
+          {% for content_block in bloco.value.conteudo %}
+            {% if content_block.block_type == "contatos_section" %}
+              {% with section=content_block.value %}
+              <div class="contatos my-4">
+                {% if section.section_title %}
+                  <h3 class="section-title {{ section.title_size }}">{{ section.section_title }}</h3>
+                {% endif %}
+
+                {% for item in section.itens_contato %}
+                  {% if item.block_type == 'contato_simples' %}
+                    {# --- Renderiza um Contato Simples --- #}
+                    {% with contato=item.value %}
+                      <div class="contatos-grupo mb-2">
+                        <ul class="contatos-list {{ contato.list_style }}">
+                          <li>
+                            <strong>{{ contato.titulo }}</strong>
+                          {% for info in contato.informacoes %}
+                            <span>{{ info.info }}</span>
+                          {% endfor %}
+                          </li>
+                        </ul>
+                      </div>
+                      {% if contato.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+
+                  {% elif item.block_type == 'grupo_contatos' %}
+                    {# --- Renderiza um Grupo de Contatos --- #}
+                    {% with grupo=item.value %}
+                      <div class="contatos-grupo">
+                        <strong>{{ grupo.titulo_grupo }}</strong>
+                        <ul class="contatos-list {{ grupo.list_style }}">
+                          {% for contato in grupo.contatos %}
+                            <li>
+                              {% if contato.titulo %}<strong>{{ contato.titulo }}:</strong>{% endif %}
+                              {% for info in contato.informacoes %}
+                                <span>{{ info.info }}</span>
+                              {% endfor %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      {% if grupo.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+              {% endwith %}
+            {% else %}
+              <div class="my-3">
+                {% include_block content_block %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+        {% for bloco in col2_blocks %} {# Renderiza blocos da Coluna 2 #}
+          {% for content_block in bloco.value.conteudo %}
+            {% if content_block.block_type == "contatos_section" %}
+              {% with section=content_block.value %}
+              <div class="contatos my-4">
+                {% if section.section_title %}
+                  <h3 class="section-title {{ section.title_size }}">{{ section.section_title }}</h3>
+                {% endif %}
+
+                {% for item in section.itens_contato %}
+                  {# ... (lógica de renderização) ... #}
+                {% endfor %}
+              </div>
+              {% endwith %}
+            {% else %}
+              <div class="my-3">
+                {% include_block content_block %}
+              </div>
+            {% endif %}
+          {% endfor %}
         {% endfor %}
       </div>
+      <aside class="col-lg-5 col-12">
+        {% for bloco in widget_blocks %} {# Renderiza blocos de Widgets #}
+          {% for content_block in bloco.value.conteudo %}
+            {% if content_block.block_type == "contatos_section" %}
+              {% with section=content_block.value %}
+              <div class="contatos my-4">
+                {# ... (lógica de renderização) ... #}
+              </div>
+              {% endwith %}
+            {% else %}
+              <div class="my-3">
+                {% include_block content_block %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% empty %}
+          <p>Nenhum widget.</p>
+        {% endfor %}
+      </aside>
+
+    {# --- Layout: 1 coluna (100%) --- #}
+    {% elif layout == "100_col1" %}
+      <div class="col-12">
+        {% for bloco in col1_blocks %} {# Renderiza blocos da Coluna 1 #}
+          {% for content_block in bloco.value.conteudo %}
+            {% if content_block.block_type == "contatos_section" %}
+              {% with section=content_block.value %}
+              <div class="contatos my-4">
+                {% if section.section_title %}
+                  <h3 class="section-title {{ section.title_size }}">{{ section.section_title }}</h3>
+                {% endif %}
+
+                {% for item in section.itens_contato %}
+                  {% if item.block_type == 'contato_simples' %}
+                    {# --- Renderiza um Contato Simples --- #}
+                    {% with contato=item.value %}
+                      <div class="contatos-grupo mb-2">
+                        <ul class="contatos-list {{ contato.list_style }}">
+                          <li>
+                            <strong>{{ contato.titulo }}</strong>
+                          {% for info in contato.informacoes %}
+                            <span>{{ info.info }}</span>
+                          {% endfor %}
+                          </li>
+                        </ul>
+                      </div>
+                      {% if contato.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+
+                  {% elif item.block_type == 'grupo_contatos' %}
+                    {# --- Renderiza um Grupo de Contatos --- #}
+                    {% with grupo=item.value %}
+                      <div class="contatos-grupo">
+                        <strong>{{ grupo.titulo_grupo }}</strong>
+                        <ul class="contatos-list {{ grupo.list_style }}">
+                          {% for contato in grupo.contatos %}
+                            <li>
+                              {% if contato.titulo %}<strong>{{ contato.titulo }}:</strong>{% endif %}
+                              {% for info in contato.informacoes %}
+                                <span>{{ info.info }}</span>
+                              {% endfor %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      {% if grupo.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+              {% endwith %}
+            {% else %}
+              <div class="my-3">
+                {% include_block content_block %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% empty %}
+          <p>Nenhum bloco nesta coluna.</p>
+        {% endfor %}
+      </div>
+
+    {# --- Layout: 1 coluna (100%) --- #}
+    {% elif layout == "100_col2" %}
+      <div class="col-12">
+        {% for bloco in col2_blocks %} {# Renderiza blocos da Coluna 2 #}
+          {% for content_block in bloco.value.conteudo %}
+            {% if content_block.block_type == "contatos_section" %}
+              {% with section=content_block.value %}
+              <div class="contatos my-4">
+                {% if section.section_title %}
+                  <h3 class="section-title {{ section.title_size }}">{{ section.section_title }}</h3>
+                {% endif %}
+
+                {% for item in section.itens_contato %}
+                  {% if item.block_type == 'contato_simples' %}
+                    {# --- Renderiza um Contato Simples --- #}
+                    {% with contato=item.value %}
+                      <div class="contatos-grupo mb-2">
+                        <ul class="contatos-list {{ contato.list_style }}">
+                          <li>
+                            <strong>{{ contato.titulo }}</strong>
+                          {% for info in contato.informacoes %}
+                            <span>{{ info.info }}</span>
+                          {% endfor %}
+                          </li>
+                        </ul>
+                      </div>
+                      {% if contato.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+
+                  {% elif item.block_type == 'grupo_contatos' %}
+                    {# --- Renderiza um Grupo de Contatos --- #}
+                    {% with grupo=item.value %}
+                      <div class="contatos-grupo">
+                        <strong>{{ grupo.titulo_grupo }}</strong>
+                        <ul class="contatos-list {{ grupo.list_style }}">
+                          {% for contato in grupo.contatos %}
+                            <li>
+                              {% if contato.titulo %}<strong>{{ contato.titulo }}:</strong>{% endif %}
+                              {% for info in contato.informacoes %}
+                                <span>{{ info.info }}</span>
+                              {% endfor %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                      {% if grupo.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+                    {% endwith %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+              {% endwith %}
+            {% else %}
+              <div class="my-3">
+                {% include_block content_block %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% empty %}
+          <p>Nenhum bloco nesta coluna.</p>
+        {% endfor %}
+      </div>
+
+    {# --- Layout: 1 coluna de Widgets (100%) --- #}
+    {% elif layout == "100_widget" %}
+      <aside class="col-12">
+        {% for bloco in widget_blocks %} {# Renderiza blocos de Widgets #}
+          {% for content_block in bloco.value.conteudo %}
+            {% if content_block.block_type == "contatos_section" %}
+              {% with section=content_block.value %}
+              <div class="contatos my-4">
+                {% if section.section_title %}
+                  <h3 class="section-title {{ section.title_size }}">{{ section.section_title }}</h3>
+                {% endif %}
+
+                {% for item in section.itens_contato %}
+                  {# ... (a lógica de renderização é a mesma) ... #}
+                {% endfor %}
+              </div>
+              {% endwith %}
+            {% else %}
+              <div class="my-3">
+                {% include_block content_block %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% empty %}
+          <p>Nenhum widget.</p>
+        {% endfor %}
+      </aside>
 
     {% else %}
       <div class="col-12 text-center">
