@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     "agenda",
     "avisos",
     'editais',
+    "eventos",
 
     "plone_migration",
     "auth_keycloak",
