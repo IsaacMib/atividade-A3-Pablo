@@ -1,16 +1,16 @@
-from django.db import models
-from django import forms
 from datetime import date
+
 from django.core.exceptions import ValidationError
 from django.utils.html import escape
+from django.db import models
 
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
-from wagtail.models import Page
 from wagtail.images.blocks import ImageChooserBlock
 
 from blocks.models import ListRedeSocial, ListRedesSociais
+from wagtail.models import Page
 
 
 class PageSitePadrao(Page):
@@ -21,6 +21,7 @@ class PageSitePadrao(Page):
         blank=True,
         help_text="Descrição da página para SEO e redes sociais"
     )
+
 
     images = StreamField(
         [("image", ImageChooserBlock(label="Imagem"))],
@@ -41,6 +42,11 @@ class PageSitePadrao(Page):
 
 class PageSitePadraoIndex(Page):
     """Classe base para páginas de índice do site."""
+    """
+    Classe base para páginas de índice do site.
+    Herda apenas de Page do Wagtail sem campos adicionais.
+    """
+
     class Meta:
         abstract = True
 
@@ -49,6 +55,12 @@ class PageSitePadraoIndex(Page):
 class SiteSettings(BaseSiteSetting):
     """Configurações gerais do site."""
     
+    """
+    Configurações do site acessíveis via Wagtail Settings.
+    Adiciona campos de título, período eleitoral, redes sociais, menu,
+    cookies / analytics e reCAPTCHA (site + secret).
+    """
+
     title_suffix = models.CharField(
         verbose_name="Título do Site",
         max_length=255,
@@ -157,6 +169,20 @@ class SiteSettings(BaseSiteSetting):
     )
 
 
+    captcha_site_key = models.CharField(
+        verbose_name="Captcha Site Key (pública)",
+        max_length=255,
+        blank=True,
+        help_text="Chave pública (site key) do reCAPTCHA usada no cliente (frontend)."
+    )
+
+    captcha_secret_key = models.CharField(
+        verbose_name="Captcha Secret Key (secreta)",
+        max_length=255,
+        blank=True,
+        help_text="Chave secreta do reCAPTCHA usada para validação no servidor. (Deixe em branco se não usar captcha)"
+    )
+
     panels = [
         FieldPanel("title_suffix"),
         MultiFieldPanel(
@@ -208,6 +234,16 @@ class SiteSettings(BaseSiteSetting):
     ]
 
     # --- Funções auxiliares ---
+        MultiFieldPanel(
+            [
+                FieldPanel("captcha_site_key"),
+                FieldPanel("captcha_secret_key"),
+            ],
+            heading="Captcha (reCAPTCHA)"
+        ),
+    ]
+
+    # ----------------- Métodos utilitários -----------------
     def is_periodo_eleitoral(self):
         """
         Retorna True se o período eleitoral está habilitado e a data atual está entre o início e o fim.
@@ -267,15 +303,45 @@ class SiteSettings(BaseSiteSetting):
         return redes_ativas
 
     # --- Validações ---
+    def deve_exibir_cookies(self):
+        """Retorna True se o aviso de cookies deve ser exibido."""
+        return self.cookies_habilitado
+
+    def tem_google_analytics(self):
+        """Retorna True se a tag do Google Analytics está configurada."""
+        return bool(self.google_analytics_tag and self.google_analytics_tag.strip())
+
+    def deve_exibir_cookies_analytics(self):
+        """
+        Retorna True se o aviso de cookies analíticos deve ser exibido.
+        Só exibe se os cookies estão habilitados E a tag do Google Analytics está definida.
+        """
+        return self.deve_exibir_cookies() and self.tem_google_analytics()
+
+    def tem_captcha_site(self):
+        return bool(self.captcha_site_key and self.captcha_site_key.strip())
+
+    def tem_captcha_secret(self):
+        return bool(self.captcha_secret_key and self.captcha_secret_key.strip())
+
+    def has_recaptcha_keys(self):
+        return self.tem_captcha_site() and self.tem_captcha_secret()
+
+    def get_captcha_site_key(self):
+        return self.captcha_site_key.strip() if self.tem_captcha_site() else None
+
+    def get_captcha_secret(self):
+        return self.captcha_secret_key.strip() if self.tem_captcha_secret() else None
+
     def clean(self):
         super().clean()
+
 
         if self.menu_max_levels > 3:
             raise ValidationError({
                 "menu_max_levels": "O número máximo de níveis permitido para o menu é 3."
             })
 
-        # Validação do Google Analytics
         if self.google_analytics_tag:
             tag = self.google_analytics_tag.strip()
             if tag and not (tag.startswith('G-') or tag.startswith('UA-') or tag.startswith('GT-')):
@@ -301,4 +367,18 @@ class SiteSettings(BaseSiteSetting):
                 raise ValidationError({
                     "periodo_eleitoral_inicio": "A data de início não pode ser posterior à data de fim.",
                     "periodo_eleitoral_fim": "A data de fim não pode ser anterior à data de início."
+                })
+
+        if self.captcha_site_key:
+            site = self.captcha_site_key.strip()
+            if site and len(site) < 10:
+                raise ValidationError({
+                    "captcha_site_key": "A site key do captcha parece ser muito curta."
+                })
+
+        if self.captcha_secret_key:
+            secret = self.captcha_secret_key.strip()
+            if secret and len(secret) < 10:
+                raise ValidationError({
+                    "captcha_secret_key": "A chave secreta do captcha parece ser muito curta."
                 })

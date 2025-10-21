@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "cursos",
     "documentos",
     'editais',
+    "eventos",
 
 
     "plone_migration",

@@ -1,0 +1,72 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="bloco-informativo tema-{{ self.tema|default:'branco' }}">
+    <div class="bloco-informativo-content-wrapper">
+        {% if self.titulo_geral %}
+                    {% include 'include/titulo.html' with titulo=self.titulo_geral classe_css="titulo-formulario" %}
+        {% endif %}
+
+        <div class="secoes-informativas">
+            {# Se for AcordeonBlock com múltiplas seções #}
+            {% if self.secoes %}
+                {% for secao in self.secoes %}
+                    <section class="secao">
+                        {% if secao.titulo %}
+                            <div class="secao-header">
+                                <span>{{ secao.titulo }}</span>
+                                <span class="seta">&gt;</span>
+            </div>
+        {% endif %}
+
+                        <div class="secao-conteudo">
+                            {% if secao.conteudo %}
+                                {% for block in secao.conteudo %}
+                                    {% include_block block %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </section>
+                {% endfor %}
+            {% else %}
+                {# Caso seja apenas um AcordeonItemBlock individual #}
+                <section class="secao">
+                    {% if self.titulo %}
+                        <div class="secao-header">
+                            <span>{{ self.titulo }}</span>
+                            <span class="seta">&gt;</span>
+                        </div>
+        {% endif %}
+
+                    <div class="secao-conteudo">
+                        {% if self.conteudo %}
+                            {% for block in self.conteudo %}
+                                {% include_block block %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </section>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Garante que o script seja carregado apenas uma vez
+    if (!window.blocoInformativoScriptLoaded) {
+        console.log("Inicializando script do acordeão.");
+        document.body.addEventListener('click', function(event) {
+            // Verifica se o clique foi no cabeçalho de uma seção
+            const header = event.target.closest('.secao-header');
+            if (header) {
+                const conteudo = header.nextElementSibling;
+                // Adiciona/remove a classe 'ativo' para a animação da seta
+                header.classList.toggle("ativo");
+                // Mostra ou esconde o conteúdo
+                conteudo.style.display = (conteudo.style.display === "block") ? "none" : "block";
+            }
+        });
+        window.blocoInformativoScriptLoaded = true;
+    }
+});
+</script>
