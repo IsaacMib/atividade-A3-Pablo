@@ -13,7 +13,6 @@ from django.shortcuts import render
 
 from search import views as search_views
 from sitepadrao import views as sitepadrao_views
-from api.views import SharedContentByTagAPIView
 from . import views
 
 handler403 = 'sitepadrao.views.erro_403'
@@ -37,14 +36,13 @@ urlpatterns = [
         ),
     path("acesso_negado/", sitepadrao_views.acesso_negado, name="acesso_negado"),
     path("404/", sitepadrao_views.erro_404, name="erro_404"),
-    path('api/shared-content/<slug:tag_slug>/', SharedContentByTagAPIView.as_view(), name='shared-content-by-tag'),
+
+    path("api/v1/", include("api.urls", namespace="api")),
 ]
 
 if settings.HABILITAR_SSO_LOGIN:
     urlpatterns += [
-        # Sobrescreve a URL de logout do Wagtail admin para incluir logout do SSO
         path("admin/manager/logout/", sitepadrao_views.wagtail_logout_with_sso, name="wagtailadmin_logout"),
-        # path("admin/email/", login_required(sitepadrao_views.redirect_if_in_group), name="admin_email_redirect"),
         path('admin/manager/login/', RedirectView.as_view(url='/admin/', permanent=True)),
         path("admin/manager/", include(wagtailadmin_urls)),
         path("admin/", include("allauth.urls")),

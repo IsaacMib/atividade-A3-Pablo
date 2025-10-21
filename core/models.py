@@ -181,19 +181,6 @@ class SiteSettings(BaseSiteSetting):
 
     def clean(self):
         super().clean()
-        if self.menu_max_levels > 3:
-            raise ValidationError({
-                "menu_max_levels": "O número máximo de níveis permitido para o menu é 3."
-            })
-
-        # Validação do Google Analytics
-        if self.google_analytics_tag:
-            tag = self.google_analytics_tag.strip()
-            if tag and not (tag.startswith('G-') or tag.startswith('UA-') or tag.startswith('GT-')):
-                raise ValidationError({
-                    "google_analytics_tag": "A tag deve começar com 'G-', 'UA-' ou 'GT-' seguido do identificador."
-                })
-
         if self.periodo_eleitoral_habilitado:
             if not self.periodo_eleitoral_inicio and not self.periodo_eleitoral_fim:
                 raise ValidationError({
@@ -213,3 +200,71 @@ class SiteSettings(BaseSiteSetting):
                     "periodo_eleitoral_inicio": "A data de início não pode ser posterior à data de fim.",
                     "periodo_eleitoral_fim": "A data de fim não pode ser anterior à data de início."
                 })
+
+        if self.menu_max_levels > 3:
+            raise ValidationError({
+                "menu_max_levels": "O número máximo de níveis permitido para o menu é 3."
+            })
+
+        if self.google_analytics_tag:
+            tag = self.google_analytics_tag.strip()
+            if tag and not (tag.startswith('G-') or tag.startswith('UA-') or tag.startswith('GT-')):
+                raise ValidationError({
+                    "google_analytics_tag": "A tag deve começar com 'G-', 'UA-' ou 'GT-' seguido do identificador."
+                })
+
+
+@register_setting(icon="link")
+class ApiSettings(BaseSiteSetting):
+    api_url = models.URLField(
+        verbose_name="URL da API Externa",
+        blank=True,
+        help_text="URL base da API do portal de conteúdo externo."
+    )
+    api_token = models.CharField(
+        max_length=255,
+        verbose_name="Token de Autenticação da API",
+        blank=True,
+        help_text="Token para autenticação na API externa (Ex: 'Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b')."
+    )
+
+    puxar_noticias = models.BooleanField(
+        verbose_name="Puxar Notícias",
+        default=False,
+        help_text="Ativar para buscar notícias do portal externo."
+    )
+    tags_noticias = models.CharField(
+        max_length=255,
+        verbose_name="Tags de Notícias",
+        blank=True,
+        help_text="Separar tags por vírgula. Ex: 'geral, importante'. Deixe em branco para buscar todas."
+    )
+
+    puxar_avisos = models.BooleanField(
+        verbose_name="Puxar Avisos",
+        default=False,
+        help_text="Ativar para buscar avisos do portal externo."
+    )
+    tags_avisos = models.CharField(
+        max_length=255,
+        verbose_name="Tags de Avisos",
+        blank=True,
+        help_text="Separar tags por vírgula. Ex: 'urgente, comunicado'. Deixe em branco para buscar todos."
+    )
+
+    panels = [
+        MultiFieldPanel(
+            [
+                FieldPanel("api_url"),
+                FieldPanel("api_token"),
+                FieldPanel("puxar_noticias"),
+                FieldPanel("tags_noticias"),
+                FieldPanel("puxar_avisos"),
+                FieldPanel("tags_avisos"),
+            ],
+            heading="Integração de Conteúdo Externo"
+        ),
+    ]
+
+    class Meta:
+        verbose_name = "Configurações de Conteúdo Externo"
