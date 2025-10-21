@@ -1,0 +1,98 @@
+{% load wagtailcore_tags %}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <div class="formulario-bloco">
+                {% if self.titulo_geral %}
+                    <h2 class="titulo-formulario">{{ self.titulo_geral }}</h2>
+                {% endif %}
+
+                {% if self.descricao %}
+                    <div class="subtitulo-formulario">
+                        {{ self.descricao|richtext }}
+                    </div>
+                {% endif %}
+
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.tags == 'success' %}
+                            <div class="alert alert-success text-center formulario-sucesso">
+                                <h4 class="alert-heading"></h4>
+                                <p>{{ message }}</p>
+                                <hr>
+                                <a href="{{ request.path }}" class="btn btn-secondary">Enviar Outra Resposta</a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data" class="formulario-dinamico">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        {% for err in form.non_field_errors %}
+                            <div class="text-danger small mb-2">{{ err }}</div>
+                        {% endfor %}
+                    {% endif %}
+                    {% for field in form %}
+                        {% if field.is_hidden %}
+                            {{ field }}
+                        {% else %}
+                            <div class="mb-3">
+                                {{ field.label_tag }}
+                                {{ field }}
+                                {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                                {% if field.errors %}
+                                    {% for err in field.errors %}
+                                        <div class="text-danger small mt-1">{{ err }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    {% if show_recaptcha and recaptcha_site_key %}
+                        <div class="mb-3">
+                            <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+                        </div>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary btn-enviar-sugestao">
+                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        <span class="button-text">{{ self.texto_botao }}</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if show_recaptcha and recaptcha_site_key %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const formWrapper = document.querySelector('.formulario-bloco');
+    if (formWrapper) {
+        const form = formWrapper.querySelector('.formulario-dinamico');
+        const successMessage = formWrapper.querySelector('.formulario-sucesso');
+        if (successMessage) {
+            form.style.display = 'none';
+        }
+
+        form.addEventListener('submit', function (event) {
+            const button = form.querySelector('.btn-enviar-sugestao');
+            const spinner = button.querySelector('.spinner-border');
+            const buttonText = button.querySelector('.button-text');
+
+            button.disabled = true;
+
+            if (spinner) {
+                spinner.classList.remove('d-none');
+            }
+            if (buttonText) {
+                buttonText.textContent = 'Enviando...';
+            }
+        });
+    }
+});
+</script>

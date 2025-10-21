@@ -2,13 +2,15 @@
 
 <div class="titulo-container {{ bgClass }} {{ bgClassExtra}} text-center">
    <div class="d-flex flex-column align-items-center">
-       <h2 class="titulo-1">
+       <h2 class="titulo-1{% if classes %} {{ classes }}{% endif %}">
            {{ titulo }}
        </h2>
+       {% if not remover_svg %}
        <div class="titulo-linha">
            <svg width="133" height="3">
                <line x1="0" y1="1.5" x2="133" y2="1.5" stroke-width="3"/>
            </svg>
        </div>
+       {% endif %}
    </div>
 </div>
