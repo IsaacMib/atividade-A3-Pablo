@@ -5,6 +5,18 @@ from core.models import PageSitePadrao, PageSitePadraoIndex
 
 
 # Create your models here.
+
+
+class LinhaDoTempoIndex(PageSitePadraoIndex):
+
+    parent_page_types = [
+        "home.HomePage",
+    ]
+
+    class Meta:
+        verbose_name = "Página de Index da Linha do Tempo"
+
+
 class CardLinhaDoTempoPage(PageSitePadrao):
 
     imagem = models.ForeignKey(
@@ -47,8 +59,7 @@ class CardLinhaDoTempoPage(PageSitePadrao):
     parent_page_types = [
         "home.HomePage",
     ]
-    
+
     class Meta:
         verbose_name = "Página de Card da Linha do Tempo"
         # template = 'blocks/card_linha_do_tempo_page.html'
-
