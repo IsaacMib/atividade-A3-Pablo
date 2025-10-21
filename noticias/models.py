@@ -122,7 +122,7 @@ class NoticiasPage(PageSitePadrao):
         FieldPanel("subtitle"),
         FieldPanel(
             "descricao",
-            widget=get_widget_input_with_counter(char_limit=220)),
+            widget=get_widget_input_with_counter(char_limit=211)),
         MultiFieldPanel(
             [
                 FieldPanel("slideshow_imagens"),

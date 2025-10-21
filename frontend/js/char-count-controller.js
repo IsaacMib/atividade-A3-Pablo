@@ -39,15 +39,16 @@ class CharCountController extends window.StimulusModule.Controller {
   }
 
   addCounter(field, maxLength) {
-    // Set maxlength attribute on the field
-    if (!field.hasAttribute('maxlength')) {
-      field.setAttribute('maxlength', maxLength);
-    } else {
-      if (field.getAttribute('maxlength') !== maxLength) {
+    // O maxlength do campo deve ser definido pelo widget para sobrecrever o campo título das páginas
+    if (field.hasAttribute('maxlength')) {
+      if (maxLength === undefined) {
+        maxLength = field.getAttribute('maxlength');
+      }
+      else if (field.getAttribute('maxlength') !== maxLength) {
         console.log('O limite de caracteres do campo ' + field.name + ' já havia sido estabelecido e não coincide com o valor definido no controller.');
       }
-      maxLength = parseInt(field.getAttribute('maxlength'), 10) || maxLength;
     }
+    field.setAttribute('maxlength', maxLength);
 
     const counter = document.createElement('div');
     counter.className = 'char-counter';
