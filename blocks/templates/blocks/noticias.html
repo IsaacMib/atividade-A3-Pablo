@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
 <div class="noticias-wrap">
-  <a href="{% pageurl noticias %}" class="text-decoration-none">
+  <a href="{{ noticias.get_url }}" class="text-decoration-none" {% if noticias.is_remote %}target="_blank" rel="noopener noreferrer"{% endif %}>
     <div class="noticias-conteudo">
       <div class="col d-flex justify-content-center justify-content-md-start">
           <p class="noticias-conteudo--data">{{ noticias.data_publicacao|date:"d/m/Y" }}</p>
@@ -17,7 +17,11 @@
       </div>
       {% if noticias.get_imagem_destaque %}
           <div class="noticias-conteudo--imagem"> 
-            {% picture noticias.get_imagem_destaque format-{avif,webp,jpeg} fill-322x247 loading="lazy" %}
+            {% if noticias.is_remote %}
+              <img src="{{ noticias.get_imagem_destaque }}" alt="{{ noticias.title }}" class="img-fluid" style="width: 322px; height: 247px; object-fit: cover;" loading="lazy"/>
+            {% else %}
+              {% picture noticias.get_imagem_destaque format-{avif,webp,jpeg} fill-322x247 loading="lazy" %}
+            {% endif %}
           </div>
       {% else %}
           <div class="noticias-conteudo--imagem semImagem">

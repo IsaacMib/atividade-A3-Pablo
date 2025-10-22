@@ -33,6 +33,7 @@ from core.models import ApiSettings
 
 
 class NoticiaRemota:
+    is_remote = True 
 
     def __init__(self, data):
         self.id = data.get('id')
@@ -53,6 +54,10 @@ class NoticiaRemota:
 
     def get_imagem_destaque(self):
         return self.imagem_destaque_remota
+
+    def get_url(self, request=None, current_site=None):
+
+        return self.url
 
 MAX_NOTICIAS_DESTAQUE = 6
 
