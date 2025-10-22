@@ -216,6 +216,11 @@ class SiteSettings(BaseSiteSetting):
 
 @register_setting(icon="link")
 class ApiSettings(BaseSiteSetting):
+    api_habilitada = models.BooleanField(
+        verbose_name="Habilitar Integração via API",
+        default=False,
+        help_text="Marque esta opção para ativar a busca de conteúdo de um portal externo."
+    )
     api_url = models.URLField(
         verbose_name="URL da API Externa",
         blank=True,
@@ -235,7 +240,7 @@ class ApiSettings(BaseSiteSetting):
     )
 
     puxar_noticias = models.BooleanField(
-        verbose_name="Retornar Conteúdo de Notícias",
+        verbose_name="Puxar Notícias",
         default=False,
         help_text="Ativar para buscar notícias do portal externo."
     )
@@ -249,13 +254,20 @@ class ApiSettings(BaseSiteSetting):
     panels = [
         MultiFieldPanel(
             [
+                FieldPanel("api_habilitada"),
                 FieldPanel("api_url"),
                 FieldPanel("api_usuario"),
                 FieldPanel("api_senha"),
+            ],
+            heading="Integração de Conteúdo Externo"
+        ),
+        MultiFieldPanel(
+            [
                 FieldPanel("puxar_noticias"),
                 FieldPanel("tags_noticias"),
             ],
-            heading="Integração de Conteúdo Externo"
+            heading="Tipos de Conteúdo para que será consumido",
+            classname="collapsible collapsed"
         ),
     ]
     class Meta:
