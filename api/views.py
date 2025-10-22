@@ -3,7 +3,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 import datetime
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 from taggit.models import Tag
 
 from .serializers import SharedContentSerializer
@@ -12,22 +11,6 @@ try:
     from noticias.models import NoticiasPage
 except ImportError:
     NoticiasPage = None
-
-try:
-    from avisos.models import AvisosPage
-except ImportError:
-    AvisosPage = None
-
-try:
-    from editais.models import EditalPage
-except ImportError:
-    EditalPage = None
-
-try:
-    from cursos.models import CursosPage
-except ImportError:
-    CursosPage = None
-
 
 def _get_consistent_datetime(obj):
     from django.utils import timezone
@@ -44,7 +27,6 @@ def _get_consistent_datetime(obj):
 
 class SharedContentByTagAPIView(APIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
-    permission_classes = [IsAuthenticated]
     CONTENT_TYPE_MAP = {
         'noticias': NoticiasPage,
     }
@@ -83,7 +65,6 @@ class SharedContentByTagAPIView(APIView):
 
 class AllSharedContentAPIView(APIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
-    permission_classes = [IsAuthenticated]
     CONTENT_TYPE_MAP = {
         'noticias': NoticiasPage,
     }

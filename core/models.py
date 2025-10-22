@@ -221,15 +221,21 @@ class ApiSettings(BaseSiteSetting):
         blank=True,
         help_text="URL base da API do portal de conteúdo externo."
     )
-    api_token = models.CharField(
+    api_usuario = models.CharField(
         max_length=255,
-        verbose_name="Token de Autenticação da API",
+        verbose_name="Usuário da API",
         blank=True,
-        help_text="Token para autenticação na API externa (Ex: 'Token 9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b')."
+        help_text="Usuário para autenticação na API externa."
+    )
+    api_senha = models.CharField(
+        max_length=255,
+        verbose_name="Senha da API",
+        blank=True,
+        help_text="Senha para autenticação na API externa. Cuidado: será armazenada como texto plano."
     )
 
     puxar_noticias = models.BooleanField(
-        verbose_name="Puxar Notícias",
+        verbose_name="Retornar Conteúdo de Notícias",
         default=False,
         help_text="Ativar para buscar notícias do portal externo."
     )
@@ -240,31 +246,17 @@ class ApiSettings(BaseSiteSetting):
         help_text="Separar tags por vírgula. Ex: 'geral, importante'. Deixe em branco para buscar todas."
     )
 
-    puxar_avisos = models.BooleanField(
-        verbose_name="Puxar Avisos",
-        default=False,
-        help_text="Ativar para buscar avisos do portal externo."
-    )
-    tags_avisos = models.CharField(
-        max_length=255,
-        verbose_name="Tags de Avisos",
-        blank=True,
-        help_text="Separar tags por vírgula. Ex: 'urgente, comunicado'. Deixe em branco para buscar todos."
-    )
-
     panels = [
         MultiFieldPanel(
             [
                 FieldPanel("api_url"),
-                FieldPanel("api_token"),
+                FieldPanel("api_usuario"),
+                FieldPanel("api_senha"),
                 FieldPanel("puxar_noticias"),
                 FieldPanel("tags_noticias"),
-                FieldPanel("puxar_avisos"),
-                FieldPanel("tags_avisos"),
             ],
             heading="Integração de Conteúdo Externo"
         ),
     ]
-
     class Meta:
         verbose_name = "Configurações de Conteúdo Externo"
