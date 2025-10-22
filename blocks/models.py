@@ -706,7 +706,7 @@ class CardLinhaDoTempoBlock(StructBlock):
     descricao = TextBlock(required=False, label="Descrição")
     detail_page = PageChooserBlock(
         required=False,
-        target_model='paginas.CardLinhaDoTempoPage',
+        target_model='linhasdotempo.CardLinhaDoTempoPage',
         label="Link",
         help_text="Se as informações da descrição ultrapassarem o limite de exibição estabelecido, \
         você poderá criar uma nova página com as informações completas, a qual estará disponível\

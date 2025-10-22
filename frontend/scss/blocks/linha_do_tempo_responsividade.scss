@@ -292,6 +292,17 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
     --max-lines: 7;
     -webkit-line-clamp: var(--max-lines);
     line-clamp: var(--max-lines);
+
+    @media (max-width: 400px) {  //Iphonme 12/13 
+      font-size: 0.65rem;
+    }
+
+    @media (max-width: 368px) {  //Galaxy 11 
+      font-size: 0.6rem;
+      --max-lines: 8;
+      -webkit-line-clamp: var(--max-lines);
+      line-clamp: var(--max-lines);
+    }
   }
 
   @media (max-width: 500px) {
@@ -312,9 +323,9 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
     line-clamp: var(--max-lines);
   }
 
-  @media (max-width: 352px) {
-    --max-lines: 3;
-    -webkit-line-clamp: var(--max-lines);
-    line-clamp: var(--max-lines);
-  }
+  // @media (max-width: 352px) {
+  //   --max-lines: 3;
+  //   -webkit-line-clamp: var(--max-lines);
+  //   line-clamp: var(--max-lines);
+  // }
 }
