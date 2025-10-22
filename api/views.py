@@ -3,9 +3,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 import datetime
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from taggit.models import Tag
 
+from taggit.models import Tag
 from .serializers import SharedContentSerializer
+from .permissions import IsIntegrationUser
 
 try:
     from noticias.models import NoticiasPage
@@ -27,6 +28,7 @@ def _get_consistent_datetime(obj):
 
 class SharedContentByTagAPIView(APIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsIntegrationUser]
     CONTENT_TYPE_MAP = {
         'noticias': NoticiasPage,
     }
@@ -65,6 +67,7 @@ class SharedContentByTagAPIView(APIView):
 
 class AllSharedContentAPIView(APIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsIntegrationUser]
     CONTENT_TYPE_MAP = {
         'noticias': NoticiasPage,
     }
