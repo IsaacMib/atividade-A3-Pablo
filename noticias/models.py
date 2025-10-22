@@ -1,6 +1,7 @@
 from django import forms
 from django.db import models
 from django.core.exceptions import ValidationError
+import requests
 
 from django.contrib import messages
 from django.shortcuts import redirect, render
@@ -12,6 +13,7 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList, Tabbed
 from wagtail.fields import StreamField
 from wagtail.search import index
 from wagtail.api import APIField
+from wagtail.models import Page
 from core.models import PageSitePadrao, PageSitePadraoIndex
 
 from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
@@ -26,6 +28,31 @@ from core.utils import (
     get_page_title_with_counter,
     get_widget_input_with_counter
 )
+
+from core.models import ApiSettings
+
+
+class NoticiaRemota:
+
+    def __init__(self, data):
+        self.id = data.get('id')
+        self.title = data.get('title', 'Sem título')
+        self.subtitle = data.get('subtitle', '')
+        self.descricao = data.get('descricao', '')
+        self.url = data.get('url', '#')
+        self.destaque = data.get('destaque', False)
+        self.imagem_destaque_remota = data.get('imagem_destaque')
+        data_str = data.get('data_publicacao')
+        if data_str:
+            try:
+                self.data_publicacao = datetime.fromisoformat(data_str.replace('Z', '+00:00'))
+            except (ValueError, TypeError):
+                self.data_publicacao = datetime.now(datetime.timezone.utc)
+        else:
+            self.data_publicacao = datetime.now(datetime.timezone.utc)
+
+    def get_imagem_destaque(self):
+        return self.imagem_destaque_remota
 
 MAX_NOTICIAS_DESTAQUE = 6
 
@@ -323,23 +350,81 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
     # date that they were published
     # https://docs.wagtail.org/en/stable/getting_started/tutorial.html#overriding-context
     def get_context(self, request):
-        context = super(NoticiasIndexPages, self).get_context(request)
-        all_posts = NoticiasPage.objects.descendant_of(
+        context = super().get_context(request)
+        
+        # 1. Busca as notícias locais
+        noticias_locais = list(NoticiasPage.objects.descendant_of(
             self).live().order_by("-data_publicacao")
-        paginator = Paginator(all_posts, 12)  # Show 12 posts per page
+        )
+
+        # 2. Busca notícias da API externa
+        noticias_remotas = self._fetch_remote_noticias()
+
+        # 3. Combina e ordena as listas
+        all_posts = sorted(
+            noticias_locais + noticias_remotas,
+            key=lambda x: x.data_publicacao,
+            reverse=True
+        )
+
+        # 4. Paginação
+        paginator = Paginator(all_posts, 12)
         page = request.GET.get("page")
         try:
-            # If the page exists and the ?page=x is an int
             posts = paginator.page(page)
         except PageNotAnInteger:
-            # If the ?page=x is not an int; show the first page
             posts = paginator.page(1)
         except EmptyPage:
-            # If the ?page=x is out of range (too high most likely)
-            # Then return the last page
             posts = paginator.page(paginator.num_pages)
+
         context["posts"] = posts
         return context
+
+    def _fetch_remote_noticias(self):
+        """
+        Busca notícias de uma API externa com base nas configurações do site.
+        """
+        try:
+            site = Site.objects.get(is_default_site=True)
+            api_settings = ApiSettings.for_site(site)
+        except (Site.DoesNotExist, ApiSettings.DoesNotExist):
+            return []
+
+        if not api_settings.api_habilitada or not api_settings.puxar_noticias:
+            return []
+
+        # Obter token
+        token_url = f"{api_settings.api_url.rstrip('/')}/api/v1/get-token/"
+        try:
+            response = requests.post(
+                token_url,
+                data={'username': api_settings.api_usuario, 'password': api_settings.api_senha},
+                timeout=10
+            )
+            response.raise_for_status()
+            token = response.json().get('token')
+            if not token:
+                return []
+            auth_token = f"Token {token}"
+        except requests.RequestException:
+            return [] # Falha ao obter token
+
+        # Buscar notícias
+        noticias_url = f"{api_settings.api_url.rstrip('/')}/api/v1/shared-content/all/?noticias=true"
+        headers = {'Authorization': auth_token}
+        try:
+            response = requests.get(noticias_url, headers=headers, timeout=15)
+            response.raise_for_status()
+            remote_data = response.json()
+        except requests.RequestException:
+            return [] # Falha ao buscar notícias
+
+        # Converte os dados em objetos NoticiaRemota
+        noticias_remotas = []
+        for item in remote_data:
+            noticias_remotas.append(NoticiaRemota(item))
+            
+        return noticias_remotas
 
      # This defines a Custom view that utilizes Tags. This view will return all
     # related NoticiasPage for a given Tag or redirect back to the BlogIndexPage.
