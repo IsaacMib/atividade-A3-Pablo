@@ -1,0 +1,53 @@
+{% load wagtailcore_tags %}
+
+{% if content_block.block_type == "contatos_section" %}
+  {% with section=content_block.value %}
+  <div class="contatos my-4">
+    {% if section.section_title %}
+      <h3 class="section-title {{ section.title_size }}">{{ section.section_title }}</h3>
+    {% endif %}
+
+    {% for item in section.itens_contato %}
+      {% if item.block_type == 'contato_simples' %}
+        {# --- Renderiza um Contato Simples --- #}
+        {% with contato=item.value %}
+          <div class="contatos-grupo mb-2">
+            <ul class="contatos-list {{ contato.list_style }}">
+              <li>
+                <strong>{{ contato.titulo }}</strong>
+              {% for info in contato.informacoes %}
+                <span>{{ info.info }}</span>
+              {% endfor %}
+              </li>
+            </ul>
+          </div>
+          {% if contato.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+        {% endwith %}
+
+      {% elif item.block_type == 'grupo_contatos' %}
+        {# --- Renderiza um Grupo de Contatos --- #}
+        {% with grupo=item.value %}
+          <div class="contatos-grupo">
+            <strong>{{ grupo.titulo_grupo }}</strong>
+            <ul class="contatos-list {{ grupo.list_style }}">
+              {% for contato in grupo.contatos %}
+                <li>
+                  {% if contato.titulo %}<strong>{{ contato.titulo }}:</strong>{% endif %}
+                  {% for info in contato.informacoes %}
+                    <span>{{ info.info }}</span>
+                  {% endfor %}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% if grupo.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+        {% endwith %}
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endwith %}
+{% else %}
+  <div class="my-3">
+    {% include_block content_block %}
+  </div>
+{% endif %}

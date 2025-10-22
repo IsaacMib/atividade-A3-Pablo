@@ -2,7 +2,7 @@ from django.db import models
 from django import forms
 from datetime import date
 from django.core.exceptions import ValidationError
-
+from django.utils.html import escape
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
@@ -23,10 +23,7 @@ from blocks.models import ListRedeSocial
 
 
 class PageSitePadrao(Page):
-    """
-    Classe base para todas as páginas do site.
-    Herda de Page do Wagtail e adiciona campos comuns a todas as páginas.
-    """
+
     descricao = models.TextField(
         verbose_name="Descrição",
         blank=True,
@@ -62,6 +59,7 @@ class PageSitePadraoIndex(Page):
 
 @register_setting(icon="site")
 class SiteSettings(BaseSiteSetting):
+
     title_suffix = models.CharField(
         verbose_name="Titulo do Site",
         max_length=255,
@@ -95,9 +93,9 @@ class SiteSettings(BaseSiteSetting):
         verbose_name="Redes Sociais",
         blank=True,
         use_json_field=True,
+        help_text="Defina as redes sociais do Portal."
     )
 
-    # Novo campo para controlar o nível máximo do menu
     menu_max_levels = models.PositiveIntegerField(
         verbose_name="Níveis máximos do menu",
         default=1,
@@ -116,6 +114,49 @@ class SiteSettings(BaseSiteSetting):
         blank=True,
         help_text="Insira a tag do Google Analytics (ex: G-XXXXXXXXXX). O aviso de cookies analíticos só será exibido se esta tag estiver definida."
     )
+
+    footer_titulo_instituicao = models.CharField(
+       max_length=255,
+       blank=True,
+       verbose_name="Título da Instituição no Rodapé",
+       default="CENTRO ADMINISTRATIVO ESTADUAL"
+    )
+    footer_informacoes = models.TextField(
+        blank=True,
+        verbose_name="Informações do Rodapé",
+        help_text="Endereço, telefone, horário, CNPJ. Use <br> para quebras de linha.",
+        default="Rua João da Mata, S/N, Jaguaribe - CEP: 58.015-020<br>\nFone: Recepção: (83) 98658-8328 - JOÃO PESSOA - PARAÍBA<br>\nHorário de Atendimento: Das 8:00 às 16:30<br>\nCNPJ: 09.189.499/0001-00"
+    )
+    footer_link_sic = models.URLField(
+        blank=True,
+        verbose_name="Link para o SIC (Serviço de Informação ao Cidadão)",
+        default="https://sic.pb.gov.br/"
+    )
+    footer_imagem_sic = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name="Imagem do SIC no rodapé",
+        help_text="Faça o upload da imagem do logo do SIC."
+    )
+
+    captcha_site_key = models.CharField(
+        verbose_name="Captcha Site Key (pública)",
+        max_length=255,
+        blank=True,
+        help_text="Chave pública (site key) do reCAPTCHA usada no cliente (frontend)."
+    )
+
+
+    captcha_secret_key = models.CharField(
+        verbose_name="Captcha Secret Key (secreta)",
+        max_length=255,
+        blank=True,
+        help_text="Chave secreta do reCAPTCHA usada para validação no servidor. (Deixe em branco se não usar captcha)"
+    )
+
 
     panels = [
         FieldPanel("title_suffix"),
@@ -146,6 +187,23 @@ class SiteSettings(BaseSiteSetting):
                 FieldPanel("google_analytics_tag"),
             ],
             heading="Cookies e Analytics"
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("footer_titulo_instituicao"),
+                FieldPanel("footer_informacoes"),
+                FieldPanel("footer_link_sic"),
+                FieldPanel("footer_imagem_sic"),
+            ],
+            heading="Rodapé",
+            classname="collapsible collapsed"
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("captcha_site_key"),
+                FieldPanel("captcha_secret_key"),
+            ],
+            heading="Captcha (reCAPTCHA)"
         ),
     ]
 
@@ -178,6 +236,26 @@ class SiteSettings(BaseSiteSetting):
         Só exibe se os cookies estão habilitados E a tag do Google Analytics está definida.
         """
         return self.deve_exibir_cookies() and self.tem_google_analytics()
+    
+    def tem_captcha_site(self):
+        return bool(self.captcha_site_key and self.captcha_site_key.strip())
+
+
+    def tem_captcha_secret(self):
+        return bool(self.captcha_secret_key and self.captcha_secret_key.strip())
+
+
+    def has_recaptcha_keys(self):
+        return self.tem_captcha_site() and self.tem_captcha_secret()
+
+
+    def get_captcha_site_key(self):
+        return self.captcha_site_key.strip() if self.tem_captcha_site() else None
+
+
+    def get_captcha_secret(self):
+        return self.captcha_secret_key.strip() if self.tem_captcha_secret() else None
+
 
     def clean(self):
         super().clean()
@@ -213,3 +291,15 @@ class SiteSettings(BaseSiteSetting):
                     "periodo_eleitoral_inicio": "A data de início não pode ser posterior à data de fim.",
                     "periodo_eleitoral_fim": "A data de fim não pode ser anterior à data de início."
                 })
+            if self.captcha_site_key:
+                site = self.captcha_site_key.strip()
+                if site and len(site) < 10:
+                    raise ValidationError({
+                        "captcha_site_key": "A site key do captcha parece ser muito curta."
+                })
+            if self.captcha_secret_key:
+                secret = self.captcha_secret_key.strip()
+                if secret and len(secret) < 10:
+                    raise ValidationError({
+                        "captcha_secret_key": "A chave secreta do captcha parece ser muito curta."
+               })

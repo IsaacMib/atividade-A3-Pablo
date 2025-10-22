@@ -6,7 +6,7 @@ from django.utils.text import slugify
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from modelcluster.fields import ParentalKey
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator 
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import Tag, TaggedItemBase
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
@@ -14,6 +14,7 @@ from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
 from wagtail import blocks
 from core.models import PageSitePadraoIndex
+from wagtail.admin.panels import TabbedInterface, ObjectList
 from django.core.exceptions import ValidationError
 
 
@@ -120,25 +121,13 @@ class ContatosSectionBlock(blocks.StructBlock):
         label = "Seção de Contatos"
 
 
-# === BLOCO DE COLUNA (estrutura principal) ===
-class ContatosColumnBlock(blocks.StructBlock):
-    coluna = blocks.ChoiceBlock(
-        choices=[
-            ('coluna_1', 'Primeira Coluna'),
-            ('coluna_2', 'Segunda Coluna'),
-            ('coluna_3', 'Widgets'),
-        ],
-        default='coluna_1',
-        label="Posição do bloco na página"
-    )
+CONTENT_BLOCKS = [
+    ('contatos_section', ContatosSectionBlock()),
+]
 
-    conteudo = blocks.StreamBlock(
-        [
-            ('contatos_section', ContatosSectionBlock()),
-        ],
-        required=True,
-        label="Conteúdo do bloco"
-    )
+WIDGET_BLOCKS = [
+    ('contatos_section', ContatosSectionBlock()),
+]
 
 
 # === TAGS ===
@@ -151,84 +140,79 @@ class ContatosPageTag(TaggedItemBase):
 
 
 # === PÁGINA PRINCIPAL ===
-class ContatosPage(RoutablePageMixin, PageSitePadraoIndex): # Mantém esta definição
+class ContatosPage(RoutablePageMixin, PageSitePadraoIndex):
     titulo = models.CharField(max_length=255, default="Contatos", verbose_name="Título da Página")
-    
-    # Campo para escolha do layout de duas colunas, só relevante se houver 2 colunas de conteúdo
-    two_column_layout_choice = models.CharField(
+
+    LAYOUT_CHOICES = [
+        ('100_col1', 'Layout: 100% (Coluna 1)'),
+        ('100_col2', 'Layout: 100% (Coluna 2)'),
+        ('100_widget', 'Layout: 100% (Widgets)'),
+        ('50_50', 'Layout: 50% / 50%'),
+        ('60_40', 'Layout: 60% / 40% (Conteúdo / Widgets)'),
+        ('70_30', 'Layout: 70% / 30% (Conteúdo / Widgets)'),
+        ('40_40_20', 'Layout: 40% / 40% / 20%'),
+    ]
+
+    layout = models.CharField(
         max_length=20,
-        choices=[
-            ('60_40', 'Duas Colunas (60/40)'),
-        ],
-        default='50_50',
-        blank=True,
-        null=True, # Permite que o campo seja nulo no banco de dados
-        verbose_name="Escolha de Layout para Duas Colunas",
-        help_text="Selecione o layout para as duas colunas de conteúdo. Será ignorado se a página tiver 1 ou 3 colunas."
+        choices=LAYOUT_CHOICES,
+        default='100_col1',
+        verbose_name="Layout da Página",
+        help_text="Escolha a proporção e o conteúdo das colunas."
     )
 
-    body = StreamField(
-        [
-            ('coluna', ContatosColumnBlock()),
-        ],
+    coluna_1 = StreamField(
+        CONTENT_BLOCKS,
         use_json_field=True,
-        blank=True, # Permite que o StreamField esteja vazio
-        verbose_name="Conteúdo da Página" # Renomeado para ser mais genérico
+        blank=True,
+        verbose_name="Coluna 1"
+    )
+
+    coluna_2 = StreamField(
+        CONTENT_BLOCKS,
+        use_json_field=True,
+        blank=True,
+        verbose_name="Coluna 2"
+    )
+
+    widgets = StreamField(
+        WIDGET_BLOCKS,
+        use_json_field=True,
+        blank=True,
+        verbose_name="Widgets (Coluna Lateral)"
     )
 
     tags = ClusterTaggableManager(through=ContatosPageTag, blank=True)
 
-    parent_page_types = ["home.HomePage"] # Mantém o tipo de página pai
+    parent_page_types = ["home.HomePage"]
     subpage_types = []
 
     content_panels = PageSitePadraoIndex.content_panels + [
-        FieldPanel("two_column_layout_choice"), # Usa o novo campo
-        FieldPanel("body"),
+        FieldPanel("coluna_1"),
+        FieldPanel("coluna_2"),
+        FieldPanel("widgets"),
         FieldPanel("tags"),
     ]
 
-    def get_layout_context(self):
-        col1_blocks, col2_blocks, widget_blocks = [], [], []
+    layout_panels = [
+        FieldPanel('layout'),
+    ]
 
-        for block in self.body:
-            if block.block_type == 'coluna' and block.value.get('conteudo'):
-                coluna = block.value.get('coluna')
-                if coluna == 'coluna_1':
-                    col1_blocks.append(block)
-                elif coluna == 'coluna_2':
-                    col2_blocks.append(block)
-                elif coluna == 'coluna_3':
-                    widget_blocks.append(block)
-
-        has_col1 = bool(col1_blocks)
-        has_col2 = bool(col2_blocks)
-        has_widget = bool(widget_blocks)
-
-        layout_to_use = "no_blocks"
-
-        if has_col1 and has_col2 and has_widget:
-            layout_to_use = "40_40_20"
-        elif has_col1 and has_col2:
-            layout_to_use = self.two_column_layout_choice or '50_50'
-        elif (has_col1 or has_col2) and has_widget:
-            layout_to_use = self.two_column_layout_choice if self.two_column_layout_choice in ['70_30', '60_40'] else '70_30'
-        elif has_col1:
-            layout_to_use = "100_col1"
-        elif has_col2:
-            layout_to_use = "100_col2"
-        elif has_widget:
-            layout_to_use = "100_widget"
-
-        return {
-            "col1_blocks": col1_blocks,
-            "col2_blocks": col2_blocks,
-            "widget_blocks": widget_blocks,
-            "layout": layout_to_use,
-        }
+    edit_handler = TabbedInterface([
+        ObjectList(content_panels, heading='Conteúdo'),
+        ObjectList(layout_panels, heading='Layout'),
+        ObjectList(PageSitePadraoIndex.promote_panels, heading='Promover'),
+        ObjectList(PageSitePadraoIndex.settings_panels, heading='Configurações', classname="settings"),
+    ])
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
-        context.update(self.get_layout_context())
+        context.update({
+            "layout": self.layout,
+            "col1_blocks": self.coluna_1,
+            "col2_blocks": self.coluna_2,
+            "widget_blocks": self.widgets,
+        })
         return context
 
     def serve(self, request, *args, **kwargs):
@@ -246,9 +230,10 @@ class ContatosPage(RoutablePageMixin, PageSitePadraoIndex): # Mantém esta defin
                 messages.info(request, f'Não há contatos com a tag "{tag}"')
             return redirect(self.url)
 
+        # Esta parte pode precisar de ajuste dependendo do que você quer mostrar na página de tag
+        # Atualmente, ela renderiza a própria página de contatos com um contexto adicional.
+        # Se a intenção é listar outras páginas, a lógica precisa mudar.
         posts = ContatosPage.objects.live().filter(tags=tag_obj)
         context = self.get_context(request)
         context.update({"tag": tag_obj, "posts": posts})
         return render(request, "contatos/contatos_page.html", context)
-
-# Remove a definição duplicada da classe ContatosPage que estava aqui.
