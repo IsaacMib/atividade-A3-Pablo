@@ -29,4 +29,3 @@ frontend/sprite/sprite.png
 frontend/css/sprite.scss
 media/
 .tool-versions
-echo "sitepadrao2/" >> .gitignore

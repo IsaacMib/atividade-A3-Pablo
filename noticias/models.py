@@ -407,19 +407,24 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
                 return []
             auth_token = f"Token {token}"
         except requests.RequestException:
-            return [] # Falha ao obter token
+            return [] 
+        base_api_url = f"{api_settings.api_url.rstrip('/')}/api/v1/shared-content"
+        tags_noticias = [tag.strip() for tag in api_settings.tags_noticias.split(',') if tag.strip()]
 
-        # Buscar notícias
-        noticias_url = f"{api_settings.api_url.rstrip('/')}/api/v1/shared-content/all/?noticias=true"
+        if tags_noticias:
+            tag_slug = tags_noticias[0]
+            noticias_url = f"{base_api_url}/tag/{tag_slug}/?noticias=true"
+        else:
+            noticias_url = f"{base_api_url}/all/?noticias=true"
+
         headers = {'Authorization': auth_token}
         try:
             response = requests.get(noticias_url, headers=headers, timeout=15)
             response.raise_for_status()
             remote_data = response.json()
         except requests.RequestException:
-            return [] # Falha ao buscar notícias
+            return []
 
-        # Converte os dados em objetos NoticiaRemota
         noticias_remotas = []
         for item in remote_data:
             noticias_remotas.append(NoticiaRemota(item))
