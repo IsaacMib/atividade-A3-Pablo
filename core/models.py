@@ -257,7 +257,7 @@ class ApiSettings(BaseSiteSetting):
                 FieldPanel("api_habilitada"),
                 FieldPanel("api_url"),
                 FieldPanel("api_usuario"),
-                FieldPanel("api_senha"),
+                FieldPanel("api_senha", widget=forms.PasswordInput),
             ],
             heading="Integração de Conteúdo Externo"
         ),
