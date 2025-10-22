@@ -207,11 +207,52 @@ class ContatosPage(RoutablePageMixin, PageSitePadraoIndex):
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
+        
+        # Inicializa as classes de coluna com valores padrão
+        col1_class = "col-12"
+        col2_class = None
+        widget_class = None
+
+        # Determina as classes com base no layout selecionado
+        if self.layout == "40_40_20":
+            col1_class = "col-lg-5 col-md-6 col-12"
+            col2_class = "col-lg-5 col-md-6 col-12"
+            widget_class = "col-lg-2 col-12"
+        elif self.layout == "50_50":
+            col1_class = "col-md-6 col-12"
+            col2_class = "col-md-6 col-12"
+            widget_class = None
+        elif self.layout == "70_30":
+            col1_class = "col-lg-9 col-12"
+            col2_class = None
+            widget_class = "col-lg-3 col-12"
+        elif self.layout == "60_40":
+            col1_class = "col-lg-7 col-12"
+            col2_class = None
+            widget_class = "col-lg-5 col-12"
+        elif self.layout == "100_col1":
+            col1_class = "col-12"
+            col2_class = None
+            widget_class = None
+        elif self.layout == "100_col2":
+            col1_class = None
+            col2_class = "col-12"
+            widget_class = None
+        elif self.layout == "100_widget":
+            col1_class = None
+            col2_class = None
+            widget_class = "col-12"
+        # Se o layout não for nenhum dos acima, os valores padrão (100_col1) serão usados.
+
         context.update({
             "layout": self.layout,
             "col1_blocks": self.coluna_1,
             "col2_blocks": self.coluna_2,
             "widget_blocks": self.widgets,
+            # Passa as classes de layout calculadas para o template
+            "col1_class": col1_class,
+            "col2_class": col2_class,
+            "widget_class": widget_class,
         })
         return context
 

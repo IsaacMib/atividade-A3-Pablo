@@ -8,84 +8,44 @@
 
     {% include 'include/titulo.html' with titulo=page.introduction|default:"Contatos" bgClass='' %}
 
-    {% with col1_class=None col2_class=None widget_class=None %}
-      {% if layout == "40_40_20" %}
-        {% with col1_class="col-lg-5 col-md-6 col-12" col2_class="col-lg-5 col-md-6 col-12" widget_class="col-lg-2 col-12" %}
-          {{ block.super }}
-        {% endwith %}
-      {% elif layout == "50_50" %}
-        {% with col1_class="col-md-6 col-12" col2_class="col-md-6 col-12" widget_class=None %}
-          {{ block.super }}
-        {% endwith %}
-      {% elif layout == "70_30" %}
-        {% with col1_class="col-lg-9 col-12" col2_class=None widget_class="col-lg-3 col-12" %}
-          {{ block.super }}
-        {% endwith %}
-      {% elif layout == "60_40" %}
-        {% with col1_class="col-lg-7 col-12" col2_class=None widget_class="col-lg-5 col-12" %}
-          {{ block.super }}
-        {% endwith %}
-      {% elif layout == "100_col1" %}
-        {% with col1_class="col-12" col2_class=None widget_class=None %}
-          {{ block.super }}
-        {% endwith %}
-      {% elif layout == "100_col2" %}
-        {% with col1_class=None col2_class="col-12" widget_class=None %}
-          {{ block.super }}
-        {% endwith %}
-      {% elif layout == "100_widget" %}
-        {% with col1_class=None col2_class=None widget_class="col-12" %}
-          {{ block.super }}
-        {% endwith %}
-      {% else %}
-        {# Layout Padrão ou não definido #}
-        {% with col1_class="col-12" col2_class=None widget_class=None %}
-          {{ block.super }}
-        {% endwith %}
-      {% endif %}
+    {# As classes de layout (col1_class, col2_class, widget_class) são definidas no get_context do modelo. #}
 
-      {% if col1_class %}
-        <div class="{{ col1_class }}">
-          {% for bloco in col1_blocks %}
-            {% for content_block in bloco.value.conteudo %}
-              {% include "contatos/include/contato_block.html" %}
-            {% endfor %}
-          {% empty %}
-            <p>Nenhum bloco nesta coluna.</p>
-          {% endfor %}
-        </div>
-      {% endif %}
+    {% if col1_class %}
+      <div class="{{ col1_class }}">
+        {% for content_block in col1_blocks %} {# Loop corrigido #}
+          {% include "contatos/contato_block.html" %}
+        {% empty %}
+          <p>Nenhum bloco nesta coluna.</p>
+        {% endfor %}
+      </div>
+    {% endif %}
 
-      {% if col2_class %}
-        <div class="{{ col2_class }}">
-          {% for bloco in col2_blocks %}
-            {% for content_block in bloco.value.conteudo %}
-              {% include "contatos/include/contato_block.html" %}
-            {% endfor %}
-          {% empty %}
-            <p>Nenhum bloco nesta coluna.</p>
-          {% endfor %}
-        </div>
-      {% endif %}
+    {% if col2_class %}
+      <div class="{{ col2_class }}">
+        {% for content_block in col2_blocks %} {# Loop corrigido #}
+          {% include "contatos/contato_block.html" %}
+        {% empty %}
+          <p>Nenhum bloco nesta coluna.</p>
+        {% endfor %}
+      </div>
+    {% endif %}
 
-      {% if widget_class %}
-        <aside class="{{ widget_class }}">
-          {% for bloco in widget_blocks %}
-            {% for content_block in bloco.value.conteudo %}
-              {% include "contatos/include/contato_block.html" %}
-            {% endfor %}
-          {% empty %}
-            <p>Nenhum widget.</p>
-          {% endfor %}
-        </aside>
-      {% endif %}
+    {% if widget_class %}
+      <aside class="{{ widget_class }}">
+        {% for content_block in widget_blocks %} {# Loop corrigido #}
+          {% include "contatos/contato_block.html" %}
+        {% empty %}
+          <p>Nenhum widget.</p>
+        {% endfor %}
+      </aside>
+    {% endif %}
 
-      {% if not col1_class and not col2_class and not widget_class and layout %}
-        <div class="col-12 text-center">
-          <p>Nenhum layout detectado.</p>
-        </div>
-      {% endif %}
-    {% endwith %}
+    {# Mensagem de fallback se nenhum layout for renderizado e um layout foi selecionado #}
+    {% if not col1_class and not col2_class and not widget_class and layout %}
+      <div class="col-12 text-center">
+        <p>Nenhum layout detectado ou as colunas estão vazias para o layout selecionado.</p>
+      </div>
+    {% endif %}
 
   </div>
 </div>
