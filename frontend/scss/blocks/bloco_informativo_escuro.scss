@@ -1,0 +1,54 @@
+@use '../variables.scss' as variables;
+
+[data-theme="dark"] {
+    .titulo-geral-acordeao {
+        color: variables.$color-white;
+    }
+
+    .introducao-acordeao {
+        color: variables.$color-grey-100;
+    }
+
+    .secao {
+        border-color: variables.$color-grey-600;
+        background-color: variables.$color-agenda-item-bg-escuro;
+    }
+
+    .secoes-informativas > .secao:last-of-type {
+        border-bottom-color: variables.$color-grey-600;
+    }
+
+    .secao-header {
+        color: variables.$color-grey-100;
+    }
+
+    .secao-header .seta {
+        color: variables.$color-grey-100;
+    }
+
+    .secao-conteudo {
+        color: variables.$color-grey-100;
+    }
+
+    .bloco-informativo .secao-lista-itens li {
+        color: variables.$color-grey-100;
+    }
+
+    .bloco-informativo a {
+        color: variables.$color-primary;
+    }
+
+    .bloco-informativo.tema-azul .secao-header {
+        background-color: variables.$top-background-busca;
+        color: variables.$color-white;
+    }
+
+    .bloco-informativo.tema-azul .secao-header .seta {
+        color: variables.$color-white;
+    }
+
+    .bloco-informativo.tema-azul .secao-conteudo {
+        background-color: variables.$color-grey-800;
+        color: variables.$color-grey-200;
+    }
+}

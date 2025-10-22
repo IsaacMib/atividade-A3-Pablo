@@ -1,23 +1,12 @@
-from django.db import models
-from django import forms
 from datetime import date
+
 from django.core.exceptions import ValidationError
 from django.utils.html import escape
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
-from wagtail.models import Page
 from wagtail.images.blocks import ImageChooserBlock
-
-from blocks.models import ListRedeSocial
-
-
-from django.db import models
-from datetime import date
-from django.core.exceptions import ValidationError
-
-from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
-from wagtail.fields import StreamField
+from wagtail.models import Page
 
 from blocks.models import ListRedeSocial
 
@@ -29,7 +18,7 @@ class PageSitePadrao(Page):
         blank=True,
         help_text="Descrição da página para SEO e redes sociais"
     )
-    
+
     images = StreamField(
         [("image", ImageChooserBlock(label="Imagem"))],
         verbose_name="Imagens",
@@ -52,13 +41,18 @@ class PageSitePadraoIndex(Page):
     Classe base para páginas de índice do site.
     Herda apenas de Page do Wagtail sem campos adicionais.
     """
-    
+
     class Meta:
         abstract = True
 
 
 @register_setting(icon="site")
 class SiteSettings(BaseSiteSetting):
+    """
+    Configurações do site acessíveis via Wagtail Settings.
+    Adiciona campos de título, período eleitoral, redes sociais, menu,
+    cookies / analytics e reCAPTCHA (site + secret).
+    """
 
     title_suffix = models.CharField(
         verbose_name="Titulo do Site",
@@ -219,15 +213,11 @@ class SiteSettings(BaseSiteSetting):
         return False
 
     def deve_exibir_cookies(self):
-        """
-        Retorna True se o aviso de cookies deve ser exibido.
-        """
+        """Retorna True se o aviso de cookies deve ser exibido."""
         return self.cookies_habilitado
 
     def tem_google_analytics(self):
-        """
-        Retorna True se a tag do Google Analytics está configurada.
-        """
+        """Retorna True se a tag do Google Analytics está configurada."""
         return bool(self.google_analytics_tag and self.google_analytics_tag.strip())
 
     def deve_exibir_cookies_analytics(self):
@@ -257,14 +247,29 @@ class SiteSettings(BaseSiteSetting):
         return self.captcha_secret_key.strip() if self.tem_captcha_secret() else None
 
 
+    def tem_captcha_site(self):
+        return bool(self.captcha_site_key and self.captcha_site_key.strip())
+
+    def tem_captcha_secret(self):
+        return bool(self.captcha_secret_key and self.captcha_secret_key.strip())
+
+    def has_recaptcha_keys(self):
+        return self.tem_captcha_site() and self.tem_captcha_secret()
+
+    def get_captcha_site_key(self):
+        return self.captcha_site_key.strip() if self.tem_captcha_site() else None
+
+    def get_captcha_secret(self):
+        return self.captcha_secret_key.strip() if self.tem_captcha_secret() else None
+
     def clean(self):
         super().clean()
+
         if self.menu_max_levels > 3:
             raise ValidationError({
                 "menu_max_levels": "O número máximo de níveis permitido para o menu é 3."
             })
 
-        # Validação do Google Analytics
         if self.google_analytics_tag:
             tag = self.google_analytics_tag.strip()
             if tag and not (tag.startswith('G-') or tag.startswith('UA-') or tag.startswith('GT-')):
