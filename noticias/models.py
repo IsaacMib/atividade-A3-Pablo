@@ -415,20 +415,31 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
             return [] 
         base_api_url = f"{api_settings.api_url.rstrip('/')}/api/v1/shared-content"
         tags_noticias = [tag.strip() for tag in api_settings.tags_noticias.split(',') if tag.strip()]
+        headers = {'Authorization': auth_token}
+        remote_data = []
+        seen_ids = set()
 
         if tags_noticias:
-            tag_slug = tags_noticias[0]
-            noticias_url = f"{base_api_url}/tag/{tag_slug}/?noticias=true"
+            for tag_slug in tags_noticias:
+                noticias_url = f"{base_api_url}/tag/{tag_slug}/?noticias=true"
+                try:
+                    response = requests.get(noticias_url, headers=headers, timeout=15)
+                    response.raise_for_status()
+                    items = response.json()
+                    for item in items:
+                        if item.get('id') not in seen_ids:
+                            remote_data.append(item)
+                            seen_ids.add(item.get('id'))
+                except requests.RequestException:
+                    continue
         else:
             noticias_url = f"{base_api_url}/all/?noticias=true"
-
-        headers = {'Authorization': auth_token}
-        try:
-            response = requests.get(noticias_url, headers=headers, timeout=15)
-            response.raise_for_status()
-            remote_data = response.json()
-        except requests.RequestException:
-            return []
+            try:
+                response = requests.get(noticias_url, headers=headers, timeout=15)
+                response.raise_for_status()
+                remote_data = response.json()
+            except requests.RequestException:
+                return []
 
         noticias_remotas = []
         for item in remote_data:
