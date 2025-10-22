@@ -3,7 +3,7 @@ from wagtail.images.api.fields import ImageRenditionField
 
 from noticias.models import NoticiasPage
 class NoticiasPageSerializer(serializers.ModelSerializer):
-    imagem_destaque = ImageRenditionField('fill-800x450', source='get_imagem_destaque')
+    imagem_destaque = serializers.SerializerMethodField()
     tags = serializers.StringRelatedField(many=True)
 
     class Meta:
@@ -12,6 +12,13 @@ class NoticiasPageSerializer(serializers.ModelSerializer):
             'id', 'title', 'subtitle', 'descricao', 'data_publicacao',
             'tags', 'imagem_destaque', 'url', 'body', 'destaque'
         ]
+
+    def get_imagem_destaque(self, obj):
+        imagem = obj.get_imagem_destaque()
+        if imagem:
+            request = self.context.get('request')
+            return request.build_absolute_uri(imagem.get_rendition('fill-800x450').url)
+        return None
 
 class SharedContentSerializer(serializers.Serializer):
     SERIALIZERS = {
