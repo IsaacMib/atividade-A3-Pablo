@@ -13,7 +13,7 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList, Tabbed
 from wagtail.fields import StreamField
 from wagtail.search import index
 from wagtail.api import APIField
-from wagtail.models import Page
+from wagtail.models import Page, Site
 from core.models import PageSitePadrao, PageSitePadraoIndex
 
 from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
