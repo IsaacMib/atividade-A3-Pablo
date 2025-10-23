@@ -2,7 +2,7 @@
 
 .corpo-tecnico--wrapper {
   background-color: variables.$color-white;
-  margin: 16px 0px 48px 0px;
+  padding: 16px 0px 48px 0px;
 }
 
 .caixa-eliptica-sombra {
@@ -145,6 +145,7 @@
   font-size: 8px;
   color: variables.$color-white;
   margin-left: 4px;
+  margin-top: 10px;
 }
 
 .corpo-tecnico-grupo-card {
