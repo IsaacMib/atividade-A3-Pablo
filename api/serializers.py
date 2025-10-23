@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from wagtail.images.api.fields import ImageRenditionField
+from wagtail.rich_text import expand_db_html
 
 from noticias.models import NoticiasPage
 class NoticiasPageSerializer(serializers.ModelSerializer):
     imagem_destaque = serializers.SerializerMethodField()
     tags = serializers.StringRelatedField(many=True)
+    body = serializers.SerializerMethodField()
 
     class Meta:
         model = NoticiasPage
@@ -12,6 +14,12 @@ class NoticiasPageSerializer(serializers.ModelSerializer):
             'id', 'title', 'subtitle', 'descricao', 'data_publicacao',
             'tags', 'imagem_destaque', 'url', 'body', 'destaque'
         ]
+
+    def get_body(self, obj):
+        """Renderiza o StreamField 'body' como HTML."""
+        if obj.body:
+            return expand_db_html(obj.body.render_as_block())
+        return ""
 
     def get_imagem_destaque(self, obj):
         imagem = obj.get_imagem_destaque()

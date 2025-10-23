@@ -490,20 +490,18 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
         return tags
 
     def get_ultimas_noticias(self, quantidade=6):
-        # Busca notícias em destaque ordenadas por data de publicação
-        noticias_destaque = NoticiasPage.objects.live().descendant_of(self).filter(
-            destaque=True
-        ).order_by("-data_publicacao")
+
+        noticias_locais = list(NoticiasPage.objects.live().descendant_of(self).order_by("-data_publicacao"))
+
+        noticias_remotas = self._fetch_remote_noticias()
+
+        all_posts = sorted(
+            noticias_locais + noticias_remotas,
+            key=lambda x: x.data_publicacao,
+            reverse=True
+        )
         
-        # Busca notícias que não estão em destaque ordenadas por data de publicação
-        noticias_sem_destaque = NoticiasPage.objects.live().descendant_of(self).filter(
-            destaque=False
-        ).order_by("-data_publicacao")
-        
-        # Combina as listas: primeiro as em destaque, depois as sem destaque
-        noticias_combinadas = list(noticias_destaque) + list(noticias_sem_destaque)
-        
-        # Retorna apenas a quantidade solicitada
-        return noticias_combinadas[:quantidade]
+        # 4. Retorna a quantidade solicitada
+        return all_posts[:quantidade]
     
         # return NoticiasPage.objects.live().descendant_of(self).order_by('-data_publicacao')[:quantidade]
