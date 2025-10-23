@@ -38,6 +38,7 @@ urlpatterns = [
     path("404/", sitepadrao_views.erro_404, name="erro_404"),
 
     path("api/v1/", include("api.urls", namespace="api")),
+    path("noticias/", include("noticias.urls")),
 ]
 
 if settings.HABILITAR_SSO_LOGIN:
