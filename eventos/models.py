@@ -24,13 +24,13 @@ from core.utils import (
 from django.core.exceptions import ValidationError
 
 
-class AvisosPageTag(TaggedItemBase):
+class EventosPageTag(TaggedItemBase):
     content_object = ParentalKey(
-        "AvisosPage", related_name="tagged_items", on_delete=models.CASCADE
+        "EventosPage", related_name="tagged_items", on_delete=models.CASCADE
     )
 
 
-class AvisosPage(PageSitePadrao):
+class EventosPage(PageSitePadrao):
     subtitle = models.CharField(
         verbose_name="Subtítulo", blank=True, max_length=255)
     descricao = models.TextField(
@@ -40,8 +40,8 @@ class AvisosPage(PageSitePadrao):
         max_length=255
     )
     data_publicacao = models.DateTimeField(
-        "Data de publicação do aviso", default=datetime.now, blank=True, null=True)
-    tags = ClusterTaggableManager(through=AvisosPageTag, blank=True)
+        "Data de publicação do evento", default=datetime.now, blank=True, null=True)
+    tags = ClusterTaggableManager(through=EventosPageTag, blank=True)
     body = StreamField(
         BaseStreamBlock(), verbose_name="Corpo da página", blank=True, null=True, use_json_field=True
     )
@@ -58,16 +58,16 @@ class AvisosPage(PageSitePadrao):
         help_text="ID do nó no Plone, usado para identificar a página migrada."
     )
     sensivel_periodo_eleitoral = models.BooleanField(
-        verbose_name="Aviso sensível ao período eleitoral",
+        verbose_name="Evento sensível ao período eleitoral",
         default=False,
-        help_text="Marque se este aviso deve ser ocultado ou tratado de forma especial durante o período eleitoral."
+        help_text="Marque se este evento deve ser ocultado ou tratado de forma especial durante o período eleitoral."
     )
     arquivos = StreamField(
         [
             ('arquivo', EspecificDocumentChooserBlock(
                 required=True, label="Arquivos")),
         ],
-        verbose_name="Arquivos do aviso",
+        verbose_name="Arquivos do evento",
         blank=True,
         null=True,
         use_json_field=True,
@@ -75,7 +75,7 @@ class AvisosPage(PageSitePadrao):
     nao_exibir_lista_de_arquivos = models.BooleanField(
         verbose_name="Não exibir lista de arquivos",
         default=False,
-        help_text="Marque para não exibir a lista de arquivos na página do aviso."
+        help_text="Marque para não exibir a lista de arquivos na página do evento."
     )
 
     content_panels = get_page_title_with_counter(50) + [
@@ -86,14 +86,13 @@ class AvisosPage(PageSitePadrao):
                 FieldPanel("nao_exibir_lista_de_arquivos"),
                 FieldPanel("arquivos"),
             ],
-            heading="Arquivos do aviso"
+            heading="Arquivos do evento"
         ),
         FieldPanel("body"),
         FieldPanel("data_publicacao"),
         FieldPanel("tags"),
     ]
 
-    # Painel de promoções
     promote_panels = PageSitePadrao.promote_panels
 
     migracao_panels = [
@@ -117,7 +116,7 @@ class AvisosPage(PageSitePadrao):
         counter = 1
         parent = self.get_parent()
         parent_path = parent.path if parent else ''
-        while AvisosPage.objects.filter(slug=slug, path__startswith=parent_path).exclude(pk=self.pk).exists():
+        while EventosPage.objects.filter(slug=slug, path__startswith=parent_path).exclude(pk=self.pk).exists():
             slug = f"{base_slug}-{counter}"
             counter += 1
         return slug
@@ -136,9 +135,9 @@ class AvisosPage(PageSitePadrao):
             raise ValidationError(
                 {"title": "O título não pode ter mais que 50 caracteres."})
 
-        if AvisosPage.objects.filter(slug=self.slug, path__startswith=parent_path).exclude(pk=self.pk).exists():
+        if EventosPage.objects.filter(slug=self.slug, path__startswith=parent_path).exclude(pk=self.pk).exists():
             raise ValidationError(
-                "Esse título já está sendo usado em outro aviso.")
+                "Esse título já está sendo usado em outro evento.")
 
     @property
     def get_tags(self):
@@ -148,17 +147,16 @@ class AvisosPage(PageSitePadrao):
             tag.url = f"{base_url}tags/{tag.slug}/"
         return tags
 
-    parent_page_types = ["AvisosIndexPage"]
+    parent_page_types = ["EventosIndexPage"]
     subpage_types = []
 
-    def get_ultimos_avisos(self, quantidade=6):
-        return AvisosPage.objects.live().order_by("-data_publicacao")[:quantidade]
+    def get_ultimos_eventos(self, quantidade=6):
+        return EventosPage.objects.live().order_by("-data_publicacao")[:quantidade]
 
     def get_context(self, request):
         context = super().get_context(request)
-        context["ultimos_avisos"] = self.get_ultimos_avisos()
+        context["ultimos_eventos"] = self.get_ultimos_eventos()
 
-        # Prepara uma lista de arquivos com seus ícones para o template
         arquivos_com_icone = []
         if self.arquivos:
             for block in self.arquivos:
@@ -178,10 +176,10 @@ class AvisosPage(PageSitePadrao):
         return get_fontawesome_file_icon(file_info)
 
     class Meta:
-        verbose_name = "Página de Aviso"
-        verbose_name_plural = "Páginas de Avisos"
+        verbose_name = "Página de Evento"
+        verbose_name_plural = "Páginas de Eventos"
 
-    icon = "warning"
+    icon = "calendar"
 
     search_fields = PageSitePadrao.search_fields + [
         index.SearchField('body'),
@@ -190,20 +188,21 @@ class AvisosPage(PageSitePadrao):
     ]
 
 
-class AvisosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
+class EventosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
     introduction = models.TextField(
-        help_text="Texto para o topo da página de avisos", blank=True)
+        help_text="Texto para o topo da página de eventos", blank=True)    
+   
 
     content_panels = PageSitePadraoIndex.content_panels + [
         FieldPanel("introduction"),
     ]
 
     parent_page_types = ["home.HomePage"]
-    subpage_types = ["AvisosPage"]
+    subpage_types = ["EventosPage"]
 
     def get_context(self, request):
-        context = super(AvisosIndexPage, self).get_context(request)
-        all_posts = AvisosPage.objects.descendant_of(
+        context = super(EventosIndexPage, self).get_context(request)
+        all_posts = EventosPage.objects.descendant_of(
             self).live().order_by("-data_publicacao")
         paginator = Paginator(all_posts, 12)
         page = request.GET.get("page")
@@ -214,7 +213,7 @@ class AvisosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         except EmptyPage:
             posts = paginator.page(paginator.num_pages)
         context["posts"] = posts
-        context["tag"] = None  # Garante que a variável tag exista no contexto
+        context["tag"] = None
         return context
 
     @route(r"^tags/$", name="tag_archive")
@@ -224,7 +223,7 @@ class AvisosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
             tag_obj = Tag.objects.get(slug=tag)
         except Tag.DoesNotExist:
             if tag:
-                msg = f'Não há avisos com a tag "{tag}"'
+                msg = f'Não há eventos com a tag "{tag}"'
                 messages.add_message(request, messages.INFO, msg)
             return redirect(self.url)
 
@@ -232,18 +231,18 @@ class AvisosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         context = self.get_context(request)
         context["tag"] = tag_obj
         context["posts"] = posts
-        return render(request, "avisos/avisos_index_page.html", context)
+        return render(request, "eventos/eventos_index_page.html", context)
 
     def get_posts(self, tag=None):
-        posts = AvisosPage.objects.live().descendant_of(self)
+        posts = EventosPage.objects.live().descendant_of(self)
         if tag:
             posts = posts.filter(tags=tag)
         return posts
 
-    def get_ultimos_avisos(self, quantidade=6):
-        return AvisosPage.objects.live().descendant_of(self).order_by('-data_publicacao')[:quantidade]
+    def get_ultimos_eventos(self, quantidade=6):
+        return EventosPage.objects.live().descendant_of(self).order_by('-data_publicacao')[:quantidade]
 
     class Meta:
-        verbose_name = "Página de Índice de Avisos"
+        verbose_name = "Página de Índice de Eventos"
 
     icon = "list-ul"

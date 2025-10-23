@@ -1,0 +1,37 @@
+@use '../variables.scss';
+
+[data-theme="dark"] {
+    .formulario-bloco {
+        background-color: transparent;
+
+        .titulo-formulario {
+            color: variables.$color-white;
+        }
+
+        .subtitulo-formulario {
+            color: variables.$color-grey-500;
+        }
+
+        form {
+            label {
+                color: variables.$color-white;
+            }
+
+            .form-control, .form-select {
+                background-color: variables.$color-grey-800;
+                border-color: variables.$color-grey-600;
+                color: variables.$color-grey-100;
+
+                &:focus {
+                    background-color: variables.$color-grey-700;
+                }
+            }
+
+            .btn.btn-primary.btn-enviar-sugestao {
+                background-color: variables.$color-white;
+                border-color: variables.$color-white;
+                color: variables.$color-black;
+            }
+        }
+    }
+}

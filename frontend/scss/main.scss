@@ -5,12 +5,13 @@
 @use './sitepadrao/index.scss' as sitepadrao;
 
 @use  './barraidentidadepb/index.scss' as barraidentidadepb;
-@use  './home/index.scss' as home;
 @use  './blocks/index.scss' as blocks;
 @use  './noticias/index.scss' as noticias;
+@use  './home/index.scss' as home;
 @use  './institucional/index.scss' as institucional;
 @use './search/index.scss' as search;
 @use  './agenda/index.scss' as agenda;
+@use  './editais/index.scss' as editais;
 @use './breadcrumb.scss';
 @use './breadcrumb_escuro.scss';
 @use './cookieconsent.scss';
