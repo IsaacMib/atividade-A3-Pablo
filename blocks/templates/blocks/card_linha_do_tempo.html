@@ -1,8 +1,7 @@
 {% load wagtailimages_tags %}
 {% load text_filters %}
-{% comment %} {% if card.detail_page %}
-    <a class="" href="{{ card.detail_page.url }}">
-{% endif %} {% endcomment %}
+
+{% block card %}
 <div
     class="linha-do-tempo__item"
     data-index="{{ index }}"
@@ -31,11 +30,11 @@
                 {% endif %}
             >
                 <div class="card-linha-do-tempo__image">
-                    {% image card.imagem width-400 alt=card.texto_alternativo|default:card.titulo %}
+                    {% image card.imagem width-400 alt=card.texto_alternativo|default:"Não especificado" %}
                 </div>
                 <div class="card-linha-do-tempo__content text-center">
                     <h3 class="card-linha-do-tempo__title mt-3 mb-1">
-                        {{ card.titulo }}
+                        {% firstof card.titulo card.title %}
                     </h3>
                     {% comment %} <p class="card-linha-do-tempo__date">{{ card.data|date:"d/m/Y" }}</p> {% endcomment %}
                     <span class="card-description-wrapper inline">
@@ -123,6 +122,4 @@
         })();
     </script>
 </div>
-{% comment %} {% if card.detail_page %}
-</a>
-{% endif %} {% endcomment %}
+{% endblock %}

@@ -1,23 +1,21 @@
-{% load wagtailimages_tags %}
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags static %}
 
+{% block content %}
 <div class="linha-do-tempo">
     <div class="container">
         <div class="titulo-container text-center">
-            {% if value.titulo %}
-                {% include 'include/titulo.html' with titulo=value.titulo bgClass='' %}
-            {% else %}
-                <h2 class="titulo-1">Linha do Tempo</h2>
-            {% endif %}
+            {% include 'include/titulo.html' with titulo=page.title bgClass='' %}
         </div>
         <div
             class="linha-do-tempo-cards-container"
-            ntotal-cards="{{ value.cards|length }}"
+            ntotal-cards="{{ cards|length }}"
         >
-            {% for card in value.cards %}
+            {% for card in cards %}
             {% if not forloop.counter|divisibleby:2 %}
                 <div class="row block-linha-do-tempo">
             {% endif %}
-                {% include 'blocks/card_linha_do_tempo.html' with card=card index=forloop.counter0 last_index=value.cards|length|add:'-1' %}
+                {% include 'blocks/card_linha_do_tempo.html' with card=card index=forloop.counter0 last_index=cards|length|add:'-1' %}
             {% if forloop.last or forloop.counter|divisibleby:2 %}
                 </div>
             {% endif %}
@@ -182,3 +180,5 @@
   // Considera redimensionamento da janela
   window.addEventListener('resize', updateTimelineGradient, { passive: true });
 </script>
+
+{% endblock %}

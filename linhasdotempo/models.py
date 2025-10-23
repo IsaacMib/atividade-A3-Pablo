@@ -36,16 +36,14 @@ class LinhaDoTempoPage(PageSitePadrao):
     class Meta:
         verbose_name = "Página da Linha do Tempo"
 
+    def get_context(self, request):
+        context = super().get_context(request)
+        context["cards"] = CardLinhaDoTempoPage.objects.live().child_of(self).order_by("data_evento")
+        return context
+
 
 class CardLinhaDoTempoPage(PageSitePadrao):
 
-    titulo = models.CharField(
-        "Título",
-        max_length=255,
-        blank=True,
-        null=True,
-        help_text="Título da página do card da linha do tempo"
-    )
     data_evento = models.DateField(
         "Data do evento", default=datetime.now, blank=True, null=True
     )
@@ -62,7 +60,7 @@ class CardLinhaDoTempoPage(PageSitePadrao):
         null=True,
         verbose_name='Texto alternativo da imagem'
     )
-    descricao_completa = StreamField(
+    descricao = StreamField(
         [
             ("paragraph", RichTextBlock(
                     icon="pilcrow",
@@ -90,11 +88,10 @@ class CardLinhaDoTempoPage(PageSitePadrao):
     )
 
     content_panels = PageSitePadrao.content_panels + [
-        FieldPanel("titulo"),
         FieldPanel("data_evento"),
         FieldPanel("imagem"),
         FieldPanel("texto_alternativo"),
-        FieldPanel("descricao_completa"),
+        FieldPanel("descricao"),
         FieldPanel("data_publicacao"),
     ]
 
@@ -104,4 +101,20 @@ class CardLinhaDoTempoPage(PageSitePadrao):
 
     class Meta:
         verbose_name = "Página de Card da Linha do Tempo"
-        # template = 'blocks/card_linha_do_tempo_page.html'
+
+    # @property
+    # def descricao(self):
+    #     try:
+    #         # Join rendered strings of blocks in descricao_completa
+    #         if not self.descricao_completa:
+    #             return ""
+    #         parts = []
+    #         for block in self.descricao_completa:
+    #             parts.append(str(block))
+    #         return " ".join(parts)
+    #     except Exception:
+    #         return ""
+
+    @property
+    def detail_page(self):
+        return self
