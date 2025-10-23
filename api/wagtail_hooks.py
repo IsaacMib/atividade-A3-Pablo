@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.contrib.auth.models import Group
+from wagtail import hooks
 from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.admin.viewsets import viewsets
 from wagtail.users.forms import UserCreationForm, UserEditForm
@@ -27,7 +29,7 @@ class IntegrationUserAdmin(ModelViewSet):
     model = IntegrationUser
     menu_label = "Usuários de Integração"
     name = "integration_users"
-    icon = "users"
+    icon = "plus"
     menu_order = 800
     add_to_settings_menu = True
     list_display = ("username", "email", "first_name", "last_name", "is_active")
@@ -43,4 +45,5 @@ class IntegrationUserAdmin(ModelViewSet):
         return qs.filter(groups__name='Usuário de integração')
 
 
-viewsets.register(IntegrationUserAdmin())
+if settings.PORTAL_PROVEDOR_CONTEUDO:
+    viewsets.register(IntegrationUserAdmin())

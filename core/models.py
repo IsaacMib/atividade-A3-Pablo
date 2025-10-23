@@ -215,7 +215,6 @@ class SiteSettings(BaseSiteSetting):
                 })
 
 
-@register_setting(icon="link")
 class ApiSettings(BaseSiteSetting):
     api_habilitada = models.BooleanField(
         verbose_name="Habilitar Integração via API",
@@ -241,13 +240,13 @@ class ApiSettings(BaseSiteSetting):
     )
 
     puxar_noticias = models.BooleanField(
-        verbose_name="Puxar Notícias",
+        verbose_name="Consumir Notícias",
         default=False,
         help_text="Ativar para buscar notícias do portal externo."
     )
     tags_noticias = models.CharField(
         max_length=255,
-        verbose_name="Tags de Notícias",
+        verbose_name="Tags para filtrar Notícias",
         blank=True,
         help_text="Separar tags por vírgula. Ex: 'geral, importante'. Deixe em branco para buscar todas."
     )
