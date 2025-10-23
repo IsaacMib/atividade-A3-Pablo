@@ -224,7 +224,7 @@ class ApiSettings(BaseSiteSetting):
     api_url = models.URLField(
         verbose_name="URL da API Externa",
         blank=True,
-        help_text="URL base da API do portal de conteúdo externo."
+        help_text="URL base da API do portal de conteúdo externo. Ex:https://paraiba.pb.gov.br/"
     )
     api_usuario = models.CharField(
         max_length=255,
