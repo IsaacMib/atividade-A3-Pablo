@@ -6,13 +6,19 @@ from .models import IntegrationUser
 
 
 class CustomIntegrationUserCreationForm(UserCreationForm):
-    """Formulário de criação com ordem de campos e grupos ocultos."""
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+            integration_group, _ = Group.objects.get_or_create(name='Usuário de integração')
+            user.groups.add(integration_group)
+        return user
+
     class Meta(UserCreationForm.Meta):
         fields = ("username", "first_name", "last_name", "email", "is_active")
 
 
 class CustomIntegrationUserEditForm(UserEditForm):
-    """Formulário de edição com ordem de campos e grupos ocultos."""
     class Meta(UserEditForm.Meta):
         fields = ("username", "first_name", "last_name", "email", "is_active")
 
@@ -36,11 +42,5 @@ class IntegrationUserAdmin(ModelViewSet):
         qs = super().get_queryset(request)
         return qs.filter(groups__name='Usuário de integração')
 
-    def save_instance(self, instance, form, is_new):
-        user = super().save_instance(instance, form, is_new)
-        if is_new:
-            integration_group, _ = Group.objects.get_or_create(name='Usuário de integração')
-            user.groups.add(integration_group)
-        return user
 
 viewsets.register(IntegrationUserAdmin())
