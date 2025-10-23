@@ -4,7 +4,7 @@ from django.http import Http404
 from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.admin.panels import FieldPanel
 
-from .models import NoticiasPage, NoticiaRemota
+from .models import NoticiasPage, NoticiaRemota, NoticiasIndexPages
 from core.models import ApiSettings
 from wagtail.models import Site
 
@@ -61,4 +61,11 @@ def noticia_remota_detail_view(request, noticia_id):
     noticia_remota = NoticiaRemota(data, api_base_url=api_settings.api_url)
     
     # Reutilizamos o template da notícia local
-    return render(request, 'noticias/noticias_page.html', {'page': noticia_remota})
+    # Buscamos a página de índice de notícias para usar no contexto (breadcrumbs, etc.)
+    noticias_index = NoticiasIndexPages.objects.live().first()
+
+    return render(request, 'noticias/noticias_page.html', {
+        'page': noticia_remota,
+        'self': noticias_index, # 'self' é usado nos templates do Wagtail para a página de índice
+        'ultimas_noticias': noticias_index.get_ultimas_noticias() if noticias_index else []
+    })

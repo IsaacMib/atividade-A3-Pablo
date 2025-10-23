@@ -422,7 +422,7 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
 
         if tags_noticias:
             for tag_slug in tags_noticias:
-                noticias_url = f"{base_api_url}/noticias/tag/{tag_slug}/"
+                noticias_url = f"{base_api_url}/tag/{tag_slug}/?noticias=true"
                 try:
                     response = requests.get(noticias_url, headers=headers, timeout=15)
                     response.raise_for_status()
@@ -434,7 +434,7 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
                 except requests.RequestException:
                     continue
         else:
-            noticias_url = f"{base_api_url}/noticias/all/"
+            noticias_url = f"{base_api_url}/all/?noticias=true"
             try:
                 response = requests.get(noticias_url, headers=headers, timeout=15)
                 response.raise_for_status()
