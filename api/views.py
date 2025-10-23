@@ -88,3 +88,21 @@ class AllSharedContentAPIView(APIView):
         all_results.sort(key=_get_consistent_datetime, reverse=True)
         serializer = SharedContentSerializer(all_results, many=True, context={'request': request})
         return Response(serializer.data)
+
+
+class SingleNoticiaAPIView(APIView):
+    """
+    API view para retornar os dados de uma única notícia.
+    """
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsIntegrationUser]
+
+    def get(self, request, pk, format=None):
+        if not NoticiasPage:
+            return Response({"error": "O modelo de Notícias não está disponível."}, status=500)
+        try:
+            noticia = NoticiasPage.objects.live().public().get(pk=pk)
+            serializer = SharedContentSerializer(noticia, context={'request': request})
+            return Response(serializer.data)
+        except NoticiasPage.DoesNotExist:
+            return Response({"error": "Notícia não encontrada."}, status=404)

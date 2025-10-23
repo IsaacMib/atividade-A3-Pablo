@@ -40,8 +40,8 @@ class NoticiaRemota:
         self.title = data.get('title', 'Sem título')
         self.subtitle = data.get('subtitle', '')
         self.descricao = data.get('descricao', '')
-        self.url = f"{api_base_url.rstrip('/')}{data.get('url', '')}"
         self.destaque = data.get('destaque', False)
+        self.body = data.get('body', '')
         self.imagem_destaque_remota = data.get('imagem_destaque')
         data_str = data.get('data_publicacao')
         if data_str:
@@ -52,12 +52,13 @@ class NoticiaRemota:
         else:
             self.data_publicacao = datetime.now(datetime.timezone.utc)
 
+    @property
+    def url(self):
+        return f"/noticias/remota/{self.id}/"
+
     def get_imagem_destaque(self):
         return self.imagem_destaque_remota
 
-    def get_url(self, request=None, current_site=None):
-
-        return self.url
 
 MAX_NOTICIAS_DESTAQUE = 6
 

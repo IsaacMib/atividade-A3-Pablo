@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
 <div class="noticias-wrap">
-  <a href="{% if noticias.is_remote %}{{ noticias.url }}{% else %}{% pageurl noticias %}{% endif %}" class="text-decoration-none" {% if noticias.is_remote %}target="_blank" rel="noopener noreferrer"{% endif %}>
+  <a href="{% if noticias.is_remote %}{{ noticias.url }}{% else %}{% pageurl noticias %}{% endif %}" class="text-decoration-none">
     <div class="noticias-conteudo">
       <div class="col d-flex justify-content-center justify-content-md-start">
           <p class="noticias-conteudo--data">{{ noticias.data_publicacao|date:"d/m/Y" }}</p>
