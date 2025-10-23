@@ -22,17 +22,16 @@
             </p>
           {% endif %}
 
-          {% if settings.core.SiteSettings.footer_link_sic and settings.core.SiteSettings.footer_imagem_sic %}
             <div class="d-flex justify-content-center justify-content-md-start mt-3">
-              <a href="{{ settings.core.SiteSettings.footer_link_sic }}" aria-label="Serviço de Informação ao Cidadão (SIC)">
-                {% image settings.core.SiteSettings.footer_imagem_sic original as sic_image %}
-                <img 
-                  src="{{ sic_image.url }}" 
-                  alt="{{ sic_image.alt|default:'Serviço de Informação ao Cidadão (SIC)' }}" 
-                  class="img-fluid footer-sic-logo">
+              <a href="https://sic.pb.gov.br/" aria-label="Serviço de Informação ao Cidadão (SIC)">
+                <img
+                  class="img-fluid footer-sic-logo"
+                  src="{% static 'img/logo_sic.png' %}"
+                  alt="Serviço de Informação ao Cidadão (SIC)"
+                  width= "185px"
+                >
               </a>
             </div>
-          {% endif %}
         </div>
       </div>   
       

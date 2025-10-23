@@ -46,25 +46,29 @@
       </div>
 
     {% else %}
-      <!-- MODO BLOCOS GRANDES - até 4 colunas -->
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
-        {% for item in value.itens %}
-          <div class="col">
-            <a href="{{ item.link }}">
-              <div class="quick-access quick-access-fullwidth d-flex flex-column align-items-center p-4 shadow rounded-4 h-100">
-                <div class="quick-access-icon-ellipse d-flex align-items-center justify-content-center mb-3 fs-1">
-                  {% if item.icone %}
-                    <i class="{{ item.icone }}"></i>
-                  {% else %}
-                    <i class="fa-regular fa-file-lines"></i>
-                  {% endif %}
+      {# MODO BLOCOS GRANDES - até 4 colunas; se 'widget' flag estiver presente, renderiza widget separado #}
+      {% if value.widget is defined and value.widget %}
+        {% include 'blocks/widget_acesso_rapido.html' with itens=value.itens %}
+      {% else %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+          {% for item in value.itens %}
+            <div class="col">
+              <a href="{{ item.link }}">
+                <div class="quick-access quick-access-fullwidth d-flex flex-column align-items-center p-4 shadow rounded-4 h-100">
+                  <div class="quick-access-icon-ellipse d-flex align-items-center justify-content-center mb-3 fs-1">
+                    {% if item.icone %}
+                      <i class="{{ item.icone }}"></i>
+                    {% else %}
+                      <i class="fa-regular fa-file-lines"></i>
+                    {% endif %}
+                  </div>
+                  <h5 class="quick-access-title mb-2 text-center">{{ item.titulo|linebreaksbr }}</h5>
                 </div>
-                <h5 class="quick-access-title mb-2 text-center">{{ item.titulo|linebreaksbr }}</h5>
-              </div>
-            </a>
-          </div>
-        {% endfor %}
-      </div>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
 
     {% endif %}
   </div>

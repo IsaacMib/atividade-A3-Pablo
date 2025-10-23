@@ -36,6 +36,28 @@ class PageSitePadrao(Page):
         FieldPanel("images"),
     ]
 
+    def get_context(self, request, *args, **kwargs):
+        """Add common context for all pages derived from PageSitePadrao.
+
+        This provides `redes_ativas` so templates can render sharing buttons
+        consistently across the site.
+        """
+        context = super().get_context(request, *args, **kwargs)
+        redes_ativas = []
+        try:
+            site_settings = SiteSettings.for_request(request)
+            if site_settings and site_settings.compartilhar_redes_sociais:
+                absolute_url = request.build_absolute_uri(getattr(self, 'url', '/'))
+                redes_ativas = site_settings.get_redes_ativas(
+                    absolute_url=absolute_url,
+                    page_title=getattr(self, 'title', '')
+                )
+        except Exception:
+            redes_ativas = []
+
+        context['redes_ativas'] = redes_ativas
+        return context
+
     class Meta:
         abstract = True
 
@@ -110,7 +132,8 @@ class SiteSettings(BaseSiteSetting):
         verbose_name="Selecionar Redes para Compartilhamento",
         blank=True,
         use_json_field=True,
-        help_text="Escolha quais redes sociais estarão disponíveis para compartilhamento."
+        help_text=("Escolha quais redes sociais estarão disponíveis para compartilhamento. "
+                   "Cada tipo de rede só pode ser adicionado uma vez (máx. 1 por tipo).")
     )
 
     # --- Menu ---
@@ -145,29 +168,12 @@ class SiteSettings(BaseSiteSetting):
         max_length=255,
         blank=True,
         verbose_name="Título da Instituição no Rodapé",
-        default="CENTRO ADMINISTRATIVO ESTADUAL"
     )
     footer_informacoes = models.TextField(
         blank=True,
         verbose_name="Informações do Rodapé",
         help_text="Endereço, telefone, horário, CNPJ. Use <br> para quebras de linha.",
-        default="Rua João da Mata, S/N, Jaguaribe - CEP: 58.015-020<br>\nFone: Recepção: (83) 98658-8328 - JOÃO PESSOA - PARAÍBA<br>\nHorário de Atendimento: Das 8:00 às 16:30<br>\nCNPJ: 09.189.499/0001-00"
     )
-    footer_link_sic = models.URLField(
-        blank=True,
-        verbose_name="Link para o SIC (Serviço de Informação ao Cidadão)",
-        default="https://sic.pb.gov.br/"
-    )
-    footer_imagem_sic = models.ForeignKey(
-        'wagtailimages.Image',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name="Imagem do SIC no rodapé",
-        help_text="Faça o upload da imagem do logo do SIC."
-    )
-
 
     captcha_site_key = models.CharField(
         verbose_name="Captcha Site Key (pública)",
@@ -225,8 +231,6 @@ class SiteSettings(BaseSiteSetting):
             [
                 FieldPanel("footer_titulo_instituicao"),
                 FieldPanel("footer_informacoes"),
-                FieldPanel("footer_link_sic"),
-                FieldPanel("footer_imagem_sic"),
             ],
             heading="Rodapé",
             classname="collapsible collapsed"
@@ -257,11 +261,79 @@ class SiteSettings(BaseSiteSetting):
             return []
 
         redes_ativas = []
+        seen_names = set()
         for bloco in self.compartilhar_rede_social:
-            for rede in bloco.value:
-                dados = rede.value
+            # bloco.value can be a list of choice strings (from ListRedesSociais)
+            # or a list of Struct values (legacy). Normalize both cases.
+            inner = bloco.value
+            # If inner is a dict with key 'redes' (StructBlock shape), extract list
+            if isinstance(inner, dict) and 'redes' in inner:
+                redes_list = inner.get('redes') or []
+                # redes_list typically is a list of strings (choice values)
+                for nome in redes_list:
+                    if not nome:
+                        continue
+                    # avoid duplicates
+                    if nome in seen_names:
+                        continue
+                    seen_names.add(nome)
+                    icone = f"fa-brands fa-{nome}"
+                    url = ""
+                    # construct sharing URL by type
+                    if nome == "messenger":
+                        url = f"https://www.facebook.com/dialog/send?link={absolute_url}&app_id=YOUR_APP_ID&redirect_uri={absolute_url}"
+                    elif nome == "linkedin":
+                        url = f"https://www.linkedin.com/shareArticle?mini=true&url={absolute_url}&title={escape(page_title or '')}"
+                    elif nome == "pinterest":
+                        url = f"https://pinterest.com/pin/create/button/?url={absolute_url}&description={escape(page_title or '')}"
+                    elif nome == "x":
+                        url = f"https://twitter.com/intent/tweet?url={absolute_url}&text={escape(page_title or '')}"
+                    elif nome == "reddit":
+                        url = f"https://www.reddit.com/submit?url={absolute_url}&title={escape(page_title or '')}"
+                    elif nome == "whatsapp":
+                        url = f"https://api.whatsapp.com/send?text={escape(page_title or '')} {absolute_url}"
+                    elif nome == "telegram":
+                        url = f"https://t.me/share/url?url={absolute_url}&text={escape(page_title or '')}"
+                    elif nome == "email":
+                        url = f"mailto:?subject={escape(page_title or '')}&body={absolute_url}"
+                    elif nome == "facebook":
+                        url = f"https://www.facebook.com/sharer/sharer.php?u={absolute_url}"
+                    elif nome == "sms":
+                        url = f"sms:?body={escape(page_title or '')} {absolute_url}"
+                    elif nome == "print":
+                        url = "javascript:window.print();"
+                    elif nome == "copy":
+                        url = absolute_url
+
+                    redes_ativas.append({"nome": nome, "icone": icone, "url": url})
+                continue
+
+            # Otherwise, try to iterate as before over bloco.value items
+            for rede in inner:
+                # Some stored values may be plain strings or unexpected structures
+                # (e.g. older DB migrations). Guard against that by extracting
+                # the underlying mapping safely.
+                if hasattr(rede, "value"):
+                    dados = rede.value
+                elif isinstance(rede, dict):
+                    dados = rede
+                elif isinstance(rede, str):
+                    dados = {"nome": rede, "habilitado": True}
+                else:
+                    # Skip entries we can't interpret as a social item
+                    continue
+
+                if not isinstance(dados, dict):
+                    continue
+
                 if dados.get("habilitado", False):
                     nome = dados.get("nome")
+                    if not nome:
+                        continue
+                    # avoid duplicates
+                    if nome in seen_names:
+                        continue
+                    seen_names.add(nome)
                     icone = dados.get("icone") or f"fa-brands fa-{nome}"
                     url = ""
 
@@ -290,11 +362,7 @@ class SiteSettings(BaseSiteSetting):
                     elif nome == "copy":
                         url = absolute_url
 
-                    redes_ativas.append({
-                        "nome": nome,
-                        "icone": icone,
-                        "url": url,
-                    })
+                    redes_ativas.append({"nome": nome, "icone": icone, "url": url})
 
         return redes_ativas
 
@@ -331,6 +399,44 @@ class SiteSettings(BaseSiteSetting):
 
     def clean(self):
         super().clean()
+
+        # Validate compartilhar_rede_social: ensure no duplicate network types
+        try:
+            selected = []
+            for bloco in self.compartilhar_rede_social:
+                inner = bloco.value
+                if isinstance(inner, dict) and 'redes' in inner:
+                    redes_list = inner.get('redes') or []
+                    for nome in redes_list:
+                        if nome:
+                            selected.append(nome)
+                else:
+                    # iterate items if list-like
+                    try:
+                        for item in inner:
+                            if hasattr(item, 'value') and isinstance(item.value, dict):
+                                nome = item.value.get('nome')
+                                if nome:
+                                    selected.append(nome)
+                            elif isinstance(item, str):
+                                selected.append(item)
+                    except Exception:
+                        # ignore unexpected shapes here; will be caught earlier if needed
+                        pass
+
+            # find duplicates
+            from collections import Counter
+            counts = Counter(selected)
+            duplicates = [k for k, v in counts.items() if v > 1]
+            if duplicates:
+                raise ValidationError({
+                    'compartilhar_rede_social': ValidationError(
+                        f"Duplicatas encontradas nas redes de compartilhamento: {', '.join(duplicates)}. Remova duplicatas (máx. 1 de cada tipo)."
+                    )
+                })
+        except Exception:
+            # don't break saving for unexpected shapes; be conservative and allow save
+            pass
 
 
         if self.menu_max_levels > 3:

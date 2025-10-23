@@ -1,154 +1,206 @@
 from django.db import models
-from django.http import HttpResponseRedirect
-from django.conf import settings
+from wagtail.search import index
+from django.shortcuts import redirect
+from django.contrib import messages
 from wagtail.admin.panels import FieldPanel, TabbedInterface, ObjectList
 from wagtail.fields import StreamField
-from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
+from core.models import PageSitePadrao 
 from wagtail import blocks
-from blocks.agenda import ( 
 
-    ListAgendaBlock, 
-    CompromissoBlock, 
-    AgendaDoDiaBlock,
-)
-from core.models import PageSitePadrao, PageSitePadraoIndex
-    
 
 from blocks.models import (
-
-    AcessosRapidosBlock,
-    BannerComLinkBlock,
-    ListaVideosBlock,
-    OdometerListBlock,
-    CarrosselBannersBlock,
-    ServicosOnlineBlock,
-    TituloBlock,
-    NoticiasListBlock,
-    CarrosselSolucoesBlock,
-    AvisosListBlock,
-
+ TituloBlock,
+ AvisosListBlock,
+ AcessosRapidosBlock,
+ BannerComLinkBlock,
+ ListaVideosBlock,
+ OdometerListBlock,
+ NoticiasListBlock,
+ CarrosselBannersBlock,
+ ServicosOnlineBlock,
+ CarrosselSolucoesBlock,
+ GridImagensBlock,
+ ServicoOnlineItemBlock,
+ AcordeonBlock,
+ CustomFormBlock,
+ LinhaDoTempoBlock,
+ AvisosWidget,
 )
+from blocks.agenda import ListAgendaBlock 
+from django.core.files.base import File 
+from wagtail.blocks import RichTextBlock 
+from wagtail.images.blocks import ImageChooserBlock 
 
-CONTENT_BLOCKS = [
+
+INTRANET_HOME_BLOCKS = [
+ ('titulo', TituloBlock()),
+ ('lista_avisos', AvisosListBlock()),
+ ("acessos_rapidos", AcessosRapidosBlock()),
+ ('banner_com_link', BannerComLinkBlock()),
+ ('lista_videos', ListaVideosBlock()),
+ ("central_monitoramento", OdometerListBlock()),
+ ('noticias', NoticiasListBlock()),
+ ("carrossel_banners", CarrosselBannersBlock()),
+ ("servicos_online", ServicosOnlineBlock()),
+ ("list_agenda", ListAgendaBlock()),
+ ("carrossel_solucoes", CarrosselSolucoesBlock()),
+ ("programa", GridImagensBlock()),
+ ("secao_informativa", AcordeonBlock()),
+ ("formulario_customizado", CustomFormBlock()),
+ ("servico_online_item", ServicoOnlineItemBlock()),
+ ("linha_do_tempo", LinhaDoTempoBlock()),
+]
+
+# Lista de blocos disponíveis para a coluna de Widgets
+INTRANET_WIDGET_BLOCKS = [
     ('titulo', TituloBlock()),
-    ('lista_avisos', AvisosListBlock()),
-    ('banner_com_link', BannerComLinkBlock()),
-    ('lista_videos', ListaVideosBlock()),
-    ('noticias', NoticiasListBlock()),
-    ("carrossel_banners", CarrosselBannersBlock()),
-    ("carrossel_solucoes", CarrosselSolucoesBlock()),
-    ('compromisso', CompromissoBlock()),
-]
-
-WIDGET_BLOCKS = [
+    ('widget_avisos', AvisosWidget()), # Usando o novo bloco de widget
     ("acessos_rapidos", AcessosRapidosBlock()),
-    ("central_monitoramento", OdometerListBlock()),
-    ("servicos_online", ServicosOnlineBlock()),
-    ('agenda_do_dia', AgendaDoDiaBlock()),
-    ('listar_agenda', ListAgendaBlock()),
+    ('banner_com_link', BannerComLinkBlock()),
+    ("list_agenda", ListAgendaBlock()),
+    ("servico_online_item", ServicoOnlineItemBlock()),
+    # Adicione aqui outras versões de blocos otimizadas para widgets
 ]
 
-class GrupoIntranet(models.Model):
-    nome = models.CharField(max_length=255, verbose_name="Nome do Grupo")
+class IntranetHomePage(PageSitePadrao):
 
-    panels = [FieldPanel("nome")]
+  body = StreamField(
+    INTRANET_HOME_BLOCKS,
+    use_json_field=True,
+    null=True,
+    default=None,
+    blank=True,
+    verbose_name="Body"
+    )
 
-    def __str__(self):
-        return self.nome
-
-    class Meta:
-        verbose_name = "Grupo da Intranet"
-        verbose_name_plural = "Grupos da Intranet"
-
-class IntranetBase(PageSitePadrao):
-    """Página base para todas as páginas internas da Intranet."""
-    
-    LAYOUT_CHOICES = [
-        ('100', 'Layout 1: 100%'),
-        ('50_50', 'Layout 2: 50% / 50%'),
-        ('60_40', 'Layout 3: 60% / 40%'),
-        ('70_30', 'Layout 4: 70% / 30%'),
-        ('80_20', 'Layout 5: 80% / 20%'),
-        ('35_35_30', 'Layout 6: 35% / 35% / 30%'),
-        ('40_40_20', 'Layout 7: 40% / 40% / 20%'),
+  widgets = StreamField(
+    INTRANET_WIDGET_BLOCKS, 
+    use_json_field=True,
+    null=True,
+    default=None,
+    blank=True,
+    verbose_name="Widgets"
+    )
+  
+  search_fields = PageSitePadrao.search_fields + [
+        index.SearchField('title', partial_match=True),
+        index.SearchField('body'),
+        index.FilterField('title'),
     ]
 
-    layout = models.CharField(
-        max_length=20,
-        choices=LAYOUT_CHOICES,
-        default='100',
-        verbose_name="Layout da Página",
-        help_text="Escolha a proporção das colunas de conteúdo."
-    )
+  # Painéis de conteúdo separados para abas
+  content_panels = [
+    FieldPanel("title"), # Adiciona o campo de título aqui
+    FieldPanel("body"),
+  ]
 
-    coluna_1 = StreamField(
-        CONTENT_BLOCKS,
-        use_json_field=True,
-        blank=True,
-        verbose_name="Coluna 1"
-    )
+  widget_panels = [
+    FieldPanel("widgets"),
+  ]
 
-    coluna_2 = StreamField(
-        CONTENT_BLOCKS,
-        use_json_field=True,
-        blank=True,
-        verbose_name="Coluna 2"
-    )
+  # Organiza os painéis em abas
+  edit_handler = TabbedInterface([
+      ObjectList(content_panels, heading='Conteúdo'),
+      ObjectList(widget_panels, heading='Widgets'),
+      ObjectList(PageSitePadrao.promote_panels, heading='Promover'),
+      ObjectList(PageSitePadrao.settings_panels, heading='Configurações'),
+  ])
 
-    widgets = StreamField(
-        WIDGET_BLOCKS,
-        use_json_field=True,
-        blank=True,
-        verbose_name="Widgets (Coluna Lateral)"
-    )
+  parent_page_types = ['wagtailcore.Page']
 
-    # Painéis para a aba de Conteúdo
-    content_panels = PageSitePadrao.content_panels + [
-        FieldPanel('coluna_1'),
-        FieldPanel('coluna_2'),
-        FieldPanel('widgets'),
+  subpage_types = [
+    'noticias.NoticiasIndexPages',
+    'avisos.AvisosIndexPage',
+    'eventos.EventosIndexPage',
+    'agenda.AgendaIndexPage',
+    'intranet.IntranetPage',
     ]
 
-    layout_panels = [
-        FieldPanel('layout'),
-    ]
+  class Meta:
+    verbose_name = "Página Principal da Intranet"
+    verbose_name_plural = "Páginas Principais da Intranet"
 
-    edit_handler = TabbedInterface([
-        ObjectList(content_panels, heading='Conteúdo'),
-        ObjectList(layout_panels, heading='Layout'),
-        ObjectList(PageSitePadrao.promote_panels, heading='Promover'),
-        ObjectList(PageSitePadrao.settings_panels, heading='Configurações', classname="settings"),
-    ])
-    
-    def get_context(self, request, *args, **kwargs):
-        context = super().get_context(request, *args, **kwargs)
-        context['layout'] = self.layout
-        return context
+  def get_context(self, request, *args, **kwargs):
+    context = super().get_context(request, *args, **kwargs)
+    context.update({
+      "col1_blocks": self.body,
+      "widget_blocks": self.widgets,
+      "col1_class": "col-lg-7 col-12",
+      "widget_class": "col-lg-5 col-12", 
+      "is_intranet_home": True,
+    })
+    return context
 
-    def serve(self, request, *args, **kwargs):
-        user = request.user
-        if not user.is_authenticated:
-            login_url = f"{settings.LOGIN_URL}?next={self.get_url(request)}"
-            return HttpResponseRedirect(login_url)
+  def serve(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            form_block = next((block for block in self.body if isinstance(block.block, CustomFormBlock)), None)
+
+            if form_block:
+                form = form_block.block.get_context(form_block.value, parent_context={'request': request})['form']
+                form_kwargs = {
+                    'show_recaptcha': getattr(form, 'show_recaptcha', False),
+                    'recaptcha_secret_key': getattr(form, 'recaptcha_secret_key', None),
+                    'fields_config': form.fields_config if hasattr(form, 'fields_config') else None,
+                    'initial': form.initial if hasattr(form, 'initial') else {},
+                    'request': request,
+                }
+                bound_form = type(form)(request.POST, request.FILES, **form_kwargs)
+
+                if bound_form.is_valid():
+                    from blocks.models import FormularioSubmissao, ArquivoSubmetido
+                    from django.core.files.base import File
+                    field_map = {}
+                    if hasattr(bound_form, 'fields_config') and bound_form.fields_config:
+                        for i, block in enumerate(bound_form.fields_config):
+                            field_name = f"custom_field_{i}_{block.block_type}"
+                            field_label = block.value.get('label', field_name)
+                            field_map[field_name] = field_label
+
+                    cleaned_data = bound_form.cleaned_data.copy()
+                    arquivos_para_salvar = {}
+                    dados_adicionais_serializaveis = {}
+
+                    for key, value in cleaned_data.items():
+                        if isinstance(value, File):
+                            arquivos_para_salvar[key] = value
+                        else:
+                            dados_adicionais_serializaveis[field_map.get(key, key)] = value
+
+                    nome_completo = cleaned_data.pop('nome_completo', '')
+                    titulo = cleaned_data.pop('titulo', '')                    
+
+                    submissao = FormularioSubmissao.objects.create(
+                        nome_completo=nome_completo,
+                        titulo=titulo,
+                        dados_adicionais={k: v for k, v in dados_adicionais_serializaveis.items() if k not in ['nome_completo', 'titulo', 'g-recaptcha-response']},
+                        pagina=self,
+                        usuario=request.user if request.user.is_authenticated else None
+                    )
+                    for nome_campo, arquivo in arquivos_para_salvar.items():
+                        ArquivoSubmetido.objects.create(submissao=submissao, nome_campo=nome_campo, arquivo=arquivo)
+
+                    messages.success(request, "Formulário Enviado Com Sucesso!")
+                    return redirect(request.path)
+                else:
+                    messages.error(request, "Ocorreu um erro. Por favor, verifique os campos do formulário.")
+                    setattr(request, '_form_errors', bound_form)
         return super().serve(request, *args, **kwargs)
 
-    class Meta:
-        abstract = True
-        verbose_name = "Página Base da Intranet"
-
-
-class IntranetIndexPage(IntranetBase, PageSitePadraoIndex):
-    parent_page_types = None
-    subpage_types = ['intranet.IntranetPage']
-    max_count = 1
-
-    class Meta:
-        verbose_name = "Página Principal da Intranet"
-
-
-class IntranetPage(IntranetBase):
-    parent_page_types = ['intranet.IntranetIndexPage']
-    subpage_types = ['intranet.IntranetPage']
-
-    class Meta:
-        verbose_name = "Página de Conteúdo da Intranet"
+class IntranetPage(PageSitePadrao):
+  body = StreamField(
+    INTRANET_HOME_BLOCKS,
+    use_json_field=True,
+    null=True,
+    default=None,
+    blank=True,
+    verbose_name="Conteúdo da Página"
+    )
+  content_panels = PageSitePadrao.content_panels + [
+    FieldPanel("body"),
+    ]
+  parent_page_types = ['intranet.IntranetHomePage', 'intranet.IntranetPage']
+  subpage_types = ['intranet.IntranetPage']
+  
+  class Meta:
+    verbose_name = "Página de Conteúdo da Intranet"
+    verbose_name_plural = "Páginas de Conteúdo da Intranet"

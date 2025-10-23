@@ -19,6 +19,10 @@
 @use './breadcrumb_escuro.scss';
 @use './cookieconsent.scss';
 
+// Project-specific partials added by assistant: widgets and banners
+@use './_widgets.scss' as widgets;
+@use './_banners.scss' as banners;
+
 /*Arquivo para customizar o bootstrap*/
 @use './customBT';
 

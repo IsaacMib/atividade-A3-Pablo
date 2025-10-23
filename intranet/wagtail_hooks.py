@@ -4,14 +4,12 @@ from django.urls import reverse_lazy
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSetGroup
 from core.models import SiteSettings
-from .views import GrupoIntranetViewSet
 
 
 class IntranetMenuGroup(SnippetViewSetGroup):
     menu_label = "Intranet"
     menu_icon = "cogs"
     menu_order = 300
-    items = (GrupoIntranetViewSet,)
 
     def is_shown(self, request):
         settings = SiteSettings.for_request(request)

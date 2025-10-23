@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags static file_extras avisos_tags %}
 
 {% block body_class %}template-aviso-page{% endblock %}
 
@@ -7,38 +7,95 @@
 
 <div class="avisos-page-container">
   <div class="container d-flex flex-column align-items-center justify-content-center">
-<h2 class="aviso-page--title">{{ page.title }}</h2>
-<div class="d-none d-md-block w-100">
-  <hr class="linha-horizontal mb-2">
-</div>
-<div class="d-none d-md-flex justify-content-between w-100 align-items-center mb-0 linha-compartilhe">
-  {% if page.data_publicacao %}
-  <h5 class="aviso-page-publicacao cor-texto-corpo mb-0">
-    Publicado em {{ page.data_publicacao|date:"d/m/Y H:i" }}
-  </h5>
-  {% endif %}
-  {% include "blocks/redes_sociais_share.html" %}
-</div>
-<div class="d-none d-md-block w-100">
-  <hr class="linha-horizontal mt-2">
-</div>
-<div class="d-flex d-md-none flex-column align-items-center justify-content-center w-100 mb-2">
-  {% if page.data_publicacao %}
-  <h5 class="aviso-page-publicacao cor-texto-corpo mb-1">
-    Publicado em {{ page.data_publicacao|date:"d/m/Y H:i" }}
-  </h5>
-  {% endif %}
-</div>
-<div class="aviso-page-content body-content justify-content-center w-100">
-  {% for block in page.body %}
-    {% include_block block %}
-  {% endfor %}
-</div>
-<div class="d-flex d-md-none flex-column w-100 mt-3 linha-compartilhe">
-  <hr class="linha-horizontal mb-2">
-  {% include "blocks/redes_sociais_share.html" %}
-</div>
+
+    <!-- Título principal -->
+    <h1 class="aviso-page--title">{{ page.title }}</h1>
+
+    <!-- Linha superior -->
+    <div class="d-none d-md-block w-100">
+      <hr class="linha-horizontal mb-2">
+    </div>
+
+    <!-- Publicação + Compartilhar (Desktop) -->
+    <div class="d-none d-md-flex justify-content-between w-100 align-items-center mb-0 linha-compartilhe">
+      {% if page.data_publicacao %}
+        <p class="aviso-page-publicacao cor-texto-corpo mb-0">
+          Publicado em {{ page.data_publicacao|date:"d/m/Y H:i" }}
+          {% if page.latest_revision_created_at and page.latest_revision_created_at != page.data_publicacao %}
+            <span aria-hidden="true">•</span>
+            Atualizado em {{ page.latest_revision_created_at|date:"d/m/Y H:i" }}
+          {% endif %}
+        </p>
+      {% endif %}
+  {% include "blocks/redes_sociais_share.html" with redes=redes_ativas %}
+    </div>
+
+    <!-- Linha inferior -->
+    <div class="d-none d-md-block w-100">
+      <hr class="linha-horizontal mt-2">
+    </div>
+
+    <!-- Publicação (Mobile) -->
+    <div class="d-flex d-md-none flex-column align-items-center justify-content-center w-100 mb-2">
+      {% if page.data_publicacao %}
+        <p class="aviso-page-publicacao cor-texto-corpo mb-1">
+          Publicado em {{ page.data_publicacao|date:"d/m/Y H:i" }}
+          {% if page.latest_revision_created_at and page.latest_revision_created_at != page.data_publicacao %}
+            <br>Atualizado em {{ page.latest_revision_created_at|date:"d/m/Y H:i" }}
+          {% endif %}
+        </p>
+      {% endif %}
+    </div>
+
+    <!-- Resumo do aviso -->
+    {% if page.resumo %}
+      <div class="aviso-page-resumo mb-3 text-center">
+        <h3 class="fw-semibold">{{ page.resumo|striptags|truncatechars:120 }}</h3>
+      </div>
+    {% endif %}
+
+    <!-- Descrição detalhada do aviso -->
+    {% if page.descricao %}
+      <div class="aviso-page-descricao mb-3 w-100">
+        <p>{{ page.descricao }}</p>
+      </div>
+    {% endif %}
+
+    <!-- Conteúdo principal -->
+    <div class="aviso-page-content body-content justify-content-center w-100">
+      {% for block in page.body %}
+        {% include_block block %}
+      {% endfor %}
+    </div>
+
+    <!-- Compartilhar (Mobile) -->
+    <div class="d-flex d-md-none flex-column w-100 mt-3 linha-compartilhe">
+      <hr class="linha-horizontal mb-2">
+  {% include "blocks/redes_sociais_share.html" with redes=redes_ativas %}
+    </div>
+
+    <!-- Lista de Arquivos -->
+    {% if page.arquivos and not page.nao_exibir_lista_de_arquivos %}
+      <div id="lista-arquivos" class="lista-arquivos tw:mt-8 w-100">
+        <h2 class="titulo-2 mb-3">Arquivos</h2>
+        <ul class="lista-arquivos__list list-unstyled">
+          {% for arquivo in page.arquivos %}
+            <li class="lista-arquivos__item mb-2">
+              <a href="{{ arquivo.value.url }}" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="lista-arquivos__link d-inline-flex align-items-center gap-2"
+                 download="{{ arquivo.value.title }}">
+                <i class="fa-regular {{ arquivo.value|arquivo_icon }}"></i>
+                <span>{{ arquivo.value.title }}</span>
+                <i class="fa-solid fa-download"></i>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
   </div>
 </div>
-
-{% endblock %}
+{% endblock content %}

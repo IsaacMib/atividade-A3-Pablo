@@ -73,9 +73,8 @@ class AcessosRapidosBlock(StructBlock):
     titulo = CharBlock(required=False, default="Acessos Rápidos")
     layout = ChoiceBlock(
         choices=[
-            ('lista', 'Lista Vertical'),
-            ('grid', 'Grid de Cards'),
-            ('blocos', 'Blocos Grandes (com ícones)'),
+            ('lista', 'Lista'),
+            ('blocos', 'Blocos'),
         ],
         default='lista',
         label="Layout dos acessos rápidos"
@@ -118,15 +117,9 @@ class BannerComLinkBlock(blocks.StructBlock):
             ("4-3", "Clássico (4:3)"),
             ("16-9", "Wide (16:9)"),
             ("18-6", "Super Wide (18:6)"),
-            ("custom", "Altura Personalizada"),
         ],
         default="16-9",
         label="Proporção do Banner"
-    )
-    altura_personalizada = blocks.CharBlock(
-        required=False,
-        label="Altura personalizada",
-        help_text="Exemplo: 300px ou 40vh. Só é usada se 'Altura Personalizada' for selecionada."
     )
 
     def clean(self, value):
@@ -535,16 +528,10 @@ class NoticiasListBlock(StructBlock):
         label="Mostrar título e linha abaixo?"
     )
 
-    background_personalizado = blocks.BooleanBlock(
-        required=False,
-        default=False,
-        label="Aplicar fundo personalizado?"
-    )
-
     layout = blocks.ChoiceBlock(
         choices=[
-            ('lista', 'Lista (padrão vertical)'),
-            ('grid', 'Cards em grade'),
+            ('lista', 'Lista'),
+            ('grid', 'Blocos'),
         ],
         default='lista',
         required=False,
@@ -582,6 +569,56 @@ class NoticiasListBlock(StructBlock):
         label = 'Lista de Notícias'
 
 
+from wagtail import blocks
+from wagtail.blocks import StructBlock, CharBlock, PageChooserBlock, BooleanBlock, IntegerBlock
+
+class AvisosWidget(StructBlock):
+    titulo = CharBlock(
+        required=False,
+        default="Destaques",
+        help_text="Título exibido acima dos avisos"
+    )
+    mostrar_titulo = BooleanBlock(
+        required=False,
+        default=True,
+        help_text="Marcar para exibir o título"
+    )
+    avisos_index_page = PageChooserBlock(
+        required=True,
+        target_model='avisos.AvisosIndexPage',
+        help_text="Selecione a página de index de avisos."
+    )
+    quantidade = IntegerBlock(
+        required=False,
+        default=3,
+        min_value=1,
+        label="Quantidade de avisos em destaque"
+    )
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        avisos_index_page = value.get('avisos_index_page')
+        quantidade = value.get('quantidade') or 3
+        avisos = []
+        avisos_index_page_url = None
+
+        if avisos_index_page:
+            try:
+                # Aqui filtramos somente os avisos marcados como destaque
+                avisos = avisos_index_page.get_ultimos_avisos(quantidade=quantidade, destaque=True)
+            except Exception:
+                avisos = []
+            avisos_index_page_url = avisos_index_page.url
+
+        context['avisos'] = avisos
+        context['avisos_index_page_url'] = avisos_index_page_url
+        return context
+
+    class Meta:
+        template = "blocks/aviso_widget.html"
+        icon = "star"
+        label = "Destaques"
+
 class AvisosListBlock(StructBlock):
     titulo = CharBlock(
         required=False,
@@ -593,69 +630,45 @@ class AvisosListBlock(StructBlock):
         default=True,
         help_text="Marcar para exibir o título"
     )
-    mostrar_destaques = blocks.BooleanBlock(
-        required=False,
-        default=True,
-        help_text="Se marcado, exibe os avisos em destaque; caso contrário, exibe as últimas notícias"
-    )
     avisos_index_page = PageChooserBlock(
         required=True,
         target_model='avisos.AvisosIndexPage',
         help_text="Selecione a página de index de avisos."
     )
-    qtd_destaques = IntegerBlock(
+    quantidade = IntegerBlock(
         required=False,
         default=6,
-        label="Quantidade máxima de avisos em destaque"
+        min_value=1,
+        label="Quantidade de avisos exibidos"
     )
-    qtd_ultimos = IntegerBlock(
+    texto_link = CharBlock(
         required=False,
-        default=4,
-        label="Quantidade de últimos avisos para completar ou exibir"
-    )
-    layout = blocks.ChoiceBlock(
-        choices=[
-            ('blocos', 'Cards (Blocos)'),
-            ('lista', 'Lista Vertical'),
-        ],
-        default='blocos',
-        required=True,
-        label="Layout dos avisos"
+        default="Ver todos os avisos",
+        label="Texto do link para todos os avisos"
     )
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
-
-        avisos_index = value.get("avisos_index_page")
-        destaques = []
-        ultimos = []
-
-        if avisos_index:
-            if value.get("mostrar_destaques", True):
-                destaques = list(avisos_index.get_avisos_destaque(value.get("qtd_destaques", 6)))
-                # Completa com últimos avisos se faltar para totalizar qtd_destaques
-                faltando = value.get("qtd_destaques", 6) - len(destaques)
-                if faltando > 0:
-                    ultimos = list(avisos_index.get_ultimos_avisos(value.get("qtd_ultimos", 4)))
-                    # Remove destaques da lista de ultimos
-                    ultimos = [a for a in ultimos if a not in destaques][:faltando]
-            else:
-                ultimos = list(avisos_index.get_ultimos_avisos(value.get("qtd_ultimos", 4)))
-
-        context.update({
-            "mostrar_titulo": value.get("mostrar_titulo", True),
-            "titulo": value.get("titulo", "Quadro de Avisos"),
-            "mostrar_destaques": value.get("mostrar_destaques", True),
-            "avisos_destaque": destaques,
-            "ultimos_avisos": ultimos,
-            "layout": value.get("layout", "blocos"),
-        })
+        avisos_index_page = value.get('avisos_index_page')
+        quantidade = value.get('quantidade') or 6
+        texto_link = value.get('texto_link') or "Ver todos os avisos"
+        avisos = []
+        avisos_index_page_url = None
+        if avisos_index_page:
+            try:
+                avisos = avisos_index_page.get_ultimos_avisos(quantidade=quantidade)
+            except Exception:
+                avisos = []
+            avisos_index_page_url = avisos_index_page.url
+        context['avisos'] = avisos
+        context['avisos_index_page_url'] = avisos_index_page_url
+        context['texto_link'] = texto_link
         return context
 
     class Meta:
         template = "blocks/list_avisos.html"
         icon = "warning"
-        label = "Avisos (Destaques ou Últimas)"
+        label = "Avisos"
 
 class LinkStructBlock(StructBlock):
     link_text = CharBlock(required=True, help_text="Texto")
@@ -1073,6 +1086,7 @@ class AcordeonBlock(StructBlock):
         label = "Acordeão"
         icon = "collapse-down"
         template = "blocks/bloco_informativo.html"
+
 class CustomFormBlock(StructBlock):
     titulo_geral = CharBlock(default="Formulário", label="Título Principal do Formulário", help_text="Título que será exibido acima do formulário.")
     descricao = RichTextBlock(required=False, label="Descrição/Introdução")

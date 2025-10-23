@@ -7,11 +7,7 @@
   padding: 2rem 0;
 }
 
-.avisos-wrapper {
-  margin-right: auto;
-  margin-left: auto;
-  padding-bottom: 3rem;
-}
+.avisos-wrapper { padding-bottom: 3rem; }
 
 .aviso-link {
   display: block;
@@ -69,7 +65,7 @@
     font-size: 1.3rem;
     font-weight: 600;
     color: variables.$color-primary;
-    margin-bottom: 0.15rem;
+    margin-bottom: 1rem; // Corresponds to Bootstrap mb-3
     text-align: left;
   }
 
@@ -81,35 +77,26 @@
     text-align: left;
   }
 
-  .aviso-desc-row {
+  // This targets the main description paragraph directly under .aviso-card
+  & > .aviso-descricao {
+    margin: 0; // Reset default <p> margin
+    line-height: 1.8;
+    word-break: break-word;
+    color: variables.$color-grey-700; // Corresponds to Bootstrap text-muted
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem; // Corresponds to Bootstrap mb-4
+  }
+
+  .aviso-info { // Styles for the new .aviso-info div in HTML
     display: flex;
     align-items: flex-start;
-    gap: 0.5rem;
-    color: variables.$color-primary;
+    gap: 0.5rem; // Corresponds to Bootstrap gap-2
 
-    .icon-col {
+    .aviso-icon {
+      font-size: 1.25rem; // Corresponds to Bootstrap fs-5
+      color: variables.$color-primary; // Corresponds to Bootstrap text-primary
       flex-shrink: 0;
       padding-top: 1px;
-
-      .aviso-icon {
-        font-size: 1.4rem;
-        color: variables.$color-grey-700;
-      }
-    }
-
-    .desc-col {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      text-align: left;
-    }
-
-    .aviso-descricao {
-      margin: 0;
-      line-height: 1.8;
-      word-break: break-word;
-      color: variables.$color-grey-800;
-      font-size: 0.95rem;
     }
 
     .aviso-data {
@@ -118,6 +105,20 @@
       font-weight: 600;
       color: variables.$color-primary;
     }
+
+    .aviso-descricao-curta { // Styles for the new .aviso-descricao-curta in HTML
+      margin-bottom: 0.25rem; // Corresponds to Bootstrap mb-1
+      color: variables.$color-grey-600; // Corresponds to Bootstrap text-secondary
+      font-size: 0.875rem; // Corresponds to Bootstrap small
+      line-height: 1.4;
+    }
+
+    .aviso-data { // Re-defining .aviso-data under .aviso-info to match HTML structure
+      margin: 0; // Corresponds to Bootstrap mb-0
+      font-size: 0.875rem; // Corresponds to Bootstrap small
+      font-weight: 600; // Corresponds to Bootstrap fw-bold
+      color: variables.$color-grey-600; // Corresponds to Bootstrap text-secondary
+    }
   }
 }
 
@@ -125,11 +126,4 @@
   color: variables.$color-grey-700;
   margin-top: 2rem;
   text-align: center;
-}
-
-@media (max-width: 991px) {
-  .avisos-wrapper {
-    grid-template-columns: 1fr;
-    justify-items: center;
-  }
 }

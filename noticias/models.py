@@ -181,7 +181,7 @@ class NoticiasPage(PageSitePadrao):
         return tags
 
     # Specifies parent to NoticiasPage as being NoticiasIndexPages
-    parent_page_types = ["NoticiasIndexPages"]
+    parent_page_types = ["NoticiasIndexPages", "intranet.IntranetHomePage"]
 
     # Specifies what content types can exist as children of NoticiasPage.
     # Empty list means that no child content types are allowed.
@@ -309,6 +309,7 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
     ]
 
     parent_page_types = [
+        "intranet.IntranetHomePage",
         "home.HomePage",
     ]
 

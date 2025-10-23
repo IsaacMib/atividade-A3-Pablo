@@ -1,63 +1,62 @@
 @use './../../variables.scss';
 
 [data-theme='dark'] {
-  
-  .texto-secundario {
-    color: var(variables.$color-grey-700);
-  }
   .mural-avisos {
-    background-color: variables.$color-black;
-    border-top: 0.5px solid variables.$color-grey-700;
-    border-bottom: 0.5px solid variables.$color-grey-700;
+    background-color: variables.$color-grey-900;
     color: variables.$color-white;
 
-    &.modo-blocos {
-      background-color: variables.$color-black;
-    }
-
     .aviso-card {
-      background-color: variables.$color-white !important;
-      box-shadow: 0 1px 4px variables.$color-dark-theme-border !important;
-      border: 1px solid variables.$color-white !important;
+      background-color: variables.$color-grey-800;
+      border: 1px solid variables.$color-dark-theme-border;
+      box-shadow: 0 1px 4px variables.$color-dark-theme-border;
+      transition: all 0.2s ease-in-out;
 
       &:hover {
-        box-shadow: 0 4px 10px variables.$color-dark-theme-border !important;
-        background-color: variables.$color-grey-100 !important;
+        background-color: variables.$color-grey-700;
+        box-shadow: 0 4px 10px variables.$color-dark-theme-border;
       }
-      
+
       &::before {
-        background-color: variables.$color-dark-theme-border !important;
+        background-color: variables.$color-primary;
       }
-      
-      .aviso-title,
-      h3 {
-        color: variables.$color-text-body-dark !important;
-        margin-bottom: 0.5rem;
+
+      > .aviso-descricao {
+        color: variables.$color-grey-400;
       }
-      
-      .aviso-descricao,
-      .aviso-data,
-      p {
-        color: variables.$color-text-body-dark !important;
+
+      .card-body {
+        background-color: transparent;
       }
-      
-      .icon-col i,
-      > i { // Para o modo lista
-        color: variables.$color-text-body-dark !important;
+
+      .aviso-title {
+        color: variables.$color-grey-100;
       }
-      
+
+      .aviso-info {
+        .aviso-icon {
+          color: variables.$color-dark-theme-border;
+        }
+
+        .aviso-descricao-curta {
+          color: variables.$color-grey-500;
+        }
+
+        .aviso-data {
+          color: variables.$color-grey-500;
+          font-weight: 600;
+        }
+      }
     }
 
-    .ver-todos-btn {
-      a {
-        border: 1px solid variables.$color-white;
-        color: variables.$color-white;
-        transition: all 0.2s ease;
+    /* Botão "Ver todos" */
+    .ver-todos-btn a {
+      border: 1px solid variables.$color-white;
+      color: variables.$color-white;
+      transition: 0.2s;
 
-        &:hover {
-          background-color: variables.$color-white;
-          color: variables.$color-black;
-        }
+      &:hover {
+        background-color: variables.$color-white;
+        color: variables.$color-black;
       }
     }
   }

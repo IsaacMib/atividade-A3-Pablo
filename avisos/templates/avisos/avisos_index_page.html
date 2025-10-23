@@ -4,41 +4,69 @@
 {% block body_class %}template-avisos-index-page{% endblock %}
 
 {% block content %}
-<div class="avisos-container">
-  <div class="container text-center">
+<section class="avisos-container py-5">
+  <div class="container">
 
-    {% include 'include/titulo.html' with titulo=page.introduction|default:"Quadro de Avisos" bgClass='' %}
+    <!-- Cabeçalho -->
+    {% if not tag %}
+      {% include "include/titulo.html" with titulo=page.introduction|default:"Quadro de Avisos" bgClass="" %}
+    {% else %}
+      <div class="text-center mb-4">
+        <h1 class="index-header__title">Avisos</h1>
+        <p class="index-header__introduction">
+          Visualizando todos os avisos classificados pela tag
+          <span class="blog-tags__tag text-primary fw-bold">{{ tag }}</span>.
+        </p>
+      </div>
+    {% endif %}
 
-    <div class="avisos-wrapper row justify-content-start">
+    <!-- Lista de avisos -->
+    <div class="avisos-wrapper row justify-content-center">
       {% for aviso in posts %}
-      <div class="col-12 col-md-6 col-lg-6 mb-4">
-        <a href="{% pageurl aviso %}" class="aviso-link">
-          <div class="aviso-card p-4 h-100 rounded-4 shadow-sm">
-            <h3 class="aviso-title mb-2">{{ aviso.title }}</h3>
+        <div class="col-12 col-md-6 col-lg-3 mb-4">
+          <a href="{% pageurl aviso %}" class="text-decoration-none aviso-link d-block h-100">
+            <article class="aviso-card p-4 h-100 rounded-4 shadow-sm text-start transition-all d-flex flex-column">
 
-            <div class="aviso-desc-row d-flex gap-3 items-start">
-              <div class="icon-col flex-shrink-0">
-                <i class="bi bi-calendar3 aviso-icon"></i>
-              </div>
-              <div class="desc-col text-start">
-                <p class="aviso-descricao mb-2">
+              <!-- Título -->
+              <header>
+                <h3 class="aviso-title h5 mb-2">{{ aviso.title }}</h3>
+                <hr class="linha-horizontal mb-3">
+              </header>
+
+              <!-- Resumo -->
+              {% if aviso.resumo %}
+                <p class="aviso-resumo text-muted mb-2">
+                  {{ aviso.resumo|striptags|truncatechars:120 }}
+                </p>
+              {% endif %}
+
+              <!-- Descrição -->
+              {% if aviso.descricao %}
+                <p class="aviso-descricao text-muted mb-3">
                   {{ aviso.descricao|striptags|truncatechars:120 }}
                 </p>
-                {% if aviso.data_publicacao %}
-                <p class="aviso-data mb-0">Data: {{ aviso.data_publicacao|date:"d/m/Y" }}</p>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
+              {% endif %}
+
+              <!-- Data -->
+              {% if aviso.data_publicacao %}
+                <footer class="mt-auto aviso-info d-flex align-items-center gap-2">
+                  <i class="bi bi-calendar3 aviso-icon text-primary fs-5" aria-hidden="true"></i>
+                  <p class="aviso-data mb-0 text-secondary small">
+                    {{ aviso.data_publicacao|date:"d/m/Y" }}
+                  </p>
+                </footer>
+              {% endif %}
+
+            </article>
+          </a>
+        </div>
       {% empty %}
-      <p class="text-center aviso-empty">Nenhum aviso encontrado.</p>
+        <p class="text-center aviso-empty mt-4">Nenhum aviso encontrado.</p>
       {% endfor %}
     </div>
 
+    <!-- Paginação -->
     {% include "include/paginator.html" with posts=posts %}
-
   </div>
-</div>
-{% endblock %}
+</section>
+{% endblock content %}

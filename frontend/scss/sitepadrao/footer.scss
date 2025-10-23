@@ -15,6 +15,11 @@
   background-color: variables.$footer-color;
 }
 
+.footer-sic-logo {
+  width: 180px;
+  height: auto;
+}
+
 @media screen and (max-width: 767px) {
   .footer-layout {
     flex-direction: column;

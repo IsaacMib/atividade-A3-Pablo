@@ -1,0 +1,77 @@
+// Widgets partial
+// Variables: colors and fonts must be defined here using project SCSS variables
+// Follow the rule: use variables for color/font and avoid alpha transparency
+
+@use './variables.scss' as vars;
+@use 'sass:math';
+
+$widget-icon-size: 2rem;
+$widget-icon-bg: vars.$primary-color !default; // relies on variables.scss
+$widget-icon-bg-light: #e6f2ff !default; // if a lighter variant is needed, define hex explicitly
+$widget-title-color: vars.$color-on-surface !default;
+ $widget-border-radius: 9999px; // circle
+
+$card-gap: 1rem !default;
+$aviso-aspect: math.div(1, 1); // square
+
+.widget-acesso-rapido {
+  ul { margin: 0; padding: 0; }
+  li { list-style: none; }
+
+  .icon {
+    width: $widget-icon-size;
+    height: $widget-icon-size;
+    background: $widget-icon-bg;
+    color: #fff;
+    border-radius: $widget-border-radius;
+    flex: 0 0 $widget-icon-size;
+    img, i { max-width: 60%; max-height: 60%; }
+  }
+
+  .title {
+    color: $widget-title-color;
+    font-size: 0.95rem;
+  }
+}
+
+.widget-avisos-importantes {
+  ul { margin: 0; padding: 0; }
+  li { list-style: none; }
+
+  .icon {
+    width: $widget-icon-size;
+    height: $widget-icon-size;
+    background: $widget-icon-bg-light;
+    color: vars.$color-primary-dark;
+    border-radius: $widget-border-radius;
+    flex: 0 0 $widget-icon-size;
+    i { font-size: 0.95rem; }
+  }
+
+  .title {
+    color: $widget-title-color;
+    font-size: 0.95rem;
+  }
+}
+
+/* Aviso cards: make them square and uniform */
+.aviso-card {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  .aviso-card-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  /* content area will naturally grow; no extra rules required here */
+  .aviso-title { font-size: 0.95rem; }
+  .aviso-descricao { color: vars.$color-text-secondary; font-size: .9rem; }
+}
+
+/* Make cards square using aspect-ratio where supported; fallback will rely on equal paddings */
+.avisos-wrapper .col-12 > .aviso-card { aspect-ratio: 1 / 1; }
+
+/* Smaller screens could keep natural height; ensure readability */
+@media (max-width: 767px) {
+  .avisos-wrapper .col-12 > .aviso-card { aspect-ratio: auto; }
+}

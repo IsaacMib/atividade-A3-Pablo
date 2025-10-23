@@ -1,14 +1,17 @@
-{% if redes %}
-<div class="redes-sociais-compartilhar">
-  <h3>Compartilhe:</h3>
-  <ul>
-    {% for rede in redes %}
-      <li>
-        <a href="{{ rede.url }}" target="_blank" rel="noopener noreferrer">
-          <i class="{{ rede.icone }}"></i>
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
-</div>
-{% endif %}
+{# Accept either 'redes' or 'redes_ativas' in the context for flexibility #}
+{% with redes=redes|default:redes_ativas %}
+  {% if redes %}
+    <div class="redes-sociais-compartilhar" style="display:inline-flex; align-items:center; gap:0.5rem;">
+  <span class="text-muted d-inline-flex align-items-center" style="line-height:1; font-size:0.95rem;" aria-hidden="true">Compartilhe:</span>
+      <ul class="list-unstyled mb-0" role="list" style="display:inline-flex; align-items:center; gap:0.35rem; margin:0; padding:0;">
+        {% for rede in redes %}
+          <li style="list-style:none;">
+            <a class="text-decoration-none text-reset d-inline-flex align-items-center justify-content-center" href="{{ rede.url }}" target="_blank" rel="noopener noreferrer" aria-label="Compartilhar no {{ rede.nome|default:rede.nome }}" style="padding:0.12rem;">
+              <i class="{{ rede.icone }}" style="font-size:0.95rem; line-height:1; display:inline-block; vertical-align:middle;"></i>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+{% endwith %}
