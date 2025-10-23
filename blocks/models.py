@@ -704,15 +704,35 @@ class CardLinhaDoTempoBlock(StructBlock):
         required=False, label="Texto alternativo da imagem")
     titulo = CharBlock(required=False, label="Título")
     descricao = TextBlock(required=False, label="Descrição")
-    detail_page = PageChooserBlock(
+    internal_page = PageChooserBlock(
         required=False,
         target_model='linhasdotempo.CardLinhaDoTempoPage',
-        label="Link",
+        label="Página interna de evento da linha do tempo.",
         help_text="Se as informações da descrição ultrapassarem o limite de exibição estabelecido, \
         você poderá criar uma nova página com as informações completas, a qual estará disponível\
-        no card através do link 'Ver mais'."
+        no card através do link 'Ver mais' ou clicando no card."
+    )
+    external_url = URLBlock(
+        required=False,
+        label="URL externa com informações adicionais de evento da linha do tempo.",
+        help_text="Ou adicionar uma fonte externa, a qual também ficará disponível\
+        no card através do link 'Ver mais' ou clicando no card."
     )
     # data = DateBlock(required=True, label="Data")
+
+    def clean(self, value):
+        cleaned_data = super().clean(value)
+        if not cleaned_data.get('internal_page') and not cleaned_data.get('external_url'):
+            raise ValidationError(
+                'Você deve fornecer um link interno ou externo.')
+        if cleaned_data.get('internal_page') and cleaned_data.get('external_url'):
+            raise ValidationError('Você deve fornecer apenas 1 link.')
+        return cleaned_data
+
+    def get_url(self, value):
+        if value.get('internal_page'):
+            return value['internal_page'].url
+        return value.get('external_url')
 
     class Meta:
         icon = 'title'
