@@ -270,5 +270,26 @@ class ApiSettings(BaseSiteSetting):
             classname="collapsible collapsed"
         ),
     ]
+
+    def clean(self):
+        super().clean()
+        if self.api_habilitada:
+            errors = {}
+            if not self.api_url:
+                errors['api_url'] = ValidationError(
+                    "A URL da API é obrigatória quando a integração está habilitada."
+                )
+            if not self.api_usuario:
+                errors['api_usuario'] = ValidationError(
+                    "O usuário da API é obrigatório quando a integração está habilitada."
+                )
+            if not self.api_senha:
+                errors['api_senha'] = ValidationError(
+                    "A senha da API é obrigatória quando a integração está habilitada."
+                )
+            
+            if errors:
+                raise ValidationError(errors)
+
     class Meta:
         verbose_name = "Configurações de Conteúdo Externo"
