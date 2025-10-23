@@ -35,12 +35,12 @@ from core.models import ApiSettings
 class NoticiaRemota:
     is_remote = True 
 
-    def __init__(self, data):
+    def __init__(self, data, api_base_url):
         self.id = data.get('id')
         self.title = data.get('title', 'Sem título')
         self.subtitle = data.get('subtitle', '')
         self.descricao = data.get('descricao', '')
-        self.url = data.get('url', '#')
+        self.url = f"{api_base_url.rstrip('/')}{data.get('url', '')}"
         self.destaque = data.get('destaque', False)
         self.imagem_destaque_remota = data.get('imagem_destaque')
         data_str = data.get('data_publicacao')
@@ -443,7 +443,7 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
 
         noticias_remotas = []
         for item in remote_data:
-            noticias_remotas.append(NoticiaRemota(item))
+            noticias_remotas.append(NoticiaRemota(item, api_base_url=api_settings.api_url))
             
         return noticias_remotas
 
