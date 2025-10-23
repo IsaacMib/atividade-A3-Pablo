@@ -3,6 +3,7 @@ from django import forms
 from datetime import date
 from django.core.exceptions import ValidationError
 
+import requests
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
@@ -276,20 +277,35 @@ class ApiSettings(BaseSiteSetting):
         if self.api_habilitada:
             errors = {}
             if not self.api_url:
-                errors['api_url'] = ValidationError(
-                    "A URL da API é obrigatória quando a integração está habilitada."
-                )
+                errors['api_url'] = ValidationError("A URL da API é obrigatória quando a integração está habilitada.")
             if not self.api_usuario:
-                errors['api_usuario'] = ValidationError(
-                    "O usuário da API é obrigatório quando a integração está habilitada."
-                )
+                errors['api_usuario'] = ValidationError("O usuário da API é obrigatório quando a integração está habilitada.")
             if not self.api_senha:
-                errors['api_senha'] = ValidationError(
-                    "A senha da API é obrigatória quando a integração está habilitada."
-                )
-            
+                errors['api_senha'] = ValidationError("A senha da API é obrigatória quando a integração está habilitada.")
+
             if errors:
                 raise ValidationError(errors)
+
+            token_url = f"{self.api_url.rstrip('/')}/api/v1/get-token/"
+            try:
+                response = requests.post(
+                    token_url,
+                    data={'username': self.api_usuario, 'password': self.api_senha},
+                    timeout=10 
+                )
+
+                if response.status_code in [400, 401]:
+                    raise ValidationError({
+                        'api_usuario': "Credenciais inválidas. Verifique o usuário e a senha.",
+                        'api_senha': "Credenciais inválidas. Verifique o usuário e a senha.",
+                    })
+                
+                response.raise_for_status()
+                if 'token' not in response.json():
+                    raise ValidationError("A API não retornou um token de autenticação válido.")
+
+            except requests.exceptions.RequestException as e:
+                raise ValidationError({'api_url': f"Não foi possível conectar à API. Verifique a URL. Erro: {e}"})
 
     class Meta:
         verbose_name = "Configurações de Conteúdo Externo"
