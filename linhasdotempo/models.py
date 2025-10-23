@@ -18,6 +18,14 @@ class LinhaDoTempoIndex(PageSitePadraoIndex):
     class Meta:
         verbose_name = "Página de Index da Linha do Tempo"
 
+    def get_context(self, request):
+        context = super().get_context(request)
+        context["linha_do_tempo_page"] = LinhaDoTempoPage.objects.live().child_of(self)
+        return context
+
+    def get_children(self):
+        return super().get_children()
+
 
 class LinhaDoTempoPage(PageSitePadrao):
 
