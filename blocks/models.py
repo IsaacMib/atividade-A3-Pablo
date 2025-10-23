@@ -834,6 +834,27 @@ class GridImagensBlock(StructBlock):
         label = "Grid de Imagens"
         template = 'blocks/grid_imagens.html'
 
+class BaseStreamCorpoTecnicoBlock(StreamBlock):
+    """
+    Define the custom blocks that `StreamField` will utilize
+    """
+
+    paragraph_block = RichTextBlock(
+        icon="pilcrow",
+        template="blocks/paragraph_block.html",
+        preview_value=(
+            """
+            <h2>Our bread pledge</h2>
+            <p>As a bakery, <b>breads</b> have <i>always</i> been in our hearts.
+            <a href="https://en.wikipedia.org/wiki/Staple_food">Staple foods</a>
+            are essential for society, and – bread is the tastiest of all.
+            We love to transform batters and doughs into baked goods with a firm
+            dry crust and fluffy center.</p>
+            """
+        ),
+        description="A rich text paragraph",
+    )
+    
 class ItemListaInformativaBlock(StructBlock):
     texto = CharBlock(required=False, help_text="Use para um item de texto simples (um por linha).")
     titulo_link = CharBlock(required=False, help_text="Texto que será exibido para o link.")
