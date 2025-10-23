@@ -39,12 +39,14 @@
                     {% comment %} <p class="card-linha-do-tempo__date">{{ card.data|date:"d/m/Y" }}</p> {% endcomment %}
                     <span class="card-description-wrapper inline">
                         {% comment %} Adiciona link para página com detalhes do card caso texto ultrapasse um certo limite {% endcomment %}
-                        {% with card.descricao as text_content %}
-                            {% if text_content|length > 180 and card.detail_page %}
-                                {{ text_content|truncatechars:160|add_link_to_trimmed_text:card.detail_page.url }}
-                            {% else %}
-                                <p lang="pt-BR" class="card-linha-do-tempo__description">{{ text_content }}</p>
-                            {% endif %}
+                        {% with card.descricao|default_if_none:'' as html %}
+                            {% with html|striptags as plain %}
+                                {% if plain|length > 180 and card.detail_page %}
+                                    {{ plain|truncatechars:160|add_link_to_trimmed_text:card.detail_page.url }}
+                                {% else %}
+                                    <p lang="pt-BR" class="card-linha-do-tempo__description">{{ plain }}</p>
+                                {% endif %}
+                            {% endwith %}
                         {% endwith %}
                     </span>
                 </div>
