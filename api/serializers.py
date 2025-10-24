@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from wagtail.images.api.fields import ImageRenditionField
 from wagtail.rich_text import expand_db_html
+from django.conf import settings
 from core.utils import get_file_type, get_fontawesome_file_icon
 
 from noticias.models import NoticiasPage
@@ -19,16 +20,18 @@ class NoticiasPageSerializer(serializers.ModelSerializer):
         ]
 
     def get_body(self, obj):
-        """Renderiza o StreamField 'body' como HTML."""
         if obj.body:
-            return expand_db_html(obj.body.render_as_block())
+            return expand_db_html(obj.body.render_as_block(context={'request': self.context.get('request')}))
         return ""
 
     def get_imagem_destaque(self, obj):
         imagem = obj.get_imagem_destaque()
         if imagem:
             request = self.context.get('request')
-            return request.build_absolute_uri(imagem.get_rendition('fill-800x450').url)
+            if request:
+                return request.build_absolute_uri(imagem.get_rendition('fill-800x450').url)
+            if hasattr(settings, 'WAGTAILADMIN_BASE_URL'):
+                return f"{settings.WAGTAILADMIN_BASE_URL}{imagem.get_rendition('fill-800x450').url}"
         return None
 
     def get_arquivos(self, obj):
@@ -57,8 +60,14 @@ class NoticiasPageSerializer(serializers.ModelSerializer):
             request = self.context.get('request')
             for block in obj.images:
                 if block.block_type == 'imagem' and block.value:
+                    image_url = block.value.get_rendition('original').url
+                    absolute_url = image_url
+                    if request:
+                        absolute_url = request.build_absolute_uri(image_url)
+                    elif hasattr(settings, 'WAGTAILADMIN_BASE_URL'):
+                        absolute_url = f"{settings.WAGTAILADMIN_BASE_URL}{image_url}"
                     images_list.append({
-                        'url': request.build_absolute_uri(block.value.get_rendition('original').url),
+                        'url': absolute_url,
                         'title': block.value.title
                     })
         return images_list
