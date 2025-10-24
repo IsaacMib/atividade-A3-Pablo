@@ -83,17 +83,29 @@
                     </div>
                 {% endif %} {% endcomment %}
             </div>
-            {% if page.arquivos and not page.nao_exibir_lista_de_arquivos %}
+            {% if page.arquivos %}
                 <div id="lista-arquivos" class="lista-arquivos tw:mt-8">
                     <h2 class="titulo-2">Arquivos</h2>
                     <ul class="lista-arquivos__list">
-                        {% for arquivo in page.arquivos %}
-                            <li class="lista-arquivos__item">
-                                <a href="{{ arquivo.value.url }}" target="_blank" rel="noopener noreferrer" class="lista-arquivos__link">
-                                    <i class="fa-regular {{ arquivo.value|arquivo_icon }} tw:mr-2"></i>{{ arquivo.value.title }}<i class="fa-solid fa-download tw:ml-0"></i>
-                                </a>
-                            </li>
-                        {% endfor %}
+                        {% if page.is_remote %}
+                            {# Lógica para Notícias Remotas #}
+                            {% for arquivo in page.arquivos %}
+                                <li class="lista-arquivos__item">
+                                    <a href="{{ arquivo.url }}" target="_blank" rel="noopener noreferrer" class="lista-arquivos__link">
+                                        <i class="fa-regular {{ arquivo.icon_class }} tw:mr-2"></i>{{ arquivo.title }}<i class="fa-solid fa-download tw:ml-0"></i>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            {# Lógica para Notícias Locais (como estava antes) #}
+                            {% for arquivo in page.arquivos %}
+                                <li class="lista-arquivos__item">
+                                    <a href="{{ arquivo.value.url }}" target="_blank" rel="noopener noreferrer" class="lista-arquivos__link">
+                                        <i class="fa-regular {{ arquivo.value|arquivo_icon }} tw:mr-2"></i>{{ arquivo.value.title }}<i class="fa-solid fa-download tw:ml-0"></i>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
                     </ul>
                 </div>
             {% endif %}

@@ -43,6 +43,7 @@ class NoticiaRemota:
         self.destaque = data.get('destaque', False)
         self.body = data.get('body', '')
         self.imagem_destaque_remota = data.get('imagem_destaque')
+        self.arquivos = data.get('arquivos', [])
         data_str = data.get('data_publicacao')
         if data_str:
             try:
