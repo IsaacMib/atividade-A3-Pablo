@@ -1,4 +1,4 @@
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags static %}
 
 {% if content_block.block_type == "contatos_section" %}
   {% with section=content_block.value %}
@@ -7,47 +7,30 @@
       <h3 class="section-title {{ section.title_size }}">{{ section.section_title }}</h3>
     {% endif %}
 
-    {% for item in section.itens_contato %}
-      {% if item.block_type == 'contato_simples' %}
-        {# --- Renderiza um Contato Simples --- #}
+    <ul class="contatos-list {{ section.list_style }}">
+      {% for item in section.itens_contato %}
         {% with contato=item.value %}
-          <div class="contatos-grupo mb-2">
-            <ul class="contatos-list {{ contato.list_style }}">
-              <li>
-                <strong>{{ contato.titulo }}</strong>
-              {% for info in contato.informacoes %}
-                <span>{{ info.info }}</span>
-              {% endfor %}
-              </li>
-            </ul>
-          </div>
-          {% if contato.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
-        {% endwith %}
+          <li class="contato-simples mb-3">
+            {% if contato.titulo %}
+              <strong class="contato-titulo">{{ contato.titulo }}:</strong>
+            {% endif %}
 
-      {% elif item.block_type == 'grupo_contatos' %}
-        {# --- Renderiza um Grupo de Contatos --- #}
-        {% with grupo=item.value %}
-          <div class="contatos-grupo">
-            <strong>{{ grupo.titulo_grupo }}</strong>
-            <ul class="contatos-list {{ grupo.list_style }}">
-              {% for contato in grupo.contatos %}
-                <li>
-                  {% if contato.titulo %}<strong>{{ contato.titulo }}:</strong>{% endif %}
-                  {% for info in contato.informacoes %}
-                    <span>{{ info.info }}</span>
-                  {% endfor %}
+            <ul class="contato-infos list-none ps-0 ms-4">
+              {% for info in contato.informacoes %}
+                <li class="contato-info-item">
+                  <span class="icone">{{ info.icone|safe }}</span>
+                  <span class="texto">{{ info.info }}</span>
                 </li>
               {% endfor %}
             </ul>
-          </div>
-          {% if grupo.mostrar_linha_separadora %}<hr class="my-3">{% endif %}
+
+            {% if contato.mostrar_linha_separadora %}
+              <hr class="my-3">
+            {% endif %}
+          </li>
         {% endwith %}
-      {% endif %}
-    {% endfor %}
+      {% endfor %}
+    </ul>
   </div>
   {% endwith %}
-{% else %}
-  <div class="my-3">
-    {% include_block content_block %}
-  </div>
 {% endif %}
