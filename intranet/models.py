@@ -25,6 +25,7 @@ from blocks.models import (
  CustomFormBlock,
  LinhaDoTempoBlock,
  AvisosWidget,
+ AcessoRapidoWidget,
 )
 from blocks.agenda import ListAgendaBlock 
 from django.core.files.base import File 
@@ -55,10 +56,8 @@ INTRANET_HOME_BLOCKS = [
 INTRANET_WIDGET_BLOCKS = [
     ('titulo', TituloBlock()),
     ('widget_avisos', AvisosWidget()), # Usando o novo bloco de widget
-    ("acessos_rapidos", AcessosRapidosBlock()),
+    ("acessos_rapidos", AcessoRapidoWidget()),
     ('banner_com_link', BannerComLinkBlock()),
-    ("list_agenda", ListAgendaBlock()),
-    ("servico_online_item", ServicoOnlineItemBlock()),
     # Adicione aqui outras versões de blocos otimizadas para widgets
 ]
 

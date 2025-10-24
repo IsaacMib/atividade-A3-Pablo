@@ -3,53 +3,6 @@
   <div class="container acesso-rapido">
     
     {% include 'include/titulo.html' with titulo=self.titulo bgClassExtra='titulo-pequeno-mobile' %}
-
-    {% if self.layout == 'lista' %}
-      <div class="lista-acessos-vertical">
-        {% for item in value.itens %}
-          <a href="{{ item.link }}" class="acesso-item-vertical d-flex align-items-center p-3 mb-3">
-            <div class="barra-vertical"></div>
-            <div class="icone-ellipse d-flex align-items-center justify-content-center me-3">
-              {% if item.icone %}
-                <i class="{{ item.icone }}"></i>
-              {% else %}
-                <i class="fa-regular fa-file-lines"></i>
-              {% endif %}
-            </div>
-            <div class="acesso-texto-vertical">
-              {{ item.titulo|linebreaksbr }}
-            </div>
-          </a>
-        {% endfor %}
-      </div>
-
-    {% elif self.layout == 'grid' %}
-      <div class="row g-4">
-        {% for item in value.itens %}
-          <div class="col-12">
-            <a href="{{ item.link }}">
-              <div class="quick-access quick-access-card d-flex flex-column align-items-center p-3 h-100">
-                <div class="quick-access-icon-ellipse d-flex align-items-center justify-content-center mb-2">
-                  {% if item.icone %}
-                    <i class="{{ item.icone }}"></i>
-                  {% else %}
-                    <i class="fa-regular fa-file-lines"></i>
-                  {% endif %}
-                </div>
-                <div class="quick-access-title text-center">
-                  {{ item.titulo|linebreaksbr }}
-                </div>
-              </div>
-            </a>
-          </div>
-        {% endfor %}
-      </div>
-
-    {% else %}
-      {# MODO BLOCOS GRANDES - até 4 colunas; se 'widget' flag estiver presente, renderiza widget separado #}
-      {% if value.widget is defined and value.widget %}
-        {% include 'blocks/widget_acesso_rapido.html' with itens=value.itens %}
-      {% else %}
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
           {% for item in value.itens %}
             <div class="col">
@@ -68,9 +21,6 @@
             </div>
           {% endfor %}
         </div>
-      {% endif %}
-
-    {% endif %}
   </div>
 </div>
 

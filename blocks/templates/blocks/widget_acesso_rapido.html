@@ -1,19 +1,24 @@
-{% comment %} Widget de Acessos Rápidos - separado para controle independente {% endcomment %}
-<div class="widget-acesso-rapido">
-  <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
-    {% for item in itens %}
-      <li class="d-flex align-items-center gap-3">
-        <a href="{{ item.link }}" class="d-flex align-items-center text-reset text-decoration-none w-100">
-          <span class="icon rounded-circle d-inline-flex align-items-center justify-content-center" aria-hidden="true">
-            {% if item.icone %}
-              <i class="{{ item.icone }}"></i>
-            {% else %}
-              <i class="fa-regular fa-file-lines"></i>
-            {% endif %}
-          </span>
-          <span class="title">{{ item.titulo }}</span>
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
+<div class="acesso-rapido-wrapper">
+  <div class="container acesso-rapido">
+    
+    {% include 'include/titulo.html' with titulo=self.titulo bgClassExtra='titulo-pequeno-mobile' %}
+
+      <div class="lista-acessos-vertical">
+        {% for item in value.itens %}
+          <a href="{{ item.link }}" class="acesso-item-vertical d-flex align-items-center p-3 mb-3">
+            <div class="barra-vertical"></div>
+            <div class="icone-ellipse d-flex align-items-center justify-content-center me-3">
+              {% if item.icone %}
+                <i class="{{ item.icone }}"></i>
+              {% else %}
+                <i class="fa-regular fa-file-lines"></i>
+              {% endif %}
+            </div>
+            <div class="acesso-texto-vertical">
+              {{ item.titulo|linebreaksbr }}
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+  </div>
 </div>

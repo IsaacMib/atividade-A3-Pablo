@@ -71,20 +71,28 @@ class AcessoRapidoItemBlock(StructBlock):
 
 class AcessosRapidosBlock(StructBlock):
     titulo = CharBlock(required=False, default="Acessos Rápidos")
-    layout = ChoiceBlock(
-        choices=[
-            ('lista', 'Lista'),
-            ('blocos', 'Blocos'),
-        ],
-        default='lista',
-        label="Layout dos acessos rápidos"
-    )
     itens = ListBlock(AcessoRapidoItemBlock(), default=[])
 
     class Meta:
         icon = "list-ul"
         label = "Bloco de Acessos Rápidos"
         template = "blocks/list_acesso_rapido.html"
+
+
+class AcessoRapidoWidget(StructBlock):
+    titulo = CharBlock(
+        required=False,
+        default="Acessos Rápidos",
+        help_text="Título exibido acima dos acessos rápidos"
+    )
+    itens = ListBlock(AcessoRapidoItemBlock(), default=[])
+
+    class Meta:
+        icon = "list-ul"
+        label = "Widget de Acessos Rápidos"
+        template = "blocks/widget_acesso_rapido.html"
+
+
 
 class BannerComLinkBlock(blocks.StructBlock):
     imagem = ImageChooserBlock(
