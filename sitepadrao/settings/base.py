@@ -65,7 +65,6 @@ INSTALLED_APPS = [
     "agenda",
     "avisos",
     'editais',
-    "paginas",
     "eventos",
     "linhasdotempo",
 
