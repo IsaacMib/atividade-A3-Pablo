@@ -208,15 +208,17 @@ class NoticiasPage(PageSitePadrao):
 
         return context
 
-    def get_imagem_destaque(self):
-        """
-        Retorna a primeira imagem da coleção de imagens (images) ou None se não houver.
-        """
+    def get_imagem_destaque(self):        
         if self.images and len(self.images):
             # Cada item é um bloco do tipo 'imagem'
             for bloco in self.images:
                 if bloco.block_type == 'imagem' and bloco.value:
                     return bloco.value
+        
+        if self.imagem_destaque:
+            return self.imagem_destaque
+        
+        # Retorna None se não houver nenhuma imagem
         return None
 
     @staticmethod
