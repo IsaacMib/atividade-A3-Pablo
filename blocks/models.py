@@ -742,7 +742,7 @@ class BaseStreamBlock(StreamBlock):
     table_block = TableBlock(
         help_text="Insira os dados da tabela",
         icon="table",
-        # template="blocks/table_block.html",
+        template="blocks/table.html",
         # preview_template="blocks/preview/static_table_block.html",
         description="Uma tabela de dados",
     )
