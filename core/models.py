@@ -23,18 +23,52 @@ class PageSitePadrao(Page):
     )
 
 
-    images = StreamField(
-        [("image", ImageChooserBlock(label="Imagem"))],
-        verbose_name="Imagens",
+    imagem_destaque = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
         blank=True,
-        use_json_field=True,
-        help_text="Imagens relacionadas à página"
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name="Imagem de Destaque",
+        help_text="Imagem usada em destaque para SEO e redes sociais"
     )
 
     content_panels = Page.content_panels + [
         FieldPanel("descricao"),
-        FieldPanel("images"),
+        
     ]
+
+    promote_panels = Page.promote_panels + [
+        FieldPanel("imagem_destaque"),
+    ]
+
+    def get_imagem_destaque(self):
+        """
+        Retorna a imagem de destaque da página ou None se não houver.
+        """
+        return self.imagem_destaque
+
+    def get_context(self, request, *args, **kwargs):
+        """Add common context for all pages derived from PageSitePadrao.
+
+        This provides `redes_ativas` so templates can render sharing buttons
+        consistently across the site.
+        """
+        context = super().get_context(request, *args, **kwargs)
+        redes_ativas = []
+        try:
+            site_settings = SiteSettings.for_request(request)
+            if site_settings and site_settings.compartilhar_redes_sociais:
+                absolute_url = request.build_absolute_uri(getattr(self, 'url', '/'))
+                redes_ativas = site_settings.get_redes_ativas(
+                    absolute_url=absolute_url,
+                    page_title=getattr(self, 'title', '')
+                )
+        except Exception:
+            redes_ativas = []
+
+        context['redes_ativas'] = redes_ativas
+        return context
 
     def get_context(self, request, *args, **kwargs):
         """Add common context for all pages derived from PageSitePadrao.
