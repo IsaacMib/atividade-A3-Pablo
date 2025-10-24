@@ -20,14 +20,7 @@
         <p class="page-subtitle">{{ page.subtitle }}</p>
         {% endif %}
     </div>
-
-    {% if page.descricao %}
-    <div class="description-section text-center mx-auto mb-5">
-        <div class="description-content" style="text-align: justify;">
-            {{ page.descricao|richtext }}
-        </div>
-    </div>
-    {% endif %}
+   
 
     {% if page.lgpd_text %}
     <div class="lgpd-content text-center mx-auto mb-5">
@@ -42,7 +35,7 @@
         {% for block in page.corpo %}
         <div class="content-section text-center mx-auto mb-5">
             <div class="section-content">
-                <h2 class="section-title">{{ block.value.titulo }}</h2>
+                {% include "include/titulo.html" with titulo=block.value.titulo classes="section-title" bgClass="bg-light" %}
                 <div class="section-text" style="text-align: justify;">
                     {{ block.value.texto|richtext }}
                 </div>

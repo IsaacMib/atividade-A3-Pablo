@@ -1,22 +1,15 @@
 from django.db import models
-from wagtail.models import Page
+from core.models import PageSitePadrao
 from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel
 from wagtail import blocks
 
-class LGPD(Page):
+class LGPDPage(PageSitePadrao):
     subtitle = models.CharField(
         verbose_name="Subtítulo",
         blank=True,
         max_length=255
-    )
-
-    descricao = models.TextField(
-        verbose_name="Descrição",
-        blank=True,
-        max_length=500,
-        help_text="Breve descrição do conteúdo da página."
-    )
+    )   
 
     banner = models.ForeignKey(
         'wagtailimages.Image',
@@ -42,9 +35,8 @@ class LGPD(Page):
 
     template = "lgpd/lgpd_page.html"
 
-    content_panels = Page.content_panels + [
-        FieldPanel("subtitle"),
-        FieldPanel("descricao"),
+    content_panels = PageSitePadrao.content_panels + [
+        FieldPanel("subtitle"),        
         FieldPanel("banner"),  
         FieldPanel("lgpd_text"),
         FieldPanel("corpo"),
