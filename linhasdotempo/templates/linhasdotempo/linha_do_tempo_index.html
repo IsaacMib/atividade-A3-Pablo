@@ -2,10 +2,9 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 {% block content %}
     <div class="container">
-        <h2>Listar Linhas do Tempo</h2>
         <ul>
             {% for linha_do_tempo in linha_do_tempo_page %}
-                <li><h2><a href="{% pageurl linha_do_tempo %}">{{ linha_do_tempo.title }}</a></h2></li>
+                <li><h3><a href="{% pageurl linha_do_tempo %}">{{ linha_do_tempo.title }}</a></h3></li>
             {% endfor %}
         </ul>
     </div>

@@ -15,8 +15,12 @@ class LinhaDoTempoIndex(PageSitePadraoIndex):
         "home.HomePage",
     ]
 
+    subpage_types = [
+        "linhasdotempo.LinhaDoTempoPage",
+    ]
+
     class Meta:
-        verbose_name = "Página de Index da Linha do Tempo"
+        verbose_name = "Página de Listagem de Diferentes Linhas do Tempo"
 
     def get_context(self, request):
         context = super().get_context(request)
@@ -33,16 +37,27 @@ class LinhaDoTempoPage(PageSitePadrao):
         "linhasdotempo.LinhaDoTempoIndex",
     ]
 
+    subpage_types = [
+        "linhasdotempo.CardLinhaDoTempoPage",
+    ]
+
     class Meta:
         verbose_name = "Página da Linha do Tempo"
 
     def get_context(self, request):
         context = super().get_context(request)
-        context["cards"] = CardLinhaDoTempoPage.objects.live().child_of(self).order_by("data_evento")
+        context["cards"] = CardLinhaDoTempoPage.objects.live().child_of(
+            self).order_by("data_evento")
         return context
 
 
 class CardLinhaDoTempoPage(PageSitePadrao):
+
+    parent_page_types = [
+        "linhasdotempo.LinhaDoTempoPage",
+    ]
+
+    subpage_types = []
 
     data_evento = models.DateField(
         "Data do evento", default=datetime.now, blank=True, null=True
@@ -63,10 +78,10 @@ class CardLinhaDoTempoPage(PageSitePadrao):
     descricao = StreamField(
         [
             ("paragraph", RichTextBlock(
-                    icon="pilcrow",
-                    template="blocks/paragraph_block.html",
-                    preview_value=(
-                        """
+                icon="pilcrow",
+                template="blocks/paragraph_block.html",
+                preview_value=(
+                    """
                         <h2>Our bread pledge</h2>
                         <p>As a bakery, <b>breads</b> have <i>always</i> been in our hearts.
                         <a href="https://en.wikipedia.org/wiki/Staple_food">Staple foods</a>
@@ -74,9 +89,9 @@ class CardLinhaDoTempoPage(PageSitePadrao):
                         We love to transform batters and doughs into baked goods with a firm
                         dry crust and fluffy center.</p>
                         """
-                    ),
-                    description="A rich text paragraph",
-                )),
+                ),
+                description="A rich text paragraph",
+            )),
         ],
         verbose_name="Descrição",
         blank=True,
