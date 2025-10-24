@@ -601,7 +601,7 @@ class CaptionedImageBlock(StructBlock):
         icon = "image"
         template = "blocks/captioned_image_block.html"
         preview_value = {"attribution": "The Wagtail Bakery"}
-        description = "An image with optional caption and attribution"
+        description = "Uma imagem com legenda e atribuição opcionais"
 
 
 class BlockQuote(StructBlock):
@@ -623,7 +623,7 @@ class BlockQuote(StructBlock):
             ),
             "attribute_name": "Willie Wagtail",
         }
-        description = "A quote with an optional attribution"
+        description = "Uma citação com atribuição opcional"
 
 
 class IframeBlock(StructBlock):
@@ -703,11 +703,16 @@ class CardLinhaDoTempoBlock(StructBlock):
 class BaseStreamBlock(StreamBlock):
     """
     Define the custom blocks that `StreamField` will utilize
+    
     """
 
-    heading_block = HeadingBlock()
+    heading_block = HeadingBlock(
+        label="Block de Título",
+        description="Título com tamanho selecionável (H2, H3, H4)",
+    )
     paragraph_block = RichTextBlock(
         icon="pilcrow",
+        label="Texto de Parágrafo",
         template="blocks/paragraph_block.html",
         preview_value=(
             """
@@ -719,27 +724,35 @@ class BaseStreamBlock(StreamBlock):
             dry crust and fluffy center.</p>
             """
         ),
-        description="A rich text paragraph",
+        description="Um parágrafo de texto rico",
     )
-    image_block = CaptionedImageBlock()
-    block_quote = BlockQuote()
+    image_block = CaptionedImageBlock(
+        label="Bloco de Imagem com Legenda",
+    )
+    block_quote = BlockQuote(
+        label="Bloco de Citação",
+        description="Uma citação com atribuição opcional",
+    )
     embed_block = EmbedBlock(
-        help_text="Insert an embed URL e.g https://www.youtube.com/watch?v=SGJFWirQ3ks",
+        label="Bloco de Embed",
+        help_text="Insira uma URL de incorporação, ex: https://www.youtube.com/watch?v=SGJFWirQ3ks",
         icon="media",
         template="blocks/embed_block.html",
         preview_template="blocks/preview/static_embed_block.html",
         preview_value="https://www.youtube.com/watch?v=mwrGSfiB1Mg",
-        description="An embedded video or other media",
+        description="Um vídeo ou outra mídia incorporada",
     )
     iframe_block = IframeBlock(
-        help_text="Insert an iframe URL e.g https://example.com",
+        label="Bloco de Iframe",
+        help_text="Adicione uma URL https://example.com",
         icon="site",
         template="blocks/iframe_block.html",
         # preview_template="blocks/preview/static_iframe_block.html",
-        # preview_value="https://example.com",
-        description="An embedded iframe",
+        # preview_value="https://example.com", 
+        description="Um iframe incorporado",
     )
     table_block = TableBlock(
+        label="Bloco de Tabela",
         help_text="Insira os dados da tabela",
         icon="table",
         template="blocks/table.html",

@@ -94,7 +94,7 @@ class NoticiasPage(PageSitePadrao):
     )
     tags = ClusterTaggableManager(through=NoticiasPageTag, blank=True)
     body = StreamField(
-        BaseStreamBlock(), verbose_name="Page body", blank=True, null=True, use_json_field=True
+        BaseStreamBlock(), verbose_name="Corpo da Página", blank=True, null=True, use_json_field=True
     )
 
     body_migrated = models.TextField(
