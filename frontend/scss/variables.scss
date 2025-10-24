@@ -1,3 +1,4 @@
+@use 'sass:math';
 // Material Design Color System - Core Palette
 
 $color-white: #ffffff;
@@ -21,6 +22,9 @@ $color-primary-dark: #0a00b6;
 $color-primary-darker: #24477c;
 $color-primary-active: #396BBB38;
 $color-primary-hover: #25447a;
+
+$color-primary-06: #F3F5F9;
+$color-primary-12: #E6EBF3;
 
 $color-primary-70: #30599bb3;
 $color-primary-50: #30599b80;
@@ -165,3 +169,11 @@ $color-site-menu-nav-tools-border: #00000026;
 
 $background: $color-primary-hover;
 $color-text-secondary: #555555;
+
+$widget-icon-size: 2rem;
+$widget-icon-bg: $primary-color !default;
+$widget-icon-bg-light: $color-white !default;
+$widget-title-color: $color-on-surface !default;
+$widget-border-radius: 9999px;
+$card-gap: 1rem !default;
+$aviso-aspect: math.div(1, 1);

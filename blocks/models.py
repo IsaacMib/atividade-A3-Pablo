@@ -598,14 +598,13 @@ class AvisosWidget(StructBlock):
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
         avisos_index_page = value.get('avisos_index_page')
-        quantidade = value.get('quantidade') or 3
+        quantidade = value.get('quantidade') or 6
         avisos = []
         avisos_index_page_url = None
 
         if avisos_index_page:
             try:
-                # Aqui filtramos somente os avisos marcados como destaque
-                avisos = avisos_index_page.get_ultimos_avisos(quantidade=quantidade, destaque=True)
+                avisos = avisos_index_page.get_ultimos_avisos(quantidade=quantidade)
             except Exception:
                 avisos = []
             avisos_index_page_url = avisos_index_page.url
@@ -615,7 +614,7 @@ class AvisosWidget(StructBlock):
         return context
 
     class Meta:
-        template = "blocks/aviso_widget.html"
+        template = "blocks/widget_avisos.html"
         icon = "star"
         label = "Destaques"
 
