@@ -9,12 +9,13 @@ class NoticiasPageSerializer(serializers.ModelSerializer):
     tags = serializers.StringRelatedField(many=True)
     body = serializers.SerializerMethodField()
     arquivos = serializers.SerializerMethodField()
+    images = serializers.SerializerMethodField()
 
     class Meta:
         model = NoticiasPage
         fields = [
             'id', 'title', 'subtitle', 'descricao', 'data_publicacao', 'tags', 
-            'imagem_destaque', 'url', 'body', 'destaque', 'arquivos'
+            'imagem_destaque', 'url', 'body', 'destaque', 'arquivos', 'images'
         ]
 
     def get_body(self, obj):
@@ -46,6 +47,21 @@ class NoticiasPageSerializer(serializers.ModelSerializer):
                     'icon_class': get_fontawesome_file_icon(file_info)
                 })
         return arquivos_list
+
+    def get_images(self, obj):
+        """
+        Serializa a coleção de imagens do carrossel, incluindo URL absoluta.
+        """
+        images_list = []
+        if obj.images:
+            request = self.context.get('request')
+            for block in obj.images:
+                if block.block_type == 'imagem' and block.value:
+                    images_list.append({
+                        'url': request.build_absolute_uri(block.value.get_rendition('original').url),
+                        'title': block.value.title
+                    })
+        return images_list
 
 class SharedContentSerializer(serializers.Serializer):
     SERIALIZERS = {

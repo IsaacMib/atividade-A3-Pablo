@@ -37,11 +37,19 @@
                     {% else %}
                         <div class="swiper noticias-mySwiper2">
                             <div class="swiper-wrapper">
-                                {% for imagem in page.images %}
-                                    {% if imagem.block_type == 'imagem' and imagem.value %}
+                                {% if page.is_remote %}
+                                    {% for imagem in page.images %}
                                         <div class="swiper-slide swiper-slide-noticias">
-                                            {% picture imagem.value original format-{avif,webp,jpeg} height-380 loading="lazy" sizes="100%" class="image-noticia-carrossel" %} 
+                                            <img src="{{ imagem.url }}" alt="{{ imagem.title }}" class="image-noticia-carrossel" style="height: 380px; width: 100%; object-fit: cover;" loading="lazy">
                                         </div>
+                                    {% endfor %}
+                                {% else %}
+                                    {% for imagem in page.images %}
+                                        {% if imagem.block_type == 'imagem' and imagem.value %}
+                                            <div class="swiper-slide swiper-slide-noticias">
+                                                {% picture imagem.value original format-{avif,webp,jpeg} height-380 loading="lazy" sizes="100%" class="image-noticia-carrossel" %} 
+                                            </div>
+                                        {% endif %}
                                     {% endif %}
                                 {% endfor %}
                             </div>
@@ -50,11 +58,19 @@
                         </div>
                         <div thumbsSlider="" class="swiper noticias-mySwiper">
                             <div class="swiper-wrapper">
-                            {% for imagem in page.images %}
-                                {% if imagem.block_type == 'imagem' and imagem.value %}
+                            {% if page.is_remote %}
+                                {% for imagem in page.images %}
                                     <div class="swiper-slide swiper-slide-noticias">
-                                        {% picture imagem.value original format-{avif,webp,jpeg} height-380 loading="lazy" sizes="100%" class="image-noticia-carrossel" %} 
+                                        <img src="{{ imagem.url }}" alt="{{ imagem.title }}" class="image-noticia-carrossel" style="height: 380px; width: 100%; object-fit: cover;" loading="lazy">
                                     </div>
+                                {% endfor %}
+                            {% else %}
+                                {% for imagem in page.images %}
+                                    {% if imagem.block_type == 'imagem' and imagem.value %}
+                                        <div class="swiper-slide swiper-slide-noticias">
+                                            {% picture imagem.value original format-{avif,webp,jpeg} height-380 loading="lazy" sizes="100%" class="image-noticia-carrossel" %} 
+                                        </div>
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                             </div>
