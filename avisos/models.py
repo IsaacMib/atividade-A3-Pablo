@@ -104,7 +104,7 @@ class AvisosPage(PageSitePadrao):
     )
 
     images = StreamField(
-        [("imagem", ImageChooserBlock(required=True, label="Imagem da notícia"))],
+        [("imagem", ImageChooserBlock(required=True, label="Imagem do aviso"))],
         verbose_name="Coleção de Imagens",
         blank=True,
         null=True,
@@ -113,7 +113,7 @@ class AvisosPage(PageSitePadrao):
 
     arquivos = StreamField(
         [("arquivo", EspecificDocumentChooserBlock(required=True, label="Arquivos"))],
-        verbose_name="Arquivos da notícia",
+        verbose_name="Arquivos do aviso",
         blank=True,
         null=True,
         use_json_field=True,
@@ -132,7 +132,7 @@ class AvisosPage(PageSitePadrao):
     )
 
     destaque = models.BooleanField(
-        "Notícia em destaque",
+        "Aviso em destaque",
         default=False,
         help_text="Exibe o aviso em destaque na página inicial. Máximo de 6 avisos."
     )
@@ -149,7 +149,7 @@ class AvisosPage(PageSitePadrao):
         ),
         MultiFieldPanel(
             [FieldPanel("nao_exibir_lista_de_arquivos"), FieldPanel("arquivos")],
-            heading="Arquivos da notícia"
+            heading="Arquivos da aviso"
         ),
         FieldPanel("body"),
         FieldPanel("data_publicacao"),
