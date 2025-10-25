@@ -237,34 +237,29 @@ class NoticiasPage(PageSitePadrao):
     subpage_types = []
 
     def get_ultimas_noticias(self, quantidade=6):
-        # Busca notícias em destaque ordenadas por data de publicação
         noticias_destaque = NoticiasPage.objects.live().filter(
             destaque=True
         ).order_by("-data_publicacao")
         
-        # Busca notícias que não estão em destaque ordenadas por data de publicação
         noticias_sem_destaque = NoticiasPage.objects.live().filter(
             destaque=False
         ).order_by("-data_publicacao")
         
-        # Combina as listas: primeiro as em destaque, depois as sem destaque
         noticias_combinadas = list(noticias_destaque) + list(noticias_sem_destaque)
         
-        # Retorna apenas a quantidade solicitada
         return noticias_combinadas[:quantidade]
 
     def get_context(self, request):
         context = super().get_context(request)
-        context["ultimas_noticias"] = self.get_ultimas_noticias()
-
+        noticias_index = NoticiasIndexPages.objects.live().first()
+        if noticias_index:
+            context["ultimas_noticias"] = noticias_index.get_ultimas_noticias()
+        else:
+            context["ultimas_noticias"] = self.get_ultimas_noticias() # Fallback para o método antigo
         return context
 
     def get_imagem_destaque(self):
-        """
-        Retorna a primeira imagem da coleção de imagens (images) ou None se não houver.
-        """
         if self.images and len(self.images):
-            # Cada item é um bloco do tipo 'imagem'
             for bloco in self.images:
                 if bloco.block_type == 'imagem' and bloco.value:
                     return bloco.value
@@ -272,9 +267,7 @@ class NoticiasPage(PageSitePadrao):
 
     @staticmethod
     def get_arquivo_icon(arquivo):
-        """
-        Retorna a classe do ícone FontAwesome de acordo com a extensão ou mimetype do arquivo.
-        """
+
         file_info = get_file_type(arquivo)
         return get_fontawesome_file_icon(file_info)
 
