@@ -10,6 +10,7 @@ from blocks.utils import (
 )
 
 import requests
+import re
 from django.core.cache import cache
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.documents.blocks import DocumentChooserBlock
@@ -90,14 +91,26 @@ class VideoBlock(StructBlock):
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
-        url = value.get('srcIframe')
+        original_url = value.get('srcIframe')
+        video_id = None
 
-        # Transforma links padrão do YouTube em formato embed
-        if 'watch?v=' in url:
-            url = url.replace('watch?v=', 'embed/')
-        elif 'youtu.be/' in url:
-            url = url.replace('youtu.be/', 'www.youtube.com/embed/')
+        # Regex para extrair o ID do vídeo de diferentes formatos de URL do YouTube
+        # Suporta: youtube.com/watch?v=... , youtu.be/... , youtube.com/embed/...
+        regex_patterns = [
+            r'(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})',
+            r'(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})',
+            r'(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})',
+        ]
 
+        for pattern in regex_patterns:
+            match = re.search(pattern, original_url)
+            if match:
+                video_id = match.group(1)
+                break
+
+        # Constrói a URL de embed final ou usa a original como fallback
+        url = f"https://www.youtube.com/embed/{video_id}" if video_id else original_url
+        
         context['titulo'] = value.get('titulo')
         context['src'] = url
         return context
@@ -733,14 +746,8 @@ class BaseStreamBlock(StreamBlock):
         label="Bloco de Citação",
         description="Uma citação com atribuição opcional",
     )
-    embed_block = EmbedBlock(
-        label="Bloco de Embed",
-        help_text="Insira uma URL de incorporação, ex: https://www.youtube.com/watch?v=SGJFWirQ3ks",
-        icon="media",
-        template="blocks/embed_block.html",
-        preview_template="blocks/preview/static_embed_block.html",
-        preview_value="https://www.youtube.com/watch?v=mwrGSfiB1Mg",
-        description="Um vídeo ou outra mídia incorporada",
+    video_block = VideoBlock(
+        label="Bloco de Vídeo",
     )
     iframe_block = IframeBlock(
         label="Bloco de Iframe",
