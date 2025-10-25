@@ -56,7 +56,7 @@ class NoticiaRemota:
 
     @property
     def url(self):
-        return f"/noticias/remota/{self.id}/"
+        return f"/noticias/v1/{self.id}/"
 
     def get_imagem_destaque(self):
         return self.imagem_destaque_remota
