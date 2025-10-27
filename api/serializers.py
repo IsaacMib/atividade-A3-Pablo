@@ -15,29 +15,43 @@ class NoticiasPageSerializer(serializers.ModelSerializer):
     class Meta:
         model = NoticiasPage
         fields = [
-            'id', 'title', 'subtitle', 'descricao', 'data_publicacao', 'tags', 
-            'imagem_destaque', 'url', 'body', 'destaque', 'arquivos', 'images'
+            'id',
+            'title',
+            'subtitle',
+            'descricao',
+            'data_publicacao',
+            'tags',
+            'imagem_destaque',
+            'url',
+            'body',
+            'destaque',
+            'arquivos',
+            'images',
+            'slideshow_imagens', 
+            'nao_exibir_lista_de_arquivos', 
         ]
 
     def get_body(self, obj):
         if obj.body:
-            return expand_db_html(obj.body.render_as_block(context={'request': self.context.get('request')}))
+            return expand_db_html(
+                obj.body.render_as_block(
+                    context={'request': self.context.get('request')}
+                )
+            )
         return ""
 
     def get_imagem_destaque(self, obj):
         imagem = obj.get_imagem_destaque()
         if imagem:
             request = self.context.get('request')
+            rendition_url = imagem.get_rendition('fill-800x450').url
             if request:
-                return request.build_absolute_uri(imagem.get_rendition('fill-800x450').url)
+                return request.build_absolute_uri(rendition_url)
             if hasattr(settings, 'WAGTAILADMIN_BASE_URL'):
-                return f"{settings.WAGTAILADMIN_BASE_URL}{imagem.get_rendition('fill-800x450').url}"
+                return f"{settings.WAGTAILADMIN_BASE_URL}{rendition_url}"
         return None
 
     def get_arquivos(self, obj):
-        """
-        Serializa a lista de arquivos, incluindo URL absoluta e ícone.
-        """
         arquivos_list = []
         if obj.arquivos:
             request = self.context.get('request')
@@ -52,9 +66,6 @@ class NoticiasPageSerializer(serializers.ModelSerializer):
         return arquivos_list
 
     def get_images(self, obj):
-        """
-        Serializa a coleção de imagens do carrossel, incluindo URL absoluta.
-        """
         images_list = []
         if obj.images:
             request = self.context.get('request')
@@ -71,6 +82,7 @@ class NoticiasPageSerializer(serializers.ModelSerializer):
                         'title': block.value.title
                     })
         return images_list
+
 
 class SharedContentSerializer(serializers.Serializer):
     SERIALIZERS = {
