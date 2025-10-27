@@ -749,6 +749,7 @@ class BaseStreamBlock(StreamBlock):
     video_block = VideoBlock(
         label="Bloco de Vídeo",
     )
+    '''
     iframe_block = IframeBlock(
         label="Bloco de Iframe",
         help_text="Adicione uma URL https://example.com",
@@ -758,6 +759,7 @@ class BaseStreamBlock(StreamBlock):
         # preview_value="https://example.com", 
         description="Um iframe incorporado",
     )
+    '''
     table_block = TableBlock(
         label="Bloco de Tabela",
         help_text="Insira os dados da tabela",
