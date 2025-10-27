@@ -190,7 +190,7 @@
     content: "";
     position: absolute;
     top: 99%;
-    --secondary-color: #e8edf4;
+    --secondary-color: #{variables.$color-timeline-secondary};
     --percentageReminder: calc(var(--reveal-percentage, 0%, 0%) - var(--percentageRange, 0%));
     --percentageAtElement: calc(var(--percentageReminder, 0%) / var(--percentageCorrectionFactor, 0%));
 

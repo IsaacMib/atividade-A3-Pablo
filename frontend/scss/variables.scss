@@ -87,6 +87,18 @@ $color-grey-700: #616161;
 $color-grey-800: #424242;
 $color-grey-900: #212121;
 
+// Cores específicas para componentes
+$color-dark-bg: #222; // Para barraidentidadepb
+$color-dark-bg-alt: #3b3b3b; // Para barraidentidadepb alternativo
+$color-light-blue: #568ED8; // Para erro base
+$color-light-bg: #F7F7FD; // Para erro base
+$color-light-bg-hover: #e6e6f1; // Para erro base hover
+$color-light-border: #f1f3f5; // Para cookieconsent
+$color-timeline-secondary: #e8edf4; // Para linha do tempo
+
+// Box shadows
+$box-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.2); // Para compartilhamento hover
+
 
 $color-link-navbar: #b7c5dc;
 $color-link-navbar-hover: $color-white;
