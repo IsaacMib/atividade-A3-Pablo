@@ -32,8 +32,6 @@ class AvisosPageTag(TaggedItemBase):
 
 
 class AvisosPage(PageSitePadrao):
-    subtitle = models.CharField(
-        verbose_name="Subtítulo", blank=True, max_length=255)
     descricao = models.TextField(
         verbose_name="Descrição",
         blank=False,
@@ -101,9 +99,8 @@ class AvisosPage(PageSitePadrao):
         help_text="Exibe o aviso em destaque na página inicial. Máximo de 6 avisos."
     )
 
-    content_panels = get_page_title_with_counter(50) + [
+    content_panels = get_page_title_with_counter(100) + [
         FieldPanel("destaque"),
-        FieldPanel("subtitle"),
         FieldPanel("descricao", widget=get_widget_input_with_counter()),
         MultiFieldPanel(
             [FieldPanel("slideshow_imagens"), FieldPanel("images")],
@@ -147,9 +144,9 @@ class AvisosPage(PageSitePadrao):
         super().clean()
         parent = self.get_parent()
         parent_path = parent.path if parent else ''
-        if len(self.title) > 50:
+        if len(self.title) > 100:
             raise ValidationError(
-                {"title": "O título não pode ter mais que 50 caracteres."})
+                {"title": "O título não pode ter mais que 100 caracteres."})
 
         if AvisosPage.objects.filter(slug=self.slug, path__startswith=parent_path).exclude(pk=self.pk).exists():
             raise ValidationError(
@@ -214,7 +211,6 @@ class AvisosPage(PageSitePadrao):
 
     search_fields = PageSitePadrao.search_fields + [
         index.SearchField('body'),
-        index.SearchField('subtitle'),
         index.SearchField('descricao'),
     ]
 
