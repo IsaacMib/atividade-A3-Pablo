@@ -94,10 +94,14 @@ class SharedContentSerializer(serializers.Serializer):
         serializer_class = self.SERIALIZERS.get(model_class)
 
         if serializer_class:
-            return serializer_class(instance, context=self.context).data
+            data = serializer_class(instance, context=self.context).data
+            data["is_remote"] = True
+            return data
+
         return {
             'id': instance.id,
             'title': instance.title,
             'url': instance.url,
-            'detail': 'Serializer específico não implementado para este tipo de conteúdo.'
+            'detail': 'Serializer específico não implementado para este tipo de conteúdo.',
+            'is_remote': True,
         }
