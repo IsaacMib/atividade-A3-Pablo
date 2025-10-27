@@ -45,6 +45,7 @@ class NoticiaRemota:
         self.imagem_destaque_remota = data.get('imagem_destaque')
         self.arquivos = data.get('arquivos', [])
         self.images = data.get('images', [])
+        self.tags = data.get('tags', [])  # Adiciona as tags
         data_str = data.get('data_publicacao')
         if data_str:
             try:
@@ -60,6 +61,18 @@ class NoticiaRemota:
 
     def get_imagem_destaque(self):
         return self.imagem_destaque_remota
+
+    def get_tags(self):
+        """
+        Simula o comportamento do get_tags para notícias remotas.
+        As tags vêm como uma lista de strings.
+        """
+        # Como não temos um 'slug' ou uma página de índice de tags para remotas,
+        # não podemos gerar uma URL funcional por enquanto.
+        # Retornamos uma lista de objetos simples para exibição.
+        return [{'name': tag, 'url': '#'} for tag in self.tags]
+
+
 
 
 MAX_NOTICIAS_DESTAQUE = 6

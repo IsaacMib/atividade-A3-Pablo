@@ -718,11 +718,12 @@ class BaseStreamBlock(StreamBlock):
     Define the custom blocks that `StreamField` will utilize
     
     """
+    '''
     titulo_bloco = TituloBlock(
         label="Título",
         description="Um título simples com opção de cor de fundo."
     )
-    
+    '''
     paragraph_block = RichTextBlock(
         icon="pilcrow",
         label="Texto de Parágrafo",
@@ -742,10 +743,12 @@ class BaseStreamBlock(StreamBlock):
     image_block = CaptionedImageBlock(
         label="Bloco de Imagem com Legenda",
     )
+    '''
     block_quote = BlockQuote(
         label="Bloco de Citação",
         description="Uma citação com atribuição opcional",
     )
+    '''
     video_block = VideoBlock(
         label="Bloco de Vídeo",
     )

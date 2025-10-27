@@ -99,6 +99,16 @@
           </ul>
         </div>
       {% endif %}
+
+      {% if page.get_tags %}
+        <div class="noticias-tags tw:mt-8 tw:mb-4">
+          <div class="tags-container justify-content-center">
+            {% for tag in page.get_tags %}
+              <a href="{{ tag.url }}" class="tag-link">{{ tag.name }}</a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
     {% endif %}
   </div>
 </div>
