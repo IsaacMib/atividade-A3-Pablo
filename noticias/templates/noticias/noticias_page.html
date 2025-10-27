@@ -21,6 +21,7 @@
           </div>
         {% endif %}
       </div>
+
       {% if page.images and page.images|length > 1 %}
         <div class="noticias-img-destaque tw:pb-12">
           <div class="swiper noticias-mySwiper2">
@@ -28,9 +29,9 @@
               {% for imagem in page.images %}
                 <div class="swiper-slide swiper-slide-noticias">
                   {% if page.is_remote %}
-                    <img src="{{ imagem.url }}" alt="{{ imagem.title }}" class="image-noticia-carrossel" style="height: 380px; width: 100%; object-fit: cover;" loading="lazy">
+                    <img src="{{ imagem.url }}" alt="{{ imagem.title }}" class="image-noticia-carrossel" style="width: 100%; height: auto; object-fit: contain;" loading="lazy">
                   {% else %}
-                    {% picture imagem.value original format-{avif,webp,jpeg} height-380 loading="lazy" sizes="100%" class="image-noticia-carrossel" %}
+                    {% picture imagem.value original format-{avif,webp,jpeg} loading="lazy" sizes="100%" class="image-noticia-carrossel" %}
                   {% endif %}
                 </div>
               {% endfor %}
@@ -44,9 +45,9 @@
               {% for imagem in page.images %}
                 <div class="swiper-slide swiper-slide-noticias">
                   {% if page.is_remote %}
-                    <img src="{{ imagem.url }}" alt="{{ imagem.title }}" class="image-noticia-carrossel" style="height: 80px; width: 100%; object-fit: cover;" loading="lazy">
+                    <img src="{{ imagem.url }}" alt="{{ imagem.title }}" class="image-noticia-carrossel" style="width: 100%; height: auto; object-fit: contain;" loading="lazy">
                   {% else %}
-                    {% picture imagem.value original format-{avif,webp,jpeg} height-80 loading="lazy" sizes="100%" class="image-noticia-carrossel" %}
+                    {% picture imagem.value original format-{avif,webp,jpeg} loading="lazy" sizes="100%" class="image-noticia-carrossel" %}
                   {% endif %}
                 </div>
               {% endfor %}
@@ -57,9 +58,9 @@
       {% elif page.get_imagem_destaque %}
         <div class="d-flex justify-content-center noticias-img-destaque tw:pb-12">
           {% if page.is_remote %}
-            <img src="{{ page.get_imagem_destaque }}" alt="{{ page.title }}" class="img-fluid" loading="lazy" style="max-height: 380px; object-fit: cover;">
+            <img src="{{ page.get_imagem_destaque }}" alt="{{ page.title }}" class="img-fluid" style="width: 100%; height: auto; object-fit: contain;" loading="lazy">
           {% else %}
-            {% picture page.get_imagem_destaque format-{avif,webp,jpeg} height-380 loading="lazy" sizes="100%" %}
+            {% picture page.get_imagem_destaque original format-{avif,webp,jpeg} loading="lazy" sizes="100%" %}
           {% endif %}
         </div>
       {% endif %}
@@ -120,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const swiperMain = new Swiper(".noticias-mySwiper2", {
     loop: true,
     spaceBetween: 10,
+    autoHeight: true,
     navigation: {
       nextEl: ".swiper-button-next",
       prevEl: ".swiper-button-prev",
