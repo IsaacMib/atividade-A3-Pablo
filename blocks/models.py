@@ -718,11 +718,11 @@ class BaseStreamBlock(StreamBlock):
     Define the custom blocks that `StreamField` will utilize
     
     """
-
-    heading_block = HeadingBlock(
-        label="Block de Título",
-        description="Título com tamanho selecionável (H2, H3, H4)",
+    titulo_bloco = TituloBlock(
+        label="Título",
+        description="Um título simples com opção de cor de fundo."
     )
+    
     paragraph_block = RichTextBlock(
         icon="pilcrow",
         label="Texto de Parágrafo",

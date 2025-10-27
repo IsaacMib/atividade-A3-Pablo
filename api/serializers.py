@@ -10,7 +10,7 @@ class NoticiasPageSerializer(serializers.ModelSerializer):
     tags = serializers.StringRelatedField(many=True)
     body = serializers.SerializerMethodField()
     arquivos = serializers.SerializerMethodField()
-    images = serializers.SerializerMethodField()
+    images = serializers.SerializerMethodField() # Serializa o StreamField 'images'
 
     class Meta:
         model = NoticiasPage
@@ -43,10 +43,13 @@ class NoticiasPageSerializer(serializers.ModelSerializer):
     def get_imagem_destaque(self, obj):
         imagem = obj.get_imagem_destaque()
         if imagem:
+            # get_imagem_destaque retorna um objeto WagtailImage.
+            # Precisamos obter a URL da rendição aqui.
             request = self.context.get('request')
-            rendition_url = imagem.get_rendition('fill-800x450').url
+            # Usamos 'fill-800x450' como rendição padrão para a imagem de destaque
+            rendition_url = imagem.get_rendition('fill-800x450').url 
             if request:
-                return request.build_absolute_uri(rendition_url)
+                return request.build_absolute_uri(rendition_url) # Retorna URL absoluta
             if hasattr(settings, 'WAGTAILADMIN_BASE_URL'):
                 return f"{settings.WAGTAILADMIN_BASE_URL}{rendition_url}"
         return None
@@ -70,16 +73,16 @@ class NoticiasPageSerializer(serializers.ModelSerializer):
         if obj.images:
             request = self.context.get('request')
             for block in obj.images:
-                if block.block_type == 'imagem' and block.value:
-                    image_url = block.value.get_rendition('original').url
-                    absolute_url = image_url
-                    if request:
-                        absolute_url = request.build_absolute_uri(image_url)
-                    elif hasattr(settings, 'WAGTAILADMIN_BASE_URL'):
-                        absolute_url = f"{settings.WAGTAILADMIN_BASE_URL}{image_url}"
+                if block.block_type == 'imagem' and block.value: # block.value é o objeto WagtailImage
+                    image_obj = block.value
+                    # Incluímos rendições específicas para o cliente
                     images_list.append({
-                        'url': absolute_url,
-                        'title': block.value.title
+                        'id': image_obj.id,
+                        'title': image_obj.title,
+                        'alt_text': image_obj.default_alt_text,
+                        'original': request.build_absolute_uri(image_obj.get_rendition('original').url) if request else image_obj.get_rendition('original').url,
+                        'fill_800x450': request.build_absolute_uri(image_obj.get_rendition('fill-800x450').url) if request else image_obj.get_rendition('fill-800x450').url,
+                        # Adicione outras rendições se necessário
                     })
         return images_list
 
