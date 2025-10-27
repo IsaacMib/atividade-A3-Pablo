@@ -186,9 +186,6 @@ class AvisosPage(PageSitePadrao):
                         'icon_class': self.get_arquivo_icon(doc)
                     })
         context['arquivos_com_icone'] = arquivos_com_icone
-
-        #TODOGABRIEL: Adicionar compartilhar nas redes sociais
-
         return context
 
     @staticmethod

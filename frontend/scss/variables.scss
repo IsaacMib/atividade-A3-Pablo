@@ -96,6 +96,16 @@ $color-light-bg-hover: #e6e6f1; // Para erro base hover
 $color-light-border: #f1f3f5; // Para cookieconsent
 $color-timeline-secondary: #e8edf4; // Para linha do tempo
 
+// Cores para cookieconsent
+$color-cookie-bg: #f9faff; // Background principal do cookie consent
+$color-cookie-secondary-bg: #dfe7f9; // Background do botão secundário
+$color-cookie-secondary-hover-bg: #c6d1ea; // Hover do botão secundário
+$color-cookie-category-bg: #ebeff9; // Background das categorias
+$color-cookie-category-hover-bg: #dbe5f9; // Hover das categorias
+$color-cookie-overlay: rgba(219, 232, 255, 0.85); // Overlay do modal
+$color-cookie-toggle-readonly: #cbd8f1; // Toggle readonly
+$color-cookie-toggle-off: #8fa8d6; // Toggle off
+
 // Box shadows
 $box-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.2); // Para compartilhamento hover
 
