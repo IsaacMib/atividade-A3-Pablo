@@ -1,6 +1,5 @@
 from django.forms import Textarea
 from django.db import models
-from django.urls import reverse
 from wagtail.models import Page
 from django.utils.text import slugify
 from django.contrib import messages
