@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "avisos",
     'editais',
     "eventos",
+    "linhasdotempo",
     "lgpd",
 
     "plone_migration",
@@ -96,7 +97,7 @@ INSTALLED_APPS = [
     "wagtail.contrib.settings",
     'wagtail.contrib.search_promotions',
     "wagtail.contrib.table_block",
-     'allauth',
+    'allauth',
     'allauth.account',
     'allauth.socialaccount',
     "allauth.socialaccount.providers.openid_connect",
