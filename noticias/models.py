@@ -46,6 +46,7 @@ class NoticiaRemota:
         self.arquivos = data.get('arquivos', [])
         self.images = data.get('images', [])
         self.tags = data.get('tags', [])  # Adiciona as tags
+        self.remote_url = f"{api_base_url.rstrip('/')}{data.get('url', '')}"
         data_str = data.get('data_publicacao')
         if data_str:
             try:
@@ -57,7 +58,7 @@ class NoticiaRemota:
 
     @property
     def url(self):
-        return f"/noticias/v1/{self.id}/"
+        return self.remote_url
 
     def get_imagem_destaque(self):
         return self.imagem_destaque_remota
