@@ -207,6 +207,9 @@ class ContatosPage(RoutablePageMixin, PageSitePadraoIndex):
                         else:
                             setattr(info, "icone", icone)
 
+        context["coluna_1"] = self.coluna_1
+        context["coluna_2"] = self.coluna_2
+
         return context
 
 
