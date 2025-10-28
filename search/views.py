@@ -93,23 +93,31 @@ def search(request):
         # Buscar nos títulos dos arquivos com busca parcial
         arquivos_resultados = []
         if not selected_types or "document" in selected_types:
-            arquivo_query = PloneImportedFile.objects.all()
-            for term in search_terms:
-                arquivo_query = arquivo_query.filter(
-                    Q(title__icontains=term) |
-                    Q(file__icontains=term)
-                )
-            arquivos_resultados = list(arquivo_query)
+            try:
+                arquivo_query = PloneImportedFile.objects.all()
+                for term in search_terms:
+                    arquivo_query = arquivo_query.filter(
+                        Q(title__icontains=term) |
+                        Q(file__icontains=term)
+                    )
+                arquivos_resultados = list(arquivo_query)
+            except Exception as e:
+                # Se houver erro com PloneImportedFile, continua sem incluir arquivos
+                arquivos_resultados = []
         
         # Buscar nos títulos das imagens com busca parcial
         imagens_resultados = []
         if not selected_types or "image" in selected_types:
-            imagem_query = PloneImportedImage.objects.all()
-            for term in search_terms:
-                imagem_query = imagem_query.filter(
-                    Q(title__icontains=term)
-                )
-            imagens_resultados = list(imagem_query)
+            try:
+                imagem_query = PloneImportedImage.objects.all()
+                for term in search_terms:
+                    imagem_query = imagem_query.filter(
+                        Q(title__icontains=term)
+                    )
+                imagens_resultados = list(imagem_query)
+            except Exception as e:
+                # Se houver erro com PloneImportedImage, continua sem incluir imagens
+                imagens_resultados = []
 
         # Junta todos os resultados em uma única lista
         all_results = search_results + arquivos_resultados + imagens_resultados
