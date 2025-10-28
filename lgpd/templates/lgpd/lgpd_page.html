@@ -35,7 +35,7 @@
         {% for block in page.corpo %}
         <div class="content-section text-center mx-auto mb-5">
             <div class="section-content">
-                {% include "include/titulo.html" with titulo=block.value.titulo classes="section-title" bgClass="" %}
+                {% include "include/titulo.html" with titulo=block.value.titulo classes="titulo-com-borda-inferior section-title" bgClass="" remover_svg=True %}
                 <div class="section-text" style="text-align: justify;">
                     {{ block.value.texto|richtext }}
                 </div>
