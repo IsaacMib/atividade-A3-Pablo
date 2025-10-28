@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     "documentos",
     'editais',
     "eventos",
+    "lgpd",
 
 
     "plone_migration",
