@@ -37,7 +37,7 @@ Ou usando a template tag:
     </div>
     {% if mostrar_ver_todos|default:True and url_ver_todos %}
         <div class="text-center tw:mb-8">
-            {% include "include/ver_todos_btn.html" with ver_todos_url=url_ver_todos texto_link="Ver todos" btn_class='btn-ver-todos-bg-cinza' %}
+            {% include "include/ver_todos_btn.html" with ver_todos_url=url_ver_todos texto_link="Ver todos" btn_class='text-center btn-ver-todos-bg-cinza' %}
         </div>
     {% endif %}
 </div>
