@@ -224,7 +224,12 @@ class AvisosPage(PageSitePadrao):
                 })
 
     def get_imagem_destaque(self):
-        """Retorna a primeira imagem do bloco de imagens."""
+        """Retorna a imagem de destaque ou a primeira imagem do bloco de imagens."""
+        # Primeiro tenta usar a imagem de destaque herdada da classe pai
+        if self.imagem_destaque:
+            return self.imagem_destaque
+        
+        # Como fallback, usa a primeira imagem do StreamField
         if self.images:
             for bloco in self.images:
                 if bloco.block_type == "imagem" and bloco.value:

@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('avisos', '0005_remove_avisospage_images_avisospage_imagem_destaque'),
+        ('avisos', '0005_alter_avisospage_options_and_more'),
         ('avisos', '0007_avisospage_resumo_alter_avisosindexpage_introduction_and_more'),
     ]
 
