@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from core.models import PageSitePadrao
 from django.contrib.contenttypes.models import ContentType
 from wagtail.contrib.search_promotions.models import Query
+from wagtail.models import Page
 from noticias.models import NoticiasPage  # ajuste conforme o nome do seu app/modelo
 from plone_migration.models import PloneImportedFile, PloneImportedImage
 from django.db import models
@@ -66,7 +67,7 @@ def search(request):
         search_terms = search_query.strip().split()
         
         # Busca nas páginas com múltiplos termos
-        pages_query = PageSitePadrao.objects.live()
+        pages_query = Page.objects.live().public()
         for term in search_terms:
             pages_query = pages_query.filter(
                 Q(title__icontains=term) |
@@ -76,7 +77,7 @@ def search(request):
         
         # Se não encontrou resultados com todos os termos, tenta com busca individual
         if not search_results:
-            search_results = list(PageSitePadrao.objects.live().search(search_query))
+            search_results = list(Page.objects.live().public().search(search_query))
         
         # Aplicar filtros de tipo
         if selected_types:
@@ -128,10 +129,11 @@ def search(request):
         paginated_results = []
     
     # Obter todos os tipos de dados presentes no Wagtail (modelos de página)
+    # Buscar subclasses de Page ao invés de PageSitePadrao
     wagtail_types = list(
-        ContentType.objects.filter(app_label__in=[
-            app for app in set(PageSitePadrao._meta.app_label for PageSitePadrao in PageSitePadrao.__subclasses__())
-        ]).values_list('model', flat=True)
+        ContentType.objects.filter(
+            app_label__in=['noticias', 'avisos', 'eventos', 'agenda', 'editais', 'lgpd', 'paginas', 'institucional', 'home']
+        ).values_list('model', flat=True)
     )
 
     # Adiciona os tipos primitivos do Wagtail manualmente, se não estiverem presentes
