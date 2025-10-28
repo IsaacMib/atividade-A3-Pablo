@@ -53,6 +53,8 @@ INTERNAL_IPS = [
 # Application definition
 
 INSTALLED_APPS = [
+    "paginas",
+
     "home",
     "search",
     "core",
@@ -65,6 +67,7 @@ INSTALLED_APPS = [
     "contatos",
     'editais',
     "eventos",
+    "lgpd",
 
     "plone_migration",
     "auth_keycloak",

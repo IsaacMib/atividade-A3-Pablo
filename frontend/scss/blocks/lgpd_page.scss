@@ -1,0 +1,33 @@
+.banner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 32px;
+  width: 100%;
+  padding: 0 16px; /* respira nas laterais */
+  overflow: hidden;
+}
+
+/* DIV INTERNA QUE LIMITA A LARGURA (importante) */
+.banner-inner {
+  width: 100%;
+  max-width: 1200px; /* ajuste para o tamanho do seu container principal */
+  margin: 0 auto;
+}
+
+/* A imagem ocupa 100% da banner-inner, mantendo o aspecto 16:9 */
+.banner-inner img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  max-height: 490px;
+  object-fit: cover !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.banner-inner img:hover {
+  transform: scale(1.01);
+}

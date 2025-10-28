@@ -74,6 +74,10 @@
    &.titulo-normal {
       font-weight: 500;
    }
+   &.titulo-com-borda-inferior {
+      border-bottom: 3px solid;
+      padding: 10px;
+   }
 }
 
 .titulo-linha {
