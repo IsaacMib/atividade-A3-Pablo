@@ -1,6 +1,7 @@
 from django import forms
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.cache import cache
 import requests
 
 from django.contrib import messages
@@ -34,6 +35,7 @@ from core.models import ApiSettings
 
 class NoticiaRemota:
     is_remote = True 
+    slideshow_imagens = False
 
     def __init__(self, data, api_base_url):
         self.id = data.get('id')
@@ -43,8 +45,37 @@ class NoticiaRemota:
         self.destaque = data.get('destaque', False)
         self.body = data.get('body', '')
         self.imagem_destaque_remota = data.get('imagem_destaque')
-        self.arquivos = data.get('arquivos', [])
-        self.images = data.get('images', [])
+
+        # Garante que 'arquivos' seja uma lista de dicionários com 'url' e 'title'
+        self.arquivos = []
+        for arq in data.get('arquivos', []):
+            if isinstance(arq, dict) and 'url' in arq and 'title' in arq:
+                arq['icon_class'] = get_fontawesome_file_icon(get_file_type(arq['url']))
+                self.arquivos.append(arq)
+            elif isinstance(arq, str): # Assume que é uma string de URL
+                self.arquivos.append({
+                    'url': arq,
+                    'title': arq.split('/')[-1],
+                    'icon_class': get_fontawesome_file_icon(get_file_type(arq))
+                })
+
+        # Garante que 'images' seja uma lista de dicionários com 'url' e 'title'
+        self.images = []
+        raw_images = data.get('images', [])
+        if not isinstance(raw_images, list):
+            raw_images = [raw_images] if raw_images else []
+        for img_item in raw_images:
+            if isinstance(img_item, dict) and 'url' in img_item:
+                self.images.append({
+                    'url': img_item['url'], 
+                    'title': img_item.get('title', img_item['url'].split('/')[-1])
+                })
+            elif isinstance(img_item, str): # Assume que é uma string de URL
+                self.images.append({'url': img_item, 'title': img_item.split('/')[-1]})
+
+        # Define slideshow_imagens com base no número de imagens
+        self.slideshow_imagens = len(self.images) > 1
+
         self.tags = data.get('tags', [])  # Adiciona as tags
         self.remote_url = f"{api_base_url.rstrip('/')}{data.get('url', '')}"
         data_str = data.get('data_publicacao')
@@ -61,7 +92,16 @@ class NoticiaRemota:
         return self.remote_url
 
     def get_imagem_destaque(self):
-        return self.imagem_destaque_remota
+        """
+        Retorna a URL da imagem principal, tratando casos onde pode ser um dict ou uma lista.
+        """
+        if isinstance(self.imagem_destaque_remota, dict) and 'url' in self.imagem_destaque_remota:
+            return self.imagem_destaque_remota['url']
+        elif isinstance(self.imagem_destaque_remota, str):
+            return self.imagem_destaque_remota
+        elif self.images:
+            return self.images[0]['url']
+        return None
 
     def get_tags(self):
         """
@@ -75,7 +115,7 @@ class NoticiaRemota:
 
 
 
-
+_API_CACHE_TIMEOUT = 5 * 60  # 5 minutos
 MAX_NOTICIAS_DESTAQUE = 6
 
 
@@ -398,6 +438,7 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
     def _fetch_remote_noticias(self):
         """
         Busca notícias de uma API externa com base nas configurações do site.
+        Implementa cache para evitar chamadas repetidas à API.
         """
         try:
             site = Site.objects.get(is_default_site=True)
@@ -407,6 +448,14 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
 
         if not api_settings.api_habilitada or not api_settings.puxar_noticias:
             return []
+
+        # Gera uma chave de cache baseada nas configurações da API
+        cache_key = f"remote_noticias_api_{api_settings.api_url}_{api_settings.tags_noticias}"
+        cached_data = cache.get(cache_key)
+
+        if cached_data:
+            # Reconstrói os objetos NoticiaRemota a partir dos dados brutos cacheados
+            return [NoticiaRemota(item, api_base_url=api_settings.api_url) for item in cached_data]
 
         # Obter token
         token_url = f"{api_settings.api_url.rstrip('/')}/api/v1/get-token/"
@@ -450,6 +499,9 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
                 remote_data = response.json()
             except requests.RequestException:
                 return []
+
+        # Cacheia os dados brutos (lista de dicionários)
+        cache.set(cache_key, remote_data, timeout=_API_CACHE_TIMEOUT)
 
         noticias_remotas = []
         for item in remote_data:
