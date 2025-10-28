@@ -107,11 +107,11 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
 }
 
 @mixin connector-line-mixin-mobile {
-  $block-height: 7rem;
+  $block-margin: 7rem;
   $card-height: map-get($card-height-per-breakpoint, 'brkp');
   $icon-size: map-get($icon-size-per-breakpoint, 'brkp');
   .linha-do-tempo-calendar-group::after {
-    height: calc(#{$block-height} + $card-height - $icon-size - 1rem) !important;
+    height: calc($block-margin + $card-height - $icon-size - 1rem) !important;
   }
 }
 
@@ -122,12 +122,14 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'lg')) {
     max-height: map-get($card-height-per-breakpoint, 'lg');
+    padding: calc(map-get($card-height-per-breakpoint, 'lg') * 0.08);
     --card-aspect-ratio: 1.1;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'md')) {
     max-height: map-get($card-height-per-breakpoint, 'md');
+    padding: calc(map-get($card-height-per-breakpoint, 'md') * 0.08);
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
     h3 {
       font-size: 1.1rem;
@@ -137,17 +139,20 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'sm')) {
     max-height: map-get($card-height-per-breakpoint, 'sm');
+    padding: calc(map-get($card-height-per-breakpoint, 'sm') * 0.08);
     --card-aspect-ratio: 1.0;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'xs')) {
     max-height: map-get($card-height-per-breakpoint, 'xs');
+    padding: calc(map-get($card-height-per-breakpoint, 'xs') * 0.08);
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'xxs')) {
     max-height: map-get($card-height-per-breakpoint, 'xxs');
+    padding: calc(map-get($card-height-per-breakpoint, 'xxs') * 0.08);
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   }
 
@@ -229,4 +234,98 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
       font-size: 1.4rem;
     }
   }
+}
+
+// Limitação de texto nos cards
+
+.mouse-pointer {
+  cursor: pointer !important;
+}
+
+.card-description-wrapper {
+  display: inline-flex !important;
+}
+
+.card-linha-do-tempo__title {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.card-linha-do-tempo__description {
+  font-size: 0.9rem;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  text-overflow: clip;
+
+  @media (max-width: map-get($linha-do-tempo-breakpoints, 'sm')) {
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: map-get($linha-do-tempo-breakpoints, 'xs')) {
+    font-size: 0.65rem;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+  }
+
+  @media (max-width: 715px) {
+    font-size: 0.63rem;
+  }
+
+  @media (max-width: 670px) {
+    font-size: 0.61rem;
+  }
+
+  @media (max-width: $layout-change-breakpoint-max) {
+    font-size: 0.8rem;
+    --max-lines: 7;
+    -webkit-line-clamp: var(--max-lines);
+    line-clamp: var(--max-lines);
+
+    @media (max-width: 400px) {  //Iphonme 12/13 
+      font-size: 0.65rem;
+    }
+
+    @media (max-width: 368px) {  //Galaxy 11 
+      font-size: 0.6rem;
+      --max-lines: 8;
+      -webkit-line-clamp: var(--max-lines);
+      line-clamp: var(--max-lines);
+    }
+  }
+
+  @media (max-width: 500px) {
+    --max-lines: 6;
+    -webkit-line-clamp: var(--max-lines);
+    line-clamp: var(--max-lines);
+  }
+
+  @media (max-width: 450px) {
+    --max-lines: 5;
+    -webkit-line-clamp: var(--max-lines);
+    line-clamp: var(--max-lines);
+  }
+
+  @media (max-width: 400px) {
+    --max-lines: 4;
+    -webkit-line-clamp: var(--max-lines);
+    line-clamp: var(--max-lines);
+  }
+
+  // @media (max-width: 352px) {
+  //   --max-lines: 3;
+  //   -webkit-line-clamp: var(--max-lines);
+  //   line-clamp: var(--max-lines);
+  // }
 }

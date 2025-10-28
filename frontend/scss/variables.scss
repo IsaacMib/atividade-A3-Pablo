@@ -103,6 +103,28 @@ $color-grey-700: #616161;
 $color-grey-800: #424242;
 $color-grey-900: #212121;
 
+// Cores específicas para componentes
+$color-dark-bg: #222; // Para barraidentidadepb
+$color-dark-bg-alt: #3b3b3b; // Para barraidentidadepb alternativo
+$color-light-blue: #568ED8; // Para erro base
+$color-light-bg: #F7F7FD; // Para erro base
+$color-light-bg-hover: #e6e6f1; // Para erro base hover
+$color-light-border: #f1f3f5; // Para cookieconsent
+$color-timeline-secondary: #e8edf4; // Para linha do tempo
+
+// Cores para cookieconsent
+$color-cookie-bg: #f9faff; // Background principal do cookie consent
+$color-cookie-secondary-bg: #dfe7f9; // Background do botão secundário
+$color-cookie-secondary-hover-bg: #c6d1ea; // Hover do botão secundário
+$color-cookie-category-bg: #ebeff9; // Background das categorias
+$color-cookie-category-hover-bg: #dbe5f9; // Hover das categorias
+$color-cookie-overlay: rgba(219, 232, 255, 0.85); // Overlay do modal
+$color-cookie-toggle-readonly: #cbd8f1; // Toggle readonly
+$color-cookie-toggle-off: #8fa8d6; // Toggle off
+
+// Box shadows
+$box-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.2); // Para compartilhamento hover
+
 
 $color-link-navbar: #b7c5dc;
 $color-link-navbar-hover: $color-white;
@@ -165,6 +187,14 @@ $border-radius-lg: 0.75rem;
 $color-site-menu-navbar-collapse-border: #00000033;
 $color-site-menu-navbar-collapse-shadow: #0000004D;
 $color-site-menu-nav-tools-border: #00000026;
+
+// Aviso barra publicação - tema escuro
+$color-aviso-barra-border-dark: #afafaf;
+$color-aviso-barra-shadow-dark: #afafaf;
+
+// Aviso barra publicação - tema escuro
+$color-aviso-barra-border-dark: #afafaf;
+$color-aviso-barra-shadow-dark: #afafaf;
 
 $background: $color-primary-hover;
 $color-text-secondary: #555555;

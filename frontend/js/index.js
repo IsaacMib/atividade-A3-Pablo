@@ -24,6 +24,7 @@ import 'swiper/css/bundle';
 import Odometer from "odometer";
 
 import './cookieconsent-config.js'
+import './compartilhamento.js'
 
 window.Swiper = Swiper;
 window.Odometer = Odometer;

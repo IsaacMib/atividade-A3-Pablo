@@ -3,3 +3,45 @@
 .avisos-page-container {
   background-color: variables.$color-white;
 }
+
+.aviso-page--title {
+  padding-left: 8px;
+  color: variables.$color-primary;
+  font-weight: 700;
+  font-size: 40px;
+}
+
+.aviso-barra-publicacao {
+  padding: 8px 0;
+  /* borda e shadow removidos conforme solicitado */
+}
+
+.aviso-page-publicacao {
+  font-weight: 400;
+  font-size: 12px;
+  padding-left: 8px;
+  color: variables.$color-grey-600;
+}
+
+.aviso-page-descricao {
+  padding: 16px 0px 8px 0px;
+}
+
+.aviso-page-descricao {
+  color: variables.$color-grey-600;
+  font-weight: normal;
+  font-size: 32px;
+  padding-bottom: 32px;
+}
+
+.aviso-page-content {
+  color: variables.$color-grey-600;
+  font-weight: normal;
+  font-size: 32px;
+  text-align: justify; // Justificado conforme solicitado
+}
+
+.aviso-conteudo {
+  padding-top: 8px;
+  padding-bottom: 32px;
+}
