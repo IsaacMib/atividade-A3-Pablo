@@ -1,69 +1,69 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags static %}
 
-{% block body_class %}template-cursos-index-page{% endblock %}
+{% block body_class %}template-cursos-avisos-page{% endblock %}
 
 {% block content %}
-<div class="cursos-container">
+<div class="cursos-avisos-container">
   <div class="container text-center">
 
-    {% include 'include/titulo.html' with titulo=page.introduction|default:"Nossos Cursos" bgClass='' %}
+      {% include 'include/titulo.html' with titulo=page.introduction|default:"Nossos Cursos" bgClass='' %}
 
-    <div class="cursos-wrapper row justify-content-start">
-      {% for curso in posts %}
-      <div class="col-12 col-md-6 col-lg-6 mb-4">
-        <a href="{% pageurl curso %}" class="text-decoration-none" style="color: inherit;">
-          <div class="curso-card p-4 h-100 rounded-4 shadow-sm position-relative curso-hover-line">
-            
-            {# Imagem ou ícone padrão #}
-            <div class="curso-img mb-3 text-center">
-              {% if curso.imagem %}
-                <img src="{{ curso.imagem.url }}" alt="{{ curso.title }}" class="img-fluid rounded">
-              {% else %}
-                <i class="bi bi-journal-text fs-1 curso-icon-default"></i>
-              {% endif %}
-            </div>
-
-            <h3 class="curso-title mb-2">
-              {{ curso.title }}
-            </h3>
-
-            <div class="curso-desc-row d-flex gap-3">
-              <div class="icon-col flex-shrink-0">
-                <i class="bi bi-calendar3 fs-4 curso-icon-calendar"></i>
-              </div>
-              <div class="desc-col text-start">
-                <p class="curso-descricao mb-2">
-                  {{ curso.descricao|striptags|truncatechars:120 }}
-                </p>
-                {% if curso.data_publicacao %}
-                  <p class="curso-data fw-bold small mb-0">
-                    Publicado em: {{ curso.data_publicacao|date:"d/m/Y" }}
-                  </p>
-                {% endif %}
-                {% if curso.tags.all %}
-                  <p class="curso-tags small mt-1 mb-0">
-                    {% for tag in curso.tags.all %}
-                      <a href="{{ page.url }}tags/{{ tag.slug }}/" class="badge text-decoration-none border">
-                        #{{ tag.name }}
-                      </a>
-                    {% endfor %}
-                  </p>
+      <div class="cursos-avisos-wrapper row justify-content-start">
+          {% for item in posts %}
+          <a class="col-12 col-lg-4 col-md-6" href="{% pageurl item %}" style="text-decoration: none; color: inherit;">
+            <div class="aviso-card curso-card p-3 rounded-4 shadow-sm h-100">
+              
+              {# Imagem se for curso, ícone se não tiver #}
+              <div class="curso-img mb-3 text-center">
+                {% if item.imagem %}
+                  <img src="{{ item.imagem.url }}" alt="{{ item.title }}" class="img-fluid rounded">
+                {% else %}
+                  <i class="bi bi-journal-text fs-1 curso-icon-default"></i>
                 {% endif %}
               </div>
-            </div>
 
-          </div>
-        </a>
+              <h3 class="aviso-title curso-title mb-3">
+                {{ item.title }}
+              </h3>
+
+              <div class="aviso-desc-row curso-desc-row d-flex gap-3 text-start">
+                <div class="icon-col flex-shrink-0">
+                  <i class="bi bi-calendar3 fs-4 curso-icon-calendar"></i>
+                </div>
+                <div class="desc-col">
+                  <p class="aviso-descricao curso-descricao mb-2">
+                    {{ item.descricao|striptags|truncatechars:120 }}
+                  </p>
+
+                  {% if item.data_publicacao %}
+                    <p class="aviso-data curso-data fw-bold small mb-0">
+                      Publicado em: {{ item.data_publicacao|date:"d/m/Y" }}
+                    </p>
+                  {% endif %}
+
+                  {# Exibe tags se existirem (para cursos) #}
+                  {% if item.tags.all %}
+                    <p class="curso-tags small mt-1 mb-0">
+                      {% for tag in item.tags.all %}
+                        <a href="{{ page.url }}tags/{{ tag.slug }}/" class="badge text-decoration-none border">
+                          #{{ tag.name }}
+                        </a>
+                      {% endfor %}
+                    </p>
+                  {% endif %}
+                </div>
+              </div>
+
+            </div>
+          </a>
+          {% empty %}
+          <p class="text-center">Nenhum item encontrado.</p>
+          {% endfor %}
       </div>
-      {% empty %}
-      <p class="text-center">Nenhum curso encontrado.</p>
-      {% endfor %}
-    </div>
 
-    {% include "include/paginator.html" with posts=posts %}
+      {% include "include/paginator.html" with posts=posts %}
 
   </div>
 </div>
-
 {% endblock %}
