@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'editais',
     "eventos",
     "linhasdotempo",
+    "lgpd",
 
     "plone_migration",
     "auth_keycloak",
