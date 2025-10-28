@@ -20,10 +20,10 @@ class LGPDPage(PageSitePadrao):
         verbose_name="Banner da página"
     )
 
-    lgpd_text = models.TextField(
-        verbose_name="Texto LGPD",
+    introducao = models.TextField(
+        verbose_name="Introdução",
         blank=True,
-        help_text="Texto sobre proteção de dados e privacidade"
+        help_text="Texto introdutório"
     )
 
     corpo = StreamField([
@@ -38,7 +38,7 @@ class LGPDPage(PageSitePadrao):
     content_panels = PageSitePadrao.content_panels + [
         FieldPanel("subtitle"),        
         FieldPanel("banner"),  
-        FieldPanel("lgpd_text"),
+        FieldPanel("introducao"),
         FieldPanel("corpo"),
     ]
 
