@@ -7,10 +7,6 @@ from core.utils import get_file_type, get_fontawesome_file_icon
 from noticias.models import NoticiasPage
 class NoticiasPageSerializer(serializers.ModelSerializer):
     imagem_destaque = serializers.SerializerMethodField()
-    tags = serializers.StringRelatedField(many=True)
-    body = serializers.SerializerMethodField()
-    arquivos = serializers.SerializerMethodField()
-    images = serializers.SerializerMethodField() # Serializa o StreamField 'images'
 
     class Meta:
         model = NoticiasPage
@@ -20,15 +16,8 @@ class NoticiasPageSerializer(serializers.ModelSerializer):
             'subtitle',
             'descricao',
             'data_publicacao',
-            'tags',
             'imagem_destaque',
             'url',
-            'body',
-            'destaque',
-            'arquivos',
-            'images',
-            'slideshow_imagens', 
-            'nao_exibir_lista_de_arquivos', 
         ]
 
     def get_body(self, obj):
@@ -73,16 +62,14 @@ class NoticiasPageSerializer(serializers.ModelSerializer):
         if obj.images:
             request = self.context.get('request')
             for block in obj.images:
-                if block.block_type == 'imagem' and block.value: # block.value é o objeto WagtailImage
+                if block.block_type == 'imagem' and block.value:
                     image_obj = block.value
-                    # Incluímos rendições específicas para o cliente
                     images_list.append({
                         'id': image_obj.id,
                         'title': image_obj.title,
                         'alt_text': image_obj.default_alt_text,
                         'original': request.build_absolute_uri(image_obj.get_rendition('original').url) if request else image_obj.get_rendition('original').url,
                         'fill_800x450': request.build_absolute_uri(image_obj.get_rendition('fill-800x450').url) if request else image_obj.get_rendition('fill-800x450').url,
-                        # Adicione outras rendições se necessário
                     })
         return images_list
 
