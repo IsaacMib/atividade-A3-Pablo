@@ -164,6 +164,47 @@ class SiteSettings(BaseSiteSetting):
         help_text="Chave secreta do reCAPTCHA usada para validação no servidor. (Deixe em branco se não usar captcha)"
     )
 
+    # Configurações para compartilhamento de conteúdos nas redes sociais
+    compartilhamento_habilitado = models.BooleanField(
+        verbose_name="Habilitar Compartilhamento",
+        default=True,
+        help_text="Ative para exibir os botões de compartilhamento nas páginas."
+    )
+    compartilhamento_facebook = models.BooleanField(
+        verbose_name="Facebook",
+        default=True,
+        help_text="Permitir compartilhamento no Facebook"
+    )
+    compartilhamento_twitter = models.BooleanField(
+        verbose_name="X (Twitter)",
+        default=True,
+        help_text="Permitir compartilhamento no X (antigo Twitter)"
+    )
+    compartilhamento_linkedin = models.BooleanField(
+        verbose_name="LinkedIn",
+        default=True,
+        help_text="Permitir compartilhamento no LinkedIn"
+    )
+    compartilhamento_whatsapp = models.BooleanField(
+        verbose_name="WhatsApp",
+        default=True,
+        help_text="Permitir compartilhamento no WhatsApp"
+    )
+    compartilhamento_telegram = models.BooleanField(
+        verbose_name="Telegram",
+        default=False,
+        help_text="Permitir compartilhamento no Telegram"
+    )
+    compartilhamento_email = models.BooleanField(
+        verbose_name="E-mail",
+        default=True,
+        help_text="Permitir compartilhamento via e-mail"
+    )
+    compartilhamento_copiar_link = models.BooleanField(
+        verbose_name="Copiar Link",
+        default=True,
+        help_text="Permitir copiar o link da página"
+    )
 
     panels = [
         FieldPanel("title_suffix"),
@@ -211,6 +252,19 @@ class SiteSettings(BaseSiteSetting):
                 FieldPanel("captcha_secret_key"),
             ],
             heading="Captcha (reCAPTCHA)"
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("compartilhamento_habilitado"),
+                FieldPanel("compartilhamento_facebook"),
+                FieldPanel("compartilhamento_twitter"),
+                FieldPanel("compartilhamento_linkedin"),
+                FieldPanel("compartilhamento_whatsapp"),
+                FieldPanel("compartilhamento_telegram"),
+                FieldPanel("compartilhamento_email"),
+                FieldPanel("compartilhamento_copiar_link"),
+            ],
+            heading="Compartilhamento de Conteúdos"
         ),
     ]
 
@@ -315,9 +369,67 @@ class SiteSettings(BaseSiteSetting):
                     raise ValidationError({
                         "captcha_site_key": "A site key do captcha parece ser muito curta."
                 })
-            if self.captcha_secret_key:
-                secret = self.captcha_secret_key.strip()
-                if secret and len(secret) < 10:
-                    raise ValidationError({
-                        "captcha_secret_key": "A chave secreta do captcha parece ser muito curta."
-               })
+
+    def get_redes_sociais_compartilhamento(self):
+        """
+        Retorna uma lista das redes sociais habilitadas para compartilhamento.
+        """
+        redes_habilitadas = []
+        
+        if not self.compartilhamento_habilitado:
+            return redes_habilitadas
+            
+        if self.compartilhamento_facebook:
+            redes_habilitadas.append({
+                'nome': 'Facebook',
+                'icone': 'fa-brands fa-facebook-f',
+                'codigo': 'facebook'
+            })
+            
+        if self.compartilhamento_twitter:
+            redes_habilitadas.append({
+                'nome': 'X (Twitter)',
+                'icone': 'fa-brands fa-square-x-twitter',
+                'codigo': 'twitter'
+            })
+            
+        if self.compartilhamento_linkedin:
+            redes_habilitadas.append({
+                'nome': 'LinkedIn',
+                'icone': 'fa-brands fa-linkedin',
+                'codigo': 'linkedin'
+            })
+            
+        if self.compartilhamento_whatsapp:
+            redes_habilitadas.append({
+                'nome': 'WhatsApp',
+                'icone': 'fa-brands fa-whatsapp',
+                'codigo': 'whatsapp'
+            })
+            
+        if self.compartilhamento_telegram:
+            redes_habilitadas.append({
+                'nome': 'Telegram',
+                'icone': 'fa-brands fa-telegram',
+                'codigo': 'telegram'
+            })
+            
+        if self.compartilhamento_email:
+            redes_habilitadas.append({
+                'nome': 'E-mail',
+                'icone': 'fas fa-envelope',
+                'codigo': 'email'
+            })
+            
+        if self.compartilhamento_copiar_link:
+            redes_habilitadas.append({
+                'nome': 'Copiar Link',
+                'icone': 'fas fa-link',
+                'codigo': 'copy'
+            })
+            
+        return redes_habilitadas
+
+    def tem_compartilhamento_habilitado(self):
+        """Retorna True se o compartilhamento está habilitado."""
+        return self.compartilhamento_habilitado

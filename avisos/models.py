@@ -23,6 +23,7 @@ from core.utils import (
     get_widget_input_with_counter
 )
 from django.core.exceptions import ValidationError
+from wagtail.images.blocks import ImageChooserBlock
 
 
 class AvisosPageTag(TaggedItemBase):
@@ -32,8 +33,6 @@ class AvisosPageTag(TaggedItemBase):
 
 
 class AvisosPage(PageSitePadrao):
-    subtitle = models.CharField(
-        verbose_name="Subtítulo", blank=True, max_length=255)
     descricao = models.TextField(
         verbose_name="Descrição",
         blank=False,
@@ -63,6 +62,21 @@ class AvisosPage(PageSitePadrao):
         default=False,
         help_text="Marque se este aviso deve ser ocultado ou tratado de forma especial durante o período eleitoral."
     )
+
+    images = StreamField(
+        [("imagem", ImageChooserBlock(required=True, label="Imagem do aviso"))],
+        verbose_name="Coleção de Imagens",
+        blank=True,
+        null=True,
+        use_json_field=True,
+    )
+
+    slideshow_imagens = models.BooleanField(
+        "Ativar slideshow de imagens",
+        default=False,
+        help_text="Exibir as imagens como slideshow na página do aviso.",
+    )
+
     arquivos = StreamField(
         [
             ('arquivo', EspecificDocumentChooserBlock(
@@ -73,15 +87,26 @@ class AvisosPage(PageSitePadrao):
         null=True,
         use_json_field=True,
     )
+
     nao_exibir_lista_de_arquivos = models.BooleanField(
         verbose_name="Não exibir lista de arquivos",
         default=False,
         help_text="Marque para não exibir a lista de arquivos na página do aviso."
     )
 
-    content_panels = get_page_title_with_counter(50) + [
-        FieldPanel("subtitle"),
+    destaque = models.BooleanField(
+        "Aviso em destaque",
+        default=False,
+        help_text="Exibe o aviso em destaque na página inicial. Máximo de 6 avisos."
+    )
+
+    content_panels = get_page_title_with_counter(100) + [
+        FieldPanel("destaque"),
         FieldPanel("descricao", widget=get_widget_input_with_counter()),
+        MultiFieldPanel(
+            [FieldPanel("slideshow_imagens"), FieldPanel("images")],
+            heading="Imagens do aviso"
+        ),
         MultiFieldPanel(
             [
                 FieldPanel("nao_exibir_lista_de_arquivos"),
@@ -113,32 +138,16 @@ class AvisosPage(PageSitePadrao):
                    classname="migracao-only"),
     ])
 
-    def get_absolute_url(self):
-        return reverse("aviso_detail", args=[str(self.id)])
-
-    def generate_unique_slug(self, base_slug):
-        slug = base_slug
-        counter = 1
-        parent = self.get_parent()
-        parent_path = parent.path if parent else ''
-        while AvisosPage.objects.filter(slug=slug, path__startswith=parent_path).exclude(pk=self.pk).exists():
-            slug = f"{base_slug}-{counter}"
-            counter += 1
-        return slug
-
-    def save(self, *args, **kwargs):
-        if not self.slug and self.title:
-            base_slug = slugify(self.title)
-            self.slug = self.generate_unique_slug(base_slug)
-        super().save(*args, **kwargs)
+    parent_page_types = ["AvisosIndexPage"]
+    subpage_types = []
 
     def clean(self):
         super().clean()
         parent = self.get_parent()
         parent_path = parent.path if parent else ''
-        if len(self.title) > 50:
+        if len(self.title) > 100:
             raise ValidationError(
-                {"title": "O título não pode ter mais que 50 caracteres."})
+                {"title": "O título não pode ter mais que 100 caracteres."})
 
         if AvisosPage.objects.filter(slug=self.slug, path__startswith=parent_path).exclude(pk=self.pk).exists():
             raise ValidationError(
@@ -151,9 +160,14 @@ class AvisosPage(PageSitePadrao):
         for tag in tags:
             tag.url = f"{base_url}tags/{tag.slug}/"
         return tags
-
-    parent_page_types = ["AvisosIndexPage"]
-    subpage_types = []
+    
+    def get_imagem_destaque(self):
+        """Retorna a primeira imagem do bloco de imagens."""
+        if self.images:
+            for bloco in self.images:
+                if bloco.block_type == "imagem" and bloco.value:
+                    return bloco.value
+        return None
 
     def get_ultimos_avisos(self, quantidade=6):
         return AvisosPage.objects.live().order_by("-data_publicacao")[:quantidade]
@@ -173,32 +187,28 @@ class AvisosPage(PageSitePadrao):
                         'icon_class': self.get_arquivo_icon(doc)
                     })
         context['arquivos_com_icone'] = arquivos_com_icone
-
-        absolute_url = request.build_absolute_uri(self.url)
-        context["share_links"] = {
-            "facebook": f"https://www.facebook.com/sharer/sharer.php?u={absolute_url}",
-            "x": f"https://twitter.com/intent/tweet?url={absolute_url}&text={self.title}",
-            "linkedin": f"https://www.linkedin.com/shareArticle?mini=true&url={absolute_url}&title={self.title}",
-            "whatsapp": f"https://api.whatsapp.com/send?text={self.title} {absolute_url}",
-            "copy": absolute_url,
-        }
-
         return context
 
     @staticmethod
     def get_arquivo_icon(arquivo):
         file_info = get_file_type(arquivo)
         return get_fontawesome_file_icon(file_info)
+    
+    def get_admin_display_title(self):
+        """Exibe ícone ★ ao lado do título se o aviso for destaque."""
+        title = super().get_admin_display_title()
+        return f"★ {title}" if self.destaque else title
 
     class Meta:
         verbose_name = "Página de Aviso"
         verbose_name_plural = "Páginas de Avisos"
+        permissions = [("view_conteudo_migrado", "Pode ver conteúdo migrado (body_migrated)")]
+        default_permissions = []
 
     icon = "warning"
 
     search_fields = PageSitePadrao.search_fields + [
         index.SearchField('body'),
-        index.SearchField('subtitle'),
         index.SearchField('descricao'),
     ]
 
@@ -254,7 +264,25 @@ class AvisosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         return posts
 
     def get_ultimos_avisos(self, quantidade=6):
-        return AvisosPage.objects.live().descendant_of(self).order_by('-data_publicacao')[:quantidade]
+        """Retorna os avisos em destaque e recentes do índice."""
+        destaques = list(
+            AvisosPage.objects.live()
+            .descendant_of(self)
+            .filter(destaque=True)
+            .order_by("-data_publicacao")[:quantidade]
+        )
+        if len(destaques) >= quantidade:
+            return destaques
+        
+        falta = quantidade - len(destaques)
+
+        restantes = (
+            AvisosPage.objects.live()
+            .descendant_of(self)
+            .filter(destaque=False)
+            .order_by("-data_publicacao")[:falta]
+        )
+        return destaques + list(restantes)
 
     class Meta:
         verbose_name = "Página de Índice de Avisos"
