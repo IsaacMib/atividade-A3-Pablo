@@ -1,0 +1,239 @@
+// Estilos para o sistema de compartilhamento de conteúdos
+@use './../variables.scss';
+
+.compartilhamento-social {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: nowrap; // Força texto e ícones na mesma linha
+    
+    .compartilhamento-titulo {
+        font-weight: 500;
+        font-size: 0.95rem;
+        flex-shrink: 0; // Impede que o texto encolha
+        white-space: nowrap; // Mantém o texto em uma linha
+    }
+
+    .compartilhamento-icones {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap; // Apenas os ícones podem quebrar entre si
+        flex: 1; // Ocupa o espaço restante
+        min-width: 0; // Permite que os ícones quebrem quando necessário
+    }
+
+    .btn-compartilhar {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 40px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: variables.$color-primary;
+        background-color: transparent;
+        border: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 18px;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: variables.$box-shadow-hover;
+            color: variables.$color-primary;
+            background-color: transparent;
+            text-decoration: none;
+        }
+
+        // Todos os botões agora usam a mesma cor primária
+        &.btn-facebook,
+        &.btn-twitter,
+        &.btn-linkedin,
+        &.btn-whatsapp,
+        &.btn-telegram,
+        &.btn-email,
+        &.btn-copy-link {
+            color: variables.$color-primary;
+
+            &:hover {
+                color: variables.$color-primary;
+            }
+        }
+    }
+
+    .copy-feedback {
+        margin-left: 10px;
+        animation: fadeInOut 3s ease-in-out;
+    }
+
+    // Responsivo - mantém texto e ícones na mesma linha
+    @media (max-width: 576px) {
+        gap: 8px;
+
+        .compartilhamento-titulo {
+            font-size: 0.9rem;
+        }
+
+        .compartilhamento-icones {
+            gap: 0px;
+            
+            .btn-compartilhar {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+        }
+    }
+
+    // Para telas muito pequenas - só quebra se realmente necessário
+    @media (max-width: 350px) {
+        gap: 6px;
+        flex-wrap: wrap; // Permite quebra apenas em telas muito pequenas
+        
+        .compartilhamento-titulo {
+            font-size: 0.85rem;
+        }
+        
+        .compartilhamento-icones {
+            gap: 4px;
+            
+            .btn-compartilhar {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+        }
+    }
+}
+
+// Estilo do wrapper diagonal - autocontido no componente
+.compartilhamento-diagonal-wrapper {
+    position: relative;
+    width: 100%;
+    padding: 12px 8px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    // Div da linha separada
+    .compartilhamento-linha {
+        flex: 1; // Ocupa todo o espaço disponível
+        height: 4px; // Aumentado para 4px conforme solicitado
+        background: variables.$color-grey-210; // #D9D9D9
+        opacity: 0.9;
+    }
+
+    // Div do conteúdo sem sobreposição
+    .compartilhamento-social {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-shrink: 0; // Não encolhe
+        white-space: nowrap; // Evita quebra de linha
+
+        .compartilhamento-titulo {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .compartilhamento-icones {
+            display: flex;
+            gap: 8px;
+        }
+    }
+
+    // Responsivo: mantém a linha em mobile também
+    @media (max-width: 767px) {
+        padding: 8px;
+        justify-content: center;
+        
+        .compartilhamento-linha {
+            flex: 1;
+            max-width: 60px; // Linha menor em mobile
+        }
+
+        .compartilhamento-social {
+            gap: 8px;
+
+            .compartilhamento-titulo {
+                font-size: 0.9rem;
+            }
+
+            .compartilhamento-icones {
+                gap: 6px;
+            }
+        }
+    }
+
+    // Telas muito pequenas: ajusta layout para quebra de ícones
+    @media (max-width: 375px) {
+        flex-direction: column;
+        gap: 8px;
+        
+        .compartilhamento-linha {
+            width: 100%;
+            max-width: none;
+            height: 4px; // Mantém 4px em telas pequenas também
+        }
+
+        .compartilhamento-social {
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+
+            .compartilhamento-titulo {
+                font-size: 0.85rem;
+                text-align: center;
+            }
+
+            .compartilhamento-icones {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 4px;
+                max-width: 100%;
+                
+                .btn-compartilhar {
+                    width: 32px;
+                    height: 32px;
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+}
+
+// Tema escuro para o wrapper diagonal
+[data-theme=dark] {
+    .compartilhamento-diagonal-wrapper .compartilhamento-linha {
+        background: variables.$color-white;
+        opacity: 0.8;
+    }
+}
+
+// Estilo do popover de sucesso para cópia de link
+.copy-success-popover {
+    .popover-header {
+        display: none !important; // Remove completamente o cabeçalho/título
+    }
+    
+    .popover-body {
+        background-color: var(--bs-success);
+        color: white;
+        font-weight: 500;
+        border-radius: 4px;
+        padding: 8px 12px;
+    }
+    
+    &.bs-popover-top .popover-arrow::before {
+        border-top-color: var(--bs-success);
+    }
+}
+
+// Animação para feedback de copiar link
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}

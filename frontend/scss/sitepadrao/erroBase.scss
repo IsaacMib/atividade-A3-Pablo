@@ -1,3 +1,5 @@
+@use "../variables";
+
 #container{
     position: fixed;
     width: 100vw;
@@ -15,7 +17,7 @@
   font-family: 'Nunito Sans';
   font-style: normal;
   /* or 28px */
-  color: #FFFFFF;
+  color: variables.$color-white;
 }
 
 #info h1{
@@ -27,7 +29,7 @@
 }
 
 #info button{
-  background: #F7F7FD;
+  background: variables.$color-light-bg;
   box-shadow: 0px 4px 60px rgba(0, 0, 0, 0.05);
   border-radius: 10px;
   width:100%;
@@ -36,10 +38,10 @@
   font-weight: 900;
   font-size: 18px;
   line-height: 180%;
-  color: #568ED8;
+  color: variables.$color-light-blue;
 }
 #info button:hover{
-    background: #e6e6f1;
+    background: variables.$color-light-bg-hover;
 }
 
 @media screen and (max-width: 810px) {

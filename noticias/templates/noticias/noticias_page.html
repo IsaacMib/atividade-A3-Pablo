@@ -72,7 +72,7 @@
                         {% endfor %}
                     </div>
                 {% endif %} {% endcomment %}
-            </div>
+            </div>            
             {% if page.arquivos and not page.nao_exibir_lista_de_arquivos %}
                 <div id="lista-arquivos" class="lista-arquivos tw:mt-8">
                     <h2 class="titulo-2">Arquivos</h2>
@@ -87,6 +87,11 @@
                     </ul>
                 </div>
             {% endif %}
+            <!-- Sistema de Compartilhamento -->
+            {% load sharing_tags %}
+            <div class="compartilhamento-wrapper tw:mt-8 tw:pb-9 tw:flex tw:justify-end">
+                {% compartilhamento_social %}
+            </div>
         {% endif %}
     </div>
 </div>
