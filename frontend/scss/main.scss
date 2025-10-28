@@ -3,6 +3,7 @@
 @use  './swiper.scss';
 
 @use './sitepadrao/index.scss' as sitepadrao;
+@use './core/index.scss' as core;
 
 @use  './barraidentidadepb/index.scss' as barraidentidadepb;
 @use  './blocks/index.scss' as blocks;
@@ -36,7 +37,7 @@ $global-link-hover-color: #30599B !default;
 @import "./rawline-font.scss";
 
 // 3. Your custom mixin overwrites of ukit.
-@mixin hook-card() { color: #000; }
+@mixin hook-card() { color: variables.$color-black; }
 
 @import "uikit/src/scss/uikit-theme.scss";
 

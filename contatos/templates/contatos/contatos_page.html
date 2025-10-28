@@ -4,49 +4,21 @@
 
 {% block content %}
 <div class="container my-4">
-  <div class="row">
 
-    {% include 'include/titulo.html' with titulo=page.introduction|default:"Contatos" bgClass='' %}
+  {% include 'include/titulo.html' with titulo=page.introduction|default:"Contatos" bgClass='' %}
 
-    {# As classes de layout (col1_class, col2_class, widget_class) são definidas no get_context do modelo. #}
+  <div class="contatos-grid">
+    <div class="coluna-esquerda">
+      {% for contato in coluna_1 %}
+        {% include "contatos/contato_block.html" with content_block=contato %}
+      {% endfor %}
+    </div>
 
-    {% if col1_class %}
-      <div class="{{ col1_class }}">
-        {% for content_block in col1_blocks %} {# Loop corrigido #}
-          {% include "contatos/contato_block.html" %}
-        {% empty %}
-          <p>Nenhum bloco nesta coluna.</p>
-        {% endfor %}
-      </div>
-    {% endif %}
-
-    {% if col2_class %}
-      <div class="{{ col2_class }}">
-        {% for content_block in col2_blocks %} {# Loop corrigido #}
-          {% include "contatos/contato_block.html" %}
-        {% empty %}
-          <p>Nenhum bloco nesta coluna.</p>
-        {% endfor %}
-      </div>
-    {% endif %}
-
-    {% if widget_class %}
-      <aside class="{{ widget_class }}">
-        {% for content_block in widget_blocks %} {# Loop corrigido #}
-          {% include "contatos/contato_block.html" %}
-        {% empty %}
-          <p>Nenhum widget.</p>
-        {% endfor %}
-      </aside>
-    {% endif %}
-
-    {# Mensagem de fallback se nenhum layout for renderizado e um layout foi selecionado #}
-    {% if not col1_class and not col2_class and not widget_class and layout %}
-      <div class="col-12 text-center">
-        <p>Nenhum layout detectado ou as colunas estão vazias para o layout selecionado.</p>
-      </div>
-    {% endif %}
-
+    <div class="coluna-direita">
+      {% for contato in coluna_2 %}
+        {% include "contatos/contato_block.html" with content_block=contato %}
+      {% endfor %}
+    </div>
   </div>
 </div>
 {% endblock content %}

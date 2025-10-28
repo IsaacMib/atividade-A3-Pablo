@@ -24,7 +24,7 @@ def do_before_agendaindex_page_edit(request, parent_page, page_class):
 
 @hooks.register('insert_editor_js')
 def editor_js():
-    # add more controller code as needed
+    # Adicionar arquivo js para contagem de caracteres
     js_files = ['js/char-count-controller.js',]
     return format_html_join('\n', '<script src="{0}"></script>',
                             ((static(filename),) for filename in js_files)
