@@ -60,7 +60,6 @@ INTRANET_WIDGET_BLOCKS = [
     ('banner_com_link', BannerComLinkBlock()),
     # Adicione aqui outras versões de blocos otimizadas para widgets
 ]
-#TODOGABRIEL: Compatibilizar para usar 1 home apenas e 1 base.html para o projeto.
 class IntranetHomePage(PageSitePadrao):
 
   body = StreamField(
@@ -111,7 +110,6 @@ class IntranetHomePage(PageSitePadrao):
     'avisos.AvisosIndexPage',
     'eventos.EventosIndexPage',
     'agenda.AgendaIndexPage',
-    'intranet.IntranetPage',
     ]
 
   class Meta:
@@ -134,22 +132,3 @@ class IntranetHomePage(PageSitePadrao):
             if self._process_custom_form(request):
                 return redirect(request.path)
         return super().serve(request, *args, **kwargs)
-
-class IntranetPage(PageSitePadrao):
-  body = StreamField(
-    INTRANET_HOME_BLOCKS,
-    use_json_field=True,
-    null=True,
-    default=None,
-    blank=True,
-    verbose_name="Conteúdo da Página"
-    )
-  content_panels = PageSitePadrao.content_panels + [
-    FieldPanel("body"),
-    ]
-  parent_page_types = ['intranet.IntranetHomePage', 'intranet.IntranetPage']
-  subpage_types = ['intranet.IntranetPage']
-  
-  class Meta:
-    verbose_name = "Página de Conteúdo da Intranet"
-    verbose_name_plural = "Páginas de Conteúdo da Intranet"
