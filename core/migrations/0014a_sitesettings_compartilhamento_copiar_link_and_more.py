@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0013_sitesettings_captcha_secret_key_and_more'),
+        ('core', '0013a_sitesettings_compartilhar_rede_social_and_more'),
     ]
 
     operations = [

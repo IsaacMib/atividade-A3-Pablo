@@ -25,26 +25,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='sitesettings',
-            name='footer_imagem_sic',
-            field=models.ForeignKey(blank=True, help_text='Faça o upload da imagem do logo do SIC.', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='wagtailimages.image', verbose_name='Imagem do SIC no rodapé'),
-        ),
-        migrations.AddField(
-            model_name='sitesettings',
-            name='footer_informacoes',
-            field=models.TextField(blank=True, default='Rua João da Mata, S/N, Jaguaribe - CEP: 58.015-020<br>\nFone: Recepção: (83) 98658-8328 - JOÃO PESSOA - PARAÍBA<br>\nHorário de Atendimento: Das 8:00 às 16:30<br>\nCNPJ: 09.189.499/0001-00', help_text='Endereço, telefone, horário, CNPJ. Use <br> para quebras de linha.', verbose_name='Informações do Rodapé'),
-        ),
-        migrations.AddField(
-            model_name='sitesettings',
-            name='footer_link_sic',
-            field=models.URLField(blank=True, default='https://sic.pb.gov.br/', verbose_name='Link para o SIC (Serviço de Informação ao Cidadão)'),
-        ),
-        migrations.AddField(
-            model_name='sitesettings',
-            name='footer_titulo_instituicao',
-            field=models.CharField(blank=True, default='CENTRO ADMINISTRATIVO ESTADUAL', max_length=255, verbose_name='Título da Instituição no Rodapé'),
-        ),
-        migrations.AddField(
-            model_name='sitesettings',
             name='intranet_habilitada',
             field=models.BooleanField(default=False, help_text='Marque esta opção para ativar todas as funcionalidades da Intranet no site.', verbose_name='Ativar Intranet'),
         ),
@@ -52,11 +32,6 @@ class Migration(migrations.Migration):
             model_name='sitesettings',
             name='google_analytics_tag',
             field=models.CharField(blank=True, help_text='Insira a tag do Google Analytics (ex: G-XXXXXXXXXX).', max_length=20, verbose_name='Tag do Google Analytics'),
-        ),
-        migrations.AlterField(
-            model_name='sitesettings',
-            name='redes_sociais',
-            field=wagtail.fields.StreamField([('lista_redes', 7)], blank=True, block_lookup={0: ('wagtail.blocks.CharBlock', (), {'default': 'Siga-nos nas redes sociais', 'required': False}), 1: ('wagtail.images.blocks.ImageChooserBlock', (), {'help_text': 'Imagem que será exibida ao lado do texto.', 'required': False}), 2: ('wagtail.blocks.CharBlock', (), {'required': True}), 3: ('wagtail.blocks.URLBlock', (), {'required': True}), 4: ('wagtail.blocks.ChoiceBlock', [], {'choices': [('fa-brands fa-facebook', 'Facebook'), ('fa-brands fa-instagram', 'Instagram'), ('fa-brands fa-linkedin', 'LinkedIn'), ('fa-brands fa-spotify', 'Spotify'), ('fa-brands fa-telegram', 'Telegram'), ('fa-brands fa-tiktok', 'TikTok'), ('fa-brands fa-whatsapp', 'WhatsApp'), ('fa-brands fa-square-x-twitter', 'X'), ('fa-brands fa-youtube', 'YouTube')]}), 5: ('wagtail.blocks.StructBlock', [[('nome', 2), ('link', 3), ('icone', 4)]], {}), 6: ('wagtail.blocks.ListBlock', (5,), {'max_num': 4}), 7: ('wagtail.blocks.StructBlock', [[('titulo', 0), ('imagem', 1), ('redes', 6)]], {})}, help_text='Defina as redes sociais do Portal.', verbose_name='Redes Sociais (Globais)'),
         ),
         migrations.AlterField(
             model_name='sitesettings',

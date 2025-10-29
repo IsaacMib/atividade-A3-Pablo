@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('avisos', '0008_merge_20251024_1024'),
+        ('avisos', '0007_avisospage_resumo_alter_avisosindexpage_introduction_and_more'),
         ('wagtailimages', '0027_image_description'),
     ]
 

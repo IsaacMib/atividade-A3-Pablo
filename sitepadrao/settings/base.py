@@ -65,13 +65,13 @@ INSTALLED_APPS = [
     "agenda",
     "avisos",
     "intranet",
-    "cursos",
     "documentos",
     'editais',
     "eventos",
     "linhasdotempo",
     "lgpd",
     "cursos",
+    "contatos",
 
 
     "plone_migration",

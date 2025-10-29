@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('avisos', '0006_alter_avisosindexpage_options_and_more'),
+        ('avisos', '0006_merge_linear'),
     ]
 
     operations = [

@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('avisos', '0009_avisospage_imagem_destaque_alter_avisospage_arquivos_and_more'),
+        ('avisos', '0008_avisospage_imagem_destaque_alter_avisospage_arquivos_and_more'),
     ]
 
     operations = [
@@ -17,9 +17,5 @@ class Migration(migrations.Migration):
         migrations.AlterModelOptions(
             name='avisospage',
             options={'default_permissions': [], 'permissions': [('view_conteudo_migrado', 'Pode ver conteúdo migrado (body_migrated)')], 'verbose_name': 'Página de Aviso', 'verbose_name_plural': 'Páginas de Avisos'},
-        ),
-        migrations.RemoveField(
-            model_name='avisospage',
-            name='subtitle',
         ),
     ]
