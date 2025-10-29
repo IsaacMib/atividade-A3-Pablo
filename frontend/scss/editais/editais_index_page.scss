@@ -1,7 +1,8 @@
 @use '../variables.scss' as variables;
 
 $accordion-btn-bg: rgb(43, 80, 140);
-$accordion-btn-color: #fff;
+
+$accordion-btn-color: variables.$color-white;
 
 .editais-index-page-wrapper {
     .accordion-button.custom-blue-title,

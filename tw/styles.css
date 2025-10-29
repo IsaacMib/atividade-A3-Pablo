@@ -10,6 +10,16 @@
 @source '../../home/static';
 @source '../../search/templates';
 @source '../../blocks/templates';
+@source '../../agenda/templates';
+@source '../../auth_keycloak/templates';
+@source '../../avisos/templates';
+@source '../../core/templates';
+@source '../../editais/templates';
+@source '../../eventos/templates';
+@source '../../institucional/templates';
+@source '../../links/templates';
+@source '../../noticias/templates';
+@source '../../paginas/templates';
 
 @theme static {
   --color-primary: #30599B;

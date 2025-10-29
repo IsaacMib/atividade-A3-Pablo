@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+{% block content %}
+<div class="linha-do-tempo">
+    <div class="container">
+        <div class="titulo-container text-center">
+            {% include 'include/titulo.html' with titulo=page.title bgClass='' %}
+        </div>
+        <div
+            class="linha-do-tempo-cards-container"
+            ntotal-cards="{{ cards|length }}"
+        >
+            {% for card in cards %}
+            {% if not forloop.counter|divisibleby:2 %}
+                <div class="row block-linha-do-tempo">
+            {% endif %}
+                {% include 'blocks/card_linha_do_tempo.html' with card=card index=forloop.counter0 last_index=cards|length|add:'-1' %}
+            {% if forloop.last or forloop.counter|divisibleby:2 %}
+                </div>
+            {% endif %}
+            {% empty %}
+                <p>Nenhum card adicionado à linha do tempo.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+  calculateCardPosition = (index) => {
+    const isEven = index % 2 === 0;
+    // cálculo do índice dos card na linha do tempo pares avançam 1 enquanto ímpares avançam 2
+    const position = isEven ? 3*(index / 2) : 3*(((index - 1) / 2)) + 1;
+    return position;
+  }
+
+  const addVisibleToGroup = (row) => {
+    row.querySelector('.card-linha-do-tempo').classList.add('is-visible');
+    row.querySelectorAll('.arrow').forEach((arrow) => {
+      arrow.classList.add('is-visible');
+    });
+  };
+
+  const removeVisibleToGroup = (row) => {
+    row.querySelector('.card-linha-do-tempo').classList.remove('is-visible');
+    row.querySelectorAll('.arrow').forEach((arrow) => {
+      arrow.classList.remove('is-visible');
+    });
+  };
+
+  const isStillVisible = (el) => {
+    var rect = el.getBoundingClientRect();
+    var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+    return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+  }
+
+  const getElementRevealedPercentage = (el) => {
+    const rect = el.getBoundingClientRect();
+    if (rect.height === 0) return 0;
+    const offset = 300;  // Offset acima e abaixo do elemento
+    const visualizedPortion = -(rect.top + offset) + window.innerHeight;  // A porção já visualizada considerando a parte do scroll de cima
+    const revealedPortion = -(1 - visualizedPortion) / (rect.height - offset);
+    const secureRevealedPortionAbove = Math.max(0, revealedPortion);  // Elemento ainda não atingiu a viewport
+    const secureRevealedPortionBelow = Math.min(1, secureRevealedPortionAbove);  // Elemento ultrapassou a viewport
+    return secureRevealedPortionBelow * 100;
+  }
+
+  const setElementRevealedPercentage = (percentage) => {
+    document.documentElement.style.setProperty('--reveal-percentage', `${percentage.toFixed(2)}%`);
+  }
+
+  (function() {
+    function init() {
+      const rows = document.querySelectorAll('.linha-do-tempo-item-row');
+      if (!rows.length) return;
+
+      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) {
+        rows.forEach(function(el){ addVisibleToGroup(el); });
+        return;
+      }
+
+      if (!('IntersectionObserver' in window)) {
+        // Fallback: revelar cards com um certo delay
+        rows.forEach(function(el, i){ setTimeout(function(){
+          addVisibleToGroup(el); }, i * 200);
+        });
+        return;
+      }
+
+      const indexMap = new Map();
+      rows.forEach(function(el, i){ indexMap.set(el, i); });
+      const visible = new Set();
+      const hideTimers = new Map();
+
+      const io = new IntersectionObserver(function(entries) {
+        const entering = entries.filter(function(e){ return e.isIntersecting; });
+        const leaving = entries.filter(function(e){ return !e.isIntersecting; });
+
+        // Para cards que saem da tela
+        leaving.forEach(function(entry){
+          const el = entry.target;
+          visible.delete(el);
+          if (hideTimers.has(el)) { clearTimeout(hideTimers.get(el)); hideTimers.delete(el); }
+          const t = setTimeout(function(){ 
+            if (!visible.has(el) && !isStillVisible(el)) { removeVisibleToGroup(el); } hideTimers.delete(el);
+          }, 1200);
+          hideTimers.set(el, t);
+        });
+
+        if (entering.length) {
+          // Marcar como visível
+          entering.forEach(function(entry){
+            var el = entry.target;
+            visible.add(el);
+            if (hideTimers.has(el)) { clearTimeout(hideTimers.get(el)); hideTimers.delete(el); }
+          });
+          // Revelar cards que entram na tela em ordem do DOM
+          entering
+            .sort(function(a, b){ return indexMap.get(a.target) - indexMap.get(b.target); })
+            .forEach(function(entry, i){
+              var el = entry.target;
+              if (!el.classList.contains('is-visible')) {
+                setTimeout(function(){ addVisibleToGroup(el); }, i * 350);
+              }
+            });
+        }
+      }, {
+        root: null,
+        rootMargin: '0px 0px -10% 0px',
+        threshold: 0.15
+      });
+
+      // Inicia observação de todos os cards
+      rows.forEach(function(el){ io.observe(el); });
+
+      function inView(el){
+        const r = el.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        return r.top < vh * 0.85 && r.bottom > vh * 0.15; // approximates threshold/rootMargin
+      }
+      const initial = Array.prototype.filter.call(rows, inView)
+        .sort(function(a, b){ return indexMap.get(a) - indexMap.get(b); });
+      if (initial.length) {
+        initial.forEach(function(el){
+          visible.add(el);
+          if (hideTimers.has(el)) { clearTimeout(hideTimers.get(el)); hideTimers.delete(el); }
+        });
+        initial.forEach(function(el, i){
+          if (!el.classList.contains('is-visible')) {
+            setTimeout(function(){ addVisibleToGroup(el); }, i * 400);
+          }
+        });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+
+  function updateTimelineGradient() {
+    const linhaDoTempoCardsContainer = document.querySelector('.linha-do-tempo-cards-container');
+    const cardsRevealedPercentage = getElementRevealedPercentage(linhaDoTempoCardsContainer);
+    setElementRevealedPercentage(cardsRevealedPercentage);
+  }
+
+  // Inicializa preenchimento da linha central
+  updateTimelineGradient();
+
+  // Adiciona listener de scroll com debounce para melhorar desempenho
+  let isScrolling;
+  window.addEventListener('scroll', function() {
+      window.clearTimeout(isScrolling);
+      isScrolling = setTimeout(updateTimelineGradient, 10);
+  }, { passive: true });
+
+  // Considera redimensionamento da janela
+  window.addEventListener('resize', updateTimelineGradient, { passive: true });
+</script>
+
+{% endblock %}

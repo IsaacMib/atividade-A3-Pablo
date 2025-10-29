@@ -53,25 +53,15 @@
         <meta name="test" />
 
         {% render_bundle 'main' 'css' %}
-
-        {# Google Analytics - só carrega se configurado #}
-        {% if settings.core.SiteSettings.tem_google_analytics %}
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.core.SiteSettings.google_analytics_tag }}"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '{{ settings.core.SiteSettings.google_analytics_tag }}');
-        </script>
-        {% endif %}
     </head>
 
     <body class="tw:font-inter {% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
 
         {% include 'barra_identidade.html' %}
-        {% include 'header.html' %}
+        {% block header %}
+            {% include 'header.html' %}
+        {% endblock %}
 
         <div id="site-conteudo-main">
             {% include 'include/breadcrumb.html' %}
@@ -88,6 +78,18 @@
         {% block extra_js %}
         {# Override this in templates to add extra javascript #}
         {% endblock %}
+
+        {# Google Analytics - só carrega se configurado #}
+        {% if settings.core.SiteSettings.tem_google_analytics %}
+            <!-- Google tag (gtag.js) -->
+            <script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.core.SiteSettings.google_analytics_tag }}"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '{{ settings.core.SiteSettings.google_analytics_tag }}');
+            </script>
+        {% endif %}
 
         <div vw class="enabled">
             <div vw-access-button class="active"></div>

@@ -38,6 +38,11 @@ urlpatterns = [
     path("404/", sitepadrao_views.erro_404, name="erro_404"),
 ]
 
+if settings.HABILITAR_SITE_INTRANET:
+    urlpatterns += [
+        path("logout/", sitepadrao_views.intranet_logout, name="intranet_logout"),
+    ]
+
 if settings.HABILITAR_SSO_LOGIN:
     urlpatterns += [
         # Sobrescreve a URL de logout do Wagtail admin para incluir logout do SSO
@@ -66,7 +71,6 @@ urlpatterns = urlpatterns + [
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
     # the list:
-    path("intranet/", include("intranet.urls")),
     path("", include('wagtail.urls')),
     # Alternatively, if you want Wagtail pages to be served from a subpath
     # of your site, rather than the site root:

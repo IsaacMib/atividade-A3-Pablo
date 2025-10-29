@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block content %}
+<div class="linha-do-tempo-page">
+    <div class="container">
+        <div class="linha-do-tempo-page__content">
+            <h1 class="linha-do-tempo-page__titulo">{{ page.title }}</h1>
+            <p class="linha-do-tempo-page__data">Publicado em {{ page.data_publicacao|date:"d/m/Y" }}</p>
+            {% include 'blocks/banner.html' with banner=self %}
+            <div class="linha-do-tempo-page__descricao">{{ page.descricao }}</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
