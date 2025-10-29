@@ -93,7 +93,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: variables.$swiper-background-color;
+      background: transparent;
       img {
         max-height: 480px;
       }
@@ -112,30 +112,32 @@
     }
 
     .noticias-mySwiper2 {
-      --swiper-navigation-color: #{variables.$color-white};
+      --swiper-navigation-color: #{variables.$color-primary};
       --swiper-pagination-color: #{variables.$color-white};
       height: 80%;
       width: 100%;
-      background: variables.$swiper-background-color;
+      background: transparent;
+
+      .swiper-button-next::after,
+      .swiper-button-prev::after {
+        font-size: 1.5rem; // Define um tamanho menor e mais discreto para as setas
+      }
     }
     
 
     .noticias-mySwiper {
       height: 20%;
       box-sizing: border-box;
-      padding: 10px 0;
       &.swiper-thumbs {
-        
-        margin-top: 10px;
+        margin-top: 4px; // Diminui a distância para a imagem principal
         
         max-height: variables.$tamanho-imagem-noticia-thumbs;
         .swiper-slide-noticias {
           max-height: variables.$tamanho-imagem-noticia-thumbs;
           background: transparent;
-          background: variables.$swiper-thumbs-background-color;
         }
         img {
-          border: 1px solid #d3d3d3;
+          box-sizing: border-box; // Garante que a borda não aumente o tamanho do elemento
           max-height: variables.$tamanho-imagem-noticia-thumbs;
         }
       }
@@ -144,11 +146,10 @@
     .noticias-mySwiper .swiper-slide-noticias {
       width: 25%;
       height: 100%;
-      opacity: 0.4;
     }
 
-    .noticias-mySwiper .swiper-slide-thumb-active {
-      opacity: 1;
+    .noticias-mySwiper .swiper-slide-thumb-active img {
+      border: 3px solid variables.$color-primary; // Adiciona a borda azul na miniatura ativa
     }
 
     .swiper-slide-noticiasimg {
