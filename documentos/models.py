@@ -39,9 +39,6 @@ class DocumentosPageTag(TaggedItemBase):
 # PÁGINA INDIVIDUAL
 # ============================================================
 class DocumentosPage(PageSitePadrao):
-    subtitle = models.CharField(
-        verbose_name="Subtítulo", blank=True, max_length=255
-    )
     descricao = models.TextField(
         verbose_name="Descrição",
         blank=True,
@@ -67,7 +64,6 @@ class DocumentosPage(PageSitePadrao):
     )
 
     content_panels = get_page_title_with_counter(50) + [
-        FieldPanel("subtitle"),
         FieldPanel("descricao", widget=get_widget_input_with_counter()),
         FieldPanel("arquivo"),
         FieldPanel("destaque"),
@@ -146,9 +142,6 @@ class DocumentosPage(PageSitePadrao):
 class DocumentosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
     introduction = models.TextField(
         help_text="Texto para o topo da página de documentos", blank=True
-    )
-    subtitle = models.CharField(
-        verbose_name="Subtítulo", blank=True, max_length=255
     )
     mostrar_destaque_primeiro = models.BooleanField(
         default=True,

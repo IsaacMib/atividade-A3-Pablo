@@ -53,7 +53,7 @@ class AvisosPage(PageSitePadrao):
     descricao = models.TextField(
         "Descrição",
         help_text="Breve descrição do conteúdo da página.",
-        max_length=211
+        max_length=255
     )
 
     data_publicacao = models.DateTimeField(

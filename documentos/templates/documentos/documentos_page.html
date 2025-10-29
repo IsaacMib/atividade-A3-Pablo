@@ -13,10 +13,6 @@
         {% include "include/titulo.html" with titulo=page.title|default:intro|default:"Documentos" bgClass="" %}
       {% endwith %}
 
-      {% if page.subtitle %}
-        <p class="documento-detalhe-subtitle mt-2">{{ page.subtitle }}</p>
-      {% endif %}
-
       {% if page.data_publicacao %}
         <p class="documento-detalhe-data mt-2">
           Publicado em {{ page.data_publicacao|date:"d \d\e F \d\e Y" }}
