@@ -100,6 +100,17 @@
         </div>
       {% endif %}
 
+      {% if page.categoria %}
+        <div class="noticias-categoria">
+          <div class="tags-container">
+            <p class="categoria-nome">Categoria:</p>
+            <span class="tag-link">
+              <i class="fa-solid fa-tag"></i>{{ page.categoria.nome }}
+            </span>
+          </div>
+        </div>
+      {% endif %}
+
       {% if page.get_tags %}
         <div class="noticias-tags">
           <div class="tags-container">
