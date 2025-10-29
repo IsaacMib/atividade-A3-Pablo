@@ -1,7 +1,13 @@
 @use '../variables.scss';
 
 .noticias-page--wrapper {
+  display: flex;
+  justify-content: center;
   background-color: variables.$color-white;
+}
+.noticias-page--content {
+  width: 100%;
+  max-width: 1000px;
 }
 
 .page-noticias-header {

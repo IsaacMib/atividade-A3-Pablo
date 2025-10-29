@@ -16,6 +16,7 @@ from wagtail.search import index
 from wagtail.api import APIField
 from wagtail.models import Page, Site
 from core.models import PageSitePadrao, PageSitePadraoIndex
+from wagtail.snippets.models import register_snippet
 
 from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
 from datetime import datetime
@@ -114,6 +115,23 @@ class NoticiaRemota:
         return [{'name': tag, 'url': '#'} for tag in self.tags]
 
 
+class CategoriaNoticias(models.Model):
+    """
+    Modelo para gerenciar as categorias de notícias.
+    """
+    nome = models.CharField(max_length=255, unique=True, verbose_name="Nome da Categoria")
+
+    panels = [
+        FieldPanel('nome'),
+    ]
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        verbose_name = "Categoria de Notícia"
+        verbose_name_plural = "Categorias de Notícias"
+
 
 _API_CACHE_TIMEOUT = 5 * 60  # 5 minutos
 MAX_NOTICIAS_DESTAQUE = 6
@@ -145,6 +163,14 @@ class NoticiasPage(PageSitePadrao):
     )
     data_publicacao = models.DateTimeField(
         "Data de publicação da notícia", default=datetime.now, blank=True, null=True
+    )
+    categoria = models.ForeignKey(
+        'noticias.CategoriaNoticias',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name="Categoria"
     )
     tags = ClusterTaggableManager(through=NoticiasPageTag, blank=True)
     body = StreamField(
@@ -231,6 +257,7 @@ class NoticiasPage(PageSitePadrao):
         ),
         FieldPanel("body"),
         FieldPanel("data_publicacao"),
+        FieldPanel("categoria"),
         FieldPanel("tags"),
     ]
 
@@ -263,6 +290,7 @@ class NoticiasPage(PageSitePadrao):
         APIField('subtitle'),
         APIField('descricao'),
         APIField('data_publicacao'),
+        APIField('categoria'),
         APIField('body'),
         APIField('tags'),
         # Usamos 'get_imagem_destaque' para garantir que pegamos a imagem correta

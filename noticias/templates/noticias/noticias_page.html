@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags static file_extras noticias_tags %}
 {% block content %}
-<div class="noticias-page--wrapper d-flex">
-  <div class="container">
+<div class="noticias-page--wrapper">
+  <div class="noticias-page--content">
 
     {% if settings.core.SiteSettings.is_periodo_eleitoral and page.sensivel_periodo_eleitoral %}
       {% include 'include/periodo-eleitoral.html' %}
@@ -113,7 +113,7 @@
         </div>
       {% endif %}
     {% endif %}
-  </div>
+  </div> <!-- .noticias-page--content -->
 </div>
 
 {% if not settings.core.SiteSettings.is_periodo_eleitoral and not page.sensivel_periodo_eleitoral %}
