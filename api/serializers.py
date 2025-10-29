@@ -7,6 +7,7 @@ from core.utils import get_file_type, get_fontawesome_file_icon
 from noticias.models import NoticiasPage
 class NoticiasPageSerializer(serializers.ModelSerializer):
     imagem_destaque = serializers.SerializerMethodField()
+    categoria = serializers.StringRelatedField()
 
     class Meta:
         model = NoticiasPage
@@ -18,6 +19,7 @@ class NoticiasPageSerializer(serializers.ModelSerializer):
             'data_publicacao',
             'imagem_destaque',
             'url',
+            'categoria',
         ]
 
     def get_body(self, obj):

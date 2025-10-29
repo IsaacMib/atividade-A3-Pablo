@@ -46,21 +46,19 @@ class NoticiaRemota:
         self.destaque = data.get('destaque', False)
         self.body = data.get('body', '')
         self.imagem_destaque_remota = data.get('imagem_destaque')
-
-        # Garante que 'arquivos' seja uma lista de dicionários com 'url' e 'title'
+        self.categoria = data.get('categoria', None)
         self.arquivos = []
         for arq in data.get('arquivos', []):
             if isinstance(arq, dict) and 'url' in arq and 'title' in arq:
                 arq['icon_class'] = get_fontawesome_file_icon(get_file_type(arq['url']))
                 self.arquivos.append(arq)
-            elif isinstance(arq, str): # Assume que é uma string de URL
+            elif isinstance(arq, str):
                 self.arquivos.append({
                     'url': arq,
                     'title': arq.split('/')[-1],
                     'icon_class': get_fontawesome_file_icon(get_file_type(arq))
                 })
 
-        # Garante que 'images' seja uma lista de dicionários com 'url' e 'title'
         self.images = []
         raw_images = data.get('images', [])
         if not isinstance(raw_images, list):
@@ -119,7 +117,7 @@ class CategoriaNoticias(models.Model):
     """
     Modelo para gerenciar as categorias de notícias.
     """
-    nome = models.CharField(max_length=255, unique=True, verbose_name="Nome da Categoria")
+    nome = models.CharField(max_length=40, unique=True, verbose_name="Nome da Categoria")
 
     panels = [
         FieldPanel('nome'),
