@@ -60,7 +60,7 @@ INTRANET_WIDGET_BLOCKS = [
     ('banner_com_link', BannerComLinkBlock()),
     # Adicione aqui outras versões de blocos otimizadas para widgets
 ]
-
+#TODOGABRIEL: Compatibilizar para usar 1 home apenas e 1 base.html para o projeto.
 class IntranetHomePage(PageSitePadrao):
 
   body = StreamField(
