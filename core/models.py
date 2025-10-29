@@ -569,7 +569,7 @@ class SiteSettings(BaseSiteSetting):
                 })
 
         if self.periodo_eleitoral_habilitado:
-            if not self.periodo_eleitoral_inicio or not self.periodo_eleitoral_fim:
+            if not self.periodo_eleitoral_inicio and not self.periodo_eleitoral_fim:
                 raise ValidationError({
                     "periodo_eleitoral_inicio": "Obrigatório quando o período eleitoral está habilitado.",
                     "periodo_eleitoral_fim": "Obrigatório quando o período eleitoral está habilitado.",
