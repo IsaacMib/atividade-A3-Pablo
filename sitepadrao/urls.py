@@ -38,6 +38,11 @@ urlpatterns = [
     path("404/", sitepadrao_views.erro_404, name="erro_404"),
 ]
 
+if settings.HABILITAR_SITE_INTRANET:
+    urlpatterns += [
+        path("logout/", sitepadrao_views.intranet_logout, name="intranet_logout"),
+    ]
+
 if settings.HABILITAR_SSO_LOGIN:
     urlpatterns += [
         # Sobrescreve a URL de logout do Wagtail admin para incluir logout do SSO

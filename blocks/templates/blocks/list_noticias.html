@@ -1,21 +1,38 @@
-<div class="lista-noticias--wrapper ">
-  <div class="container">  
-    {% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
+<div class="lista-noticias--wrapper 
+  {% if self.layout == 'lista' %}modo-lista{% else %}modo-blocos{% endif %}
+  {% if self.background_personalizado %}noticias-bg{% endif %}">
+  
+  <div class="container">
+    {% if self.mostrar_titulo %}
+      {% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
+    {% endif %}
 
     <div class="row">
       {% if noticias %}
         {% for noticia in noticias %}
-          <div class="col-lg-6 col-md-12 col-sm-12">
-            {% include 'blocks/noticias.html' with noticias=noticia %}
-          </div>
+          {% if self.layout == 'lista' %}
+            <!-- MODO LISTA -->
+            <div class="col-12 noticia-item-lista">
+              {% include 'blocks/noticias.html' with noticias=noticia %}
+            </div>
+          {% else %}
+            <!-- MODO BLOCOS -->
+            <div class="col-lg-6 col-md-12 col-sm-12">
+              {% include 'blocks/noticias.html' with noticias=noticia %}
+            </div>
+          {% endif %}
         {% endfor %}
       {% else %}
-          <div class="col-md-12 tw:text-center">
-              <p>Ainda não temos Notícias no site. Desculpe.</p>
-          </div>
+        <div class="col-md-12 text-center">
+          <p>Ainda não temos Notícias no site. Desculpe.</p>
+        </div>
+        <div class="col-md-12 text-center">
+          <p>Ainda não temos Notícias no site. Desculpe.</p>
+        </div>
       {% endif %}
     </div>
   </div>
+
   {% if noticias_index_page_url %}
     {% include "include/ver_todos_btn.html" with ver_todos_url=noticias_index_page_url ver_todos_texto_link=texto_link btn_class='text-center btn-ver-todos-bg-cinza' %}
   {% endif %}

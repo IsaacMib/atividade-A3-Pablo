@@ -1,0 +1,134 @@
+@use '../variables.scss';
+
+[data-theme="dark"] {
+    .template-documentos-index-page {
+        background-color: variables.$color-grey-900;
+        color: variables.$color-grey-100;
+        
+        .documentos-container {
+            max-width: 900px;
+            margin: 0 auto;
+
+            p.text-muted {
+                font-size: 1rem;
+                line-height: 1.6;
+                color: variables.$color-grey-400;
+            }
+
+            .border-bottom {
+                border-color: variables.$color-grey-700 !important;
+            }
+            
+            .documentos-subtitle {
+                color: variables.$color-dark-theme-text;
+            }
+
+            form {
+                .form-select {
+                    border-radius: 10px;
+                    border: 1px solid variables.$color-grey-700;
+                    background-color: variables.$color-grey-800;
+                    color: variables.$color-grey-100;
+                    padding: 0.5rem 1rem;
+                    font-size: 0.95rem;
+                    transition: all 0.2s ease;
+            
+                    option {
+                        background-color: variables.$color-grey-800;
+                        color: variables.$color-grey-100;
+                    }
+
+                    &:hover,
+                    &:focus {
+                        border-color: variables.$color-primary;
+                        box-shadow: 0 0 0 0.15rem variables.$color-overlay-40;
+                    }
+                }
+
+                .btn {
+                    border-radius: 10px;
+                    font-weight: 500;
+                    color: variables.$color-on-primary;
+                    background-color: variables.$color-dark-theme-text-secondary;
+                    border: none;
+                    transition: all 0.25s ease;
+
+                    &:hover {
+                        transform: translateY(-2px);
+                        background-color: variables.$color-primary-dark;
+                        box-shadow: 0 3px 8px variables.$color-overlay-40;
+                    }
+                }
+            }
+
+            .documentos-list {
+                .documento-item {
+                    border-bottom: 1px solid variables.$color-grey-700;
+                    transition: background 0.2s ease;
+
+                    &:hover {
+                        background-color: variables.$color-overlay-8;
+                    }
+
+                    .documento-dot {
+                        color: variables.$color-dark-theme-text;
+                    }
+
+                    .documento-link {
+                        transition: color 0.2s ease;
+                        color: variables.$color-grey-100;
+
+                        &:hover {
+                            color: variables.$color-dark-theme-text;
+                        }
+                    }
+
+                    .badge {
+                        font-size: 0.75rem;
+                        padding: 0.35rem 0.6rem;
+                        border-radius: 6px;
+                        background-color: variables.$color-warning;
+                        color: variables.$color-on-warning;
+                        text-transform: uppercase;
+                    }
+
+                    .text-muted {
+                        font-size: 0.85rem;
+                        color: variables.$color-grey-500;
+                    }
+                }
+
+                p.text-muted {
+                    text-align: center;
+                    font-style: italic;
+                    margin-top: 2rem;
+                    color: variables.$color-grey-500;
+                }
+            }
+        }
+
+        @media (max-width: 768px) {
+            .documentos-container {
+                .d-flex {
+                    flex-direction: column !important;
+                    align-items: stretch !important;
+                }
+
+                form {
+                    width: 100%;
+                    gap: 0.75rem;
+
+                    .form-select,
+                    .btn {
+                        width: 100%;
+                    }
+                }
+
+                .documentos-list .documento-item {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+            }
+        }
+    }
+}

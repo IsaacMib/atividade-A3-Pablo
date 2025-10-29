@@ -64,11 +64,15 @@ INSTALLED_APPS = [
     "institucional",
     "agenda",
     "avisos",
-    "contatos",
+    "intranet",
+    "cursos",
+    "documentos",
     'editais',
     "eventos",
     "linhasdotempo",
     "lgpd",
+    "cursos",
+
 
     "plone_migration",
     "auth_keycloak",
@@ -354,11 +358,13 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 HABILITAR_SSO_LOGIN = get_bool("HABILITAR_SSO_LOGIN", False)
+HABILITAR_SITE_INTRANET = get_bool("HABILITAR_SITE_INTRANET", True)
 
 # URL para redirecionar após login bem-sucedido
 LOGIN_REDIRECT_URL = "/admin/"
 
 LOGIN_URL = '/admin/login/'
+ACCOUNT_LOGIN_URL = '/admin/login/'  # Adicionado para django-allauth
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*']

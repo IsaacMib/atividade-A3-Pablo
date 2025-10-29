@@ -1,25 +1,26 @@
-<div class="acesso-rapido-wrapper">
+<div class="acesso-rapido-wrapper 
+     {% if self.layout == 'lista' %}modo-lista{% elif self.layout == 'grid' %}modo-grid{% else %}modo-blocos{% endif %}">
   <div class="container acesso-rapido">
+    
     {% include 'include/titulo.html' with titulo=self.titulo bgClassExtra='titulo-pequeno-mobile' %}
-    <div class="row g-4">
-      {% for item in value.itens %}
-        <div class="col-6 col-sm-4 col-md-3">
-          <a href="{{ item.link }}">
-            <div class="quick-access">
-              <div class="quick-access-wrapper">
-                <div class="quick-access-icon">
-                  {% if item.icone %}
-                    <i class="{{ item.icone }}"></i>
-                  {% endif %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+          {% for item in value.itens %}
+            <div class="col">
+              <a href="{{ item.link }}">
+                <div class="quick-access quick-access-fullwidth d-flex flex-column align-items-center p-4 shadow rounded-4 h-100">
+                  <div class="quick-access-icon-ellipse d-flex align-items-center justify-content-center mb-3 fs-1">
+                    {% if item.icone %}
+                      <i class="{{ item.icone }}"></i>
+                    {% else %}
+                      <i class="fa-regular fa-file-lines"></i>
+                    {% endif %}
+                  </div>
+                  <h5 class="quick-access-title mb-2 text-center">{{ item.titulo|linebreaksbr }}</h5>
                 </div>
-                <div class="quick-access-title">
-                  {{ item.titulo|linebreaksbr }}
-                </div>
-              </div>
+              </a>
             </div>
-          </a>
+          {% endfor %}
         </div>
-      {% endfor %}
-    </div>
   </div>
 </div>
+

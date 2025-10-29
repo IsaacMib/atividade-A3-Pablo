@@ -7,18 +7,24 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
 from wagtail.images.blocks import ImageChooserBlock
+
+from blocks.models import ListRedeSocial, ListRedesSociais
 from wagtail.models import Page
 
-from blocks.models import ListRedeSocial
+
+from django.shortcuts import redirect
+from django.contrib import messages
 
 
 class PageSitePadrao(Page):
-
+    """Classe base para todas as páginas do site."""
+    
     descricao = models.TextField(
         verbose_name="Descrição",
         blank=True,
         help_text="Descrição da página para SEO e redes sociais"
     )
+
 
     imagem_destaque = models.ForeignKey(
         'wagtailimages.Image',
@@ -44,12 +50,81 @@ class PageSitePadrao(Page):
         Retorna a imagem de destaque da página ou None se não houver.
         """
         return self.imagem_destaque
+    
+    def _process_custom_form(self, request):
+        """
+        Processa formulários customizados presentes no body da página.
+        Retorna True se o formulário foi processado com sucesso e deve ser redirecionado,
+        False caso contrário.
+        """
+        from blocks.models import CustomFormBlock
+        
+        # Procura por um bloco de formulário customizado no body
+        form_block = next((block for block in self.body if isinstance(block.block, CustomFormBlock)), None)
+        
+        if not form_block:
+            return False
+            
+        form = form_block.block.get_context(form_block.value, parent_context={'request': request})['form']
+        form_kwargs = {
+            'show_recaptcha': getattr(form, 'show_recaptcha', False),
+            'recaptcha_secret_key': getattr(form, 'recaptcha_secret_key', None),
+            'fields_config': form.fields_config if hasattr(form, 'fields_config') else None,
+            'initial': form.initial if hasattr(form, 'initial') else {},
+            'request': request,
+        }
+        bound_form = type(form)(request.POST, request.FILES, **form_kwargs)
+
+        if bound_form.is_valid():
+            from blocks.models import FormularioSubmissao, ArquivoSubmetido
+            from django.core.files.base import File
+            
+            field_map = {}
+            if hasattr(bound_form, 'fields_config') and bound_form.fields_config:
+                for i, block in enumerate(bound_form.fields_config):
+                    field_name = f"custom_field_{i}_{block.block_type}"
+                    field_label = block.value.get('label', field_name)
+                    field_map[field_name] = field_label
+
+            cleaned_data = bound_form.cleaned_data.copy()
+            arquivos_para_salvar = {}
+            dados_adicionais_serializaveis = {}
+
+            for key, value in cleaned_data.items():
+                if isinstance(value, File):
+                    arquivos_para_salvar[key] = value
+                else:
+                    dados_adicionais_serializaveis[field_map.get(key, key)] = value
+
+            nome_completo = cleaned_data.pop('nome_completo', '')
+            titulo = cleaned_data.pop('titulo', '')                    
+
+            submissao = FormularioSubmissao.objects.create(
+                nome_completo=nome_completo,
+                titulo=titulo,
+                dados_adicionais={k: v for k, v in dados_adicionais_serializaveis.items() if k not in ['nome_completo', 'titulo', 'g-recaptcha-response']},
+                pagina=self,
+                usuario=request.user if request.user.is_authenticated else None
+            )
+            
+            for nome_campo, arquivo in arquivos_para_salvar.items():
+                ArquivoSubmetido.objects.create(submissao=submissao, nome_campo=nome_campo, arquivo=arquivo)
+
+            messages.success(request, "Formulário Enviado Com Sucesso!")
+            return True
+        else:
+            messages.error(request, "Ocorreu um erro. Por favor, verifique os campos do formulário.")
+            setattr(request, '_form_errors', bound_form)
+            return False
+
+
 
     class Meta:
         abstract = True
 
 
 class PageSitePadraoIndex(Page):
+    """Classe base para páginas de índice do site."""
     """
     Classe base para páginas de índice do site.
     Herda apenas de Page do Wagtail sem campos adicionais.
@@ -61,6 +136,8 @@ class PageSitePadraoIndex(Page):
 
 @register_setting(icon="site")
 class SiteSettings(BaseSiteSetting):
+    """Configurações gerais do site."""
+    
     """
     Configurações do site acessíveis via Wagtail Settings.
     Adiciona campos de título, período eleitoral, redes sociais, menu,
@@ -68,12 +145,13 @@ class SiteSettings(BaseSiteSetting):
     """
 
     title_suffix = models.CharField(
-        verbose_name="Titulo do Site",
+        verbose_name="Título do Site",
         max_length=255,
-        help_text="Titulo do site e utilizado como sufixo na tag meta. Ex.:' | Site Padrão'",
+        help_text="Título do site e utilizado como sufixo na tag meta. Ex.: ' | Site Padrão'",
         default="Site Padrão",
     )
 
+    # --- Período Eleitoral ---
     periodo_eleitoral_habilitado = models.BooleanField(
         verbose_name="Habilitar Período Eleitoral",
         default=False,
@@ -92,24 +170,41 @@ class SiteSettings(BaseSiteSetting):
     texto_informativo_periodo_eleitoral = models.TextField(
         verbose_name="Texto informativo do período eleitoral",
         blank=True,
-        default="Em respeito a legislação eleitoral, Lei 9.504/97, as notícias deste site/portal estão temporariamente suspensa."
+        default="Em respeito à legislação eleitoral (Lei 9.504/97), as notícias deste site/portal estão temporariamente suspensas."
     )
 
+    # --- Redes Sociais e Compartilhamento ---
     redes_sociais = StreamField(
         [("lista_redes", ListRedeSocial())],
-        verbose_name="Redes Sociais",
+        verbose_name="Redes Sociais (Globais)",
         blank=True,
         use_json_field=True,
         help_text="Defina as redes sociais do Portal."
     )
 
+    compartilhar_redes_sociais = models.BooleanField(
+        verbose_name="Ativar Compartilhamento em Redes Sociais",
+        default=False,
+        help_text="Ative para exibir os botões de compartilhamento nas páginas."
+    )
+
+    compartilhar_rede_social = StreamField(
+        [("redes_compartilhar", ListRedesSociais())],
+        verbose_name="Selecionar Redes para Compartilhamento",
+        blank=True,
+        use_json_field=True,
+        help_text=("Escolha quais redes sociais estarão disponíveis para compartilhamento. "
+                   "Cada tipo de rede só pode ser adicionado uma vez (máx. 1 por tipo).")
+    )
+
+    # --- Menu ---
     menu_max_levels = models.PositiveIntegerField(
         verbose_name="Níveis máximos do menu",
         default=1,
         help_text="Define até quantos níveis de páginas o menu principal irá exibir. (Máximo: 3)"
     )
 
-    # Configurações para cookies e Google Analytics
+    # --- Cookies e Analytics ---
     cookies_habilitado = models.BooleanField(
         verbose_name="Habilitar Aviso de Cookies",
         default=False,
@@ -119,7 +214,26 @@ class SiteSettings(BaseSiteSetting):
         verbose_name="Tag do Google Analytics",
         max_length=20,
         blank=True,
-        help_text="Insira a tag do Google Analytics (ex: G-XXXXXXXXXX). O aviso de cookies analíticos só será exibido se esta tag estiver definida."
+        help_text="Insira a tag do Google Analytics (ex: G-XXXXXXXXXX)."
+    )
+
+    # --- Intranet ---
+    intranet_habilitada = models.BooleanField(
+        default=False,
+        verbose_name="Ativar Intranet",
+        help_text="Marque esta opção para ativar todas as funcionalidades da Intranet no site."
+    )
+
+    # --- Rodapé ---
+    footer_titulo_instituicao = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Título da Instituição no Rodapé",
+    )
+    footer_informacoes = models.TextField(
+        blank=True,
+        verbose_name="Informações do Rodapé",
+        help_text="Endereço, telefone, horário, CNPJ. Use <br> para quebras de linha.",
     )
 
     footer_titulo_instituicao = models.CharField(
@@ -220,8 +334,10 @@ class SiteSettings(BaseSiteSetting):
         MultiFieldPanel(
             [
                 FieldPanel("redes_sociais"),
+                FieldPanel("compartilhar_redes_sociais"),
+                FieldPanel("compartilhar_rede_social"),
             ],
-            heading="Redes Sociais"
+            heading="Redes Sociais e Compartilhamento"
         ),
         MultiFieldPanel(
             [
@@ -238,10 +354,14 @@ class SiteSettings(BaseSiteSetting):
         ),
         MultiFieldPanel(
             [
+                FieldPanel("intranet_habilitada"),
+            ],
+            heading="Intranet"
+        ),
+        MultiFieldPanel(
+            [
                 FieldPanel("footer_titulo_instituicao"),
                 FieldPanel("footer_informacoes"),
-                FieldPanel("footer_link_sic"),
-                FieldPanel("footer_imagem_sic"),
             ],
             heading="Rodapé",
             classname="collapsible collapsed"
@@ -279,6 +399,118 @@ class SiteSettings(BaseSiteSetting):
             return self.periodo_eleitoral_inicio <= hoje <= self.periodo_eleitoral_fim
         return False
 
+    def get_redes_ativas(self, absolute_url, page_title=None):
+        """Gera a lista de redes sociais ativas com URLs de compartilhamento."""
+        if not self.compartilhar_redes_sociais or not self.compartilhar_rede_social:
+            return []
+
+        redes_ativas = []
+        seen_names = set()
+        for bloco in self.compartilhar_rede_social:
+            # bloco.value can be a list of choice strings (from ListRedesSociais)
+            # or a list of Struct values (legacy). Normalize both cases.
+            inner = bloco.value
+            # If inner is a dict with key 'redes' (StructBlock shape), extract list
+            if isinstance(inner, dict) and 'redes' in inner:
+                redes_list = inner.get('redes') or []
+                # redes_list typically is a list of strings (choice values)
+                for nome in redes_list:
+                    if not nome:
+                        continue
+                    # avoid duplicates
+                    if nome in seen_names:
+                        continue
+                    seen_names.add(nome)
+                    icone = f"fa-brands fa-{nome}"
+                    url = ""
+                    # construct sharing URL by type
+                    if nome == "messenger":
+                        url = f"https://www.facebook.com/dialog/send?link={absolute_url}&app_id=YOUR_APP_ID&redirect_uri={absolute_url}"
+                    elif nome == "linkedin":
+                        url = f"https://www.linkedin.com/shareArticle?mini=true&url={absolute_url}&title={escape(page_title or '')}"
+                    elif nome == "pinterest":
+                        url = f"https://pinterest.com/pin/create/button/?url={absolute_url}&description={escape(page_title or '')}"
+                    elif nome == "x":
+                        url = f"https://twitter.com/intent/tweet?url={absolute_url}&text={escape(page_title or '')}"
+                    elif nome == "reddit":
+                        url = f"https://www.reddit.com/submit?url={absolute_url}&title={escape(page_title or '')}"
+                    elif nome == "whatsapp":
+                        url = f"https://api.whatsapp.com/send?text={escape(page_title or '')} {absolute_url}"
+                    elif nome == "telegram":
+                        url = f"https://t.me/share/url?url={absolute_url}&text={escape(page_title or '')}"
+                    elif nome == "email":
+                        url = f"mailto:?subject={escape(page_title or '')}&body={absolute_url}"
+                    elif nome == "facebook":
+                        url = f"https://www.facebook.com/sharer/sharer.php?u={absolute_url}"
+                    elif nome == "sms":
+                        url = f"sms:?body={escape(page_title or '')} {absolute_url}"
+                    elif nome == "print":
+                        url = "javascript:window.print();"
+                    elif nome == "copy":
+                        url = absolute_url
+
+                    redes_ativas.append({"nome": nome, "icone": icone, "url": url})
+                continue
+
+            # Otherwise, try to iterate as before over bloco.value items
+            for rede in inner:
+                # Some stored values may be plain strings or unexpected structures
+                # (e.g. older DB migrations). Guard against that by extracting
+                # the underlying mapping safely.
+                if hasattr(rede, "value"):
+                    dados = rede.value
+                elif isinstance(rede, dict):
+                    dados = rede
+                elif isinstance(rede, str):
+                    dados = {"nome": rede, "habilitado": True}
+                else:
+                    # Skip entries we can't interpret as a social item
+                    continue
+
+                if not isinstance(dados, dict):
+                    continue
+
+                if dados.get("habilitado", False):
+                    nome = dados.get("nome")
+                    if not nome:
+                        continue
+                    # avoid duplicates
+                    if nome in seen_names:
+                        continue
+                    seen_names.add(nome)
+                    icone = dados.get("icone") or f"fa-brands fa-{nome}"
+                    url = ""
+
+                    if nome == "messenger":
+                        url = f"https://www.facebook.com/dialog/send?link={absolute_url}&app_id=YOUR_APP_ID&redirect_uri={absolute_url}"
+                    elif nome == "linkedin":
+                        url = f"https://www.linkedin.com/shareArticle?mini=true&url={absolute_url}&title={escape(page_title or '')}"
+                    elif nome == "pinterest":
+                        url = f"https://pinterest.com/pin/create/button/?url={absolute_url}&description={escape(page_title or '')}"
+                    elif nome == "x":
+                        url = f"https://twitter.com/intent/tweet?url={absolute_url}&text={escape(page_title or '')}"
+                    elif nome == "reddit":
+                        url = f"https://www.reddit.com/submit?url={absolute_url}&title={escape(page_title or '')}"
+                    elif nome == "whatsapp":
+                        url = f"https://api.whatsapp.com/send?text={escape(page_title or '')} {absolute_url}"
+                    elif nome == "telegram":
+                        url = f"https://t.me/share/url?url={absolute_url}&text={escape(page_title or '')}"
+                    elif nome == "email":
+                        url = f"mailto:?subject={escape(page_title or '')}&body={absolute_url}"
+                    elif nome == "facebook":
+                        url = f"https://www.facebook.com/sharer/sharer.php?u={absolute_url}"
+                    elif nome == "sms":
+                        url = f"sms:?body={escape(page_title or '')} {absolute_url}"
+                    elif nome == "print":
+                        url = "javascript:window.print();"
+                    elif nome == "copy":
+                        url = absolute_url
+
+                    redes_ativas.append({"nome": nome, "icone": icone, "url": url})
+
+        return redes_ativas
+
+    # --- Validações ---
     def deve_exibir_cookies(self):
         """Retorna True se o aviso de cookies deve ser exibido."""
         return self.cookies_habilitado
@@ -331,6 +563,45 @@ class SiteSettings(BaseSiteSetting):
 
     def clean(self):
         super().clean()
+
+        # Validate compartilhar_rede_social: ensure no duplicate network types
+        try:
+            selected = []
+            for bloco in self.compartilhar_rede_social:
+                inner = bloco.value
+                if isinstance(inner, dict) and 'redes' in inner:
+                    redes_list = inner.get('redes') or []
+                    for nome in redes_list:
+                        if nome:
+                            selected.append(nome)
+                else:
+                    # iterate items if list-like
+                    try:
+                        for item in inner:
+                            if hasattr(item, 'value') and isinstance(item.value, dict):
+                                nome = item.value.get('nome')
+                                if nome:
+                                    selected.append(nome)
+                            elif isinstance(item, str):
+                                selected.append(item)
+                    except Exception:
+                        # ignore unexpected shapes here; will be caught earlier if needed
+                        pass
+
+            # find duplicates
+            from collections import Counter
+            counts = Counter(selected)
+            duplicates = [k for k, v in counts.items() if v > 1]
+            if duplicates:
+                raise ValidationError({
+                    'compartilhar_rede_social': ValidationError(
+                        f"Duplicatas encontradas nas redes de compartilhamento: {', '.join(duplicates)}. Remova duplicatas (máx. 1 de cada tipo)."
+                    )
+                })
+        except Exception:
+            # don't break saving for unexpected shapes; be conservative and allow save
+            pass
+
 
         if self.menu_max_levels > 3:
             raise ValidationError({

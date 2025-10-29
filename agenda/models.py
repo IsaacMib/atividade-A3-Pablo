@@ -114,7 +114,7 @@ class AgendaIndexPage(RoutablePageMixin, PageSitePadraoIndex):
     """
     Página que serve como índice para a aplicação de agenda.
     """
-    parent_page_types = ['home.HomePage']
+    parent_page_types = ['home.HomePage', 'intranet.IntranetHomePage']
     subpage_types = ['agenda.AgendaPage']
 
     # Overrides the context to list all child items, that are live, by the

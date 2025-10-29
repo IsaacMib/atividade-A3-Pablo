@@ -1,0 +1,25 @@
+{% load wagtailcore_tags wagtailimages_tags static file_extras %}
+
+<div class="lista-avisos--wrapper {{ classe_bg|default:'' }}">
+    <div class="container">
+        {% include 'include/titulo.html' with titulo=titulo|default:'Últimos Avisos' bgClass='' %}
+        <div class="row">
+            {% if ultimos_avisos %}
+                {% for aviso in ultimos_avisos %}
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        {% include 'blocks/aviso.html' with aviso=aviso %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-md-12">
+                    <p>Ainda não temos avisos no site.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    {% if mostrar_ver_todos|default:True and url_ver_todos %}
+        <div class="text-center tw:mb-8">
+            {% include "include/ver_todos_btn.html" with ver_todos_url=url_ver_todos texto_link="Ver todos" btn_class='btn-ver-todos-bg-cinza' %}
+        </div>
+    {% endif %}
+</div>

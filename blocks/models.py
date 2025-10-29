@@ -14,6 +14,7 @@ from django.db import models
 
 import requests
 from django.core.cache import cache
+from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.blocks import (
@@ -39,6 +40,7 @@ from wagtail.images import get_image_model
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from django.conf import settings
+import re
 import uuid
 
 import magic
@@ -65,11 +67,10 @@ mappingIconsServicos = {
 class AcessoRapidoItemBlock(StructBlock):
     titulo = CharBlock(required=True, max_length=100)
     link = URLBlock(required=True)
-    icone = ChoiceBlock(choices=ICONES_ACESSO_RAPIDO,
-                        required=True, label="Ícone")
+    icone = ChoiceBlock(choices=ICONES_ACESSO_RAPIDO, required=True, label="Ícone")
 
     class Meta:
-        icon = 'link'
+        icon = "link"
         label = "Item de Acesso Rápido"
 
 
@@ -78,26 +79,85 @@ class AcessosRapidosBlock(StructBlock):
     itens = ListBlock(AcessoRapidoItemBlock(), default=[])
 
     class Meta:
-        icon = 'list-ul'
+        icon = "list-ul"
         label = "Bloco de Acessos Rápidos"
-        template = 'blocks/list_acesso_rapido.html'
+        template = "blocks/list_acesso_rapido.html"
 
 
-class BannerComLinkBlock(StructBlock):
-    imagem = ImageChooserBlock(required=True, label="Imagem do Banner")
-    imagem_mobile = ImageChooserBlock(
+class AcessoRapidoWidget(StructBlock):
+    titulo = CharBlock(
         required=False,
-        label="Imagem do Banner para Celulares e Telas Menores",
-        help_text="Imagem que será exibida em telas menores (ex: celulares)")
-    link = URLBlock(required=True, label="URL do Banner")
-    alt_texto = CharBlock(required=False, label="Texto alternativo",
-                          help_text="Descrição da imagem (alt)")
+        default="Acessos Rápidos",
+        help_text="Título exibido acima dos acessos rápidos"
+    )
+    itens = ListBlock(AcessoRapidoItemBlock(), default=[])
 
     class Meta:
-        icon = 'image'
-        label = "Banner com Link"
-        template = 'blocks/banner.html'
+        icon = "list-ul"
+        label = "Widget de Acessos Rápidos"
+        template = "blocks/widget_acesso_rapido.html"
 
+
+
+class BannerComLinkBlock(blocks.StructBlock):
+    imagem = ImageChooserBlock(
+        required=True,
+        label="Imagem do Banner (Desktop)"
+    )
+    imagem_mobile = ImageChooserBlock(
+        required=False,
+        label="Imagem do Banner (Mobile)",
+        help_text="Imagem alternativa para dispositivos menores."
+    )
+    link = blocks.URLBlock(
+        required=True,
+        label="URL do Banner"
+    )
+    alt_texto = blocks.CharBlock(
+        required=False,
+        label="Texto alternativo",
+        help_text="Descrição curta para acessibilidade e SEO."
+    )
+    abrir_nova_aba = blocks.BooleanBlock(
+        required=False,
+        default=False,
+        label="Abrir em nova aba?"
+    )
+    proporcao = blocks.ChoiceBlock(
+        choices=[
+            ("1-1", "Quadrado (1:1)"),
+            ("3-2", "Padrão (3:2)"),
+            ("4-3", "Clássico (4:3)"),
+            ("16-9", "Wide (16:9)"),
+            ("18-6", "Super Wide (18:6)"),
+        ],
+        default="16-9",
+        label="Proporção do Banner"
+    )
+
+    def clean(self, value):
+        cleaned_data = super().clean(value)
+        proporcao = cleaned_data.get('proporcao')
+        altura_personalizada = cleaned_data.get('altura_personalizada')
+
+        errors = {}
+        if proporcao == 'custom':
+            if not altura_personalizada:
+                errors['altura_personalizada'] = ValidationError("Este campo é obrigatório quando a proporção é 'Altura Personalizada'.")
+            else:
+                # Valida se o valor corresponde a um formato de altura CSS comum (ex: 300px, 50vh, 80%)
+                if not re.match(r'^\d+(\.\d+)?(px|vh|vw|%|rem|em)$', altura_personalizada.strip()):
+                    errors['altura_personalizada'] = ValidationError("Formato inválido. Use um valor seguido de uma unidade (ex: '300px', '50vh', '80%').")
+
+        if errors:
+            raise ValidationError('Erros de validação no Banner com Link', params=errors)
+
+        return cleaned_data
+
+    class Meta:
+        icon = "image"
+        label = "Banner com Link"
+        template = "blocks/banner.html"
 
 class VideoBlock(StructBlock):
     titulo = CharBlock(required=True, max_length=100)
@@ -156,6 +216,33 @@ class ListRedeSocial(StructBlock):
         label = "Lista de Redes Sociais"
         template = "blocks/redes_sociais.html"
 
+class ListRedesSociais(blocks.StructBlock):
+
+    ICONES_REDES = [
+        ("facebook", "Facebook"),
+        ("x", "X (Twitter)"),
+        ("linkedin", "LinkedIn"),
+        ("whatsapp", "WhatsApp"),
+        ("telegram", "Telegram"),
+        ("email", "E-mail"),
+        ("sms", "SMS"),
+        ("print", "Imprimir"),
+        ("copy", "Copiar Link"),
+        ("reddit", "Reddit"),
+        ("pinterest", "Pinterest"),
+        ("messenger", "Messenger"),
+    ]
+
+    redes = blocks.ListBlock(
+        blocks.ChoiceBlock(choices=ICONES_REDES, label="Rede de compartilhamento"),
+        label="Selecionar Redes de Compartilhamento",
+        help_text="Selecione as redes sociais nas quais o conteúdo poderá ser compartilhado."
+    )
+
+    class Meta:
+        icon = "share"
+        label = "Compartilhamento em Redes Sociais"
+        template = "blocks/redes_sociais_share.html"
 
 class ItemCarrosselBannerBlock(StructBlock):
     imagem = ImageChooserBlock(required=True, label="Imagem do Banner")
@@ -331,7 +418,9 @@ class ServicosOnlineBlock(StructBlock):
 
 
 class TituloBlock(StructBlock):
+
     """Bloco de título com opções de estilo e visibilidade."""
+
     titulo = CharBlock(
         required=True,
         help_text='Digite o título que será exibido'
@@ -424,7 +513,7 @@ class NoticiasListBlock(StructBlock):
     titulo = CharBlock(
         required=False,
         default="Últimas Notícias",
-        help_text="Título que aparecerá acima da lista de notícias"
+        help_text="Título exibido acima da lista de notícias"
     )
 
     noticias_index_page = PageChooserBlock(
@@ -439,26 +528,52 @@ class NoticiasListBlock(StructBlock):
         min_value=1,
         label="Quantidade de notícias exibidas"
     )
+
     texto_link = CharBlock(
         required=False,
         default="Ver todas as notícias",
         label="Texto do link para todas as notícias"
     )
 
+    mostrar_titulo = blocks.BooleanBlock(
+        required=False,
+        default=True,
+        label="Mostrar título e linha abaixo?"
+    )
+
+    layout = blocks.ChoiceBlock(
+        choices=[
+            ('lista', 'Lista'),
+            ('grid', 'Blocos'),
+        ],
+        default='lista',
+        required=False,
+        label="Layout das notícias"
+    )
+
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
+
         noticias_index_page = value.get('noticias_index_page')
         quantidade = value.get('quantidade') or 6
         texto_link = value.get('texto_link') or "Ver todas as notícias"
+
         noticias = []
         noticias_index_page_url = None
+
         if noticias_index_page:
-            noticias = noticias_index_page.get_ultimas_noticias(
-                quantidade=quantidade)
+            noticias = noticias_index_page.get_ultimas_noticias(quantidade=quantidade)
             noticias_index_page_url = noticias_index_page.url
-        context['noticias'] = noticias
-        context['noticias_index_page_url'] = noticias_index_page_url
-        context['texto_link'] = texto_link
+
+        context.update({
+            'titulo': value.get('titulo'),
+            'noticias': noticias,
+            'noticias_index_page_url': noticias_index_page_url,
+            'texto_link': texto_link,
+            'mostrar_titulo': value.get('mostrar_titulo', True),
+            'layout': value.get('layout', 'lista')
+        })
+
         return context
 
     class Meta:
@@ -467,16 +582,70 @@ class NoticiasListBlock(StructBlock):
         label = 'Lista de Notícias'
 
 
-class AvisosListBlock(StructBlock):
+from wagtail import blocks
+from wagtail.blocks import StructBlock, CharBlock, PageChooserBlock, BooleanBlock, IntegerBlock
+
+class AvisosWidget(StructBlock):
     titulo = CharBlock(
         required=False,
-        default="Últimos Avisos",
-        help_text="Título que aparecerá acima da lista de avisos"
+        default="Destaques",
+        help_text="Título exibido acima dos avisos"
+    )
+    mostrar_titulo = BooleanBlock(
+        required=False,
+        default=True,
+        help_text="Marcar para exibir o título"
     )
     avisos_index_page = PageChooserBlock(
         required=True,
         target_model='avisos.AvisosIndexPage',
-        help_text="Selecione a página de index de avisos"
+        help_text="Selecione a página de index de avisos."
+    )
+    quantidade = IntegerBlock(
+        required=False,
+        default=3,
+        min_value=1,
+        label="Quantidade de avisos em destaque"
+    )
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        avisos_index_page = value.get('avisos_index_page')
+        quantidade = value.get('quantidade') or 6
+        avisos = []
+        avisos_index_page_url = None
+
+        if avisos_index_page:
+            try:
+                avisos = avisos_index_page.get_ultimos_avisos(quantidade=quantidade)
+            except Exception:
+                avisos = []
+            avisos_index_page_url = avisos_index_page.url
+
+        context['avisos'] = avisos
+        context['avisos_index_page_url'] = avisos_index_page_url
+        return context
+
+    class Meta:
+        template = "blocks/widget_avisos.html"
+        icon = "star"
+        label = "Destaques"
+
+class AvisosListBlock(StructBlock):
+    titulo = CharBlock(
+        required=False,
+        default="Quadro de Avisos",
+        help_text="Título exibido acima dos avisos"
+    )
+    mostrar_titulo = blocks.BooleanBlock(
+        required=False,
+        default=True,
+        help_text="Marcar para exibir o título"
+    )
+    avisos_index_page = PageChooserBlock(
+        required=True,
+        target_model='avisos.AvisosIndexPage',
+        help_text="Selecione a página de index de avisos."
     )
     quantidade = IntegerBlock(
         required=False,
@@ -498,8 +667,10 @@ class AvisosListBlock(StructBlock):
         avisos = []
         avisos_index_page_url = None
         if avisos_index_page:
-            avisos = avisos_index_page.get_ultimos_avisos(
-                quantidade=quantidade)
+            try:
+                avisos = avisos_index_page.get_ultimos_avisos(quantidade=quantidade)
+            except Exception:
+                avisos = []
             avisos_index_page_url = avisos_index_page.url
         context['avisos'] = avisos
         context['avisos_index_page_url'] = avisos_index_page_url
@@ -507,10 +678,9 @@ class AvisosListBlock(StructBlock):
         return context
 
     class Meta:
-        template = 'blocks/list_avisos.html'
-        icon = 'warning'
-        label = 'Lista de Avisos'
-
+        template = "blocks/list_avisos.html"
+        icon = "warning"
+        label = "Avisos"
 
 class LinkStructBlock(StructBlock):
     link_text = CharBlock(required=True, help_text="Texto")
@@ -983,6 +1153,7 @@ class AcordeonBlock(StructBlock):
         label = "Acordeão"
         icon = "collapse-down"
         template = "blocks/bloco_informativo.html"
+
 class CustomFormBlock(StructBlock):
     titulo_geral = CharBlock(default="Formulário", label="Título Principal do Formulário", help_text="Título que será exibido acima do formulário.")
     descricao = RichTextBlock(required=False, label="Descrição/Introdução")
