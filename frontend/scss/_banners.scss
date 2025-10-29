@@ -1,6 +1,7 @@
+@use "sass:math";
 // Banner styles - use variables for sizes and colors
 $banner-height-default: 320px !default;
-$banner-aspect-16-9: (16 / 9);
+$banner-aspect-16-9: math.div(16, 9); // migrated from (16 / 9)
 
 .banner-wrapper { width: 100%; overflow: hidden; }
 .banner-container { width: 100%; }

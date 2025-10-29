@@ -1,3 +1,4 @@
+@use "sass:color";
 @use '../variables.scss';
 @use  '../sprite';
 
@@ -116,7 +117,7 @@
   font-weight: 700;
   text-decoration: none;
   &:hover {
-    color: darken(variables.$color-primary, 10%);
+    color: color.adjust(variables.$color-primary, $lightness: -10%);
     text-decoration: underline;
   }
 }
@@ -126,7 +127,7 @@
   font-weight: 700;
   text-decoration: none;
   &:hover .dropdown-menu {
-    color: darken(variables.$color-primary, 10%);
+    color: color.adjust(variables.$color-primary, $lightness: -10%);
     text-decoration: underline;
   }
 }
