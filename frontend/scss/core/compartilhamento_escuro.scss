@@ -1,0 +1,60 @@
+@use './../variables.scss';
+
+// Estilos para tema escuro do sistema de compartilhamento
+[data-theme=dark] {
+    .compartilhamento-social {
+        .compartilhamento-titulo {
+            span {
+                color: variables.$color-white !important;
+            }
+        }
+
+        .copy-feedback {
+            small {
+                color: variables.$color-white !important;
+            }
+        }
+
+        .btn-compartilhar {
+            // No tema escuro, ícones ficam brancos
+            color: variables.$color-white !important;
+
+            &:hover {
+                color: variables.$color-white !important;
+                opacity: 0.8; // Leve transparência no hover
+            }
+
+            // Todos os botões seguem o mesmo padrão no tema escuro
+            &.btn-facebook,
+            &.btn-twitter,
+            &.btn-linkedin,
+            &.btn-whatsapp,
+            &.btn-telegram,
+            &.btn-email,
+            &.btn-copy-link {
+                color: variables.$color-white !important;
+
+                &:hover {
+                    color: variables.$color-white !important;
+                    opacity: 0.8;
+                }
+            }
+        }
+
+        // Popover no tema escuro
+        .copy-success-popover {
+            .popover-header {
+                display: none !important; // Remove completamente o cabeçalho/título
+            }
+            
+            .popover-body {
+                background-color: variables.$color-success;
+                color: variables.$color-on-success;
+            }
+
+            .popover-arrow::before {
+                border-top-color: variables.$color-success !important;
+            }
+        }
+    }
+}

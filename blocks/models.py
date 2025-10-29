@@ -10,6 +10,8 @@ from blocks.utils import (
     validate_file_size
 )
 
+from django.db import models
+
 import requests
 from django.core.cache import cache
 from wagtail import blocks
@@ -28,12 +30,15 @@ from wagtail.blocks import (
     URLBlock,
     IntegerBlock,
     BooleanBlock,
+    PageChooserBlock,
     DateBlock,
 )
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.embeds.blocks import EmbedBlock
 from django.utils.functional import cached_property
 from wagtail.images import get_image_model
+from wagtail.models import Page
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from django.conf import settings
 import re
 import uuid
@@ -869,12 +874,44 @@ class CardLinhaDoTempoBlock(StructBlock):
         required=False, label="Texto alternativo da imagem")
     titulo = CharBlock(required=False, label="Título")
     descricao = TextBlock(required=False, label="Descrição")
+    internal_page = PageChooserBlock(
+        required=False,
+        target_model='linhasdotempo.CardLinhaDoTempoPage',
+        label="Página interna de evento da linha do tempo.",
+        help_text="Se as informações da descrição ultrapassarem o limite de exibição estabelecido, \
+        você poderá criar uma nova página com as informações completas, a qual estará disponível\
+        no card através do link 'Ver mais' ou clicando no card."
+    )
+    external_url = URLBlock(
+        required=False,
+        label="URL externa com informações adicionais de evento da linha do tempo.",
+        help_text="Ou adicionar uma fonte externa, a qual também ficará disponível\
+        no card através do link 'Ver mais' ou clicando no card."
+    )
     # data = DateBlock(required=True, label="Data")
+
+    def clean(self, value):
+        cleaned_data = super().clean(value)
+        if not cleaned_data.get('internal_page') and not cleaned_data.get('external_url'):
+            raise ValidationError(
+                'Você deve fornecer um link interno ou externo.')
+        if cleaned_data.get('internal_page') and cleaned_data.get('external_url'):
+            raise ValidationError('Você deve fornecer apenas 1 link.')
+        return cleaned_data
+
+    def get_url(self, value):
+        if value.get('internal_page'):
+            return value['internal_page'].url
+        return value.get('external_url')
 
     class Meta:
         icon = 'title'
         label = 'Card da Linha do Tempo'
         template = 'blocks/card_linha_do_tempo.html'
+        form_attrs = {
+            'data-controller': 'char-count',
+            'data-char-count-fields-value': 'titulo:50,descricao:220',
+        }
 
 
 # StreamBlocks
@@ -930,7 +967,8 @@ class BaseStreamBlock(StreamBlock):
 
 class LinhaDoTempoBlock(StructBlock):
     titulo = CharBlock(required=True, label="Título")
-    cards = ListBlock(CardLinhaDoTempoBlock(), min_num=1, max_num=12, icon='form', label="Card")
+    cards = ListBlock(CardLinhaDoTempoBlock(), min_num=1,
+                      max_num=12, icon='form', label="Card")
 
     class Meta:
         icon = 'title'
@@ -979,14 +1017,15 @@ class GridImageItemBlock(StructBlock):
 
 
 class GridImagensBlock(StructBlock):
-    titulo = CharBlock(required=True, label="Titulo do bloco Ex.: Programas, Orgãos Vinculados", default="Programas")
+    titulo = CharBlock(
+        required=True, label="Titulo do bloco Ex.: Programas, Orgãos Vinculados", default="Programas")
     link_ver_todos = URLBlock(
         required=False, label="Link do botão 'Ver todos'")
     grid_type = ChoiceBlock(choices=GRID_IMAGENS_TYPES,
-                             default=GRID_IMAGENS_DEFAULT_TYPE,
-                             required=True, label="Tipo de Grid")
+                            default=GRID_IMAGENS_DEFAULT_TYPE,
+                            required=True, label="Tipo de Grid")
     itens = ListBlock(GridImageItemBlock, min_num=1, max_num=12)
-    
+
     def get_column_classes(self, grid_type):
         """
         Retorna as classes de coluna Bootstrap baseadas no tipo de grid.

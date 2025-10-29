@@ -16,16 +16,16 @@
 }
 
 .card-linha-do-tempo {
-  @include card-aspect-ratio;
   --card-max-height: 360px;
+  @include card-aspect-ratio;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   border: solid 4px variables.$color-primary;
-  padding: 2rem;
-  overflow-y: scroll;
+  padding: 1.2rem;
+  overflow-y: hidden;
   z-index: 15;
   background-color: variables.$color-white;
 
@@ -190,7 +190,7 @@
     content: "";
     position: absolute;
     top: 99%;
-    --secondary-color: #e8edf4;
+    --secondary-color: #{variables.$color-timeline-secondary};
     --percentageReminder: calc(var(--reveal-percentage, 0%, 0%) - var(--percentageRange, 0%));
     --percentageAtElement: calc(var(--percentageReminder, 0%) / var(--percentageCorrectionFactor, 0%));
 

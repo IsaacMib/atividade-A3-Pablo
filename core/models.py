@@ -13,6 +13,10 @@ from blocks.models import ListRedeSocial, ListRedesSociais
 from wagtail.models import Page
 
 
+from django.shortcuts import redirect
+from django.contrib import messages
+
+
 class PageSitePadrao(Page):
     """Classe base para todas as páginas do site."""
     
@@ -47,50 +51,74 @@ class PageSitePadrao(Page):
         Retorna a imagem de destaque da página ou None se não houver.
         """
         return self.imagem_destaque
-
-    def get_context(self, request, *args, **kwargs):
-        """Add common context for all pages derived from PageSitePadrao.
-
-        This provides `redes_ativas` so templates can render sharing buttons
-        consistently across the site.
+    
+    def _process_custom_form(self, request):
         """
-        context = super().get_context(request, *args, **kwargs)
-        redes_ativas = []
-        try:
-            site_settings = SiteSettings.for_request(request)
-            if site_settings and site_settings.compartilhar_redes_sociais:
-                absolute_url = request.build_absolute_uri(getattr(self, 'url', '/'))
-                redes_ativas = site_settings.get_redes_ativas(
-                    absolute_url=absolute_url,
-                    page_title=getattr(self, 'title', '')
-                )
-        except Exception:
-            redes_ativas = []
-
-        context['redes_ativas'] = redes_ativas
-        return context
-
-    def get_context(self, request, *args, **kwargs):
-        """Add common context for all pages derived from PageSitePadrao.
-
-        This provides `redes_ativas` so templates can render sharing buttons
-        consistently across the site.
+        Processa formulários customizados presentes no body da página.
+        Retorna True se o formulário foi processado com sucesso e deve ser redirecionado,
+        False caso contrário.
         """
-        context = super().get_context(request, *args, **kwargs)
-        redes_ativas = []
-        try:
-            site_settings = SiteSettings.for_request(request)
-            if site_settings and site_settings.compartilhar_redes_sociais:
-                absolute_url = request.build_absolute_uri(getattr(self, 'url', '/'))
-                redes_ativas = site_settings.get_redes_ativas(
-                    absolute_url=absolute_url,
-                    page_title=getattr(self, 'title', '')
-                )
-        except Exception:
-            redes_ativas = []
+        from blocks.models import CustomFormBlock
+        
+        # Procura por um bloco de formulário customizado no body
+        form_block = next((block for block in self.body if isinstance(block.block, CustomFormBlock)), None)
+        
+        if not form_block:
+            return False
+            
+        form = form_block.block.get_context(form_block.value, parent_context={'request': request})['form']
+        form_kwargs = {
+            'show_recaptcha': getattr(form, 'show_recaptcha', False),
+            'recaptcha_secret_key': getattr(form, 'recaptcha_secret_key', None),
+            'fields_config': form.fields_config if hasattr(form, 'fields_config') else None,
+            'initial': form.initial if hasattr(form, 'initial') else {},
+            'request': request,
+        }
+        bound_form = type(form)(request.POST, request.FILES, **form_kwargs)
 
-        context['redes_ativas'] = redes_ativas
-        return context
+        if bound_form.is_valid():
+            from blocks.models import FormularioSubmissao, ArquivoSubmetido
+            from django.core.files.base import File
+            
+            field_map = {}
+            if hasattr(bound_form, 'fields_config') and bound_form.fields_config:
+                for i, block in enumerate(bound_form.fields_config):
+                    field_name = f"custom_field_{i}_{block.block_type}"
+                    field_label = block.value.get('label', field_name)
+                    field_map[field_name] = field_label
+
+            cleaned_data = bound_form.cleaned_data.copy()
+            arquivos_para_salvar = {}
+            dados_adicionais_serializaveis = {}
+
+            for key, value in cleaned_data.items():
+                if isinstance(value, File):
+                    arquivos_para_salvar[key] = value
+                else:
+                    dados_adicionais_serializaveis[field_map.get(key, key)] = value
+
+            nome_completo = cleaned_data.pop('nome_completo', '')
+            titulo = cleaned_data.pop('titulo', '')                    
+
+            submissao = FormularioSubmissao.objects.create(
+                nome_completo=nome_completo,
+                titulo=titulo,
+                dados_adicionais={k: v for k, v in dados_adicionais_serializaveis.items() if k not in ['nome_completo', 'titulo', 'g-recaptcha-response']},
+                pagina=self,
+                usuario=request.user if request.user.is_authenticated else None
+            )
+            
+            for nome_campo, arquivo in arquivos_para_salvar.items():
+                ArquivoSubmetido.objects.create(submissao=submissao, nome_campo=nome_campo, arquivo=arquivo)
+
+            messages.success(request, "Formulário Enviado Com Sucesso!")
+            return True
+        else:
+            messages.error(request, "Ocorreu um erro. Por favor, verifique os campos do formulário.")
+            setattr(request, '_form_errors', bound_form)
+            return False
+
+
 
     class Meta:
         abstract = True
@@ -223,6 +251,48 @@ class SiteSettings(BaseSiteSetting):
         help_text="Chave secreta do reCAPTCHA usada para validação no servidor. (Deixe em branco se não usar captcha)"
     )
 
+    # Configurações para compartilhamento de conteúdos nas redes sociais
+    compartilhamento_habilitado = models.BooleanField(
+        verbose_name="Habilitar Compartilhamento",
+        default=True,
+        help_text="Ative para exibir os botões de compartilhamento nas páginas."
+    )
+    compartilhamento_facebook = models.BooleanField(
+        verbose_name="Facebook",
+        default=True,
+        help_text="Permitir compartilhamento no Facebook"
+    )
+    compartilhamento_twitter = models.BooleanField(
+        verbose_name="X (Twitter)",
+        default=True,
+        help_text="Permitir compartilhamento no X (antigo Twitter)"
+    )
+    compartilhamento_linkedin = models.BooleanField(
+        verbose_name="LinkedIn",
+        default=True,
+        help_text="Permitir compartilhamento no LinkedIn"
+    )
+    compartilhamento_whatsapp = models.BooleanField(
+        verbose_name="WhatsApp",
+        default=True,
+        help_text="Permitir compartilhamento no WhatsApp"
+    )
+    compartilhamento_telegram = models.BooleanField(
+        verbose_name="Telegram",
+        default=False,
+        help_text="Permitir compartilhamento no Telegram"
+    )
+    compartilhamento_email = models.BooleanField(
+        verbose_name="E-mail",
+        default=True,
+        help_text="Permitir compartilhamento via e-mail"
+    )
+    compartilhamento_copiar_link = models.BooleanField(
+        verbose_name="Copiar Link",
+        default=True,
+        help_text="Permitir copiar o link da página"
+    )
+
     panels = [
         FieldPanel("title_suffix"),
         MultiFieldPanel(
@@ -275,6 +345,19 @@ class SiteSettings(BaseSiteSetting):
                 FieldPanel("captcha_secret_key"),
             ],
             heading="Captcha (reCAPTCHA)"
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("compartilhamento_habilitado"),
+                FieldPanel("compartilhamento_facebook"),
+                FieldPanel("compartilhamento_twitter"),
+                FieldPanel("compartilhamento_linkedin"),
+                FieldPanel("compartilhamento_whatsapp"),
+                FieldPanel("compartilhamento_telegram"),
+                FieldPanel("compartilhamento_email"),
+                FieldPanel("compartilhamento_copiar_link"),
+            ],
+            heading="Compartilhamento de Conteúdos"
         ),
     ]
 
@@ -518,3 +601,67 @@ class SiteSettings(BaseSiteSetting):
                 raise ValidationError({
                     "captcha_secret_key": "A chave secreta do captcha parece ser muito curta."
                 })
+
+    def get_redes_sociais_compartilhamento(self):
+        """
+        Retorna uma lista das redes sociais habilitadas para compartilhamento.
+        """
+        redes_habilitadas = []
+        
+        if not self.compartilhamento_habilitado:
+            return redes_habilitadas
+            
+        if self.compartilhamento_facebook:
+            redes_habilitadas.append({
+                'nome': 'Facebook',
+                'icone': 'fa-brands fa-facebook-f',
+                'codigo': 'facebook'
+            })
+            
+        if self.compartilhamento_twitter:
+            redes_habilitadas.append({
+                'nome': 'X (Twitter)',
+                'icone': 'fa-brands fa-square-x-twitter',
+                'codigo': 'twitter'
+            })
+            
+        if self.compartilhamento_linkedin:
+            redes_habilitadas.append({
+                'nome': 'LinkedIn',
+                'icone': 'fa-brands fa-linkedin',
+                'codigo': 'linkedin'
+            })
+            
+        if self.compartilhamento_whatsapp:
+            redes_habilitadas.append({
+                'nome': 'WhatsApp',
+                'icone': 'fa-brands fa-whatsapp',
+                'codigo': 'whatsapp'
+            })
+            
+        if self.compartilhamento_telegram:
+            redes_habilitadas.append({
+                'nome': 'Telegram',
+                'icone': 'fa-brands fa-telegram',
+                'codigo': 'telegram'
+            })
+            
+        if self.compartilhamento_email:
+            redes_habilitadas.append({
+                'nome': 'E-mail',
+                'icone': 'fas fa-envelope',
+                'codigo': 'email'
+            })
+            
+        if self.compartilhamento_copiar_link:
+            redes_habilitadas.append({
+                'nome': 'Copiar Link',
+                'icone': 'fas fa-link',
+                'codigo': 'copy'
+            })
+            
+        return redes_habilitadas
+
+    def tem_compartilhamento_habilitado(self):
+        """Retorna True se o compartilhamento está habilitado."""
+        return self.compartilhamento_habilitado

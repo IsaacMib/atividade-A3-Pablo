@@ -1,6 +1,7 @@
 from django import template
 from wagtail.models import Site
 from core.models import SiteSettings  # Import necessário
+from django.conf import settings
 
 register = template.Library()
 # https://docs.djangoproject.com/en/stable/howto/custom-template-tags/
@@ -71,24 +72,6 @@ def top_menu(context, parent, calling_page=None, max_levels=None):
         # required by the pageurl tag that we want to use within this template
         "request": context["request"],
         "max_levels": max_levels,
+        "HABILITAR_SITE_INTRANET": context.get("HABILITAR_SITE_INTRANET", False),
     }
 
-
-# Retrieves the top menu items for the intranet
-@register.inclusion_tag("intranet/top_menu_intranet.html", takes_context=True)
-def top_menu_intranet(context, parent, calling_page=None, max_levels=None):
-    """
-    Retorna os itens do menu da intranet até max_levels níveis, usando SiteSettings se não informado.
-    """
-    if max_levels is None:
-        site = Site.find_for_request(context["request"])
-        site_settings = SiteSettings.for_site(site)
-        max_levels = site_settings.menu_max_levels
-
-    menuitems, _ = get_menuitems_with_children(parent, calling_page, max_levels)
-    return {
-        "calling_page": calling_page,
-        "menuitems": menuitems,
-        "request": context["request"],
-        "max_levels": max_levels,
-    }

@@ -49,8 +49,23 @@ def wagtail_logout_with_sso(request):
     logout(request)
     
     # Redireciona para a página de login
-    next_url = request.GET.get('next')
-    if next_url:
-        return redirect(next_url)
+    return redirect('/admin/login/')
+
+def intranet_logout(request):
+    """View de logout customizada que aceita GET."""
+    user = request.user
     
+    # Se SSO está habilitado e disponível, tenta fazer logout do SSO
+    if settings.HABILITAR_SSO_LOGIN and SSO_AVAILABLE and user.is_authenticated:
+        try:
+            provedor = obter_provedor_recente(user)
+            if pode_fazer_logout_sso(user, provedor):
+                logout_sso(user, provedor)
+        except Exception as e:
+            LOGGER.error(f"Erro ao fazer logout do SSO: {e}")
+    
+    # Faz logout local do Django
+    logout(request)
+    
+    # Redireciona para a página de login com next apontando para a home
     return redirect('/')

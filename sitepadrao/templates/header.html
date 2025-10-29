@@ -4,9 +4,15 @@
   <div class="container">
     <div class="header-layout row">
       <div class="col-10 col-lg-auto d-flex align-items-center justify-content-start mt-4">
-        <a href="/" aria-label="Início" class="text-decoration-none">
-          <img class="header-logo" src="{% static 'img/logo_site.svg' %}" alt="{{ settings.core.SiteSettings.title_suffix }}">
-        </a>
+        {% if HABILITAR_SITE_INTRANET %}
+          <a href="/" aria-label="Início" class="text-decoration-none">
+            <img class="header-logo" src="{% static 'img/banner_intranet.png' %}" alt="{{ settings.core.SiteSettings.title_suffix }}">
+          </a>
+        {% else %}
+          <a href="/" aria-label="Início" class="text-decoration-none">
+            <img class="header-logo" src="{% static 'img/logo_site.svg' %}" alt="{{ settings.core.SiteSettings.title_suffix }}">
+          </a>
+        {% endif %}
       </div>
 
       <!-- ============================ BUSCA ============================ -->
@@ -61,57 +67,9 @@
       </div>
 
       <!-- ============================ LOGIN / PERFIL ============================ -->
-      {% get_settings %}
-      {% if settings.core.SiteSettings.intranet_habilitada %}
-      <div class="col-12 col-lg-auto d-flex align-items-center justify-content-center mt-4">   
-        {% if user.is_authenticated %}
-        <div class="dropdown">
-          <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser"
-             data-bs-toggle="dropdown" aria-expanded="false">
-              <div class="header-intranet-user-icon-wrapper rounded-circle d-flex align-items-center justify-content-center me-2">
-                <svg class="header-intranet-user-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 16 16">
-                  <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-                </svg>
-              </div>
-              <span class="header-intranet-user-text header-intranet-user-text--bold">
-                Olá, {{ user.first_name|default:user.username }}
-              </span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser">
-            <li>
-              <a class="dropdown-item" href="/intranet/">
-                Intranet
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item text-danger" href="{% url 'intranet_logout' %}">
-                Sair
-              </a>
-            </li>
-          </ul>
-        </div>
-        {% else %}
-        <div class="dropdown">
-          <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownGuest"
-             data-bs-toggle="dropdown" aria-expanded="false">
-            <div class="header-intranet-user-icon-wrapper rounded-circle d-flex align-items-center justify-content-center me-2">
-              <svg class="header-intranet-user-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 16 16">
-                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-              </svg>
-            </div>
-            <span class="header-intranet-user-text header-intranet-user-text--bold">Intranet</span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownGuest">
-            <li>
-              <a class="dropdown-item" href="{% url 'wagtailadmin_login' %}?next=/intranet/">
-                Entrar
-              </a>
-            </li>
-          </ul>
-        </div>
+      {% if HABILITAR_SITE_INTRANET %}
+        {% include 'include/perfil.html' with classes="col-12 col-lg-auto d-flex align-items-center justify-content-center mt-4" %}
       {% endif %}
-    </div>
-  {% endif %}
 
     </div>
   </div>

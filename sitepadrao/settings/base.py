@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     "documentos",
     'editais',
     "eventos",
+    "linhasdotempo",
     "lgpd",
 
 
@@ -100,7 +101,7 @@ INSTALLED_APPS = [
     "wagtail.contrib.settings",
     'wagtail.contrib.search_promotions',
     "wagtail.contrib.table_block",
-     'allauth',
+    'allauth',
     'allauth.account',
     'allauth.socialaccount',
     "allauth.socialaccount.providers.openid_connect",
@@ -356,6 +357,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 HABILITAR_SSO_LOGIN = get_bool("HABILITAR_SSO_LOGIN", False)
+HABILITAR_SITE_INTRANET = get_bool("HABILITAR_SITE_INTRANET", True)
 
 # URL para redirecionar após login bem-sucedido
 LOGIN_REDIRECT_URL = "/admin/"
