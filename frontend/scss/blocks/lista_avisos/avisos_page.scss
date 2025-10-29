@@ -1,5 +1,16 @@
 @use '../../variables.scss';
 
+// Mixin para o efeito de hover nos ícones sociais
+@mixin social-icon-hover {
+  background-color: variables.$color-primary;
+  box-shadow: 0 4px 10px variables.$color-card-shadow-hover;
+
+  i {
+    color: variables.$color-on-primary;
+    transform: scale(1.15);
+  }
+}
+
 .avisos-page-container {
   background-color: variables.$color-white;
 }

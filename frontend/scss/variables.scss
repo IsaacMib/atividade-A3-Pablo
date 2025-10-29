@@ -1,3 +1,4 @@
+@use 'sass:math';
 // Material Design Color System - Core Palette
 
 $color-white: #ffffff;
@@ -130,8 +131,8 @@ $color-link-navbar: #b7c5dc;
 $color-link-navbar-hover: $color-white;
 $color-link-navbar-hover-mobile: $color-grey-700;
 $color-link-navbar-mobile: $color-grey-700;
-$color-link-noticias: $color-primary; //#396BBB;
-$color-link-noticias: $color-primary-active; //#396BBB;
+$color-link-noticias: $color-primary;
+$color-link-noticias: $color-primary-active;
 $color-link-noticias-hover: #052F4A;
 
 $font-size-itens-menu: 20px;
@@ -159,6 +160,9 @@ $color-agenda-column-border: #00000033;
 $color-agenda-column-shadow: #00000040;
 $color-agenda-column-btn: #94a3b8;
 
+$color-warning-shadow-dark: rgba($color-warning, 0.3);
+$color-banner-shadow-hover: rgba(0, 0, 0, 0.15);
+$color-card-shadow-light: rgba(0, 0, 0, 0.1);
 $color-card-shadow: $color-black-10;
 $color-card-shadow-hover: #00000026;
 $color-card-shadow-light: rgba(0, 0, 0, 0.1);
@@ -188,9 +192,17 @@ $color-site-menu-navbar-collapse-border: #00000033;
 $color-site-menu-navbar-collapse-shadow: #0000004D;
 $color-site-menu-nav-tools-border: #00000026;
 
+$background: $color-primary-hover;
+$color-text-secondary: #555555;
 // Aviso barra publicação - tema escuro
 $color-aviso-barra-border-dark: #afafaf;
 $color-aviso-barra-shadow-dark: #afafaf;
 
-$background: $color-primary-hover;
-$color-text-secondary: #555555;
+
+$widget-icon-size: 2rem;
+$widget-icon-bg: $primary-color !default;
+$widget-icon-bg-light: $color-white !default;
+$widget-title-color: $color-on-surface !default;
+$widget-border-radius: 9999px;
+$card-gap: 1rem !default;
+$aviso-aspect: math.div(1, 1);

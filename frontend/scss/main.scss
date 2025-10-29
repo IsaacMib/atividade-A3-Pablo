@@ -14,9 +14,15 @@
 @use  './agenda/index.scss' as agenda;
 @use  './editais/index.scss' as editais;
 @use  './cursos/index.scss' as cursos;
+@use './documentos/index.scss' as documentos;
+@use './intranet/index.scss' as intranet;
 @use './breadcrumb.scss';
 @use './breadcrumb_escuro.scss';
 @use './cookieconsent.scss';
+
+// Project-specific partials added by assistant: widgets and banners
+@use './_widgets.scss' as widgets;
+@use './_banners.scss' as banners;
 
 /*Arquivo para customizar o bootstrap*/
 @use './customBT';

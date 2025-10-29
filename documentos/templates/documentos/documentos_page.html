@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+{% block body_class %}template-documentos-page{% endblock %}
+
+{% block content %}
+<div class="documento-detalhe-container">
+  <div class="container mx-auto py-12">
+
+    <!-- Cabeçalho -->
+    <div class="text-center mb-10">
+      {% with intro=page.get_parent.introduction|default:"" %}
+        {% include "include/titulo.html" with titulo=page.title|default:intro|default:"Documentos" bgClass="" %}
+      {% endwith %}
+
+      {% if page.subtitle %}
+        <p class="documento-detalhe-subtitle mt-2">{{ page.subtitle }}</p>
+      {% endif %}
+
+      {% if page.data_publicacao %}
+        <p class="documento-detalhe-data mt-2">
+          Publicado em {{ page.data_publicacao|date:"d \d\e F \d\e Y" }}
+        </p>
+      {% endif %}
+    </div>
+
+    <!-- Descrição -->
+    {% if page.descricao %}
+    <div class="descricao mb-8 leading-relaxed">
+      {{ page.descricao }}
+    </div>
+    {% endif %}
+
+    <!-- Arquivo -->
+    {% if page.arquivo %}
+    <div class="arquivo-container">
+      <i class="fa {{ page.arquivo_icon }} arquivo-container__icon"></i>
+      <div>
+        <p class="arquivo-container__title">{{ page.arquivo.title }}</p>
+        <a href="{{ page.arquivo.url }}" class="arquivo-container__link" download>
+          Baixar documento
+        </a>
+      </div>
+    </div>
+    {% else %}
+    <p class="documento-detalhe-no-file">Nenhum arquivo disponível.</p>
+    {% endif %}
+
+    <!-- Tags -->
+    {% if page.get_tags %}
+    <div class="tags mt-10">
+      <h3 class="tags__title mb-2">Tags</h3>
+      <div class="d-flex flex-wrap gap-2">
+        {% for tag in page.get_tags %}
+        <a href="{{ tag.url }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm px-3 py-1 rounded-full">
+          #{{ tag.name }}
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Destaque -->
+    {% if page.destaque %}
+    <div class="mt-10">
+      <span class="documento-detalhe-destaque">
+        Documento em destaque
+      </span>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}
+

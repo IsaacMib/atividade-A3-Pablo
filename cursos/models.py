@@ -258,4 +258,4 @@ class CursosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
     class Meta:
         verbose_name = "Página de Índice de Cursos"
 
-    icon = "list-ul"
+    icon = "book-open"

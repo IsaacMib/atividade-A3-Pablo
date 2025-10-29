@@ -154,6 +154,7 @@
   border: 1px solid variables.$color-white !important;
   border-radius: 8px !important;
   color: variables.$color-white !important;
+  z-index: 10;
   svg {
     width: 25px !important;
   }
@@ -306,7 +307,7 @@ a {
   @media (max-width: 992px) {
     padding-bottom: 0px !important;
     padding-top: 0px !important;
-    z-index: 10;
+    // z-index: 10;
   }
 }
 
@@ -337,6 +338,7 @@ a {
 }
 
 .site-menu-navbar-collapse {
+  z-index: 10;
   .nav-link.dropdown-toggle {
     @media (max-width: 992px) {
       color: variables.$color-white !important;
@@ -499,13 +501,6 @@ a {
   a {
     border-bottom: 0.2px solid variables.$color-site-menu-nav-tools-border;
   }
-}
-
-.navbar-brand-mobile-light {
-  display: block;
-}
-.navbar-brand-mobile-dark {
-  display: none;
 }
 
 
