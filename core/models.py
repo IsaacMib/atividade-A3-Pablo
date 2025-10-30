@@ -1,24 +1,15 @@
+from datetime import date
+
+from django.core.exceptions import ValidationError
 from django.db import models
 from django import forms
-from datetime import date
-from django.core.exceptions import ValidationError
 
 import requests
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
-from wagtail.models import Page
 from wagtail.images.blocks import ImageChooserBlock
-
-from blocks.models import ListRedeSocial
-
-
-from django.db import models
-from datetime import date
-from django.core.exceptions import ValidationError
-
-from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
-from wagtail.fields import StreamField
+from wagtail.models import Page
 
 from blocks.models import ListRedeSocial
 
@@ -33,7 +24,7 @@ class PageSitePadrao(Page):
         blank=True,
         help_text="Descrição da página para SEO e redes sociais"
     )
-    
+
     images = StreamField(
         [("image", ImageChooserBlock(label="Imagem"))],
         verbose_name="Imagens",
@@ -56,13 +47,19 @@ class PageSitePadraoIndex(Page):
     Classe base para páginas de índice do site.
     Herda apenas de Page do Wagtail sem campos adicionais.
     """
-    
+
     class Meta:
         abstract = True
 
 
 @register_setting(icon="site")
 class SiteSettings(BaseSiteSetting):
+    """
+    Configurações do site acessíveis via Wagtail Settings.
+    Adiciona campos de título, período eleitoral, redes sociais, menu,
+    cookies / analytics e reCAPTCHA (site + secret).
+    """
+
     title_suffix = models.CharField(
         verbose_name="Titulo do Site",
         max_length=255,
@@ -118,6 +115,20 @@ class SiteSettings(BaseSiteSetting):
         help_text="Insira a tag do Google Analytics (ex: G-XXXXXXXXXX). O aviso de cookies analíticos só será exibido se esta tag estiver definida."
     )
 
+    captcha_site_key = models.CharField(
+        verbose_name="Captcha Site Key (pública)",
+        max_length=255,
+        blank=True,
+        help_text="Chave pública (site key) do reCAPTCHA usada no cliente (frontend)."
+    )
+
+    captcha_secret_key = models.CharField(
+        verbose_name="Captcha Secret Key (secreta)",
+        max_length=255,
+        blank=True,
+        help_text="Chave secreta do reCAPTCHA usada para validação no servidor. (Deixe em branco se não usar captcha)"
+    )
+
     panels = [
         FieldPanel("title_suffix"),
         MultiFieldPanel(
@@ -148,8 +159,16 @@ class SiteSettings(BaseSiteSetting):
             ],
             heading="Cookies e Analytics"
         ),
+        MultiFieldPanel(
+            [
+                FieldPanel("captcha_site_key"),
+                FieldPanel("captcha_secret_key"),
+            ],
+            heading="Captcha (reCAPTCHA)"
+        ),
     ]
 
+    # ----------------- Métodos utilitários -----------------
     def is_periodo_eleitoral(self):
         """
         Retorna True se o período eleitoral está habilitado e a data atual está entre o início e o fim.
@@ -162,15 +181,11 @@ class SiteSettings(BaseSiteSetting):
         return False
 
     def deve_exibir_cookies(self):
-        """
-        Retorna True se o aviso de cookies deve ser exibido.
-        """
+        """Retorna True se o aviso de cookies deve ser exibido."""
         return self.cookies_habilitado
 
     def tem_google_analytics(self):
-        """
-        Retorna True se a tag do Google Analytics está configurada.
-        """
+        """Retorna True se a tag do Google Analytics está configurada."""
         return bool(self.google_analytics_tag and self.google_analytics_tag.strip())
 
     def deve_exibir_cookies_analytics(self):
@@ -180,8 +195,36 @@ class SiteSettings(BaseSiteSetting):
         """
         return self.deve_exibir_cookies() and self.tem_google_analytics()
 
+    def tem_captcha_site(self):
+        return bool(self.captcha_site_key and self.captcha_site_key.strip())
+
+    def tem_captcha_secret(self):
+        return bool(self.captcha_secret_key and self.captcha_secret_key.strip())
+
+    def has_recaptcha_keys(self):
+        return self.tem_captcha_site() and self.tem_captcha_secret()
+
+    def get_captcha_site_key(self):
+        return self.captcha_site_key.strip() if self.tem_captcha_site() else None
+
+    def get_captcha_secret(self):
+        return self.captcha_secret_key.strip() if self.tem_captcha_secret() else None
+
     def clean(self):
         super().clean()
+
+        if self.menu_max_levels > 3:
+            raise ValidationError({
+                "menu_max_levels": "O número máximo de níveis permitido para o menu é 3."
+            })
+
+        if self.google_analytics_tag:
+            tag = self.google_analytics_tag.strip()
+            if tag and not (tag.startswith('G-') or tag.startswith('UA-') or tag.startswith('GT-')):
+                raise ValidationError({
+                    "google_analytics_tag": "A tag deve começar com 'G-', 'UA-' ou 'GT-' seguido do identificador."
+                })
+
         if self.periodo_eleitoral_habilitado:
             if not self.periodo_eleitoral_inicio and not self.periodo_eleitoral_fim:
                 raise ValidationError({
@@ -273,8 +316,9 @@ class ApiSettings(BaseSiteSetting):
 
     def clean(self):
         super().clean()
+        errors = {}
+
         if self.api_habilitada:
-            errors = {}
             if not self.api_url:
                 errors['api_url'] = ValidationError("A URL da API é obrigatória quando a integração está habilitada.")
             if not self.api_usuario:
@@ -282,29 +326,38 @@ class ApiSettings(BaseSiteSetting):
             if not self.api_senha:
                 errors['api_senha'] = ValidationError("A senha da API é obrigatória quando a integração está habilitada.")
 
-            if errors:
-                raise ValidationError(errors)
+            if not errors:
+                token_url = f"{self.api_url.rstrip('/')}/api/v1/get-token/"
+                try:
+                    response = requests.post(
+                        token_url,
+                        data={'username': self.api_usuario, 'password': self.api_senha},
+                        timeout=10 
+                    )
 
-            token_url = f"{self.api_url.rstrip('/')}/api/v1/get-token/"
-            try:
-                response = requests.post(
-                    token_url,
-                    data={'username': self.api_usuario, 'password': self.api_senha},
-                    timeout=10 
-                )
+                    if response.status_code in [400, 401]:
+                        errors.update({
+                            'api_usuario': ValidationError("Credenciais inválidas. Verifique o usuário e a senha."),
+                            'api_senha': ValidationError("Credenciais inválidas. Verifique o usuário e a senha."),
+                        })
+                    else:
+                        response.raise_for_status()
+                        if 'token' not in response.json():
+                            raise ValidationError("A API não retornou um token de autenticação válido.")
+                except requests.exceptions.RequestException as e:
+                    errors['api_url'] = ValidationError(f"Não foi possível conectar à API. Verifique a URL. Erro: {e}")
 
-                if response.status_code in [400, 401]:
-                    raise ValidationError({
-                        'api_usuario': "Credenciais inválidas. Verifique o usuário e a senha.",
-                        'api_senha': "Credenciais inválidas. Verifique o usuário e a senha.",
-                    })
-                
-                response.raise_for_status()
-                if 'token' not in response.json():
-                    raise ValidationError("A API não retornou um token de autenticação válido.")
+        if getattr(self, "captcha_site_key", None):
+            site = self.captcha_site_key.strip()
+            if site and len(site) < 10:
+                errors["captcha_site_key"] = ValidationError("A site key do captcha parece ser muito curta.")
 
-            except requests.exceptions.RequestException as e:
-                raise ValidationError({'api_url': f"Não foi possível conectar à API. Verifique a URL. Erro: {e}"})
+        if getattr(self, "captcha_secret_key", None):
+            secret = self.captcha_secret_key.strip()
+            if secret and len(secret) < 10:
+                errors["captcha_secret_key"] = ValidationError("A chave secreta do captcha parece ser muito curta.")
 
+        if errors:
+            raise ValidationError(errors)
     class Meta:
         verbose_name = "Configurações de Conteúdo Externo"

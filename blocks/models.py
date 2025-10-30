@@ -6,7 +6,8 @@ from blocks.utils import (
     GRID_IMAGENS_TYPES,
     GRID_IMAGENS_CLASSES,
     GRID_IMAGENS_DEFAULT_TYPE,
-    get_metabase_card_text_by_id
+    get_metabase_card_text_by_id,
+    validate_file_size
 )
 
 import requests
@@ -37,6 +38,15 @@ from django.conf import settings
 import uuid
 
 import magic
+from django.utils.html import format_html_join
+from django.db import models
+from .forms import (
+    SingleLineFieldBlock,
+    MultiLineFieldBlock,
+    EmailFieldBlock,
+    NumberFieldBlock,
+    FileFieldBlock,
+)
 
 from django.core.exceptions import ValidationError
 
@@ -848,3 +858,210 @@ class GridImagensBlock(StructBlock):
         icon = 'list-ul'
         label = "Grid de Imagens"
         template = 'blocks/grid_imagens.html'
+
+class ItemListaInformativaBlock(StructBlock):
+    texto = CharBlock(required=False, help_text="Use para um item de texto simples (um por linha).")
+    titulo_link = CharBlock(required=False, help_text="Texto que será exibido para o link.")
+    url_link = URLBlock(required=False, help_text="URL para onde o link aponta.")
+    arquivo = DocumentChooserBlock(required=False, help_text="Selecione um arquivo para download (máx 10MB).", validators=[validate_file_size])
+
+    def clean(self, value):
+        cleaned_data = super().clean(value)
+        is_texto = bool(cleaned_data.get('texto'))
+        is_link = bool(cleaned_data.get('titulo_link') or cleaned_data.get('url_link'))
+        is_arquivo = bool(cleaned_data.get('arquivo'))
+        tipos_preenchidos = sum([is_texto, is_link, is_arquivo])
+        if tipos_preenchidos > 1:
+            raise ValidationError("Escolha apenas um tipo de item: texto, link ou arquivo.")
+        if tipos_preenchidos == 0:
+            raise ValidationError("Você deve preencher um dos tipos de item: texto, link ou arquivo.")
+        if is_link and not (cleaned_data.get('titulo_link') and cleaned_data.get('url_link')):
+            raise ValidationError("Para um link, tanto o 'Título do link' quanto a 'URL' são obrigatórios.")
+        return cleaned_data
+
+    class Meta:
+        label = "Item da Lista"
+        icon = "dot-circle"
+
+class TextoSimplesBlock(StructBlock):
+    texto = RichTextBlock(required=True, label="Texto", features=['bold', 'italic', 'ol', 'ul', 'link', 'document-link'])
+
+    class Meta:
+        label = "Texto Simples"
+        icon = "pilcrow"
+        template = "blocks/texto_simples_block.html"
+
+class LinkBlock(StructBlock):
+    titulo_link = CharBlock(required=True, label="Texto do Link")
+    url_link = URLBlock(required=True, label="URL do Link")
+
+    class Meta:
+        label = "Link"
+        icon = "link"
+        template = "blocks/link_block.html"
+
+class ArquivoDownloadBlock(StructBlock):
+    titulo_arquivo = CharBlock(required=True, label="Texto de exibição para o arquivo")
+    arquivo = DocumentChooserBlock(required=True, label="Arquivo para Download")
+
+    class Meta:
+        label = "Arquivo para Download"
+        icon = "doc-full-inverse"
+        template = "blocks/arquivo_download_block.html"
+
+class ConteudoAcordeonStreamBlock(StreamBlock):
+    texto = TextoSimplesBlock()
+    link = LinkBlock()
+    arquivo = ArquivoDownloadBlock()
+
+    class Meta:
+        label = "Conteúdo da Seção"
+
+class AcordeonItemBlock(StructBlock):
+    titulo = CharBlock(required=True, label="Título da Seção")
+    conteudo = ConteudoAcordeonStreamBlock(required=False, label="Conteúdo da Seção")
+    class Meta:
+        label = "Item do Acordeão"
+        icon = "collapse-down"
+
+
+class AcordeonBlock(StructBlock):
+    titulo_geral = CharBlock(required=False, label="Título Geral do Bloco de Acordeão")
+    secoes = ListBlock(
+        AcordeonItemBlock(),
+        label="Seções do Acordeão",
+        help_text="Adicione uma ou mais seções expansíveis."
+    )
+    TEMAS = [
+        ('branco', 'Branco (Padrão)'),
+        ('azul', 'Azul com cinza'),
+    ]
+    tema = ChoiceBlock(
+        choices=TEMAS,
+        default='branco',
+        required=False,
+        label="Tema de Cores do Acordeão",
+        help_text="A cor escolhida será aplicada a todas as seções do acordeão."
+    )
+
+    class Meta:
+        label = "Acordeão"
+        icon = "collapse-down"
+        template = "blocks/bloco_informativo.html"
+class CustomFormBlock(StructBlock):
+    titulo_geral = CharBlock(default="Formulário", label="Título Principal do Formulário", help_text="Título que será exibido acima do formulário.")
+    descricao = RichTextBlock(required=False, label="Descrição/Introdução")
+    campos_customizados = StreamBlock([
+        ('texto_simples', SingleLineFieldBlock()),
+        ('texto_longo', MultiLineFieldBlock()),
+        ('email', EmailFieldBlock()),
+        ('numero', NumberFieldBlock()),
+        ('arquivo', FileFieldBlock()),
+    ], label="Campos Customizados", required=False)
+    texto_botao = CharBlock(default="Enviar", label="Texto do Botão de Envio")
+    captcha_habilitado = BooleanBlock(required=False, default=False, label="Habilitar reCAPTCHA")
+
+    def get_context(self, value, parent_context=None):
+        from .forms import CustomForm
+        context = super().get_context(value, parent_context)
+        request = context.get('request')
+        initial_data = {}
+        if request and request.user.is_authenticated:
+            initial_data['nome_completo'] = request.user.get_full_name() or request.user.username
+        show_recaptcha = bool(value.get('captcha_habilitado'))
+
+        recaptcha_site_key = None
+        recaptcha_secret_key = None
+        try:
+            from core.models import SiteSettings
+            site_settings = SiteSettings.for_site(request.site) if request and hasattr(request, 'site') else SiteSettings.objects.first()
+            if site_settings:
+                recaptcha_site_key = site_settings.get_captcha_site_key()
+                recaptcha_secret_key = site_settings.get_captcha_secret()
+                if not (recaptcha_site_key and recaptcha_secret_key):
+                    show_recaptcha = False
+        except Exception:
+            show_recaptcha = False
+
+        form = CustomForm(
+            fields_config=value.get('campos_customizados'),
+            initial=initial_data,
+            request=request,
+            show_recaptcha=show_recaptcha,
+            recaptcha_secret_key=recaptcha_secret_key
+        )
+        # Se um formulário com erros foi passado pelo `serve`, use-o.
+        if request and hasattr(request, '_form_errors') and getattr(request, '_form_errors') is not None:
+            form = getattr(request, '_form_errors')
+
+        context['form'] = form
+        context['show_recaptcha'] = show_recaptcha
+        context['recaptcha_site_key'] = recaptcha_site_key
+        return context
+
+    class Meta:
+        label = "Formulário Customizado"
+        icon = "form"
+        template = "blocks/formulario.html"
+
+
+class ArquivoSubmetido(models.Model):
+    submissao = models.ForeignKey('FormularioSubmissao', on_delete=models.CASCADE, related_name='arquivos_submetidos')
+    nome_campo = models.CharField(max_length=255)
+    arquivo = models.FileField(upload_to='formularios_submetidos/')
+
+    def __str__(self):
+        return f"Arquivo do campo '{self.nome_campo}' para a submissão {self.submissao.id}"
+
+class FormularioSubmissao(models.Model):
+    nome_completo = models.CharField(max_length=255, verbose_name="Nome Completo")
+    titulo = models.CharField(max_length=255, verbose_name="Título")
+    dados_adicionais = models.JSONField(verbose_name="Dados Adicionais", help_text="Campos customizados do formulário.")
+    pagina = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name="Página de origem"
+    )
+    data_envio = models.DateTimeField(auto_now_add=True, verbose_name="Data de envio")
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Usuário da Intranet?"
+    )
+
+    def dados_adicionais_formatados(self):
+        if not self.dados_adicionais:
+            return "Nenhum dado adicional."
+        return format_html_join(
+            '', '<h4>{}:</h4> {}',
+            ((key, value) for key, value in self.dados_adicionais.items())
+        )
+    dados_adicionais_formatados.short_description = "Dados Adicionais"
+    
+    def arquivos_para_download(self):
+        try:
+            form_block_value = next(block.value for block in self.pagina.specific.body if isinstance(block.block, CustomFormBlock))
+            field_map = {f"custom_field_{i}_{block.block_type}": block.value.get('label') for i, block in enumerate(form_block_value.get('campos_customizados', []))}
+        except (StopIteration, AttributeError):
+            field_map = {}
+
+        return format_html_join(
+            ' / ',
+            '<a href="{}" target="_blank">{}</a>',
+            ((arquivo.arquivo.url, field_map.get(arquivo.nome_campo, arquivo.nome_campo)) for arquivo in self.arquivos_submetidos.all())
+        )
+
+    arquivos_para_download.short_description = "Arquivos Anexados"
+
+
+    def __str__(self):
+        return f"Envio de {self.nome_completo} em {self.pagina.title if self.pagina else 'N/A'}"
+
+    class Meta:
+        verbose_name = "Envio do Formulário"
+        verbose_name_plural = "Envios dos Formulários"
+        ordering = ['-data_envio']

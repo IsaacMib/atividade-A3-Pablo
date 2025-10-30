@@ -8,6 +8,8 @@
 @use './lista_noticias/index.scss' as listaNoticias;
 @use './lista_avisos/index.scss';
 
+
+
 @use './servicos_online_escuro.scss';
 @use './servicos_online.scss';
 
@@ -38,9 +40,16 @@
 @use './programas.scss';
 @use './programas_escuro.scss';
 
+@use './bloco_informativo.scss';
+@use './bloco_informativo_escuro.scss';
+
+@use './formulario.scss';
+@use './formulario_escuro.scss';
 @use './solucao.scss';
 @use './linha_do_tempo.scss';
 @use './linha_do_tempo_escuro.scss';
 
 @use './table.scss';
 @use './table_escuro.scss';
+
+@use './lista_eventos/index.scss' as listaEventos; // alias aqui

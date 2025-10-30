@@ -1,0 +1,99 @@
+@use '../variables.scss' as variables;
+
+.bloco-informativo-content-wrapper {
+        max-width: 960px;
+        margin: 0 auto;
+    }
+
+    .titulo-geral-acordeao {
+        font-size: 2rem;
+        font-weight: 700;
+        color: variables.$color-primary;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        text-decoration: underline;
+    }
+
+    .introducao-acordeao {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: variables.$color-list-video-title;
+    }
+
+    .lista-geral-acordeao {
+        margin-bottom: 2rem; 
+    }
+
+    .secao {
+        border: 1px solid variables.$color-grey-300;
+        background-color: variables.$color-white;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .secoes-informativas > .secao + .secao {
+        border-top: none;
+    }
+
+    .secoes-informativas > .secao:last-of-type {
+        border-bottom: 1px solid variables.$color-grey-300;
+        margin-bottom: 0; 
+    }
+
+    .secao-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 1.1rem;
+        color: variables.$color-black;
+        padding: 12px 16px;
+    }
+
+    .secao-header .seta {
+        color: variables.$color-black;
+        transition: transform 0.3s ease;
+    }
+
+    .secao-header.ativo .seta {
+        transform: rotate(90deg);
+    }
+
+    .secao-conteudo {
+        display: none;
+        padding: 12px 16px;
+        color: variables.$color-black;
+    }
+
+    .bloco-informativo.tema-azul .secao-header {
+        background-color: variables.$color-primary;
+        color: variables.$color-white;
+    }
+
+    .bloco-informativo.tema-azul .secao-header .seta {
+        color: variables.$color-white;
+    }
+
+    .bloco-informativo.tema-azul .secao-conteudo {
+        background-color: variables.$color-grey-100;
+        color: variables.$color-list-video-title;
+    }
+
+    .acordeon-texto-simples,
+    .acordeon-link,
+    .acordeon-arquivo {
+        margin-bottom: 1rem;
+    }
+
+    .acordeon-texto-simples:last-child,
+    .acordeon-link:last-child,
+    .acordeon-arquivo:last-child {
+        margin-bottom: 0;
+    }
+
+    .acordeon-link a, .acordeon-arquivo a {
+        color: variables.$color-primary;
+    }
