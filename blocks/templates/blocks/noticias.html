@@ -23,7 +23,7 @@
       {% if noticias.get_imagem_destaque %}
           <div class="noticias-conteudo--imagem"> 
             {% if noticias.is_remote %}
-              <img src="{{ noticias.get_imagem_destaque }}" alt="{{ noticias.title }}" class="img-fluid" style="width: 322px; height: 247px; object-fit: cover;" loading="lazy"/> {# get_imagem_destaque agora retorna a URL para NoticiaRemota #}
+              <img src="{{ noticias.get_imagem_destaque }}" alt="{{ noticias.title }}" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy"/> {# get_imagem_destaque agora retorna a URL para NoticiaRemota #}
             {% else %}
               {% picture noticias.get_imagem_destaque format-{avif,webp,jpeg} fill-322x247 loading="lazy" %}
             {% endif %}

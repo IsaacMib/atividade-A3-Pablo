@@ -58,7 +58,7 @@
       {% elif page.get_imagem_destaque %}
         <div class="d-flex justify-content-center noticias-img-destaque tw:pb-12">
           {% if page.is_remote %}
-            <img src="{{ page.get_imagem_destaque }}" alt="{{ page.title }}" class="img-fluid" style="width: 100%; height: auto; object-fit: contain;" loading="lazy">
+            <img src="{{ page.get_imagem_destaque }}" alt="{{ page.title }}" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
           {% else %}
             {% picture page.get_imagem_destaque original format-{avif,webp,jpeg} loading="lazy" sizes="100%" %}
           {% endif %}
