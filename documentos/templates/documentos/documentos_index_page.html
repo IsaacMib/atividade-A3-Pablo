@@ -10,7 +10,7 @@
   {% include 'include/titulo.html' with titulo=page.title|default:"Documentos" bgClass='' %}
 
   {% if page.introduction %}
-    <p class="text-muted mb-4">{{ page.introduction }}</p>
+    <p class="texto-muted mb-4">{{ page.introduction }}</p>
   {% endif %}
 
   <!-- SUBTÍTULO E FILTROS -->
@@ -18,7 +18,7 @@
 
     <form method="get" class="d-flex gap-3 align-items-center flex-wrap mt-2 mt-sm-0" id="filtrosForm">
       <div class="form-group">
-        <label for="filtroAno" class="form-label small text-muted mb-1">Ano:</label>
+        <label for="filtroAno" class="form-label small texto-muted mb-1">Ano:</label>
         <select name="ano" class="form-select w-auto" id="filtroAno">
           <option value="">Todos</option>
           {% for ano_item in anos_disponiveis %}
@@ -30,7 +30,7 @@
       </div>
 
       <div class="form-group">
-        <label for="filtroTag" class="form-label small text-muted mb-1">Tag:</label>
+        <label for="filtroTag" class="form-label small texto-muted mb-1">Tag:</label>
         <select name="tag" class="form-select w-auto" id="filtroTag">
           <option value="">Todos</option>
           {% for t in tags %}
@@ -42,7 +42,7 @@
       </div>
 
       <div class="form-group align-self-end">
-        <button class="btn btn-primary px-4" type="submit">Filtrar</button>
+        <button class="btn botao-primario px-4" type="submit">Filtrar</button>
       </div>
     </form>
   </div>
@@ -56,34 +56,31 @@
             <!-- Dot antes do título -->
             <span class="documento-dot fs-5 me-2">•</span>
 
-            <a href="{% url 'documentos:document_serve_inline' doc.arquivo.id doc.arquivo.filename %}" target="_blank" class="fw-semibold text-decoration-none documento-link hover-text-primary">
+            <a href="{% url 'documentos:document_serve_inline' doc.arquivo.id doc.arquivo.filename %}" target="_blank" class="fw-semibold sem-decoracao documento-link hover-text-primary">
               {{ doc.title }}
             </a>
 
-            <!-- Link para download direto se necessário -->
-            <small class="ms-2">
-              <a href="{{ doc.arquivo.url }}" class="text-muted" title="Download direto">
-                <i class="bi bi-download"></i>
-              </a>
-            </small>
-
-            <!-- Botão para visualizar o documento -->
-            <small class="ms-2">
-              <button class="btn btn-sm btn-outline-primary" onclick="showDocument('{% url 'documentos:document_serve_inline' doc.arquivo.id doc.arquivo.filename %}', '{{ doc.title|escapejs }}')">
-                <i class="bi bi-eye"></i> Visualizar
-              </button>
-            </small>
-
             {% if doc.destaque %}
-              <span class="badge bg-warning text-dark ms-2">Importante</span>
+              <span class="etiqueta etiqueta-importante ms-2">Importante</span>
             {% endif %}
 
-            <span class="text-muted ms-2 small">• {{ doc.data_publicacao|date:"d/m/Y" }}</span>
+            <span class="texto-muted ms-2 small">• {{ doc.data_publicacao|date:"d/m/Y" }}</span>
+          </div>
+
+          <!-- Botões de ação no final da linha -->
+          <div class="d-flex gap-2 align-items-center">
+            <button class="btn btn-sm botao-outline-primario" onclick="showDocument('{% url 'documentos:document_serve_inline' doc.arquivo.id doc.arquivo.filename %}', '{{ doc.title|escapejs }}')">
+              <i class="bi bi-eye"></i> Visualizar
+            </button>
+            
+            <a href="{{ doc.arquivo.url }}" class="btn btn-sm botao-outline-secundario" title="Download direto">
+              <i class="bi bi-download"></i> Baixar
+            </a>
           </div>
         </div>
       {% endif %}
     {% empty %}
-      <p class="text-muted fst-italic">Nenhum documento encontrado.</p>
+      <p class="texto-muted texto-italico">Nenhum documento encontrado.</p>
     {% endfor %}
   </div>
 
@@ -106,8 +103,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-        <a id="documentDirectLink" href="#" target="_blank" class="btn btn-primary">Abrir em nova aba</a>
+        <button type="button" class="btn botao-secundario" data-bs-dismiss="modal">Fechar</button>
+        <a id="documentDirectLink" href="#" target="_blank" class="btn botao-primario">Abrir em nova aba</a>
       </div>
     </div>
   </div>
@@ -170,7 +167,7 @@ function showDocument(url, title) {
     
     // Limpa o viewer
     const viewer = document.getElementById('documentViewer');
-    viewer.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Carregando...</span></div></div>';
+    viewer.innerHTML = '<div class="centralizar-texto"><div class="carregamento" role="status"><span class="visually-hidden">Carregando...</span></div></div>';
     
     // Tenta diferentes métodos de exibição
     const fileExtension = url.split('.').pop().toLowerCase();
@@ -184,9 +181,9 @@ function showDocument(url, title) {
     } else {
         // Para outros tipos de arquivo
         viewer.innerHTML = `
-            <div class="text-center">
+            <div class="centralizar-texto">
                 <p class="mb-3">Este tipo de arquivo não pode ser visualizado diretamente no navegador.</p>
-                <a href="${url}" target="_blank" class="btn btn-primary">Abrir documento</a>
+                <a href="${url}" target="_blank" class="btn botao-primario">Abrir documento</a>
             </div>
         `;
     }
@@ -203,8 +200,8 @@ function tryPdfViewer(url, title, viewer) {
             <iframe src="${url}" width="100%" height="500px" frameborder="0" style="border: 1px solid #ddd;">
                 <p>Seu navegador não suporta iframes. <a href="${url}" target="_blank">Clique aqui para abrir o documento</a>.</p>
             </iframe>
-            <div class="mt-2 text-center">
-                <small class="text-muted">Problemas para visualizar? 
+            <div class="mt-2 centralizar-texto">
+                <small class="texto-muted">Problemas para visualizar? 
                     <button class="btn btn-link btn-sm p-0" onclick="tryAlternativeViewer('${url}', '${title}')">Tente o visualizador alternativo</button> 
                     ou <a href="${url}" target="_blank">abra em nova aba</a>.
                 </small>
@@ -236,9 +233,9 @@ function tryAlternativeViewer(url, title) {
     let embedHTML = `
         <div class="position-relative">
             <embed src="${url}" type="application/pdf" width="100%" height="500px" />
-            <div class="mt-2 text-center">
-                <small class="text-muted">
-                    <a href="${url}" target="_blank" class="btn btn-primary btn-sm">Abrir em nova aba</a>
+            <div class="mt-2 centralizar-texto">
+                <small class="texto-muted">
+                    <a href="${url}" target="_blank" class="btn botao-primario botao-pequeno">Abrir em nova aba</a>
                 </small>
             </div>
         </div>

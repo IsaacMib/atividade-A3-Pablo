@@ -6,8 +6,59 @@
     color: variables.$color-grey-100;
 
     .documentos-container {
-      p.text-muted {
+      .texto-muted {
         color: variables.$color-grey-400 !important;
+      }
+
+      .etiqueta-importante {
+        background-color: variables.$color-warning;
+        color: variables.$color-on-warning;
+      }
+
+      .botao-primario {
+        background-color: variables.$color-primary-light;
+        border-color: variables.$color-primary-light;
+        color: variables.$color-grey-900;
+
+        &:hover {
+          background-color: variables.$color-primary;
+          border-color: variables.$color-primary;
+          box-shadow: 0 3px 8px rgba(variables.$color-primary, 0.3);
+        }
+      }
+
+      .botao-secundario {
+        background-color: variables.$color-primary-light;
+        border-color: variables.$color-primary-light;
+        color: variables.$color-grey-900;
+        
+        &:hover {
+          background-color: variables.$color-primary;
+          border-color: variables.$color-primary;
+          box-shadow: 0 3px 8px rgba(variables.$color-primary, 0.3);
+        }
+      }
+
+      .botao-outline-primario {
+        border-color: variables.$color-primary-light;
+        color: variables.$color-primary-light;
+        
+        &:hover {
+          background-color: variables.$color-primary-light;
+          color: variables.$color-grey-900;
+          box-shadow: 0 2px 4px rgba(variables.$color-primary-light, 0.3);
+        }
+      }
+
+      .botao-outline-secundario {
+        border-color: variables.$color-primary-lighter;
+        color: variables.$color-primary-lighter;
+        
+        &:hover {
+          background-color: variables.$color-primary-lighter;
+          color: variables.$color-grey-900;
+          box-shadow: 0 2px 4px rgba(variables.$color-primary-lighter, 0.3);
+        }
       }
 
       .border-bottom {
@@ -81,7 +132,7 @@
             color: variables.$color-grey-400 !important;
           }
 
-          .btn-sm.btn-outline-primary {
+          .btn-sm.botao-outline-primario {
             border-color: variables.$color-primary-light;
             color: variables.$color-primary-light;
             
@@ -92,16 +143,19 @@
             }
           }
 
-          a.text-muted {
-            color: variables.$color-grey-400 !important;
+          .btn-sm.botao-outline-secundario {
+            border-color: variables.$color-primary-lighter;
+            color: variables.$color-primary-lighter;
             
             &:hover {
-              color: variables.$color-primary-light !important;
+              background-color: variables.$color-primary-lighter;
+              color: variables.$color-grey-900;
+              box-shadow: 0 2px 4px rgba(variables.$color-primary-lighter, 0.3);
             }
           }
         }
 
-        p.text-muted {
+        p.texto-muted {
           color: variables.$color-grey-400;
         }
       }
@@ -142,18 +196,19 @@
             border-top-color: variables.$color-grey-700;
             background-color: variables.$color-grey-800;
             
-            .btn-secondary {
-              background-color: variables.$color-grey-600;
-              border-color: variables.$color-grey-600;
-              color: variables.$color-grey-100;
+            .botao-secundario {
+              background-color: variables.$color-primary-light;
+              border-color: variables.$color-primary-light;
+              color: variables.$color-grey-900;
               
               &:hover {
-                background-color: variables.$color-grey-500;
-                border-color: variables.$color-grey-500;
+                background-color: variables.$color-primary;
+                border-color: variables.$color-primary;
+                box-shadow: 0 3px 8px rgba(variables.$color-primary, 0.3);
               }
             }
             
-            .btn-primary {
+            .botao-primario {
               background-color: variables.$color-primary-light;
               border-color: variables.$color-primary-light;
               color: variables.$color-grey-900;
