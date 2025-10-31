@@ -1,0 +1,67 @@
+@use '../variables.scss';
+
+[data-theme="dark"] {
+
+  .corpo-tecnico--wrapper {
+    background-color: variables.$color-black;
+  }
+
+  .caixa-eliptica-sombra {
+    .caixa-eliptica-conteudo {
+      background-color: variables.$color-white;
+    }
+
+    .caixa-eliptica-imagem-default {
+      filter: invert(1);
+    }
+
+    &::after {
+      background: variables.$color-black;
+      border: 1px solid variables.$color-white;
+    }
+  }
+
+  .caixa-eliptica {
+    background-color: variables.$color-black;
+    border: 1px solid variables.$color-white;    
+  }
+
+  .corpo-tecnico-header {
+    color: variables.$color-white;
+  }
+
+  .corpo-tecnico-header--title {
+    color: variables.$color-white;
+  }
+
+  .corpo-tecnico-header--function {
+    font-weight: 100;
+  }
+
+  .corpo-tecnico-bio {
+    color: variables.$color-white;
+  }
+
+  .corpo-tecnico-grupo-card {
+    background-color: variables.$color-black;
+    border: 1px solid variables.$color-white;
+
+    a {
+      color: variables.$color-white;
+    }
+  }
+
+  .corpo-tecnico-nome {
+    color: variables.$color-white;
+  }
+
+  .corpo-tecnico-funcao {
+    font-weight: 100;
+    color: variables.$color-white;
+  }
+
+
+  .corpo-tecnico-bio-text {
+    color: variables.$color-white;
+  }
+}

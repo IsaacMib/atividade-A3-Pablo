@@ -117,5 +117,4 @@ def get_widget_input_with_counter(
     return InputField(attrs={
         'data-controller': 'char-count',
         'data-char-count-max-value': char_limit,
-        'data-action': 'input->char-count#updateCount paste->char-count#updateCount',
     })

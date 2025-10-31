@@ -7,7 +7,6 @@
     {% if settings.core.SiteSettings.is_periodo_eleitoral and page.sensivel_periodo_eleitoral %}
       {% include 'include/periodo-eleitoral.html' %}
     {% else %}
-
       <div class="page-noticias-header tw:pt-12 tw:pb-12">
         <h1 class="index-header__title index-header__title--blog titulo-noticia tw:font-bold">
           {{ page.title }}
@@ -19,6 +18,22 @@
               Atualização {{ page.latest_revision_created_at|date:"d/m/Y H:i" }}
             </p>
           </div>
+
+          {% if page.arquivos and not page.nao_exibir_lista_de_arquivos %}
+            <div id="lista-arquivos" class="lista-arquivos tw:mt-8">
+              <h2 class="titulo-2">Arquivos</h2>
+              <ul class="lista-arquivos__list">
+                {% for arquivo in page.arquivos %}
+                  <li class="lista-arquivos__item">
+                    <a href="{{ arquivo.value.url }}" target="_blank" rel="noopener noreferrer" class="lista-arquivos__link">
+                      <i class="fa-regular {{ arquivo.value|arquivo_icon }} tw:mr-2"></i>{{ arquivo.value.title }}<i class="fa-solid fa-download tw:ml-0"></i>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
         {% endif %}
       </div>
 
@@ -123,6 +138,12 @@
           </div>
         </div>
       {% endif %}
+
+      <!-- Sistema de Compartilhamento -->
+      {% load sharing_tags %}
+      <div class="compartilhamento-wrapper tw:mt-8 tw:pb-9 tw:flex tw:justify-end">
+        {% compartilhamento_social %}
+      </div>
     {% endif %}
   </div> <!-- .noticias-page--content -->
 </div>

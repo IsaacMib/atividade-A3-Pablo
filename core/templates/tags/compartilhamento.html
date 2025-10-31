@@ -1,0 +1,43 @@
+{% load static %}
+
+{% if redes_compartilhamento %}
+<div class="compartilhamento-diagonal-wrapper">
+  <!-- Div separada para a linha -->
+  <div class="compartilhamento-linha"></div>
+  
+  <!-- Div separada para o conteúdo -->
+  <div class="compartilhamento-social" id="compartilhamento-social">
+    <span class="compartilhamento-titulo text-muted">Compartilhe:</span>
+    
+    <div class="compartilhamento-icones">
+        {% for rede in redes_compartilhamento %}
+            {% if rede.copy_link %}
+                <!-- Botão especial para copiar link -->
+                <button 
+                    class="btn-compartilhar btn-copy-link" 
+                    data-url="{{ rede.url }}"
+                    aria-label="Copiar link da página"
+                    data-bs-toggle="popover"
+                    data-bs-placement="top"
+                    data-bs-content="Link copiado com sucesso!"
+                    data-bs-trigger="manual"
+                >
+                    <i class="{{ rede.icone }}"></i>
+                </button>
+            {% else %}
+                <!-- Botões normais de compartilhamento -->
+                <a 
+                    href="{{ rede.url }}" 
+                    class="btn-compartilhar btn-{{ rede.codigo }}" 
+                    data-rede="{{ rede.codigo }}"
+                    title="Compartilhar no {{ rede.nome }}"
+                    aria-label="Compartilhar no {{ rede.nome }}"
+                >
+                    <i class="{{ rede.icone }}"></i>
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}

@@ -1,4 +1,3 @@
-from django import forms
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.cache import cache
@@ -238,7 +237,7 @@ class NoticiasPage(PageSitePadrao):
         FieldPanel("subtitle"),
         FieldPanel(
             "descricao",
-            widget=get_widget_input_with_counter(char_limit=220)),
+            widget=get_widget_input_with_counter(char_limit=211)),
         MultiFieldPanel(
             [
                 FieldPanel("slideshow_imagens"),
@@ -338,11 +337,16 @@ class NoticiasPage(PageSitePadrao):
             context["ultimas_noticias"] = self.get_ultimas_noticias() # Fallback para o método antigo
         return context
 
-    def get_imagem_destaque(self):
+    def get_imagem_destaque(self):      
         if self.images and len(self.images):
             for bloco in self.images:
                 if bloco.block_type == 'imagem' and bloco.value:
                     return bloco.value
+        
+        if self.imagem_destaque:
+            return self.imagem_destaque
+        
+        # Retorna None se não houver nenhuma imagem
         return None
 
     @staticmethod
