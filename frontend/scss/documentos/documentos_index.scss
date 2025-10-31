@@ -20,6 +20,23 @@
       flex-wrap: wrap;
       gap: 1rem;
 
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        
+        .form-label {
+          font-weight: 500;
+          margin-bottom: 0.25rem;
+          font-size: 0.875rem;
+          color: variables.$color-grey-700;
+        }
+        
+        &.align-self-end {
+          justify-content: flex-end;
+          margin-top: 1.5rem;
+        }
+      }
+
       .form-select {
         border-radius: 10px;
         border: 1px solid variables.$color-grey-210;
@@ -28,11 +45,30 @@
         background-color: variables.$color-surface;
         color: variables.$color-on-surface;
         transition: all 0.2s ease;
-
-        &:hover,
+        min-width: 150px;
+        height: 42px;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 16px 12px;
+        appearance: none;
+        
+        &:hover {
+          border-color: variables.$color-primary;
+          background-color: rgba(variables.$color-primary, 0.05);
+          cursor: pointer;
+        }
+        
         &:focus {
           border-color: variables.$color-primary;
           box-shadow: 0 0 0 0.15rem rgba(variables.$color-primary, 0.25);
+          outline: none;
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          background-color: variables.$color-grey-100;
         }
       }
 
@@ -83,9 +119,40 @@
           text-transform: uppercase;
         }
 
-        .text-muted {
+        .texto-muted {
           font-size: 0.85rem;
           color: variables.$color-grey-600;
+        }
+
+        // Estilos para os botões de ação
+        .btn-sm {
+          padding: 0.35rem 0.75rem;
+          font-size: 0.8rem;
+          border-radius: 6px;
+          transition: all 0.2s ease;
+          
+          &.btn-outline-primary {
+            border-color: variables.$color-primary;
+            color: variables.$color-primary;
+            background-color: transparent;
+            
+            &:hover {
+              background-color: variables.$color-primary;
+              color: variables.$color-on-primary;
+              transform: translateY(-1px);
+              box-shadow: 0 2px 4px rgba(variables.$color-primary, 0.3);
+            }
+          }
+        }
+
+        // Links de download
+        a.text-muted {
+          transition: all 0.2s ease;
+          
+          &:hover {
+            color: variables.$color-primary !important;
+            transform: scale(1.1);
+          }
         }
       }
 
@@ -94,6 +161,91 @@
         font-style: italic;
         margin-top: 2rem;
         color: variables.$color-grey-600;
+      }
+    }
+
+    // Estilos para o modal
+    .modal {
+      .modal-dialog {
+        .modal-content {
+          border-radius: 12px;
+          border: none;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+          
+          .modal-header {
+            border-bottom: 1px solid variables.$color-grey-210;
+            padding: 1.25rem 1.5rem;
+            background-color: variables.$color-surface;
+            border-radius: 12px 12px 0 0;
+            
+            .modal-title {
+              font-weight: 600;
+              color: variables.$color-on-surface;
+              font-size: 1.1rem;
+            }
+            
+            .btn-close {
+              padding: 0.5rem;
+              margin: -0.5rem -0.5rem -0.5rem auto;
+            }
+          }
+          
+          .modal-body {
+            padding: 1.5rem;
+            background-color: variables.$color-surface;
+            
+            #documentViewer {
+              border-radius: 8px;
+              overflow: hidden;
+              background-color: #f8f9fa;
+              
+              iframe, embed {
+                border-radius: 8px;
+              }
+              
+              .spinner-border {
+                color: variables.$color-primary;
+                margin: 2rem auto;
+              }
+            }
+          }
+          
+          .modal-footer {
+            border-top: 1px solid variables.$color-grey-210;
+            padding: 1rem 1.5rem;
+            background-color: variables.$color-surface;
+            border-radius: 0 0 12px 12px;
+            
+            .btn {
+              border-radius: 8px;
+              font-weight: 500;
+              padding: 0.5rem 1.25rem;
+              transition: all 0.2s ease;
+              
+              &.btn-secondary {
+                background-color: variables.$color-grey-300;
+                border-color: variables.$color-grey-300;
+                color: variables.$color-grey-700;
+                
+                &:hover {
+                  background-color: variables.$color-grey-400;
+                  border-color: variables.$color-grey-400;
+                }
+              }
+              
+              &.btn-primary {
+                background-color: variables.$color-primary;
+                border-color: variables.$color-primary;
+                
+                &:hover {
+                  background-color: variables.$color-primary-dark;
+                  transform: translateY(-1px);
+                  box-shadow: 0 3px 8px rgba(variables.$color-primary, 0.3);
+                }
+              }
+            }
+          }
+        }
       }
     }
 
@@ -126,6 +278,8 @@
 
   @media (max-width: 768px) {
     .documentos-container {
+      padding: 1rem !important;
+      
       .d-flex {
         flex-direction: column !important;
         align-items: stretch !important;
@@ -135,15 +289,114 @@
         width: 100%;
         gap: 0.75rem;
 
+        .form-group {
+          width: 100%;
+          
+          &.align-self-end {
+            margin-top: 1rem;
+          }
+        }
+
         .form-select,
         .btn {
           width: 100%;
+          min-width: unset;
+        }
+        
+        .form-select {
+          height: 48px;
+          font-size: 1rem;
+        }
+        
+        .btn {
+          height: 48px;
+          font-size: 1rem;
         }
       }
 
       .documentos-list .documento-item {
         flex-direction: column;
         align-items: flex-start;
+        padding: 1rem 0;
+        
+        .d-flex {
+          flex-direction: column !important;
+          align-items: flex-start !important;
+          width: 100%;
+          gap: 0.5rem;
+          
+          .documento-link {
+            font-size: 1rem;
+            line-height: 1.4;
+          }
+          
+          small {
+            margin-left: 0 !important;
+            margin-top: 0.25rem;
+            
+            .btn-sm {
+              padding: 0.5rem 1rem;
+              font-size: 0.9rem;
+            }
+          }
+        }
+      }
+    }
+    
+    // Modal responsivo
+    .modal {
+      .modal-dialog {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+        
+        .modal-content {
+          .modal-body {
+            padding: 1rem;
+            
+            #documentViewer {
+              min-height: 300px;
+            }
+          }
+          
+          .modal-footer {
+            padding: 0.75rem 1rem;
+            flex-direction: column;
+            gap: 0.5rem;
+            
+            .btn {
+              width: 100%;
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .documentos-container {
+      .modal-dialog {
+        margin: 0.25rem;
+        max-width: calc(100% - 0.5rem);
+        
+        .modal-content {
+          .modal-header {
+            padding: 1rem;
+            
+            .modal-title {
+              font-size: 1rem;
+              line-height: 1.3;
+            }
+          }
+          
+          .modal-body {
+            padding: 0.75rem;
+            
+            #documentViewer {
+              min-height: 250px;
+            }
+          }
+        }
       }
     }
   }

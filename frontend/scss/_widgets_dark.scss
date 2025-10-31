@@ -1,0 +1,75 @@
+@use './variables.scss';
+
+// ========================================
+// WIDGET UNIFICADO (Tema escuro)
+// Baseado no padrão de lista_noticias_escuro.scss
+// - Texto em cores claras
+// - Ícones brancos
+// - Círculo do ícone em cinza escuro do variables.scss
+// - Evitar azuis sobre preto para melhor contraste
+// ========================================
+
+[data-theme=dark] {
+  .widget-container {
+    background-color: variables.$color-black;
+    border-top: 0.5px solid variables.$color-white;
+    border-bottom: 0.5px solid variables.$color-white;
+  }
+
+  .widget-item {
+    color: variables.$color-dark-theme-text;
+    border-bottom: 1px solid variables.$color-dark-theme-border-light;
+
+    &:hover {
+      // usar um cinza escuro como fundo de hover (sem azul)
+      background-color: variables.$color-dark-bg-alt;
+    }
+
+    &:focus-visible {
+      outline: 2px solid variables.$color-white;
+      outline-offset: -2px;
+    }
+  }
+
+  // Barra lateral de destaque: branco para bom contraste no fundo escuro
+  .widget-item-barra {
+    background-color: variables.$color-white;
+    opacity: 1; // garante visibilidade mesmo sem hover
+  }
+
+  // mantém spacing padrão de .widget-item-conteudo do tema base
+
+  // Círculo do ícone em cinza escuro e ícone em branco
+  .widget-item-icone {
+    background-color: variables.$color-grey-800; // cinza escuro do variables.scss
+    color: variables.$color-white; // ícone branco
+
+    .widget-item:hover & {
+      background-color: variables.$color-grey-700; // leve realce no hover
+    }
+  }
+
+  // mantém estilo de .widget-item-texto do tema base
+
+  .widget-item-titulo {
+    color: variables.$color-dark-theme-text;
+
+    // no tema escuro evitamos azul no hover
+    .widget-item:hover & {
+      color: variables.$color-white;
+    }
+  }
+
+  // Seta também em branco para contraste
+  .widget-item-seta {
+    color: variables.$color-white;
+  }
+
+  // Variações por tipo: no escuro, unificar o fundo do ícone para manter contraste consistente
+  .widget-avisos,
+  .widget-acesso-rapido {
+    .widget-item-icone {
+      background-color: variables.$color-grey-800;
+    }
+  }
+}

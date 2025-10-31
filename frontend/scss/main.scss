@@ -23,6 +23,7 @@
 
 // Project-specific partials added by assistant: widgets and banners
 @use './_widgets.scss' as widgets;
+@use './_widgets_dark.scss' as widgets_dark;
 @use './_banners.scss' as banners;
 
 /*Arquivo para customizar o bootstrap*/

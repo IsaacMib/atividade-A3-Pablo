@@ -61,6 +61,12 @@
       color: #333;
       text-align: left;
       margin-bottom: 1rem;
+      max-height: 200px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
     }
 
     .aviso-data {

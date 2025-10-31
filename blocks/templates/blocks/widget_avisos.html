@@ -1,19 +1,26 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
-{% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
-
-<div class="widget-avisos-importantes container-fluid">
-  <div class="avisos-lista mx-auto">
-    {% for aviso in avisos %}
-      <a href="{{ aviso.get_url }}" class="aviso-item d-flex align-items-center text-decoration-none" role="listitem">
-        <div class="aviso-linha"></div>
-        <div class="aviso-icone d-flex align-items-center justify-content-center flex-shrink-0">
-          <i class="bi bi-megaphone"></i>
-        </div>
-        <div class="aviso-texto ms-3">
-          <span class="aviso-titulo">{{ aviso.title }}</span>
-        </div>
-      </a>
-    {% endfor %}
+<div class="widget-container widget-avisos">
+  <div class="container">
+    {% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
+    
+    <div class="widget-lista">
+      {% for aviso in avisos %}
+        <a href="{{ aviso.get_url }}" class="widget-item">
+          <div class="widget-item-barra"></div>
+          <div class="widget-item-conteudo">
+            <div class="widget-item-icone">
+              <i class="bi bi-megaphone"></i>
+            </div>
+            <div class="widget-item-texto">
+              <span class="widget-item-titulo">{{ aviso.title }}</span>
+            </div>
+            <div class="widget-item-seta">
+              <i class="bi bi-chevron-right"></i>
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
   </div>
 </div>
