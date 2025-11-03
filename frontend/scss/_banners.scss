@@ -3,31 +3,98 @@
 $banner-height-default: 320px !default;
 $banner-aspect-16-9: math.div(16, 9); // migrated from (16 / 9)
 
-.banner-wrapper { width: 100%; overflow: hidden; }
-.banner-container { width: 100%; }
-.banner-inner { width: 100%; height: 100%; }
+// Sistema de Banner com Renditions Personalizadas
+// Suporta: fill, max, min, original
+// Mantém proporções originais sem deformação
 
-.banner-picture, .banner-image {
-  display: block;
+.banner-wrapper {
+  position: relative;
   width: 100%;
-  height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.banner-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.banner-link {
+  display: inline-block;
+  max-width: 100%;
+  text-decoration: none;
+  line-height: 0;
+}
+
+.banner-picture {
+  display: inline-block;
+  line-height: 0;
 }
 
 .banner-image {
-  object-fit: cover; // ensures the image is cropped to fill the container
+  max-width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain; // Mantém proporções sem deformar
   object-position: center center;
 }
 
-// predefined ratio classes (will rely on the template to add them)
-.ratio-16-9 { aspect-ratio: 16 / 9; }
-.ratio-1-1 { aspect-ratio: 1 / 1; }
-.ratio-3-2 { aspect-ratio: 3 / 2; }
-.ratio-4-3 { aspect-ratio: 4 / 3; }
-.ratio-18-6 { aspect-ratio: 18 / 6; }
-.ratio-custom { height: auto; }
+// Badge informativo (apenas no preview do admin)
+.banner-info-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+  pointer-events: none;
+  
+  .badge-mode {
+    background: #2196F3;
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  
+  .badge-size {
+    background: #4CAF50;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+  }
+}
+
+// Hover effect suave
+.banner-link:hover .banner-image {
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
 
 // Fullwidth banner tweaks
-.banner--standalone { width: 100vw; margin-left: calc(50% - 50vw); }
+.banner--standalone { 
+  width: 100vw; 
+  margin-left: calc(50% - 50vw); 
+}
+
+// Responsivo
+@media (max-width: 768px) {
+  .banner-info-badge {
+    font-size: 10px;
+    padding: 4px 8px;
+    gap: 6px;
+  }
+}
 
 // Accessibility helpers
 // decorative images with empty alt should still fit the container; nothing to override here

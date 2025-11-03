@@ -112,6 +112,66 @@ class BannerComLinkBlock(blocks.StructBlock):
         label="Imagem do Banner (Mobile)",
         help_text="Imagem alternativa para dispositivos menores."
     )
+    
+    # Modo de renderização
+    mode = blocks.ChoiceBlock(
+        choices=[
+            ('fill', 'Preencher (fill) - Recorta para preencher exatamente'),
+            ('max', 'Máximo (max) - Mantém proporção até tamanho máximo'),
+            ('min', 'Mínimo (min) - Garante tamanho mínimo sem estourar'),
+            ('original', 'Original - Sem redimensionamento'),
+        ],
+        default='fill',
+        label="Modo de Ajuste",
+        help_text="Define como a imagem será ajustada ao tamanho escolhido."
+    )
+    
+    # Tamanho
+    size = blocks.ChoiceBlock(
+        choices=[
+            ('original', '🖼️ Original (sem redimensionar)'),
+            
+            # Ícones e miniaturas
+            ('16x16', '🔹 Mini ícone (16x16)'),
+            ('32x32', '🔹 Ícone pequeno (32x32)'),
+            ('64x64', '🔹 Ícone médio (64x64)'),
+            ('128x128', '🔹 Ícone grande (128x128)'),
+            
+            # Miniaturas quadradas
+            ('200x200', '🟦 Miniatura quadrada (200x200)'),
+            ('230x230', '🟦 Miniatura média (230x230)'),
+            ('273x273', '🟦 Miniatura grande (273x273)'),
+            ('370x370', '🟦 Thumbnail padrão (370x370)'),
+            ('400x400', '🟦 Quadrado médio (400x400)'),
+            ('468x468', '🟦 Quadrado grande (468x468)'),
+            ('565x565', '🟦 Quadrado XL (565x565)'),
+            ('663x663', '🟦 Quadrado XXL (663x663)'),
+            ('760x760', '🟦 Quadrado 4:4 (760x760)'),
+            ('1150x1150', '🟦 Capa quadrada (1150x1150)'),
+            
+            # Horizontais e widescreen
+            ('128x85', '📺 Mini horizontal (128x85)'),
+            ('238x133', '📺 Banner pequeno (238x133)'),
+            ('750x420', '📺 Banner médio (750x420)'),
+            ('768x420', '📺 Banner padrão (768x420)'),
+            ('1150x650', '📺 Capa Desktop (1150x650)'),
+            ('1200x450', '📺 Capa Wide (1200x450)'),
+            ('1366x768', '📺 Full HD 16:9 (1366x768)'),
+            ('1920x1080', '📺 HD 16:9 (1920x1080)'),
+            ('2560x1440', '📺 QHD 16:9 (2560x1440)'),
+            ('3840x2160', '📺 4K Ultra HD (3840x2160)'),
+            
+            # Verticais e retratos
+            ('480x640', '📱 Retrato pequeno (480x640)'),
+            ('720x1080', '📱 Retrato padrão (720x1080)'),
+            ('1080x1350', '📱 Retrato social (1080x1350)'),
+            ('1080x1920', '📱 Story / Vertical (1080x1920)'),
+        ],
+        default='1920x1080',
+        label="Tamanho do Banner",
+        help_text="Selecione o tamanho desejado do banner."
+    )
+    
     link = blocks.URLBlock(
         required=True,
         label="URL do Banner"
@@ -126,17 +186,49 @@ class BannerComLinkBlock(blocks.StructBlock):
         default=False,
         label="Abrir em nova aba?"
     )
-    proporcao = blocks.ChoiceBlock(
-        choices=[
-            ("1-1", "Quadrado (1:1)"),
-            ("3-2", "Padrão (3:2)"),
-            ("4-3", "Clássico (4:3)"),
-            ("16-9", "Wide (16:9)"),
-            ("18-6", "Super Wide (18:6)"),
-        ],
-        default="16-9",
-        label="Proporção do Banner"
-    )
+    
+    def get_rendition(self, image, mode, size):
+        """
+        Retorna a rendition apropriada da imagem baseada no modo e tamanho.
+        """
+        if mode == "original" or size == "original":
+            return image
+        
+        # Constrói o filtro no formato: "fill-1920x1080", "max-400x400", etc.
+        filter_spec = f"{mode}-{size}"
+        return image.get_rendition(filter_spec)
+    
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        
+        imagem = value.get('imagem')
+        imagem_mobile = value.get('imagem_mobile')
+        mode = value.get('mode', 'fill')
+        size = value.get('size', '1920x1080')
+        
+        # Processa imagem desktop
+        if imagem:
+            if mode == "original" or size == "original":
+                context['rendition_desktop'] = imagem
+            else:
+                try:
+                    filter_spec = f"{mode}-{size}"
+                    context['rendition_desktop'] = imagem.get_rendition(filter_spec)
+                except:
+                    context['rendition_desktop'] = imagem
+        
+        # Processa imagem mobile
+        if imagem_mobile:
+            if mode == "original" or size == "original":
+                context['rendition_mobile'] = imagem_mobile
+            else:
+                try:
+                    filter_spec = f"{mode}-{size}"
+                    context['rendition_mobile'] = imagem_mobile.get_rendition(filter_spec)
+                except:
+                    context['rendition_mobile'] = imagem_mobile
+        
+        return context
 
     def clean(self, value):
         cleaned_data = super().clean(value)
