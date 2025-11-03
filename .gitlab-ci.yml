@@ -4,21 +4,64 @@ include:
     inputs:
       image: dockercodata.pb.gov.br/ci-base-images/python:3.13
       script: |-
-        # Detectar o gerenciador de pacotes e instalar libmagic
+        # Detectar o gerenciador de pacotes e instalar dependências do sistema
         if command -v apk > /dev/null 2>&1; then
           # Alpine Linux
-          apk update && apk add --no-cache file-dev libmagic
+          apk update && apk add --no-cache \
+            libexpat-dev \
+            libjpeg-turbo-dev \
+            libpq-dev \
+            zlib-dev \
+            build-base \
+            postgresql-client \
+            file-dev \
+            libmagic
         elif command -v apt-get > /dev/null 2>&1; then
-          # Debian/Ubuntu
-          apt-get update && apt-get install -y libmagic1
+          # Debian/Ubuntu (baseado no Dockerfile)
+          export DEBIAN_FRONTEND=noninteractive
+          seq 1 8 | xargs -I{} mkdir -p /usr/share/man/man{}
+          apt-get update && apt-get install -y --no-install-recommends \
+            libexpat1 \
+            libexpat1-dev \
+            libjpeg62-turbo \
+            libjpeg62-turbo-dev \
+            libpcre2-32-0 \
+            libpcre2-dev \
+            libpq5 \
+            libpq-dev \
+            media-types \
+            postgresql-client \
+            procps \
+            zlib1g \
+            zlib1g-dev \
+            gnupg \
+            build-essential \
+            curl \
+            git \
+            libmagic1 \
+            libmagic-dev
         elif command -v yum > /dev/null 2>&1; then
           # CentOS/RHEL
-          yum install -y file-devel
+          yum install -y \
+            expat-devel \
+            libjpeg-turbo-devel \
+            postgresql-devel \
+            zlib-devel \
+            gcc \
+            file-devel \
+            postgresql
         elif command -v dnf > /dev/null 2>&1; then
           # Fedora
-          dnf install -y file-devel
+          dnf install -y \
+            expat-devel \
+            libjpeg-turbo-devel \
+            postgresql-devel \
+            zlib-devel \
+            gcc \
+            file-devel \
+            postgresql
         else
-          echo "Aviso: Não foi possível instalar libmagic automaticamente"
+          echo "Aviso: Não foi possível instalar dependências do sistema automaticamente"
         fi
         
         # Instalar dependências Python
