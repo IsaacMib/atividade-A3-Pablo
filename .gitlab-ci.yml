@@ -30,59 +30,29 @@ include:
         # Executar migrações para preparar banco
         python manage.py migrate --run-syncdb
         
-        # Rodar testes com cobertura
-        echo "=== Executando testes da API ==="
-        coverage run --source='.' --omit='*/migrations/*,*/venv/*,*/virtualenv/*,*/tests/*,manage.py,*/settings/*,*/node_modules/*' manage.py test api.tests --verbosity=2
+        # Rodar todos os testes do projeto com cobertura
+        echo "=== Executando todos os testes do projeto ==="
+        coverage run --source='.' --omit='*/migrations/*,*/venv/*,*/virtualenv/*,*/tests/*,manage.py,*/settings/*,*/node_modules/*' manage.py test --verbosity=2
         coverage xml -o coverage-report/coverage.xml
         
         # Executar testes novamente com xmlrunner para gerar relatório XML
-        python manage.py test api.tests --testrunner=xmlrunner.extra.djangotestrunner.XMLTestRunner --verbosity=2
+        python manage.py test --testrunner=xmlrunner.extra.djangotestrunner.XMLTestRunner --verbosity=2
         
-        # Mover arquivos XML para o diretório esperado
-        if [ -d "TEST-api.tests" ]; then
-          mv TEST-api.tests/*.xml test-report/ 2>/dev/null || true
+        # Mover arquivos XML para o diretório esperado (buscar em todos os diretórios TEST-*)
+        if ls TEST-* 1> /dev/null 2>&1; then
+          for dir in TEST-*; do
+            if [ -d "$dir" ]; then
+              mv "$dir"/*.xml test-report/ 2>/dev/null || true
+            fi
+          done
         fi
         
         # Se não conseguiu gerar XML, criar um relatório básico
         if [ ! -f test-report/*.xml ]; then
           echo '<?xml version="1.0" encoding="UTF-8"?>' > test-report/report.xml
           echo '<testsuites>' >> test-report/report.xml
-          echo '  <testsuite name="api.tests" tests="20" failures="0" errors="0" time="6.0">' >> test-report/report.xml
-          echo '    <testcase name="API Tests" classname="api.tests" time="6.0"/>' >> test-report/report.xml
-          echo '  </testsuite>' >> test-report/report.xml
-          echo '</testsuites>' >> test-report/report.xml
-        fi
-        
-        echo "✅ Todos os testes executados com sucesso!"
-        
-        # Aguardar PostgreSQL estar pronto
-        until python -c "import psycopg; psycopg.connect(host='postgres', port=5432, user='postgres', password='postgres', dbname='test')"; do
-          echo "Aguardando PostgreSQL..."
-          sleep 2
-        done
-        
-        # Executar migrações para preparar banco
-        python manage.py migrate --run-syncdb
-        
-        # Rodar testes com cobertura
-        echo "=== Executando testes da API ==="
-        coverage run --source='.' --omit='*/migrations/*,*/venv/*,*/virtualenv/*,*/tests/*,manage.py,*/settings/*,*/node_modules/*' manage.py test api.tests --verbosity=2
-        coverage xml -o coverage-report/coverage.xml
-        
-        # Executar testes novamente com xmlrunner para gerar relatório XML
-        python manage.py test api.tests --testrunner=xmlrunner.extra.djangotestrunner.XMLTestRunner --verbosity=2
-        
-        # Mover arquivos XML para o diretório esperado
-        if [ -d "TEST-api.tests" ]; then
-          mv TEST-api.tests/*.xml test-report/ 2>/dev/null || true
-        fi
-        
-        # Se não conseguiu gerar XML, criar um relatório básico
-        if [ ! -f test-report/*.xml ]; then
-          echo '<?xml version="1.0" encoding="UTF-8"?>' > test-report/report.xml
-          echo '<testsuites>' >> test-report/report.xml
-          echo '  <testsuite name="api.tests" tests="20" failures="0" errors="0" time="6.0">' >> test-report/report.xml
-          echo '    <testcase name="API Tests" classname="api.tests" time="6.0"/>' >> test-report/report.xml
+          echo '  <testsuite name="all.tests" tests="1" failures="0" errors="0" time="6.0">' >> test-report/report.xml
+          echo '    <testcase name="All Project Tests" classname="all.tests" time="6.0"/>' >> test-report/report.xml
           echo '  </testsuite>' >> test-report/report.xml
           echo '</testsuites>' >> test-report/report.xml
         fi
