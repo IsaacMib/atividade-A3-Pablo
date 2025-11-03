@@ -7,29 +7,32 @@
 
   .page-noticias__published {
     color: variables.$color-white;
-    font-weight: 400;
   }
 
   .noticias-pagination-item {
     --paginator-svg-color: #{variables.$color-white};
-    border: 1px solid variables.$color-white;
+    border-color: variables.$color-white;
     color: variables.$color-white;
+
     a {
       color: variables.$color-white;
     }
+
     &.active {
       background-color: variables.$color-grey-800;
-      border: 1px solid variables.$color-white;
       color: variables.$color-warning;
+
       a {
         color: variables.$color-warning;
       }
     }
+
     &.disabled {
       --paginator-svg-color: #{variables.$color-grey-800};
       border: none;
+
       &.with-border {
-        border: 1px solid variables.$color-grey-800;
+        border-color: variables.$color-grey-800;
       }
     }
   }

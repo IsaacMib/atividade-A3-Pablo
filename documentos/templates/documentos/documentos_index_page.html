@@ -69,12 +69,12 @@
 
           <!-- Botões de ação no final da linha -->
           <div class="d-flex gap-2 align-items-center">
-            <button class="btn btn-sm botao-outline-primario" onclick="showDocument('{% url 'documentos:document_serve_inline' doc.arquivo.id doc.arquivo.filename %}', '{{ doc.title|escapejs }}')">
-              <i class="bi bi-eye"></i> Visualizar
+            <button class="btn btn-sm botao-primario" onclick="showDocument('{% url 'documentos:document_serve_inline' doc.arquivo.id doc.arquivo.filename %}', '{{ doc.title|escapejs }}')">
+              <i class="bi bi-eye"></i>
             </button>
             
-            <a href="{{ doc.arquivo.url }}" class="btn btn-sm botao-outline-secundario" title="Download direto">
-              <i class="bi bi-download"></i> Baixar
+            <a href="{{ doc.arquivo.url }}" class="btn btn-sm botao-secundario" title="Download direto">
+              <i class="bi bi-download"></i>
             </a>
           </div>
         </div>
