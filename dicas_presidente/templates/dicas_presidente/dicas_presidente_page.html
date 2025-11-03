@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags sharing_tags %}
+
+{% block body_class %}template-dica-presidente-page{% endblock %}
+
+{% block content %}
+
+<div class="dica-presidente-page-container">
+    <div class="container">
+        <!-- Tipo e Data -->
+        <div class="dica-meta mb-3">
+            <span class="dica-tipo-badge">{{ page.get_tipo_dica_display_icon }} {{ page.get_tipo_dica_display }}</span>
+            {% if page.destaque %}
+            <span class="etiqueta etiqueta-importante ms-2"><i class="bi bi-star-fill"></i> Destaque</span>
+            {% endif %}
+            <span class="dica-data ms-3 texto-muted">{{ page.data_publicacao|date:"d/m/Y H:i" }}</span>
+        </div>
+        
+        <!-- Título -->
+        <h1 class="dica-titulo">{{ page.title }}</h1>
+        
+        <!-- Descrição/Resumo -->
+        {% if page.descricao %}
+        <p class="dica-descricao lead">{{ page.descricao }}</p>
+        {% endif %}
+        
+        <!-- Imagem de Destaque -->
+        {% if page.imagem_destaque %}
+        <div class="dica-imagem-destaque mb-4">
+            {% image page.imagem_destaque fill-1200x600 as img %}
+            <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid rounded">
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Conteúdo por Tipo -->
+    <div class="container">
+        <div class="dica-conteudo">
+            
+            <!-- Mensagem Pessoal -->
+            {% if page.tipo_dica == 'mensagem' and page.texto_mensagem %}
+            <div class="mensagem-presidente">
+                {% for block in page.texto_mensagem %}
+                    {% include_block block %}
+                {% endfor %}
+                
+                {% if page.assinatura %}
+                <p class="assinatura-presidente mt-4">
+                    <em>{{ page.assinatura }}</em>
+                </p>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <!-- Recomendação/Estudo -->
+            {% if page.tipo_dica == 'recomendacao' %}
+            <div class="recomendacao-presidente">
+                {% if page.tipo_recomendacao %}
+                <p class="tipo-recomendacao">
+                    <strong>Tipo:</strong> {{ page.get_tipo_recomendacao_display }}
+                </p>
+                {% endif %}
+                
+                {% if page.motivo_recomendacao %}
+                <div class="motivo-recomendacao mb-4">
+                    <h3>Por que recomendo:</h3>
+                    <p>{{ page.motivo_recomendacao|linebreaks }}</p>
+                </div>
+                {% endif %}
+                
+                {% if page.link_externo %}
+                <a href="{{ page.link_externo }}" target="_blank" class="btn botao-primario">
+                    <i class="bi bi-box-arrow-up-right"></i> Acessar Conteúdo
+                </a>
+                {% endif %}
+                
+                {% if page.body %}
+                <div class="conteudo-adicional mt-4">
+                    {% for block in page.body %}
+                        {% include_block block %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <!-- Notícia Interna -->
+            {% if page.tipo_dica == 'noticia_interna' %}
+            <div class="noticia-interna-presidente">
+                {% if page.categoria_noticia %}
+                <span class="categoria-noticia-badge">{{ page.get_categoria_noticia_display }}</span>
+                {% endif %}
+                
+                {% if page.body %}
+                <div class="noticia-corpo">
+                    {% for block in page.body %}
+                        {% include_block block %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <!-- Galeria/Bastidores -->
+            {% if page.tipo_dica == 'galeria' and page.galeria_imagens %}
+            <div class="galeria-presidente">
+                {% if page.legenda_galeria %}
+                <p class="legenda-galeria mb-4">{{ page.legenda_galeria|linebreaks }}</p>
+                {% endif %}
+                
+                <div class="row g-3">
+                    {% for block in page.galeria_imagens %}
+                        <div class="col-md-4 col-sm-6">
+                            {% image block.value fill-400x300 as img %}
+                            <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid rounded">
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Frase da Semana -->
+            {% if page.tipo_dica == 'frase' and page.texto_frase %}
+            <div class="frase-presidente">
+                <blockquote class="frase-destaque">
+                    <p class="frase-texto">{{ page.texto_frase }}</p>
+                    {% if page.autor_frase %}
+                    <footer class="frase-autor">— {{ page.autor_frase }}</footer>
+                    {% endif %}
+                </blockquote>
+            </div>
+            {% endif %}
+            
+            <!-- Arquivos Anexos -->
+            {% if page.arquivos %}
+            <div class="arquivos-anexos mt-5">
+                <h3>📎 Arquivos Anexos</h3>
+                <ul class="lista-arquivos">
+                    {% for block in page.arquivos %}
+                        <li>
+                            <a href="{{ block.value.url }}" target="_blank">
+                                <i class="bi bi-file-earmark-pdf"></i> {{ block.value.title }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            <!-- Tags -->
+            {% if page.get_tags %}
+            <div class="dica-tags mt-4">
+                <strong>Tags:</strong>
+                {% for tag in page.get_tags %}
+                    <a href="{{ tag.url }}" class="badge bg-secondary">{{ tag.name }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Compartilhamento -->
+    <div class="container mt-5">
+        {% compartilhamento_social %}
+    </div>
+    
+    <!-- Botão Voltar -->
+    <div class="container mt-4 mb-5">
+        <a href="{{ page.get_parent.url }}" class="btn botao-outline-primario">
+            <i class="bi bi-arrow-left"></i> Voltar para Dicas do Presidente
+        </a>
+    </div>
+</div>
+
+{% endblock %}

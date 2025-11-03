@@ -1,0 +1,357 @@
+@use '../variables.scss';
+
+// ============================================================
+// DICAS DO PRESIDENTE - Tema Escuro
+// ============================================================
+
+[data-theme=dark] {
+  
+  // Banner
+  .banner-presidente {
+    background: variables.$color-black !important;
+  }
+  
+  // Cards
+  .dica-card,
+  .dica-card-destaque {
+    background-color: variables.$color-grey-800;
+    border-color: variables.$color-grey-700;
+    
+    .card-title a {
+      color: variables.$color-grey-100;
+      
+      &:hover {
+        color: variables.$color-primary;
+      }
+    }
+    
+    .card-text {
+      color: variables.$color-grey-300;
+    }
+  }
+  
+  .dica-card-destaque {
+    background: linear-gradient(to bottom, variables.$color-grey-800 0%, variables.$color-grey-900 100%);
+    border-color: variables.$color-primary;
+  }
+  
+  // Tipo Badge
+  .dica-tipo-badge,
+  .dica-tipo {
+    background-color: variables.$color-grey-700;
+    color: variables.$color-white;
+  }
+  
+  // Página Individual
+  .dica-presidente-page-container {
+    .dica-titulo {
+      color: variables.$color-white;
+    }
+    
+    .dica-descricao {
+      color: variables.$color-grey-300;
+    }
+  }
+  
+  // Mensagem Pessoal
+  .mensagem-presidente {
+    background: variables.$color-grey-900;
+    border-left-color: variables.$color-primary;
+    
+    .assinatura-presidente {
+      color: variables.$color-primary;
+    }
+  }
+  
+  // Recomendação
+  .recomendacao-presidente {
+    .motivo-recomendacao {
+      background: variables.$color-grey-800;
+      color: variables.$color-grey-100;
+    }
+  }
+  
+  // Notícia Interna
+  .noticia-interna-presidente {
+    .categoria-noticia-badge {
+      background: variables.$color-primary-darker;
+    }
+    
+    .noticia-corpo {
+      color: variables.$color-grey-100;
+    }
+  }
+  
+  // Galeria
+  .galeria-presidente {
+    .legenda-galeria {
+      color: variables.$color-grey-300;
+    }
+  }
+  
+  // Frase da Semana
+  .frase-presidente {
+    background: linear-gradient(135deg, variables.$color-grey-900 0%, variables.$color-grey-800 100%);
+    
+    .frase-destaque {
+      .frase-texto {
+        color: variables.$color-grey-100;
+        
+        &::before {
+          color: variables.$color-primary;
+        }
+      }
+      
+      .frase-autor {
+        color: variables.$color-primary;
+      }
+    }
+  }
+  
+  // Widget Frase
+  .widget-frase-presidente {
+    background: variables.$color-grey-900;
+    border-color: variables.$color-grey-700;
+    
+    .frase-widget {
+      .frase-conteudo {
+        p {
+          color: variables.$color-grey-100;
+        }
+        
+        footer {
+          color: variables.$color-primary;
+        }
+      }
+    }
+  }
+  
+  // Widget Dicas
+  .widget-dica-presidente {
+    background: variables.$color-grey-800;
+    border-color: variables.$color-grey-700;
+    
+    .widget-titulo {
+      color: variables.$color-primary;
+      border-bottom-color: variables.$color-grey-700;
+    }
+    
+    .dica-widget-item {
+      border-bottom-color: variables.$color-grey-700;
+      
+      .dica-widget-texto {
+        .dica-widget-titulo a {
+          color: variables.$color-grey-100;
+          
+          &:hover {
+            color: variables.$color-white !important;
+          }
+        }
+      }
+    }
+  }
+  
+  // Lista Vertical
+  .lista-dicas-vertical {
+    .dica-lista-item {
+      border-bottom-color: variables.$color-grey-700;
+      
+      .dica-titulo a {
+        color: variables.$color-grey-100;
+        
+        &:hover {
+          color: variables.$color-primary;
+        }
+      }
+      
+      .dica-descricao {
+        color: variables.$color-grey-300;
+      }
+    }
+  }
+  
+  // Seção Título
+  .secao-titulo {
+    color: variables.$color-white !important;
+    border-bottom-color: variables.$color-grey-700;
+  }
+  
+  // Arquivos Anexos
+  .arquivos-anexos {
+    background: variables.$color-grey-900;
+    
+    h3 {
+      color: variables.$color-primary;
+    }
+    
+    .lista-arquivos {
+      li a {
+        color: variables.$color-primary;
+      }
+    }
+  }
+  
+  // ============================================================
+  // FILTROS - Tema Escuro
+  // ============================================================
+  .filtros-dicas-form {
+    background: variables.$color-black !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .filtro-dica-label {
+    color: variables.$color-white !important;
+    
+    i,
+    .bi-funnel::before {
+      color: variables.$color-white !important;
+    }
+  }
+  
+  .filtro-dica-select {
+    background-color: variables.$color-grey-800 !important;
+    border-color: variables.$color-grey-700 !important;
+    color: variables.$color-grey-100 !important;
+    
+    &:hover {
+      border-color: variables.$color-primary !important;
+    }
+    
+    &:focus {
+      border-color: variables.$color-primary !important;
+      box-shadow: 0 0 0 3px variables.$color-primary-darker !important;
+    }
+    
+    option {
+      background-color: variables.$color-grey-800 !important;
+      color: variables.$color-grey-100 !important;
+    }
+  }
+  
+  .btn-filtrar-dicas {
+    background-color: variables.$color-grey-700 !important;
+    color: variables.$color-white !important;
+    
+    i {
+      color: variables.$color-white !important;
+    }
+    
+    &:hover {
+      background-color: variables.$color-grey-600 !important;
+      color: variables.$color-white !important;
+    }
+  }
+  
+  .btn-limpar-filtros {
+    background-color: variables.$color-grey-800;
+    border-color: variables.$color-grey-700;
+    color: variables.$color-grey-300;
+    
+    &:hover {
+      background-color: variables.$color-error;
+      border-color: variables.$color-error;
+      color: variables.$color-white;
+    }
+  }
+  
+  .filtros-ativos-info {
+    background: variables.$color-grey-800;
+  }
+  
+  .filtros-ativos-texto {
+    color: variables.$color-primary;
+  }
+  
+  .badge-filtro-ativo {
+    background-color: variables.$color-primary;
+    
+    .remover-filtro {
+      color: variables.$color-white;
+      
+      &:hover {
+        color: variables.$color-error;
+      }
+    }
+  }
+  
+  // ============================================================
+  // BLOCOS DE LISTA - Tema Escuro
+  // ============================================================
+  
+  .lista-dicas-presidente--wrapper {
+    
+    // MODO LISTA
+    &.modo-lista {
+      .dica-card-lista {
+        background: variables.$color-grey-900;
+        border-color: variables.$color-grey-700;
+        
+        &:hover {
+          border-color: variables.$color-white;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+        
+        .dica-titulo-lista {
+          color: variables.$color-white;
+        }
+        
+        &:hover .dica-titulo-lista {
+          color: variables.$color-white;
+        }
+        
+        .dica-tipo-badge {
+          background-color: variables.$color-grey-800;
+          color: variables.$color-white;
+        }
+        
+        .dica-descricao {
+          color: variables.$color-grey-300;
+        }
+        
+        .dica-info {
+          color: variables.$color-grey-400;
+        }
+      }
+    }
+    
+    // MODO BLOCOS
+    &.modo-blocos {
+      .dica-card {
+        background: variables.$color-grey-900;
+        border-color: variables.$color-grey-700;
+        
+        &:hover {
+          border-color: variables.$color-white;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+        
+        .dica-titulo-card {
+          color: variables.$color-white;
+        }
+        
+        &:hover .dica-titulo-card {
+          color: variables.$color-white;
+        }
+        
+        .dica-tipo-badge {
+          background-color: variables.$color-grey-800;
+          color: variables.$color-primary;
+        }
+        
+        .dica-descricao {
+          color: variables.$color-grey-300;
+        }
+        
+        .dica-info {
+          color: variables.$color-grey-400;
+          border-top-color: variables.$color-grey-700;
+        }
+      }
+    }
+    
+    .badge-destaque {
+      background-color: variables.$color-warning;
+      color: variables.$color-black;
+    }
+  }
+}

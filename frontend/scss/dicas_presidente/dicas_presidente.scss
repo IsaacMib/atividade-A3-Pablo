@@ -1,0 +1,738 @@
+@use '../variables.scss';
+
+// ============================================================
+// DICAS DO PRESIDENTE - Tema Claro
+// ============================================================
+
+// Banner do Presidente
+.banner-presidente {
+  background: linear-gradient(135deg, variables.$color-primary 0%, variables.$color-primary-darker 100%);
+  color: variables.$color-white;
+  padding: 3rem 0;
+  margin-bottom: 2rem;
+  
+  .foto-presidente {
+    border: 4px solid variables.$color-white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .titulo-presidente {
+    color: variables.$color-white;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .mensagem-presidente {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    opacity: 0.95;
+  }
+}
+
+// Cards de Dicas
+.dica-card,
+.dica-card-destaque {
+  border: 1px solid variables.$color-grey-300;
+  border-radius: variables.$border-radius-md;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card-img-top {
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .card-title a {
+    color: variables.$color-on-surface;
+    text-decoration: none;
+    
+    &:hover {
+      color: variables.$color-primary;
+    }
+  }
+}
+
+.dica-card-destaque {
+  border-color: variables.$color-primary;
+  border-width: 2px;
+  background: linear-gradient(to bottom, variables.$color-white 0%, variables.$color-primary-06 100%);
+}
+
+// Tipo de Dica Badge
+.dica-tipo-badge,
+.dica-tipo {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background-color: variables.$color-primary-12;
+  color: variables.$color-primary;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+// ============================================================
+// FILTROS ESPECÍFICOS PARA DICAS
+// ============================================================
+.filtros-dicas-section {
+  margin-bottom: 2rem;
+}
+
+.filtros-dicas-form {
+  background: variables.$color-surface;
+  border-radius: variables.$border-radius-lg;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.filtros-dicas-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  align-items: end;
+}
+
+.filtro-dica-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filtro-dica-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: variables.$color-on-surface;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  i {
+    color: variables.$color-primary;
+  }
+}
+
+.filtro-dica-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid variables.$color-grey-300;
+  border-radius: variables.$border-radius-md;
+  background-color: variables.$color-white;
+  color: variables.$color-on-surface;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  
+  &:hover {
+    border-color: variables.$color-primary;
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: variables.$color-primary;
+    box-shadow: 0 0 0 3px variables.$color-primary-12;
+  }
+}
+
+.filtro-dica-acoes {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.btn-filtrar-dicas {
+  padding: 0.75rem 1.5rem;
+  background-color: variables.$color-primary;
+  color: variables.$color-white;
+  border: none;
+  border-radius: variables.$border-radius-md;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  
+  &:hover {
+    background-color: variables.$color-primary-darker;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-limpar-filtros {
+  padding: 0.75rem 1.25rem;
+  background-color: variables.$color-grey-100;
+  color: variables.$color-text-secondary;
+  border: 2px solid variables.$color-grey-300;
+  border-radius: variables.$border-radius-md;
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  
+  &:hover {
+    background-color: variables.$color-error;
+    border-color: variables.$color-error;
+    color: variables.$color-white;
+    transform: translateY(-2px);
+  }
+}
+
+// Filtros Ativos (Badges)
+.filtros-ativos-info {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: variables.$color-primary-06;
+  border-radius: variables.$border-radius-md;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.filtros-ativos-texto {
+  font-weight: 600;
+  color: variables.$color-primary;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.badge-filtro-ativo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: variables.$color-primary;
+  color: variables.$color-white;
+  border-radius: 2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  
+  .remover-filtro {
+    color: variables.$color-white;
+    text-decoration: none;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1;
+    transition: transform 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.2);
+      color: variables.$color-error;
+    }
+  }
+}
+
+// Responsividade dos filtros
+@media (max-width: 768px) {
+  .filtros-dicas-wrapper {
+    grid-template-columns: 1fr;
+  }
+  
+  .filtro-dica-acoes {
+    flex-direction: column;
+    width: 100%;
+    
+    .btn-filtrar-dicas,
+    .btn-limpar-filtros {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+// Página Individual
+.dica-presidente-page-container {
+  .dica-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .dica-titulo {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: variables.$color-primary;
+    margin: 1rem 0;
+  }
+  
+  .dica-descricao {
+    font-size: 1.25rem;
+    color: variables.$color-grey-600;
+    margin-bottom: 2rem;
+  }
+  
+  .dica-imagem-destaque img {
+    width: 100%;
+    border-radius: variables.$border-radius-md;
+  }
+}
+
+// Mensagem Pessoal
+.mensagem-presidente {
+  background: variables.$color-grey-50;
+  border-left: 4px solid variables.$color-primary;
+  padding: 2rem;
+  border-radius: variables.$border-radius-md;
+  margin: 2rem 0;
+  
+  .assinatura-presidente {
+    text-align: right;
+    font-size: 1.1rem;
+    color: variables.$color-primary;
+    font-style: italic;
+    margin-top: 1.5rem;
+  }
+}
+
+// Recomendação
+.recomendacao-presidente {
+  .motivo-recomendacao {
+    background: variables.$color-primary-06;
+    padding: 1.5rem;
+    border-radius: variables.$border-radius-md;
+    border-left: 4px solid variables.$color-primary;
+  }
+}
+
+// Notícia Interna
+.noticia-interna-presidente {
+  .categoria-noticia-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: variables.$color-primary;
+    color: variables.$color-white;
+    border-radius: variables.$border-radius-md;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+}
+
+// Galeria
+.galeria-presidente {
+  .legenda-galeria {
+    font-size: 1.1rem;
+    color: variables.$color-grey-600;
+    font-style: italic;
+  }
+  
+  img {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+// Frase da Semana
+.frase-presidente {
+  background: linear-gradient(135deg, variables.$color-primary-06 0%, variables.$color-primary-12 100%);
+  border-radius: variables.$border-radius-lg;
+  padding: 3rem;
+  text-align: center;
+  margin: 3rem 0;
+  
+  .frase-destaque {
+    margin: 0;
+    
+    .frase-texto {
+      font-size: 2rem;
+      font-weight: 300;
+      font-style: italic;
+      color: variables.$color-primary-darker;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      
+      &::before {
+        content: '"';
+        font-size: 3rem;
+        color: variables.$color-primary;
+        opacity: 0.3;
+      }
+    }
+    
+    .frase-autor {
+      font-size: 1.1rem;
+      color: variables.$color-primary;
+      font-weight: 500;
+    }
+  }
+}
+
+// Widget de Frase (sidebar)
+.widget-frase-presidente {
+  background: variables.$color-primary-06;
+  border: 2px solid variables.$color-primary-12;
+  border-radius: variables.$border-radius-md;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  
+  .frase-widget {
+    text-align: center;
+    
+    .frase-icone {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .frase-conteudo {
+      p {
+        font-size: 1.1rem;
+        font-style: italic;
+        color: variables.$color-primary-darker;
+        margin-bottom: 0.5rem;
+      }
+      
+      footer {
+        font-size: 0.9rem;
+        color: variables.$color-primary;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Widget de Dicas (sidebar)
+.widget-dica-presidente {
+  background: variables.$color-white;
+  border: 1px solid variables.$color-grey-300;
+  border-radius: variables.$border-radius-md;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  
+  .widget-titulo {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: variables.$color-primary;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid variables.$color-primary-12;
+  }
+  
+  .dica-widget-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid variables.$color-grey-200;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    .dica-widget-thumb {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: variables.$border-radius-md;
+      flex-shrink: 0;
+    }
+    
+    .dica-widget-texto {
+      flex: 1;
+      
+      .dica-tipo-mini {
+        font-size: 1.2rem;
+        margin-right: 0.5rem;
+      }
+      
+      .dica-widget-titulo {
+        font-size: 1rem;
+        margin: 0.25rem 0;
+        
+        a {
+          color: variables.$color-on-surface;
+          text-decoration: none;
+          
+          &:hover {
+            color: variables.$color-primary;
+          }
+        }
+      }
+    }
+  }
+  
+  .widget-footer {
+    margin-top: 1rem;
+    text-align: center;
+  }
+}
+
+// Lista Vertical de Dicas
+.lista-dicas-vertical {
+  .dica-lista-item {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid variables.$color-grey-300;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    .dica-titulo {
+      font-size: 1.5rem;
+      margin-top: 0.5rem;
+      
+      a {
+        color: variables.$color-on-surface;
+        text-decoration: none;
+        
+        &:hover {
+          color: variables.$color-primary;
+        }
+      }
+    }
+  }
+}
+
+// Seções
+.secao-titulo {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: variables.$color-primary;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid variables.$color-primary-12;
+}
+
+// Dicas Destaque Section
+.dicas-destaque {
+  margin-bottom: 3rem;
+}
+
+// Arquivos Anexos
+.arquivos-anexos {
+  background: variables.$color-grey-50;
+  padding: 1.5rem;
+  border-radius: variables.$border-radius-md;
+  
+  h3 {
+    color: variables.$color-primary;
+    margin-bottom: 1rem;
+  }
+  
+  .lista-arquivos {
+    list-style: none;
+    padding: 0;
+    
+    li {
+      padding: 0.5rem 0;
+      
+      a {
+        color: variables.$color-primary;
+        text-decoration: none;
+        
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+// Tags
+.dica-tags {
+  margin-top: 2rem;
+  
+  .badge {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+// Badge Destaque
+.badge-destaque {
+  background-color: variables.$color-warning;
+  color: variables.$color-on-warning;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-weight: 500;
+}
+
+// ============================================================
+// BLOCOS DE LISTA (list_noticias e list_avisos style)
+// ============================================================
+
+.lista-dicas-presidente--wrapper {
+  padding: 2rem 0;
+  
+  // MODO LISTA
+  &.modo-lista {
+    .dica-card-lista {
+      background: variables.$color-white;
+      border: 2px solid variables.$color-grey-200;
+      border-radius: variables.$border-radius-lg;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      display: block;
+      
+      &:hover {
+        border-color: variables.$color-primary;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateX(8px);
+      }
+      
+      .dica-imagem-wrapper {
+        height: 100%;
+        overflow: hidden;
+        border-radius: variables.$border-radius-md;
+        
+        .dica-imagem {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+      }
+      
+      &:hover .dica-imagem {
+        transform: scale(1.05);
+      }
+      
+      .dica-conteudo {
+        padding: 0 1.5rem;
+      }
+      
+      .dica-titulo-lista {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: variables.$color-on-surface;
+        line-height: 1.3;
+        margin-bottom: 1rem;
+        transition: color 0.3s ease;
+      }
+      
+      &:hover .dica-titulo-lista {
+        color: variables.$color-primary;
+      }
+      
+      .dica-tipo-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background-color: variables.$color-primary-12;
+        color: variables.$color-primary;
+        border-radius: variables.$border-radius-md;
+        font-size: 0.875rem;
+        font-weight: 500;
+        
+        i {
+          font-size: 1rem;
+        }
+      }
+      
+      .dica-descricao {
+        color: variables.$color-grey-600;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+      
+      .dica-info {
+        color: variables.$color-grey-500;
+        font-size: 0.875rem;
+        
+        i {
+          font-size: 1.125rem;
+        }
+      }
+    }
+  }
+  
+  // MODO BLOCOS
+  &.modo-blocos {
+    .dica-card {
+      background: variables.$color-white;
+      border: 2px solid variables.$color-grey-200;
+      border-radius: variables.$border-radius-lg;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        border-color: variables.$color-primary;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        transform: translateY(-4px);
+      }
+      
+      .dica-titulo-card {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: variables.$color-on-surface;
+        line-height: 1.3;
+        transition: color 0.3s ease;
+      }
+      
+      &:hover .dica-titulo-card {
+        color: variables.$color-primary;
+      }
+      
+      .dica-tipo-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background-color: variables.$color-primary-12;
+        color: variables.$color-primary;
+        border-radius: variables.$border-radius-md;
+        font-size: 0.875rem;
+        font-weight: 500;
+        
+        i {
+          font-size: 1rem;
+        }
+      }
+      
+      .dica-descricao {
+        color: variables.$color-grey-600;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+      
+      .dica-info {
+        color: variables.$color-grey-500;
+        font-size: 0.875rem;
+        border-top: 1px solid variables.$color-grey-200;
+        
+        i {
+          font-size: 1.125rem;
+        }
+      }
+    }
+  }
+  
+  .badge-destaque {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.375rem 0.75rem;
+    background-color: variables.$color-warning;
+    color: variables.$color-black;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    
+    i {
+      font-size: 0.625rem;
+    }
+  }
+}

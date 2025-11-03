@@ -132,6 +132,31 @@
   }
 }
 
+.widget-dica-presidente {
+  .widget-item-icone {
+    background-color: variables.$color-primary-12;
+    
+    i {
+      font-size: 1.125rem;
+    }
+  }
+  
+  .badge-destaque {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    background-color: variables.$color-warning;
+    color: variables.$color-on-warning;
+    border-radius: 12px;
+    
+    i {
+      font-size: 0.625rem;
+    }
+  }
+}
+
 .widget-acesso-rapido {
   .widget-item-icone {
     background-color: variables.$color-grey-150;

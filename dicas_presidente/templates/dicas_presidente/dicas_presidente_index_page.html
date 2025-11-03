@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-dicas-presidente-index{% endblock %}
+
+{% block content %}
+
+<div class="dicas-presidente-container">
+    
+    <!-- Banner do Presidente -->
+    {% if page.foto_presidente or page.mensagem_presidente %}
+    <div class="banner-presidente">
+        <div class="container">
+            <div class="row align-items-center">
+                {% if page.foto_presidente %}
+                <div class="col-md-3">
+                    {% image page.foto_presidente fill-300x300 as img %}
+                    <img src="{{ img.url }}" alt="Foto do Presidente" class="foto-presidente rounded-circle">
+                </div>
+                {% endif %}
+                
+                <div class="{% if page.foto_presidente %}col-md-9{% else %}col-12{% endif %}">
+                    <h1 class="titulo-presidente">{{ page.title }}</h1>
+                    {% if page.mensagem_presidente %}
+                    <p class="mensagem-presidente">{{ page.mensagem_presidente }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="container">
+        <h1 class="titulo-pagina">{{ page.title }}</h1>
+    </div>
+    {% endif %}
+    
+    <div class="container py-5">
+        
+        <!-- Introdução -->
+        {% if page.introduction %}
+        <p class="texto-muted mb-4">{{ page.introduction }}</p>
+        {% endif %}
+        
+        <!-- Dicas em Destaque -->
+        {% if dicas_destaque %}
+        <section class="dicas-destaque mb-5">
+            <h2 class="secao-titulo"><i class="bi bi-star-fill"></i> Destaques</h2>
+            <div class="row g-4">
+                {% for dica in dicas_destaque %}
+                <div class="col-md-4">
+                    <div class="card dica-card-destaque h-100">
+                        {% if dica.imagem_destaque %}
+                        <a href="{% pageurl dica %}">
+                            {% image dica.imagem_destaque fill-400x250 as img %}
+                            <img src="{{ img.url }}" class="card-img-top" alt="{{ dica.title }}">
+                        </a>
+                        {% endif %}
+                        
+                        <div class="card-body">
+                            <div class="dica-tipo mb-2">
+                                {{ dica.get_tipo_dica_display_icon }} {{ dica.get_tipo_dica_display }}
+                            </div>
+                            
+                            <h3 class="card-title">
+                                <a href="{% pageurl dica %}" class="sem-decoracao">{{ dica.title }}</a>
+                            </h3>
+                            
+                            <p class="card-text">{{ dica.descricao|truncatewords:20 }}</p>
+                            
+                            <div class="dica-meta-footer">
+                                <small class="texto-muted">{{ dica.data_publicacao|date:"d/m/Y" }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+        
+        <!-- Filtros -->
+        <section class="filtros-dicas-section mb-4">
+            <form method="get" class="filtros-dicas-form">
+                <div class="filtros-dicas-wrapper">
+                    {% if page.mostrar_filtro_tipo %}
+                    <div class="filtro-dica-item">
+                        <label for="filtroTipo" class="filtro-dica-label">
+                            <i class="bi bi-funnel"></i> Tipo de Dica
+                        </label>
+                        <select name="tipo" class="filtro-dica-select" id="filtroTipo">
+                            <option value="">Todos os tipos</option>
+                            {% for value, label in tipos_dica %}
+                                <option value="{{ value }}" {% if tipo_filtro == value %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+                    
+                    {% if tags %}
+                    <div class="filtro-dica-item">
+                        <label for="filtroTag" class="filtro-dica-label">
+                            <i class="bi bi-tags"></i> Tag
+                        </label>
+                        <select name="tag" class="filtro-dica-select" id="filtroTag">
+                            <option value="">Todas as tags</option>
+                            {% for t in tags %}
+                                <option value="{{ t.slug }}" {% if tag and tag.slug == t.slug %}selected{% endif %}>
+                                    {{ t.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="filtro-dica-acoes">
+                        <button type="submit" class="btn-filtrar-dicas">
+                            <i class="bi bi-search"></i> Filtrar
+                        </button>
+                        {% if tipo_filtro or tag %}
+                        <a href="{{ page.url }}" class="btn-limpar-filtros">
+                            <i class="bi bi-x-circle"></i> Limpar
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+            
+            {% if tipo_filtro or tag %}
+            <div class="filtros-ativos-info">
+                <span class="filtros-ativos-texto">
+                    <i class="bi bi-filter-circle"></i> Filtrando por:
+                </span>
+                {% if tipo_filtro %}
+                <span class="badge-filtro-ativo">
+                    {% for value, label in tipos_dica %}
+                        {% if value == tipo_filtro %}{{ label }}{% endif %}
+                    {% endfor %}
+                    <a href="?{% if tag %}tag={{ tag.slug }}{% endif %}" class="remover-filtro">×</a>
+                </span>
+                {% endif %}
+                {% if tag %}
+                <span class="badge-filtro-ativo">
+                    {{ tag.name }}
+                    <a href="?{% if tipo_filtro %}tipo={{ tipo_filtro }}{% endif %}" class="remover-filtro">×</a>
+                </span>
+                {% endif %}
+            </div>
+            {% endif %}
+        </section>
+        
+        <!-- Frase Aleatória (Widget Lateral) -->
+        {% if frase_aleatoria %}
+        <aside class="widget-frase-presidente mb-5">
+            <div class="frase-widget">
+                <div class="frase-icone"><i class="bi bi-cloud"></i></div>
+                <blockquote class="frase-conteudo">
+                    <p>"{{ frase_aleatoria.texto_frase }}"</p>
+                    {% if frase_aleatoria.autor_frase %}
+                    <footer>— {{ frase_aleatoria.autor_frase }}</footer>
+                    {% endif %}
+                </blockquote>
+            </div>
+        </aside>
+        {% endif %}
+        
+        <!-- Listagem de Dicas -->
+        <section class="dicas-listagem">
+            <h2 class="secao-titulo">
+                {% if tipo_filtro or tag %}
+                    Dicas Filtradas
+                {% else %}
+                    Todas as Dicas
+                {% endif %}
+            </h2>
+            
+            {% if posts %}
+            <div class="row g-4">
+                {% for dica in posts %}
+                <div class="col-md-6 col-lg-4">
+                    <article class="card dica-card h-100">
+                        {% if dica.get_imagem_principal %}
+                        <a href="{% pageurl dica %}">
+                            {% image dica.get_imagem_principal fill-400x250 as img %}
+                            <img src="{{ img.url }}" class="card-img-top" alt="{{ dica.title }}">
+                        </a>
+                        {% endif %}
+                        
+                        <div class="card-body">
+                            <div class="dica-tipo-badge mb-2">
+                                {{ dica.get_tipo_dica_display_icon }} {{ dica.get_tipo_dica_display }}
+                            </div>
+                            
+                            <h3 class="card-title h5">
+                                <a href="{% pageurl dica %}" class="sem-decoracao">{{ dica.title }}</a>
+                            </h3>
+                            
+                            <p class="card-text">{{ dica.descricao|truncatewords:15 }}</p>
+                            
+                            <div class="dica-footer mt-auto">
+                                <small class="texto-muted">
+                                    <i class="bi bi-calendar"></i> {{ dica.data_publicacao|date:"d/m/Y" }}
+                                </small>
+                                
+                                {% if dica.destaque %}
+                                <span class="badge badge-destaque"><i class="bi bi-star-fill"></i> Destaque</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Paginação -->
+            <div class="paginacao mt-5">
+                {% include "include/paginator.html" with posts=posts %}
+            </div>
+            
+            {% else %}
+            <p class="texto-muted texto-italico">Nenhuma dica encontrada.</p>
+            {% endif %}
+        </section>
+        
+    </div>
+</div>
+
+<script>
+// Auto-submit dos filtros
+document.addEventListener('DOMContentLoaded', function() {
+    const filtroTipo = document.getElementById('filtroTipo');
+    const filtroTag = document.getElementById('filtroTag');
+    const form = document.querySelector('.filtros-dicas-form');
+    
+    if (filtroTipo) {
+        filtroTipo.addEventListener('change', () => form.submit());
+    }
+    
+    if (filtroTag) {
+        filtroTag.addEventListener('change', () => form.submit());
+    }
+});
+</script>
+
+{% endblock %}
