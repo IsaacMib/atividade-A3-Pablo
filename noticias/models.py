@@ -1,5 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.cache import cache
+import requests
 
 from django.contrib import messages
 from django.shortcuts import redirect, render
@@ -10,13 +12,17 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, ObjectList, TabbedInterface
 from wagtail.fields import StreamField
 from wagtail.search import index
+from wagtail.api import APIField
+from wagtail.models import Page, Site
 from core.models import PageSitePadrao, PageSitePadraoIndex
+from wagtail.snippets.models import register_snippet
 
 from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
 from datetime import datetime
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.images.api.fields import ImageRenditionField
 from core.utils import (
     get_file_type,
     get_fontawesome_file_icon,
@@ -24,6 +30,107 @@ from core.utils import (
     get_widget_input_with_counter
 )
 
+from core.models import ApiSettings
+
+
+class NoticiaRemota:
+    is_remote = True 
+    slideshow_imagens = False
+
+    def __init__(self, data, api_base_url):
+        self.id = data.get('id')
+        self.title = data.get('title', 'Sem título')
+        self.subtitle = data.get('subtitle', '')
+        self.descricao = data.get('descricao', '')
+        self.destaque = data.get('destaque', False)
+        self.body = data.get('body', '')
+        self.imagem_destaque_remota = data.get('imagem_destaque')
+        self.categoria = data.get('categoria', None)
+        self.arquivos = []
+        for arq in data.get('arquivos', []):
+            if isinstance(arq, dict) and 'url' in arq and 'title' in arq:
+                arq['icon_class'] = get_fontawesome_file_icon(get_file_type(arq['url']))
+                self.arquivos.append(arq)
+            elif isinstance(arq, str):
+                self.arquivos.append({
+                    'url': arq,
+                    'title': arq.split('/')[-1],
+                    'icon_class': get_fontawesome_file_icon(get_file_type(arq))
+                })
+
+        self.images = []
+        raw_images = data.get('images', [])
+        if not isinstance(raw_images, list):
+            raw_images = [raw_images] if raw_images else []
+        for img_item in raw_images:
+            if isinstance(img_item, dict) and 'url' in img_item:
+                self.images.append({
+                    'url': img_item['url'], 
+                    'title': img_item.get('title', img_item['url'].split('/')[-1])
+                })
+            elif isinstance(img_item, str): # Assume que é uma string de URL
+                self.images.append({'url': img_item, 'title': img_item.split('/')[-1]})
+
+        # Define slideshow_imagens com base no número de imagens
+        self.slideshow_imagens = len(self.images) > 1
+
+        self.tags = data.get('tags', [])  # Adiciona as tags
+        self.remote_url = f"{api_base_url.rstrip('/')}{data.get('url', '')}"
+        data_str = data.get('data_publicacao')
+        if data_str:
+            try:
+                self.data_publicacao = datetime.fromisoformat(data_str.replace('Z', '+00:00'))
+            except (ValueError, TypeError):
+                self.data_publicacao = datetime.now(datetime.timezone.utc)
+        else:
+            self.data_publicacao = datetime.now(datetime.timezone.utc)
+
+    @property
+    def url(self):
+        return self.remote_url
+
+    def get_imagem_destaque(self):
+        """
+        Retorna a URL da imagem principal, tratando casos onde pode ser um dict ou uma lista.
+        """
+        if isinstance(self.imagem_destaque_remota, dict) and 'url' in self.imagem_destaque_remota:
+            return self.imagem_destaque_remota['url']
+        elif isinstance(self.imagem_destaque_remota, str):
+            return self.imagem_destaque_remota
+        elif self.images:
+            return self.images[0]['url']
+        return None
+
+    def get_tags(self):
+        """
+        Simula o comportamento do get_tags para notícias remotas.
+        As tags vêm como uma lista de strings.
+        """
+        # Como não temos um 'slug' ou uma página de índice de tags para remotas,
+        # não podemos gerar uma URL funcional por enquanto.
+        # Retornamos uma lista de objetos simples para exibição.
+        return [{'name': tag, 'url': '#'} for tag in self.tags]
+
+
+class CategoriaNoticias(models.Model):
+    """
+    Modelo para gerenciar as categorias de notícias.
+    """
+    nome = models.CharField(max_length=40, unique=True, verbose_name="Nome da Categoria")
+
+    panels = [
+        FieldPanel('nome'),
+    ]
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        verbose_name = "Categoria de Notícia"
+        verbose_name_plural = "Categorias de Notícias"
+
+
+_API_CACHE_TIMEOUT = 5 * 60  # 5 minutos
 MAX_NOTICIAS_DESTAQUE = 6
 
 
@@ -54,9 +161,17 @@ class NoticiasPage(PageSitePadrao):
     data_publicacao = models.DateTimeField(
         "Data de publicação da notícia", default=datetime.now, blank=True, null=True
     )
+    categoria = models.ForeignKey(
+        'noticias.CategoriaNoticias',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name="Categoria"
+    )
     tags = ClusterTaggableManager(through=NoticiasPageTag, blank=True)
     body = StreamField(
-        BaseStreamBlock(), verbose_name="Page body", blank=True, null=True, use_json_field=True
+        BaseStreamBlock(), verbose_name="Corpo da Página", blank=True, null=True, use_json_field=True
     )
 
     body_migrated = models.TextField(
@@ -139,6 +254,7 @@ class NoticiasPage(PageSitePadrao):
         ),
         FieldPanel("body"),
         FieldPanel("data_publicacao"),
+        FieldPanel("categoria"),
         FieldPanel("tags"),
     ]
 
@@ -165,6 +281,20 @@ class NoticiasPage(PageSitePadrao):
         ]
     )
 
+    # Campos expostos na API
+    api_fields = [
+        APIField('title'),
+        APIField('subtitle'),
+        APIField('descricao'),
+        APIField('data_publicacao'),
+        APIField('categoria'),
+        APIField('body'),
+        APIField('tags'),
+        # Usamos 'get_imagem_destaque' para garantir que pegamos a imagem correta
+        APIField('get_imagem_destaque', serializer=ImageRenditionField('fill-800x450', source='get_imagem_destaque')),
+        APIField('url'),
+    ]
+
     @property
     def get_tags(self):
         """
@@ -186,31 +316,29 @@ class NoticiasPage(PageSitePadrao):
     subpage_types = []
 
     def get_ultimas_noticias(self, quantidade=6):
-        # Busca notícias em destaque ordenadas por data de publicação
         noticias_destaque = NoticiasPage.objects.live().filter(
             destaque=True
         ).order_by("-data_publicacao")
         
-        # Busca notícias que não estão em destaque ordenadas por data de publicação
         noticias_sem_destaque = NoticiasPage.objects.live().filter(
             destaque=False
         ).order_by("-data_publicacao")
         
-        # Combina as listas: primeiro as em destaque, depois as sem destaque
         noticias_combinadas = list(noticias_destaque) + list(noticias_sem_destaque)
         
-        # Retorna apenas a quantidade solicitada
         return noticias_combinadas[:quantidade]
 
     def get_context(self, request):
         context = super().get_context(request)
-        context["ultimas_noticias"] = self.get_ultimas_noticias()
-
+        noticias_index = NoticiasIndexPages.objects.live().first()
+        if noticias_index:
+            context["ultimas_noticias"] = noticias_index.get_ultimas_noticias()
+        else:
+            context["ultimas_noticias"] = self.get_ultimas_noticias() # Fallback para o método antigo
         return context
 
-    def get_imagem_destaque(self):        
+    def get_imagem_destaque(self):      
         if self.images and len(self.images):
-            # Cada item é um bloco do tipo 'imagem'
             for bloco in self.images:
                 if bloco.block_type == 'imagem' and bloco.value:
                     return bloco.value
@@ -223,9 +351,7 @@ class NoticiasPage(PageSitePadrao):
 
     @staticmethod
     def get_arquivo_icon(arquivo):
-        """
-        Retorna a classe do ícone FontAwesome de acordo com a extensão ou mimetype do arquivo.
-        """
+
         file_info = get_file_type(arquivo)
         return get_fontawesome_file_icon(file_info)
 
@@ -309,23 +435,109 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
     # date that they were published
     # https://docs.wagtail.org/en/stable/getting_started/tutorial.html#overriding-context
     def get_context(self, request):
-        context = super(NoticiasIndexPages, self).get_context(request)
-        all_posts = NoticiasPage.objects.descendant_of(
+        context = super().get_context(request)
+        
+        # 1. Busca as notícias locais
+        noticias_locais = list(NoticiasPage.objects.descendant_of(
             self).live().order_by("-data_publicacao")
-        paginator = Paginator(all_posts, 12)  # Show 12 posts per page
+        )
+
+        # 2. Busca notícias da API externa
+        noticias_remotas = self._fetch_remote_noticias()
+
+        # 3. Combina e ordena as listas
+        all_posts = sorted(
+            noticias_locais + noticias_remotas,
+            key=lambda x: x.data_publicacao,
+            reverse=True
+        )
+
+        # 4. Paginação
+        paginator = Paginator(all_posts, 12)
         page = request.GET.get("page")
         try:
-            # If the page exists and the ?page=x is an int
             posts = paginator.page(page)
         except PageNotAnInteger:
-            # If the ?page=x is not an int; show the first page
             posts = paginator.page(1)
         except EmptyPage:
-            # If the ?page=x is out of range (too high most likely)
-            # Then return the last page
             posts = paginator.page(paginator.num_pages)
+
         context["posts"] = posts
         return context
+
+    def _fetch_remote_noticias(self):
+        """
+        Busca notícias de uma API externa com base nas configurações do site.
+        Implementa cache para evitar chamadas repetidas à API.
+        """
+        try:
+            site = Site.objects.get(is_default_site=True)
+            api_settings = ApiSettings.for_site(site)
+        except (Site.DoesNotExist, ApiSettings.DoesNotExist):
+            return []
+
+        if not api_settings.api_habilitada or not api_settings.puxar_noticias:
+            return []
+
+        # Gera uma chave de cache baseada nas configurações da API
+        cache_key = f"remote_noticias_api_{api_settings.api_url}_{api_settings.tags_noticias}"
+        cached_data = cache.get(cache_key)
+
+        if cached_data:
+            # Reconstrói os objetos NoticiaRemota a partir dos dados brutos cacheados
+            return [NoticiaRemota(item, api_base_url=api_settings.api_url) for item in cached_data]
+
+        # Obter token
+        token_url = f"{api_settings.api_url.rstrip('/')}/api/v1/get-token/"
+        try:
+            response = requests.post(
+                token_url,
+                data={'username': api_settings.api_usuario, 'password': api_settings.api_senha},
+                timeout=10
+            )
+            response.raise_for_status()
+            token = response.json().get('token')
+            if not token:
+                return []
+            auth_token = f"Token {token}"
+        except requests.RequestException:
+            return [] 
+        base_api_url = f"{api_settings.api_url.rstrip('/')}/api/v1/shared-content"
+        tags_noticias = [tag.strip() for tag in api_settings.tags_noticias.split(',') if tag.strip()]
+        headers = {'Authorization': auth_token}
+        remote_data = []
+        seen_ids = set()
+
+        if tags_noticias:
+            for tag_slug in tags_noticias:
+                noticias_url = f"{base_api_url}/tag/{tag_slug}/?noticias=true"
+                try:
+                    response = requests.get(noticias_url, headers=headers, timeout=15)
+                    response.raise_for_status()
+                    items = response.json()
+                    for item in items:
+                        if item.get('id') not in seen_ids:
+                            remote_data.append(item)
+                            seen_ids.add(item.get('id'))
+                except requests.RequestException:
+                    continue
+        else:
+            noticias_url = f"{base_api_url}/all/?noticias=true"
+            try:
+                response = requests.get(noticias_url, headers=headers, timeout=15)
+                response.raise_for_status()
+                remote_data = response.json()
+            except requests.RequestException:
+                return []
+
+        # Cacheia os dados brutos (lista de dicionários)
+        cache.set(cache_key, remote_data, timeout=_API_CACHE_TIMEOUT)
+
+        noticias_remotas = []
+        for item in remote_data:
+            noticias_remotas.append(NoticiaRemota(item, api_base_url=api_settings.api_url))
+            
+        return noticias_remotas
 
      # This defines a Custom view that utilizes Tags. This view will return all
     # related NoticiasPage for a given Tag or redirect back to the BlogIndexPage.
@@ -369,20 +581,18 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
         return tags
 
     def get_ultimas_noticias(self, quantidade=6):
-        # Busca notícias em destaque ordenadas por data de publicação
-        noticias_destaque = NoticiasPage.objects.live().descendant_of(self).filter(
-            destaque=True
-        ).order_by("-data_publicacao")
+
+        noticias_locais = list(NoticiasPage.objects.live().descendant_of(self).order_by("-data_publicacao"))
+
+        noticias_remotas = self._fetch_remote_noticias()
+
+        all_posts = sorted(
+            noticias_locais + noticias_remotas,
+            key=lambda x: x.data_publicacao,
+            reverse=True
+        )
         
-        # Busca notícias que não estão em destaque ordenadas por data de publicação
-        noticias_sem_destaque = NoticiasPage.objects.live().descendant_of(self).filter(
-            destaque=False
-        ).order_by("-data_publicacao")
-        
-        # Combina as listas: primeiro as em destaque, depois as sem destaque
-        noticias_combinadas = list(noticias_destaque) + list(noticias_sem_destaque)
-        
-        # Retorna apenas a quantidade solicitada
-        return noticias_combinadas[:quantidade]
+        # 4. Retorna a quantidade solicitada
+        return all_posts[:quantidade]
     
         # return NoticiasPage.objects.live().descendant_of(self).order_by('-data_publicacao')[:quantidade]

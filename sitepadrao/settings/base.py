@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "agenda",
     "avisos",
     'editais',
+    "api",
     "eventos",
     "linhasdotempo",
     "lgpd",
@@ -101,6 +102,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     "allauth.socialaccount.providers.openid_connect",
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -353,6 +356,8 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 HABILITAR_SSO_LOGIN = get_bool("HABILITAR_SSO_LOGIN", False)
+PORTAL_PROVEDOR_CONTEUDO = get_bool("PORTAL_PROVEDOR_CONTEUDO", False)
+API_CONTEUDO_AGRUPADO = get_bool("API_CONTEUDO_AGRUPADO", False)
 
 # URL para redirecionar após login bem-sucedido
 LOGIN_REDIRECT_URL = "/admin/"

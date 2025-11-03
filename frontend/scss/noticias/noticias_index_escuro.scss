@@ -33,4 +33,32 @@
       }
     }
   }
+  
+  .noticias-categoria, .noticias-tags {
+    color: variables.$color-white;
+  }
+  .categoria-nome {
+    color: variables.$color-white;
+  }
+  .tags-nome {
+    color: variables.$color-white;
+  }
+  .noticias-tags {
+    color: variables.$color-white;
+    border-color: variables.$color-white;
+  }
+
+  .tag-link {
+    background-color: variables.$color-grey-800;
+    color: variables.$color-white;
+
+    &:hover {
+      background-color: variables.$color-grey-700;
+      color: variables.$color-white;
+    }
+  }
+
+  .noticias-mySwiper2 {
+    --swiper-navigation-color: #{variables.$color-white};
+  }
 }

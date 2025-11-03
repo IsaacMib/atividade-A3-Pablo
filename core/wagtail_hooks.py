@@ -1,3 +1,5 @@
+from django.urls import reverse
+from django.conf import settings
 from wagtail import hooks
 from agenda.models import AgendaIndexPage
 from noticias.models import NoticiasIndexPages

@@ -34,8 +34,7 @@
     "webpack": "^5.99.9",
     "webpack-bundle-tracker": "^3.1.1",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.0",
-    "webpack-spritesmith": "^1.1.0"
+    "webpack-dev-server": "^5.2.0"
   },
   "scripts": {
     "fix:js": "eslint --ext .js --fix .",
@@ -58,6 +57,7 @@
     "swiper": "^11.2.8",
     "uikit": "^3.23.3",
     "vanilla-calendar-pro": "^3.0.5",
-    "vanilla-cookieconsent": "^3.1.0"
+    "vanilla-cookieconsent": "^3.1.0",
+    "webpack-spritesmith": "^1.1.0"
   }
 }
