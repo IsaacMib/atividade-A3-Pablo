@@ -4,15 +4,38 @@ include:
     inputs:
       image: dockercodata.pb.gov.br/ci-base-images/python:3.13
       script: |-
-        # Atualizar repositórios e instalar dependências básicas
-        apt-get update
-        apt-get install -y wget gnupg2 software-properties-common
-        
-        # Instalar Node.js 22 usando o repositório oficial
-        wget -qO- https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | apt-key add -
-        echo "deb https://deb.nodesource.com/node_22.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
-        apt-get update
-        apt-get install -y nodejs
+        # Detectar o gerenciador de pacotes disponível e instalar Node.js
+        if command -v apk > /dev/null 2>&1; then
+          # Alpine Linux
+          echo "Detectado Alpine Linux - usando apk"
+          apk update
+          apk add --no-cache nodejs npm wget
+        elif command -v apt-get > /dev/null 2>&1; then
+          # Debian/Ubuntu
+          echo "Detectado Debian/Ubuntu - usando apt-get"
+          apt-get update
+          apt-get install -y wget gnupg2 software-properties-common
+          wget -qO- https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | apt-key add -
+          echo "deb https://deb.nodesource.com/node_22.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
+          apt-get update
+          apt-get install -y nodejs
+        elif command -v yum > /dev/null 2>&1; then
+          # CentOS/RHEL
+          echo "Detectado CentOS/RHEL - usando yum"
+          yum install -y nodejs npm wget
+        elif command -v dnf > /dev/null 2>&1; then
+          # Fedora
+          echo "Detectado Fedora - usando dnf"
+          dnf install -y nodejs npm wget
+        else
+          # Fallback: tentar baixar binário diretamente
+          echo "Gerenciador de pacotes não detectado - instalando Node.js manualmente"
+          cd /tmp
+          wget https://nodejs.org/dist/v22.11.0/node-v22.11.0-linux-x64.tar.xz
+          tar -xf node-v22.11.0-linux-x64.tar.xz
+          cp -r node-v22.11.0-linux-x64/* /usr/local/
+          cd /builds/portais/site-padrao
+        fi
         
         # Verificar versões instaladas
         node --version
