@@ -32,10 +32,11 @@ include:
         
         # Rodar todos os testes do projeto com cobertura
         echo "=== Executando todos os testes do projeto ==="
-        coverage run --source='.' --omit='*/migrations/*,*/venv/*,*/virtualenv/*,*/tests/*,manage.py,*/settings/*,*/node_modules/*' manage.py test --verbosity=2 --keepdb || true
+        coverage run --source='.' --omit='*/migrations/*,*/venv/*,*/virtualenv/*,*/tests/*,manage.py,*/settings/*,*/node_modules/*' manage.py test --verbosity=2 --keepdb
+        TEST_EXIT_CODE=$?
         coverage xml -o coverage-report/coverage.xml
         
-        # Executar testes novamente com xmlrunner para gerar relatório XML (sempre executar)
+        # Executar testes novamente com xmlrunner para gerar relatório XML (sempre executar mesmo se teste falhou)
         python manage.py test --testrunner=xmlrunner.extra.djangotestrunner.XMLTestRunner --verbosity=2 --keepdb || true
         
         # Mover arquivos XML para o diretório esperado (buscar em todos os diretórios TEST-*)
@@ -57,7 +58,13 @@ include:
           echo '</testsuites>' >> test-report/report.xml
         fi
         
-        echo "✅ Todos os testes executados com sucesso!"
+        # Verificar se os testes passaram e falhar o pipeline se necessário
+        if [ $TEST_EXIT_CODE -ne 0 ]; then
+          echo "❌ Testes falharam! Pipeline será interrompido."
+          exit $TEST_EXIT_CODE
+        fi
+        
+        echo "✅ Todos os testes passaram com sucesso!"
 
 test:
   services:
