@@ -38,6 +38,9 @@ urlpatterns = [
         ),
     path("acesso_negado/", sitepadrao_views.acesso_negado, name="acesso_negado"),
     path("404/", sitepadrao_views.erro_404, name="erro_404"),
+
+    path("api/v1/", include("api.urls", namespace="api")),
+    path("noticias/", include("noticias.urls")),
 ]
 
 if settings.HABILITAR_SITE_INTRANET:
@@ -47,9 +50,7 @@ if settings.HABILITAR_SITE_INTRANET:
 
 if settings.HABILITAR_SSO_LOGIN:
     urlpatterns += [
-        # Sobrescreve a URL de logout do Wagtail admin para incluir logout do SSO
         path("admin/manager/logout/", sitepadrao_views.wagtail_logout_with_sso, name="wagtailadmin_logout"),
-        # path("admin/email/", login_required(sitepadrao_views.redirect_if_in_group), name="admin_email_redirect"),
         path('admin/manager/login/', RedirectView.as_view(url='/admin/', permanent=True)),
         path("admin/manager/", include(wagtailadmin_urls)),
         path("admin/", include("allauth.urls")),

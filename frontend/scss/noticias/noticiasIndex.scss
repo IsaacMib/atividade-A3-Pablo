@@ -1,7 +1,31 @@
 @use '../variables.scss';
 
 .noticias-page--wrapper {
+  display: flex;
+  justify-content: center;
   background-color: variables.$color-white;
+}
+.noticias-page--content {
+  width: 100%;
+  max-width: 1000px; 
+  padding: 0rem 1rem;
+}
+
+.page-noticias-header {
+  .titulo-noticia {
+    text-align: left;
+    font-size: 2.25rem;
+  }
+  .page-noticias__published {
+    text-align: left;
+  }
+}
+
+#lista-arquivos {
+  .titulo-noticia {
+    text-align: left;
+    font-size: 1.5rem; 
+  }
 }
 
 @media (max-width: 767.98px) {
@@ -64,58 +88,148 @@
   }
 }
 
-.swiper-slide-noticias {
-  text-align: center;
-  font-size: 18px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: variables.$swiper-background-color;
+// .image-noticia-carrossel {
+//   margin: auto;
+// }
+    
+    .swiper-slide-noticias{
+      text-align: center;
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      img {
+        max-height: 480px;
+      }
+    }
 
-  img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    max-height: 480px;
-  }
-}
-
-.noticias-mySwiper2 {
-  --swiper-navigation-color: #{variables.$color-white};
-  --swiper-pagination-color: #{variables.$color-white};
-  height: 80%;
-  width: 100%;
-  background: variables.$swiper-background-color;
-}
-
-.noticias-mySwiper {
-  height: 20%;
-  box-sizing: border-box;
-  padding: 10px 0;
-
-  &.swiper-thumbs {
-    margin-top: 10px;
-    max-height: variables.$tamanho-imagem-noticia-thumbs;
+    .swiper-slide-noticias img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
 
     .swiper-slide-noticias {
-      max-height: variables.$tamanho-imagem-noticia-thumbs;
-      background: variables.$swiper-thumbs-background-color;
+      background-size: cover;
+      background-position: center;
     }
 
-    img {
-      border: 1px solid #d3d3d3;
-      max-height: variables.$tamanho-imagem-noticia-thumbs;
+    .noticias-mySwiper2 {
+      --swiper-navigation-color: #{variables.$color-primary};
+      --swiper-pagination-color: #{variables.$color-white};
+      height: 80%;
+      width: 100%;
+      background: transparent;
+
+      .swiper-button-next::after,
+      .swiper-button-prev::after {
+        font-size: 1.5rem; // Define um tamanho menor e mais discreto para as setas
+      }
     }
+    
+
+    .noticias-mySwiper {
+      height: 20%;
+      box-sizing: border-box;
+      &.swiper-thumbs {
+        margin-top: 4px; // Diminui a distância para a imagem principal
+        
+        max-height: variables.$tamanho-imagem-noticia-thumbs;
+        .swiper-slide-noticias {
+          max-height: variables.$tamanho-imagem-noticia-thumbs;
+          background: transparent;
+        }
+        img {
+          box-sizing: border-box; // Garante que a borda não aumente o tamanho do elemento
+          max-height: variables.$tamanho-imagem-noticia-thumbs;
+        }
+      }
+    }
+
+    .noticias-mySwiper .swiper-slide-noticias {
+      width: 25%;
+      height: 100%;
+    }
+
+    .noticias-mySwiper .swiper-slide-thumb-active img {
+      border: 3px solid variables.$color-primary; // Adiciona a borda azul na miniatura ativa
+    }
+
+    .swiper-slide-noticiasimg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+.noticias-categoria,
+.noticias-tags {
+  padding: 1rem;
+}
+
+.noticias-categoria {
+  margin-top: 3rem;
+  padding-bottom: 0; 
+}
+
+.categoria-nome {
+  margin-top: 1rem;
+  margin-right: 0.5rem;
+  font-weight: 600;
+  color: variables.$color-black-80;
+}
+
+.noticias-tags {
+  .tags-nome {
+    margin-top: 1rem;
+    margin-right: 0.5rem;
+    font-weight: 600;
+    color: variables.$color-black-80;
   }
 
-  .swiper-slide-noticias {
-    width: 25%;
-    height: 100%;
-    opacity: 0.4;
-  }
+  .tag-link {
+    display: inline-block;
+    background-color: variables.$color-primary;
+    color: variables.$color-white;
+    padding: 4px 12px;
+    border-radius: 16px;
+    text-decoration: none;
+    font-size: 0.8em;
+    font-weight: 600;
+    transition: background-color 0.2s, color 0.2s;
 
-  .swiper-slide-thumb-active {
-    opacity: 1;
+    i {
+      margin-right: 0.25rem; 
+    }
   }
 }
+
+.noticias-categoria .tags-container,
+.noticias-tags .tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.noticias-categoria .tag-link,
+.noticias-tags .tag-link {
+    display: inline-block;
+    background-color: variables.$color-primary;
+    color: variables.$color-white;
+    padding: 4px 12px;
+    border-radius: 16px;
+    text-decoration: none;
+    font-size: 0.8em;
+    font-weight: 600;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+      background-color: variables.$color-primary-active;
+      color: variables.$color-white;
+    }
+
+    
+  }

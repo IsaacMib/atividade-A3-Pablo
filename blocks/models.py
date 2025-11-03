@@ -13,6 +13,7 @@ from blocks.utils import (
 from django.db import models
 
 import requests
+import re
 from django.core.cache import cache
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
@@ -165,14 +166,26 @@ class VideoBlock(StructBlock):
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
-        url = value.get('srcIframe')
+        original_url = value.get('srcIframe')
+        video_id = None
 
-        # Transforma links padrão do YouTube em formato embed
-        if 'watch?v=' in url:
-            url = url.replace('watch?v=', 'embed/')
-        elif 'youtu.be/' in url:
-            url = url.replace('youtu.be/', 'www.youtube.com/embed/')
+        # Regex para extrair o ID do vídeo de diferentes formatos de URL do YouTube
+        # Suporta: youtube.com/watch?v=... , youtu.be/... , youtube.com/embed/...
+        regex_patterns = [
+            r'(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})',
+            r'(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})',
+            r'(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})',
+        ]
 
+        for pattern in regex_patterns:
+            match = re.search(pattern, original_url)
+            if match:
+                video_id = match.group(1)
+                break
+
+        # Constrói a URL de embed final ou usa a original como fallback
+        url = f"https://www.youtube.com/embed/{video_id}" if video_id else original_url
+        
         context['titulo'] = value.get('titulo')
         context['src'] = url
         return context
@@ -792,7 +805,7 @@ class CaptionedImageBlock(StructBlock):
         icon = "image"
         template = "blocks/captioned_image_block.html"
         preview_value = {"attribution": "The Wagtail Bakery"}
-        description = "An image with optional caption and attribution"
+        description = "Uma imagem com legenda e atribuição opcionais"
 
 
 class BlockQuote(StructBlock):
@@ -814,7 +827,7 @@ class BlockQuote(StructBlock):
             ),
             "attribute_name": "Willie Wagtail",
         }
-        description = "A quote with an optional attribution"
+        description = "Uma citação com atribuição opcional"
 
 
 class IframeBlock(StructBlock):
@@ -926,11 +939,17 @@ class CardLinhaDoTempoBlock(StructBlock):
 class BaseStreamBlock(StreamBlock):
     """
     Define the custom blocks that `StreamField` will utilize
+    
     """
-
-    heading_block = HeadingBlock()
+    '''
+    titulo_bloco = TituloBlock(
+        label="Título",
+        description="Um título simples com opção de cor de fundo."
+    )
+    '''
     paragraph_block = RichTextBlock(
         icon="pilcrow",
+        label="Texto de Parágrafo",
         template="blocks/paragraph_block.html",
         preview_value=(
             """
@@ -942,30 +961,36 @@ class BaseStreamBlock(StreamBlock):
             dry crust and fluffy center.</p>
             """
         ),
-        description="A rich text paragraph",
+        description="Um parágrafo de texto rico",
     )
-    image_block = CaptionedImageBlock()
-    block_quote = BlockQuote()
-    embed_block = EmbedBlock(
-        help_text="Insert an embed URL e.g https://www.youtube.com/watch?v=SGJFWirQ3ks",
-        icon="media",
-        template="blocks/embed_block.html",
-        preview_template="blocks/preview/static_embed_block.html",
-        preview_value="https://www.youtube.com/watch?v=mwrGSfiB1Mg",
-        description="An embedded video or other media",
+    image_block = CaptionedImageBlock(
+        label="Bloco de Imagem com Legenda",
     )
+    '''
+    block_quote = BlockQuote(
+        label="Bloco de Citação",
+        description="Uma citação com atribuição opcional",
+    )
+    '''
+    video_block = VideoBlock(
+        label="Bloco de Vídeo",
+    )
+    '''
     iframe_block = IframeBlock(
-        help_text="Insert an iframe URL e.g https://example.com",
+        label="Bloco de Iframe",
+        help_text="Adicione uma URL https://example.com",
         icon="site",
         template="blocks/iframe_block.html",
         # preview_template="blocks/preview/static_iframe_block.html",
-        # preview_value="https://example.com",
-        description="An embedded iframe",
+        # preview_value="https://example.com", 
+        description="Um iframe incorporado",
     )
+    '''
     table_block = TableBlock(
+        label="Bloco de Tabela",
         help_text="Insira os dados da tabela",
         icon="table",
-        # template="blocks/table_block.html",
+        template="blocks/table.html",
         # preview_template="blocks/preview/static_table_block.html",
         description="Uma tabela de dados",
     )

@@ -1,0 +1,20 @@
+/*
+ * Estilos para o modo escuro da tabela personalizada do Wagtail.
+ * Estes estilos são aplicados quando a classe 'dark-mode' está presente
+ * em um elemento pai (geralmente o <body>).
+ */
+body.dark-mode {
+    .custom-wagtail-table {
+        color: #e9ecef; // Cor do texto padrão para a tabela
+    }
+
+    .custom-wagtail-table th,
+    .custom-wagtail-table td {
+        border-color: #495057; // Borda mais sutil para o modo escuro
+    }
+
+    .custom-wagtail-table thead th {
+        background-color: #343a40; // Fundo escuro para o cabeçalho
+        color: #f8f9fa; // Texto claro para o cabeçalho
+    }
+}

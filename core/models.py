@@ -1,8 +1,10 @@
 from datetime import date
 from django.db import models
+from django import forms
 
 from django.core.exceptions import ValidationError
 from django.utils.html import escape
+import requests
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
@@ -125,10 +127,6 @@ class PageSitePadrao(Page):
 
 class PageSitePadraoIndex(Page):
     """Classe base para páginas de índice do site."""
-    """
-    Classe base para páginas de índice do site.
-    Herda apenas de Page do Wagtail sem campos adicionais.
-    """
 
     class Meta:
         abstract = True
@@ -137,12 +135,6 @@ class PageSitePadraoIndex(Page):
 @register_setting(icon="site")
 class SiteSettings(BaseSiteSetting):
     """Configurações gerais do site."""
-    
-    """
-    Configurações do site acessíveis via Wagtail Settings.
-    Adiciona campos de título, período eleitoral, redes sociais, menu,
-    cookies / analytics e reCAPTCHA (site + secret).
-    """
 
     title_suffix = models.CharField(
         verbose_name="Título do Site",
@@ -229,18 +221,7 @@ class SiteSettings(BaseSiteSetting):
         max_length=255,
         blank=True,
         verbose_name="Título da Instituição no Rodapé",
-    )
-    footer_informacoes = models.TextField(
-        blank=True,
-        verbose_name="Informações do Rodapé",
-        help_text="Endereço, telefone, horário, CNPJ. Use <br> para quebras de linha.",
-    )
-
-    footer_titulo_instituicao = models.CharField(
-       max_length=255,
-       blank=True,
-       verbose_name="Título da Instituição no Rodapé",
-       default="CENTRO ADMINISTRATIVO ESTADUAL"
+        default="CENTRO ADMINISTRATIVO ESTADUAL"
     )
     footer_informacoes = models.TextField(
         blank=True,
@@ -529,26 +510,6 @@ class SiteSettings(BaseSiteSetting):
     def tem_captcha_site(self):
         return bool(self.captcha_site_key and self.captcha_site_key.strip())
 
-
-    def tem_captcha_secret(self):
-        return bool(self.captcha_secret_key and self.captcha_secret_key.strip())
-
-
-    def has_recaptcha_keys(self):
-        return self.tem_captcha_site() and self.tem_captcha_secret()
-
-
-    def get_captcha_site_key(self):
-        return self.captcha_site_key.strip() if self.tem_captcha_site() else None
-
-
-    def get_captcha_secret(self):
-        return self.captcha_secret_key.strip() if self.tem_captcha_secret() else None
-
-
-    def tem_captcha_site(self):
-        return bool(self.captcha_site_key and self.captcha_site_key.strip())
-
     def tem_captcha_secret(self):
         return bool(self.captcha_secret_key and self.captcha_secret_key.strip())
 
@@ -640,7 +601,7 @@ class SiteSettings(BaseSiteSetting):
                     raise ValidationError({
                         "captcha_site_key": "A site key do captcha parece ser muito curta."
                 })
-
+            
     def get_redes_sociais_compartilhamento(self):
         """
         Retorna uma lista das redes sociais habilitadas para compartilhamento.
@@ -704,3 +665,110 @@ class SiteSettings(BaseSiteSetting):
     def tem_compartilhamento_habilitado(self):
         """Retorna True se o compartilhamento está habilitado."""
         return self.compartilhamento_habilitado
+   
+
+
+class ApiSettings(BaseSiteSetting):
+    api_habilitada = models.BooleanField(
+        verbose_name="Habilitar Integração via API",
+        default=False,
+        help_text="Marque esta opção para ativar a busca de conteúdo de um portal externo."
+    )
+    api_url = models.URLField(
+        verbose_name="URL da API Externa",
+        blank=True,
+        help_text="URL base da API do portal de conteúdo externo. Ex:https://paraiba.pb.gov.br/"
+    )
+    api_usuario = models.CharField(
+        max_length=255,
+        verbose_name="Usuário da API",
+        blank=True,
+        help_text="Usuário para autenticação na API externa."
+    )
+    api_senha = models.CharField(
+        max_length=255,
+        verbose_name="Senha da API",
+        blank=True,
+        help_text="Senha para autenticação na API externa. Cuidado: será armazenada como texto plano."
+    )
+
+    puxar_noticias = models.BooleanField(
+        verbose_name="Consumir Notícias",
+        default=False,
+        help_text="Ativar para buscar notícias do portal externo."
+    )
+    tags_noticias = models.CharField(
+        max_length=255,
+        verbose_name="Tags para filtrar Notícias",
+        blank=True,
+        help_text="Separar tags por vírgula. Ex: 'geral, importante'. Deixe em branco para buscar todas."
+    )
+
+    panels = [
+        MultiFieldPanel(
+            [
+                FieldPanel("api_habilitada"),
+                FieldPanel("api_url"),
+                FieldPanel("api_usuario"),
+                FieldPanel("api_senha", widget=forms.PasswordInput),
+            ],
+            heading="Integração de Conteúdo Externo"
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("puxar_noticias"),
+                FieldPanel("tags_noticias"),
+            ],
+            heading="Tipos de Conteúdo para que será consumido",
+            classname="collapsible collapsed"
+        ),
+    ]
+
+    def clean(self):
+        super().clean()
+        errors = {}
+
+        if self.api_habilitada:
+            if not self.api_url:
+                errors['api_url'] = ValidationError("A URL da API é obrigatória quando a integração está habilitada.")
+            if not self.api_usuario:
+                errors['api_usuario'] = ValidationError("O usuário da API é obrigatório quando a integração está habilitada.")
+            if not self.api_senha:
+                errors['api_senha'] = ValidationError("A senha da API é obrigatória quando a integração está habilitada.")
+
+            if not errors:
+                token_url = f"{self.api_url.rstrip('/')}/api/v1/get-token/"
+                try:
+                    response = requests.post(
+                        token_url,
+                        data={'username': self.api_usuario, 'password': self.api_senha},
+                        timeout=10 
+                    )
+
+                    if response.status_code in [400, 401]:
+                        errors.update({
+                            'api_usuario': ValidationError("Credenciais inválidas. Verifique o usuário e a senha."),
+                            'api_senha': ValidationError("Credenciais inválidas. Verifique o usuário e a senha."),
+                        })
+                    else:
+                        response.raise_for_status()
+                        if 'token' not in response.json():
+                            raise ValidationError("A API não retornou um token de autenticação válido.")
+                except requests.exceptions.RequestException as e:
+                    errors['api_url'] = ValidationError(f"Não foi possível conectar à API. Verifique a URL. Erro: {e}")
+
+        if getattr(self, "captcha_site_key", None):
+            site = self.captcha_site_key.strip()
+            if site and len(site) < 10:
+                errors["captcha_site_key"] = ValidationError("A site key do captcha parece ser muito curta.")
+
+        if getattr(self, "captcha_secret_key", None):
+            secret = self.captcha_secret_key.strip()
+            if secret and len(secret) < 10:
+                errors["captcha_secret_key"] = ValidationError("A chave secreta do captcha parece ser muito curta.")
+
+        if errors:
+            raise ValidationError(errors)
+
+    class Meta:
+            verbose_name = "Configurações de Conteúdo Externo"

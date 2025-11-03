@@ -1,0 +1,61 @@
+{% load wagtailimages_tags %}
+
+<div class="image-gallery-block">
+    {% if self.enable_slideshow and self.images|length > 1 %}
+        {# Lógica para Carrossel #}
+        <div class="swiper image-gallery-swiper-main">
+            <div class="swiper-wrapper">
+                {% for item in self.images %}
+                    <div class="swiper-slide">
+                        {% image item.image original class="img-fluid" alt=item.alt_text|default:item.image.title %}
+                        {% if item.caption %}
+                            <div class="swiper-caption">{{ item.caption }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+
+        <div thumbsSlider="" class="swiper image-gallery-swiper-thumbs tw:mt-2">
+            <div class="swiper-wrapper">
+                {% for item in self.images %}
+                    <div class="swiper-slide">
+                        {% image item.image fill-100x75 class="img-thumbnail" alt=item.alt_text|default:item.image.title %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const swiperThumbs = new Swiper(".image-gallery-swiper-thumbs", {
+                    loop: true,
+                    spaceBetween: 10,
+                    slidesPerView: 4,
+                    freeMode: true,
+                    watchSlidesProgress: true,
+                });
+
+                const swiperMain = new Swiper(".image-gallery-swiper-main", {
+                    loop: true,
+                    spaceBetween: 10,
+                    autoHeight: true,
+                    navigation: {
+                        nextEl: ".swiper-button-next",
+                        prevEl: ".swiper-button-prev",
+                    },
+                    thumbs: { swiper: swiperThumbs },
+                });
+            });
+        </script>
+
+    {% elif self.images %}
+        {# Lógica para Imagem Única #}
+        {% with item=self.images.0 %}
+            {% image item.image original class="img-fluid" alt=item.alt_text|default:item.image.title %}
+            {% if item.caption %}<p class="image-caption">{{ item.caption }}</p>{% endif %}
+        {% endwith %}
+    {% endif %}
+</div>

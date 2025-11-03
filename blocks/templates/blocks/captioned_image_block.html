@@ -1,6 +1,13 @@
 {% load wagtailimages_tags %}
 
 <figure>
-    {% picture self.image format-{avif,webp,jpeg} fill-{400x220,600x338} sizes="(max-width: 768px) 200px, 900px" loading="lazy" %}
-    <figcaption>{{ self.caption }} - {{ self.attribution }}</figcaption>
+    {% if image_absolute_url %}
+        {# Usado quando renderizado via API para o cliente #}
+        <img src="{{ image_absolute_url }}" alt="{{ value.caption|default:value.image.title }}">
+    {% else %}
+        {# Fallback para renderização local #}
+        {% image value.image original as img %}
+        <img src="{{ img.url }}" alt="{{ img.alt }}">
+    {% endif %}
+    {% if value.caption %}<figcaption>{{ value.caption }}</figcaption>{% endif %}
 </figure>
