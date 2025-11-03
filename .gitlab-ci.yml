@@ -4,8 +4,50 @@ include:
     inputs:
       image: dockercodata.pb.gov.br/ci-base-images/python:3.13
       script: |-
+        # Instalar Node.js (versão 22 conforme package.json)
+        curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+        apt-get install -y nodejs
+        
+        # Verificar versões instaladas
+        node --version
+        npm --version
+        python --version
+        
+        # Instalar dependências Python
         pip install -r requirements/test.txt
         mkdir -p test-report coverage-report
+        
+        # Instalar dependências Node.js
+        npm ci
+        
+        # Executar build do frontend
+        echo "=== Executando build do frontend ==="
+        npm run build
+        
+        # Verificar se os arquivos de build foram gerados corretamente
+        echo "=== Verificando arquivos gerados pelo webpack ==="
+        ls -la frontend/bundles/
+        
+        # Verificar se webpack-stats.json foi gerado
+        if [ ! -f "webpack-stats.json" ]; then
+          echo "ERRO: webpack-stats.json não foi gerado!"
+          exit 1
+        fi
+        
+        # Verificar se os bundles CSS e JS foram gerados
+        if [ ! -f "frontend/bundles/main.js" ]; then
+          echo "ERRO: main.js não foi gerado!"
+          exit 1
+        fi
+        
+        # Verificar se pelo menos um arquivo CSS foi gerado
+        css_files=$(find frontend/bundles -name "*.css" | wc -l)
+        if [ "$css_files" -eq 0 ]; then
+          echo "ERRO: Nenhum arquivo CSS foi gerado!"
+          exit 1
+        fi
+        
+        echo "✅ Build do frontend executado com sucesso!"
         
         # Configurar Django settings para testes
         export DJANGO_SETTINGS_MODULE=sitepadrao.settings.testing
@@ -20,6 +62,7 @@ include:
         python manage.py migrate --run-syncdb
         
         # Rodar testes com cobertura
+        echo "=== Executando testes da API ==="
         coverage run --source='.' --omit='*/migrations/*,*/venv/*,*/virtualenv/*,*/tests/*,manage.py,*/settings/*,*/node_modules/*' manage.py test api.tests --verbosity=2
         coverage xml -o coverage-report/coverage.xml
         
@@ -40,6 +83,8 @@ include:
           echo '  </testsuite>' >> test-report/report.xml
           echo '</testsuites>' >> test-report/report.xml
         fi
+        
+        echo "✅ Todos os testes executados com sucesso!"
 
 test:
   services:
