@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     "core",
     "blocks",
     "noticias",
-    "links",
     "institucional",
     "agenda",
     "avisos",
