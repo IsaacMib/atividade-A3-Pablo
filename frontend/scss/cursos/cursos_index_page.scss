@@ -44,6 +44,18 @@
           box-shadow: 0 0 10px rgba(variables.$color-warning, 0.3);
         }
 
+        .curso-img {
+          position: relative;
+          min-height: 150px;
+
+          .bi-book {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+        }
+
         .curso-icon-default {
           color: variables.$color-primary;
         }

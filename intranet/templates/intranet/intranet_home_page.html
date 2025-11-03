@@ -12,7 +12,7 @@
       <div class="{{ col1_class }}">
         {% for block in col1_blocks %}
           <div class="intranet-block-wrapper my-3">
-            {% include_block block with is_intranet=True is_widget=False %}
+            {% include_block block with is_intranet=HABILITAR_SITE_INTRANET is_widget=False %}
           </div>
         {% endfor %}
       </div>
@@ -23,7 +23,7 @@
       <aside class="{{ widget_class }} intranet-widgets">
         {% for block in widget_blocks %}
           <div class="intranet-widget my-3">
-            {% include_block block with is_intranet=True is_widget=True %}
+            {% include_block block with is_intranet=HABILITAR_SITE_INTRANET is_widget=True %}
           </div>
         {% endfor %}
       </aside>

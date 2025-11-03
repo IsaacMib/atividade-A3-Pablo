@@ -1,24 +1,28 @@
-<div class="acesso-rapido-wrapper">
-  <div class="container acesso-rapido">
-    
+<div class="widget-container widget-acesso-rapido">
+  <div class="container">
     {% include 'include/titulo.html' with titulo=self.titulo bgClassExtra='titulo-pequeno-mobile' %}
 
-      <div class="lista-acessos-vertical">
-        {% for item in value.itens %}
-          <a href="{{ item.link }}" class="acesso-item-vertical d-flex align-items-center p-3 mb-3">
-            <div class="barra-vertical"></div>
-            <div class="icone-ellipse d-flex align-items-center justify-content-center me-3">
+    <div class="widget-lista">
+      {% for item in value.itens %}
+        <a href="{{ item.link }}" class="widget-item">
+          <div class="widget-item-barra"></div>
+          <div class="widget-item-conteudo">
+            <div class="widget-item-icone">
               {% if item.icone %}
                 <i class="{{ item.icone }}"></i>
               {% else %}
                 <i class="fa-regular fa-file-lines"></i>
               {% endif %}
             </div>
-            <div class="acesso-texto-vertical">
-              {{ item.titulo|linebreaksbr }}
+            <div class="widget-item-texto">
+              <span class="widget-item-titulo">{{ item.titulo|linebreaksbr }}</span>
             </div>
-          </a>
-        {% endfor %}
-      </div>
+            <div class="widget-item-seta">
+              <i class="bi bi-chevron-right"></i>
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
   </div>
 </div>

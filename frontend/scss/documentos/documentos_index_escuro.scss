@@ -1,130 +1,273 @@
 @use '../variables.scss';
 
 [data-theme="dark"] {
-    .template-documentos-index-page {
-        background-color: variables.$color-grey-900;
-        color: variables.$color-grey-100;
+  .template-documentos-index-page {
+    background-color: variables.$color-grey-900;
+    color: variables.$color-grey-100;
+
+    .documentos-container {
+      .texto-muted {
+        color: variables.$color-grey-400 !important;
+      }
+
+      .etiqueta-importante {
+        background-color: variables.$color-warning;
+        color: variables.$color-on-warning;
+      }
+
+      .botao-primario {
+        background-color: variables.$color-primary-light;
+        border-color: variables.$color-primary-light;
+        color: variables.$color-grey-900;
+
+        &:hover {
+          background-color: variables.$color-primary;
+          border-color: variables.$color-primary;
+          box-shadow: 0 3px 8px rgba(variables.$color-primary, 0.3);
+        }
+      }
+
+      .botao-secundario {
+        background-color: variables.$color-primary-light;
+        border-color: variables.$color-primary-light;
+        color: variables.$color-grey-900;
         
-        .documentos-container {
-            max-width: 900px;
-            margin: 0 auto;
+        &:hover {
+          background-color: variables.$color-primary;
+          border-color: variables.$color-primary;
+          box-shadow: 0 3px 8px rgba(variables.$color-primary, 0.3);
+        }
+      }
 
-            p.text-muted {
-                font-size: 1rem;
-                line-height: 1.6;
-                color: variables.$color-grey-400;
+      .botao-outline-primario {
+        border-color: variables.$color-primary-light;
+        color: variables.$color-primary-light;
+        
+        &:hover {
+          background-color: variables.$color-primary-light;
+          color: variables.$color-grey-900;
+          box-shadow: 0 2px 4px rgba(variables.$color-primary-light, 0.3);
+        }
+      }
+
+      .botao-outline-secundario {
+        border-color: variables.$color-primary-lighter;
+        color: variables.$color-primary-lighter;
+        
+        &:hover {
+          background-color: variables.$color-primary-lighter;
+          color: variables.$color-grey-900;
+          box-shadow: 0 2px 4px rgba(variables.$color-primary-lighter, 0.3);
+        }
+      }
+
+      .border-bottom {
+        border-color: variables.$color-grey-700 !important;
+      }
+      
+      form {
+        .form-group {
+          .form-label {
+            color: variables.$color-grey-300;
+          }
+        }
+
+        .form-select {
+          border-color: variables.$color-grey-700;
+          background-color: variables.$color-grey-800;
+          color: variables.$color-grey-100;
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+          
+          &:hover {
+            border-color: variables.$color-primary-light;
+            background-color: variables.$color-grey-700;
+          }
+          
+          &:focus {
+            border-color: variables.$color-primary-light;
+            box-shadow: 0 0 0 0.15rem rgba(variables.$color-primary-light, 0.25);
+          }
+
+          &:disabled {
+            background-color: variables.$color-grey-800;
+            color: variables.$color-grey-500;
+          }
+
+          option {
+            background-color: variables.$color-grey-800;
+            color: variables.$color-grey-100;
+          }
+        }
+
+        .btn {
+          &:hover {
+            background-color: variables.$color-primary-light;
+            border-color: variables.$color-primary-light;
+            box-shadow: 0 3px 8px rgba(variables.$color-primary-light, 0.3);
+          }
+        }
+      }
+
+      .documentos-list {
+        .documento-item {
+          border-bottom-color: variables.$color-grey-700;
+
+          &:hover {
+            background-color: rgba(variables.$color-primary-light, 0.1);
+          }
+
+          .documento-dot {
+            color: variables.$color-primary-light;
+          }
+
+          .documento-link {
+            color: variables.$color-grey-100;
+
+            &:hover {
+              color: variables.$color-primary-light;
             }
+          }
 
-            .border-bottom {
-                border-color: variables.$color-grey-700 !important;
-            }
+          .text-muted {
+            color: variables.$color-grey-400 !important;
+          }
 
-            form {
-                .form-select {
-                    border-radius: 10px;
-                    border: 1px solid variables.$color-grey-700;
-                    background-color: variables.$color-grey-800;
-                    color: variables.$color-grey-100;
-                    padding: 0.5rem 1rem;
-                    font-size: 0.95rem;
-                    transition: all 0.2s ease;
+          .btn-sm.botao-outline-primario {
+            border-color: variables.$color-primary-light;
+            color: variables.$color-primary-light;
             
-                    option {
-                        background-color: variables.$color-grey-800;
-                        color: variables.$color-grey-100;
-                    }
-
-                    &:hover,
-                    &:focus {
-                        border-color: variables.$color-primary;
-                        box-shadow: 0 0 0 0.15rem variables.$color-overlay-40;
-                    }
-                }
-
-                .btn {
-                    border-radius: 10px;
-                    font-weight: 500;
-                    color: variables.$color-on-primary;
-                    background-color: variables.$color-dark-theme-text-secondary;
-                    border: none;
-                    transition: all 0.25s ease;
-
-                    &:hover {
-                        transform: translateY(-2px);
-                        background-color: variables.$color-primary-dark;
-                        box-shadow: 0 3px 8px variables.$color-overlay-40;
-                    }
-                }
+            &:hover {
+              background-color: variables.$color-primary-light;
+              color: variables.$color-grey-900;
+              box-shadow: 0 2px 4px rgba(variables.$color-primary-light, 0.3);
             }
+          }
 
-            .documentos-list {
-                .documento-item {
-                    border-bottom: 1px solid variables.$color-grey-700;
-                    transition: background 0.2s ease;
-
-                    &:hover {
-                        background-color: variables.$color-overlay-8;
-                    }
-
-                    .documento-dot {
-                        color: variables.$color-dark-theme-text;
-                    }
-
-                    .documento-link {
-                        transition: color 0.2s ease;
-                        color: variables.$color-grey-100;
-
-                        &:hover {
-                            color: variables.$color-dark-theme-text;
-                        }
-                    }
-
-                    .badge {
-                        font-size: 0.75rem;
-                        padding: 0.35rem 0.6rem;
-                        border-radius: 6px;
-                        background-color: variables.$color-warning;
-                        color: variables.$color-on-warning;
-                        text-transform: uppercase;
-                    }
-
-                    .text-muted {
-                        font-size: 0.85rem;
-                        color: variables.$color-grey-500;
-                    }
-                }
-
-                p.text-muted {
-                    text-align: center;
-                    font-style: italic;
-                    margin-top: 2rem;
-                    color: variables.$color-grey-500;
-                }
+          .btn-sm.botao-outline-secundario {
+            border-color: variables.$color-primary-lighter;
+            color: variables.$color-primary-lighter;
+            
+            &:hover {
+              background-color: variables.$color-primary-lighter;
+              color: variables.$color-grey-900;
+              box-shadow: 0 2px 4px rgba(variables.$color-primary-lighter, 0.3);
             }
+          }
         }
 
-        @media (max-width: 768px) {
-            .documentos-container {
-                .d-flex {
-                    flex-direction: column !important;
-                    align-items: stretch !important;
-                }
-
-                form {
-                    width: 100%;
-                    gap: 0.75rem;
-
-                    .form-select,
-                    .btn {
-                        width: 100%;
-                    }
-                }
-
-                .documentos-list .documento-item {
-                    flex-direction: column;
-                    align-items: flex-start;
-                }
-            }
+        p.texto-muted {
+          color: variables.$color-grey-400;
         }
+      }
+
+      .modal {
+        .modal-content {
+          background-color: variables.$color-grey-800;
+          border-color: variables.$color-grey-700;
+          box-shadow: 0 10px 30px rgba(variables.$color-black, 0.5);
+          
+          .modal-header {
+            border-bottom-color: variables.$color-grey-700;
+            background-color: variables.$color-grey-800;
+            
+            .modal-title {
+              color: variables.$color-grey-100;
+            }
+            
+            .btn-close {
+              filter: invert(1) grayscale(100%) brightness(200%);
+            }
+          }
+          
+          .modal-body {
+            background-color: variables.$color-grey-800;
+            
+            #documentViewer {
+              background-color: variables.$color-grey-700;
+              border-color: variables.$color-grey-700;
+              
+              .spinner-border {
+                color: variables.$color-primary-light;
+              }
+            }
+          }
+          
+          .modal-footer {
+            border-top-color: variables.$color-grey-700;
+            background-color: variables.$color-grey-800;
+            
+            .botao-secundario {
+              background-color: variables.$color-primary-light;
+              border-color: variables.$color-primary-light;
+              color: variables.$color-grey-900;
+              
+              &:hover {
+                background-color: variables.$color-primary;
+                border-color: variables.$color-primary;
+                box-shadow: 0 3px 8px rgba(variables.$color-primary, 0.3);
+              }
+            }
+            
+            .botao-primario {
+              background-color: variables.$color-primary-light;
+              border-color: variables.$color-primary-light;
+              color: variables.$color-grey-900;
+              
+              &:hover {
+                background-color: variables.$color-primary;
+                border-color: variables.$color-primary;
+                box-shadow: 0 3px 8px rgba(variables.$color-primary, 0.3);
+              }
+            }
+          }
+        }
+      }
+
+      .pagination {
+        .page-link {
+          border-color: variables.$color-grey-700;
+          color: variables.$color-primary-light;
+          background-color: variables.$color-grey-800;
+
+          &:hover {
+            background-color: variables.$color-primary-light;
+            color: variables.$color-grey-900;
+            border-color: variables.$color-primary-light;
+          }
+        }
+
+        .page-item.active .page-link {
+          background-color: variables.$color-primary-light;
+          color: variables.$color-grey-900;
+          border-color: variables.$color-primary-light;
+          box-shadow: 0 0 0 0.15rem rgba(variables.$color-primary-light, 0.25);
+        }
+      }
     }
+
+    // Sobrescritas responsivas específicas para tema escuro
+    @media (max-width: 768px) {
+      .documentos-container {
+        form {
+          .form-select {
+            background-color: variables.$color-grey-800;
+            border-color: variables.$color-grey-700;
+          }
+          
+          .btn:hover {
+            background-color: variables.$color-primary-light;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 480px) {
+      .documentos-container {
+        .modal-content {
+          background-color: variables.$color-grey-800;
+          border-color: variables.$color-grey-700;
+        }
+      }
+    }
+  }
 }

@@ -91,24 +91,6 @@ class DocumentosPage(PageSitePadrao):
         verbose_name = "Documento"
         verbose_name_plural = "Documentos"
 
-    # ============================================================
-    # MÉTODOS AUXILIARES
-    # ============================================================
-    def get_absolute_url(self):
-        return reverse("documento_detail", args=[str(self.id)])
-
-    def generate_unique_slug(self, base_slug):
-        slug = base_slug
-        counter = 1
-        parent = self.get_parent()
-        parent_path = parent.path if parent else ""
-        while DocumentosPage.objects.filter(
-            slug=slug, path__startswith=parent_path
-        ).exclude(pk=self.pk).exists():
-            slug = f"{base_slug}-{counter}"
-            counter += 1
-        return slug
-
     def save(self, *args, **kwargs):
         if not self.slug and self.title:
             base_slug = slugify(self.title)

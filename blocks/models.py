@@ -571,10 +571,16 @@ class NoticiasListBlock(StructBlock):
             'noticias_index_page_url': noticias_index_page_url,
             'texto_link': texto_link,
             'mostrar_titulo': value.get('mostrar_titulo', True),
-            'layout': value.get('layout', 'lista')
+            'layout': value.get('layout', 'lista'),
+            'btn_classes': self.get_btn_classes(value),
         })
 
         return context
+    
+    def get_btn_classes(self, value):
+        if getattr(settings, 'HABILITAR_SITE_INTRANET', False):
+            return 'text-center'
+        return 'text-center btn-ver-todos-bg-cinza'
 
     class Meta:
         template = 'blocks/list_noticias.html'

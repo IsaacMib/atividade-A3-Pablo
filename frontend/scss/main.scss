@@ -1,6 +1,7 @@
 @use  './variables.scss';
 @use  './sprite.scss';
 @use  './swiper.scss';
+@use  './classes-personalizadas.scss';
 
 @use './sitepadrao/index.scss' as sitepadrao;
 @use './core/index.scss' as core;
@@ -23,6 +24,7 @@
 
 // Project-specific partials added by assistant: widgets and banners
 @use './_widgets.scss' as widgets;
+@use './_widgets_dark.scss' as widgets_dark;
 @use './_banners.scss' as banners;
 
 /*Arquivo para customizar o bootstrap*/

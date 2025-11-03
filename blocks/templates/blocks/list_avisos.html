@@ -1,29 +1,21 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
-<section class="mural-avisos {% if is_intranet %}mural-intranet{% else %}mural-publico{% endif %}">
+<section class="mural-avisos">
   <div class="container text-center">
     {% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
 
-    <div class="avisos-wrapper row {% if is_intranet %}justify-content-center{% else %}justify-content-center{% endif %}">
+    <div class="avisos-wrapper row justify-content-center">
       {% for aviso in avisos|slice:":6" %}
         {% if is_intranet %}
           {# 2 colunas centralizadas #}
-          <div class="col-12 col-md-6 col-lg-6 d-flex justify-content-center">
+          <div class="col-12 col-md-5 d-flex justify-content-center">
         {% else %}
           {# 3 colunas centralizadas #}
           <div class="col-12 col-md-6 col-lg-6 d-flex justify-content-center">
         {% endif %}
             <a href="{% pageurl aviso %}" class="text-decoration-none aviso-link d-block h-100 w-100">
-              <article class="aviso-card p-4 h-100 rounded-4 shadow-sm text-start d-flex flex-column">
-
-                {% if not is_intranet %}
-                  <header>
-                    <h3 class="aviso-title h5 mb-2">{{ aviso.title }}</h3>
-                    <hr class="linha-horizontal mb-3">
-                  </header>
-                {% else %}
-                  <h3 class="aviso-title h5 mb-2">{{ aviso.title }}</h3>
-                {% endif %}
+              <article class="aviso-card p-4 h-100 rounded-4 shadow-sm text-start d-flex flex-column"> 
+                <h3 class="aviso-title h5 mb-2">{{ aviso.title }}</h3>
 
                 <div class="aviso-body d-flex gap-3">
                   <div class="desc-col flex-grow-1">
@@ -37,17 +29,13 @@
                     <p class="aviso-data mb-0 small">Data: {{ aviso.data_publicacao|date:"d/m/Y" }}</p>
                   {% endif %}
                 </footer>
-
-                {% if not is_intranet %}
-                  <a href="{% pageurl aviso %}" class="ver-tudo-link mt-2 d-inline-block">Ver tudo</a>
-                {% endif %}
               </article>
             </a>
           </div>
       {% endfor %}
     </div>
 
-    {% if avisos_index_page_url and not is_intranet %}
+    {% if avisos_index_page_url %}
       {% include "include/ver_todos_btn.html" with ver_todos_url=avisos_index_page_url btn_class="text-center" %}
     {% endif %}
   </div>
