@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags filtros_tags %}
 
 {% block body_class %}template-documentos-index-page{% endblock %}
 
@@ -13,39 +13,7 @@
     <p class="texto-muted mb-4">{{ page.introduction }}</p>
   {% endif %}
 
-  <!-- SUBTÍTULO E FILTROS -->
-  <div class="d-flex justify-content-between align-items-center flex-wrap border-bottom pb-3 mb-4">
-
-    <form method="get" class="d-flex gap-3 align-items-center flex-wrap mt-2 mt-sm-0" id="filtrosForm">
-      <div class="form-group">
-        <label for="filtroAno" class="form-label small texto-muted mb-1">Ano:</label>
-        <select name="ano" class="form-select w-auto" id="filtroAno">
-          <option value="">Todos</option>
-          {% for ano_item in anos_disponiveis %}
-            <option value="{{ ano_item.year }}" {% if ano_item.year|stringformat:"s" == ano %}selected{% endif %}>
-              {{ ano_item.year }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="filtroTag" class="form-label small texto-muted mb-1">Tag:</label>
-        <select name="tag" class="form-select w-auto" id="filtroTag">
-          <option value="">Todos</option>
-          {% for t in tags %}
-            <option value="{{ t.slug }}" {% if t.slug == tag.slug %}selected{% endif %}>
-              {{ t.name }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="form-group align-self-end">
-        <button class="btn botao-primario px-4" type="submit">Filtrar</button>
-      </div>
-    </form>
-  </div>
+  {% filtros_ano_tag %}
 
   <!-- LISTA DE DOCUMENTOS -->
   <div class="documentos-list mt-3">
