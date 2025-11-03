@@ -21,20 +21,19 @@
         </svg>
         <i class="bi-calendar3 linha-do-tempo-calendar-group calendar-icon left" ></i>
             <div class="arrow left animate"></div>
-            <div
-                {% if card.detail_page %}
-                    onClick="window.location.href = '{{ card.detail_page.url }}'"
-                    class="card-linha-do-tempo animate mouse-pointer"
-                {% else %}
-                    class="card-linha-do-tempo animate"
-                {% endif %}
-            >
+            <div class="card-linha-do-tempo animate {% if card.detail_page %}mouse-pointer{% endif %}">
                 <div class="card-linha-do-tempo__image">
-                    {% image card.imagem width-400 alt=card.texto_alternativo|default:"Não especificado" %}
+                    {% image card.imagem fill-570x380 alt=card.texto_alternativo|default:"Não especificado" %}
                 </div>
                 <div class="card-linha-do-tempo__content text-center">
                     <h3 class="card-linha-do-tempo__title mt-3 mb-1">
-                        {% firstof card.titulo card.title %}
+                        {% if card.detail_page %}
+                            <a href="{{ card.detail_page.url }}" class="card-linha-do-tempo__title-link">
+                                {% firstof card.titulo card.title %}
+                            </a>
+                        {% else %}
+                            {% firstof card.titulo card.title %}
+                        {% endif %}
                     </h3>
                     {% comment %} <p class="card-linha-do-tempo__date">{{ card.data|date:"d/m/Y" }}</p> {% endcomment %}
                     <span class="card-description-wrapper inline">
@@ -49,6 +48,13 @@
                             {% endwith %}
                         {% endwith %}
                     </span>
+                    {% if card.detail_page %}
+                        <div class="card-linha-do-tempo__actions mt-2">
+                            <a href="{{ card.detail_page.url }}" class="btn btn-sm btn-outline-primary">
+                                Leia mais <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="arrow right animate"></div>
