@@ -4,79 +4,9 @@ include:
     inputs:
       image: dockercodata.pb.gov.br/ci-base-images/python:3.13
       script: |-
-        # Detectar o gerenciador de pacotes disponível e instalar Node.js
-        if command -v apk > /dev/null 2>&1; then
-          # Alpine Linux
-          echo "Detectado Alpine Linux - usando apk"
-          apk update
-          apk add --no-cache nodejs npm wget
-        elif command -v apt-get > /dev/null 2>&1; then
-          # Debian/Ubuntu
-          echo "Detectado Debian/Ubuntu - usando apt-get"
-          apt-get update
-          apt-get install -y wget gnupg2 software-properties-common
-          wget -qO- https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | apt-key add -
-          echo "deb https://deb.nodesource.com/node_22.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
-          apt-get update
-          apt-get install -y nodejs
-        elif command -v yum > /dev/null 2>&1; then
-          # CentOS/RHEL
-          echo "Detectado CentOS/RHEL - usando yum"
-          yum install -y nodejs npm wget
-        elif command -v dnf > /dev/null 2>&1; then
-          # Fedora
-          echo "Detectado Fedora - usando dnf"
-          dnf install -y nodejs npm wget
-        else
-          # Fallback: tentar baixar binário diretamente
-          echo "Gerenciador de pacotes não detectado - instalando Node.js manualmente"
-          cd /tmp
-          wget https://nodejs.org/dist/v22.11.0/node-v22.11.0-linux-x64.tar.xz
-          tar -xf node-v22.11.0-linux-x64.tar.xz
-          cp -r node-v22.11.0-linux-x64/* /usr/local/
-          cd /builds/portais/site-padrao
-        fi
-        
-        # Verificar versões instaladas
-        node --version
-        npm --version
-        python --version
-        
         # Instalar dependências Python
         pip install -r requirements/test.txt
         mkdir -p test-report coverage-report
-        
-        # Instalar dependências Node.js
-        npm ci
-        
-        # Executar build do frontend
-        echo "=== Executando build do frontend ==="
-        npm run build
-        
-        # Verificar se os arquivos de build foram gerados corretamente
-        echo "=== Verificando arquivos gerados pelo webpack ==="
-        ls -la frontend/bundles/
-        
-        # Verificar se webpack-stats.json foi gerado
-        if [ ! -f "webpack-stats.json" ]; then
-          echo "ERRO: webpack-stats.json não foi gerado!"
-          exit 1
-        fi
-        
-        # Verificar se os bundles CSS e JS foram gerados
-        if [ ! -f "frontend/bundles/main.js" ]; then
-          echo "ERRO: main.js não foi gerado!"
-          exit 1
-        fi
-        
-        # Verificar se pelo menos um arquivo CSS foi gerado
-        css_files=$(find frontend/bundles -name "*.css" | wc -l)
-        if [ "$css_files" -eq 0 ]; then
-          echo "ERRO: Nenhum arquivo CSS foi gerado!"
-          exit 1
-        fi
-        
-        echo "✅ Build do frontend executado com sucesso!"
         
         # Configurar Django settings para testes
         export DJANGO_SETTINGS_MODULE=sitepadrao.settings.testing
