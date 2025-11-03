@@ -1,7 +1,7 @@
 from django.db import models
 from core.models import PageSitePadrao, PageSitePadraoIndex
 from wagtail.fields import StreamField
-from blocks.corpo_tecnico import ListGrupoCorpoTecnicoBlock
+# from blocks.corpo_tecnico import ListGrupoCorpoTecnicoBlock  # Removido - cada app implementa seu próprio block
 from wagtail.admin.panels import FieldPanel, TitleFieldPanel
 from wagtail.images.blocks import ImageChooserBlock
 from blocks.models import BaseStreamCorpoTecnicoBlock
@@ -12,6 +12,9 @@ from wagtail.models.panels import PanelPlaceholder
 # Create your models here.
 
 class CorpoTecnicoIndexPage(PageSitePadraoIndex):
+
+    class Meta:
+        abstract = True
 
     parent_page_types = [ 'institucional.InstitucionalIndexPage' ]
     subpage_types = ['paginas.CorpoTecnicoGrupoPageIndex']
@@ -25,7 +28,7 @@ class CorpoTecnicoIndexPage(PageSitePadraoIndex):
     )
 
     tecnico_em_destaque = models.ForeignKey(
-        'paginas.CorpoTecnicoPage',
+        'wagtailcore.Page',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -34,22 +37,27 @@ class CorpoTecnicoIndexPage(PageSitePadraoIndex):
         help_text="Selecione um membro do corpo técnico para destacar na página inicial do corpo técnico."
     )
 
-    grupos_corpo_tecnico = StreamField(
-        [
-            ('grupo', ListGrupoCorpoTecnicoBlock(label="Grupo do Corpo Técnico")),
-        ],
-        verbose_name="Grupos do Corpo Técnico",
-        null=True,
-        blank=True,
-    )
+    # grupos_corpo_tecnico comentado pois usa block genérico com referência abstrata
+    # Cada classe filha deve implementar seu próprio campo com block específico
+    # grupos_corpo_tecnico = StreamField(
+    #     [
+    #         ('grupo', ListGrupoCorpoTecnicoBlock(label="Grupo do Corpo Técnico")),
+    #     ],
+    #     verbose_name="Grupos do Corpo Técnico",
+    #     null=True,
+    #     blank=True,
+    # )
 
     content_panels = PageSitePadraoIndex.content_panels + [
         FieldPanel('tecnico_em_destaque'),
-        FieldPanel('grupos_corpo_tecnico'),
+        # FieldPanel('grupos_corpo_tecnico'),  # Comentado - cada classe filha implementa seu próprio
     ]
 
 class CorpoTecnicoGrupoPageIndex(PageSitePadraoIndex):
     
+    class Meta:
+        abstract = True
+
     parent_page_types = [ 'paginas.CorpoTecnicoIndexPage' ]
     subpage_types = ['paginas.CorpoTecnicoPage']
 
@@ -81,6 +89,9 @@ class CorpoTecnicoGrupoPageIndex(PageSitePadraoIndex):
         return CorpoTecnicoPage.objects.descendant_of(self).live().order_by('title')[:quantidade]
 
 class CorpoTecnicoPage(PageSitePadrao):
+
+    class Meta:
+        abstract = True
 
     parent_page_types = [ 'paginas.CorpoTecnicoGrupoPageIndex' ]
     subpage_types = []

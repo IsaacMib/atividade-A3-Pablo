@@ -64,6 +64,8 @@ mappingIconsServicos = {
     'PRESENCIAL_AGENDAMENTO': 'icon: calendar; ratio: 0.75',
 }
 
+_CACHE_TIMEOUT = 10*60  # 10 minutos em segundos
+
 
 class AcessoRapidoItemBlock(StructBlock):
     titulo = CharBlock(required=True, max_length=100)
@@ -456,9 +458,6 @@ class TituloBlock(StructBlock):
         label = 'Título'
 
 
-_CACHE_TIMEOUT = 10*60  # 10 minutos em segundos
-
-
 class OdometerBlock(StructBlock):
     odometer_value = FloatBlock(required=False, label="Valor do Dado Default",
                                 help_text="Preenchido automaticamente pela API", disabled=True)
@@ -599,10 +598,6 @@ class NoticiasListBlock(StructBlock):
         template = 'blocks/list_noticias.html'
         icon = 'list-ul'
         label = 'Lista de Notícias'
-
-
-from wagtail import blocks
-from wagtail.blocks import StructBlock, CharBlock, PageChooserBlock, BooleanBlock, IntegerBlock
 
 class AvisosWidget(StructBlock):
     titulo = CharBlock(
