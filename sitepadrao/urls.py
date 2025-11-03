@@ -23,6 +23,7 @@ urlpatterns = [
     path("health/", sitepadrao_views.health_check, name='health_check'),
     path("django-admin/", admin.site.urls),
     path("documents/", include(wagtaildocs_urls)),
+    path("core/", include("core.urls")),  # URLs do core (document viewer e outros)
     path("docs/", include("documentos.urls")),  # URLs customizadas para documentos
     re_path(
         r"^images/([^/]*)/(\d*)/([^/]*)/[^/]*$",
