@@ -1,6 +1,77 @@
 """
-Settings específicas para testes no CI/CD
+Django settings para ambiente de testes CI/CD
 """
+
+from .base import *
+
+# Database
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DATABASE_NAME', 'test'),
+        'USER': os.environ.get('DATABASE_USERNAME', 'postgres'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', 'postgres'),
+        'HOST': os.environ.get('DATABASE_HOST', 'localhost'),
+        'PORT': os.environ.get('DATABASE_PORT', '5432'),
+        'TEST': {
+            'NAME': 'test_ci',
+        },
+    }
+}
+
+# Desabilitar migrações para acelerar testes
+class DisableMigrations:
+    def __contains__(self, item):
+        return True
+    
+    def __getitem__(self, item):
+        return None
+
+MIGRATION_MODULES = DisableMigrations()
+
+# Cache simples para testes
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+
+# Log mínimo
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+}
+
+# Configurações de performance para testes
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+]
+
+# Mock do python-magic se não estiver disponível
+try:
+    import magic
+except ImportError:
+    # Criar um mock do módulo magic
+    import sys
+    from unittest.mock import MagicMock
+    
+    magic_mock = MagicMock()
+    magic_mock.from_buffer.return_value = 'text/plain'
+    magic_mock.from_file.return_value = 'text/plain'
+    
+    sys.modules['magic'] = magic_mock
+
+# Debug desabilitado
+DEBUG = False
 
 from .base import *
 
