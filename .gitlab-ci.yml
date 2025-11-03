@@ -4,6 +4,23 @@ include:
     inputs:
       image: dockercodata.pb.gov.br/ci-base-images/python:3.13
       script: |-
+        # Detectar o gerenciador de pacotes e instalar libmagic
+        if command -v apk > /dev/null 2>&1; then
+          # Alpine Linux
+          apk update && apk add --no-cache file-dev libmagic
+        elif command -v apt-get > /dev/null 2>&1; then
+          # Debian/Ubuntu
+          apt-get update && apt-get install -y libmagic1
+        elif command -v yum > /dev/null 2>&1; then
+          # CentOS/RHEL
+          yum install -y file-devel
+        elif command -v dnf > /dev/null 2>&1; then
+          # Fedora
+          dnf install -y file-devel
+        else
+          echo "Aviso: Não foi possível instalar libmagic automaticamente"
+        fi
+        
         # Instalar dependências Python
         pip install -r requirements/test.txt
         mkdir -p test-report coverage-report
