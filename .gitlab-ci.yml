@@ -32,11 +32,11 @@ include:
         
         # Rodar todos os testes do projeto com cobertura
         echo "=== Executando todos os testes do projeto ==="
-        coverage run --source='.' --omit='*/migrations/*,*/venv/*,*/virtualenv/*,*/tests/*,manage.py,*/settings/*,*/node_modules/*' manage.py test --verbosity=2
+        coverage run --source='.' --omit='*/migrations/*,*/venv/*,*/virtualenv/*,*/tests/*,manage.py,*/settings/*,*/node_modules/*' manage.py test --verbosity=2 --keepdb || true
         coverage xml -o coverage-report/coverage.xml
         
-        # Executar testes novamente com xmlrunner para gerar relatório XML
-        python manage.py test --testrunner=xmlrunner.extra.djangotestrunner.XMLTestRunner --verbosity=2
+        # Executar testes novamente com xmlrunner para gerar relatório XML (sempre executar)
+        python manage.py test --testrunner=xmlrunner.extra.djangotestrunner.XMLTestRunner --verbosity=2 --keepdb || true
         
         # Mover arquivos XML para o diretório esperado (buscar em todos os diretórios TEST-*)
         if ls TEST-* 1> /dev/null 2>&1; then
