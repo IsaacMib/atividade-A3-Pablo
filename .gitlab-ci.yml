@@ -4,8 +4,14 @@ include:
     inputs:
       image: dockercodata.pb.gov.br/ci-base-images/python:3.13
       script: |-
-        # Instalar Node.js (versão 22 conforme package.json)
-        curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+        # Atualizar repositórios e instalar dependências básicas
+        apt-get update
+        apt-get install -y wget gnupg2 software-properties-common
+        
+        # Instalar Node.js 22 usando o repositório oficial
+        wget -qO- https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | apt-key add -
+        echo "deb https://deb.nodesource.com/node_22.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
+        apt-get update
         apt-get install -y nodejs
         
         # Verificar versões instaladas
