@@ -4,10 +4,11 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+    """Merge de branches paralelas"""
 
     dependencies = [
         ('noticias', '0015_alter_noticiaspage_data_publicacao'),
-        ('noticias', '0015_alter_noticiaspage_descricao'),
+        ('noticias', '0015a_alter_noticiaspage_descricao'),
     ]
 
     operations = [

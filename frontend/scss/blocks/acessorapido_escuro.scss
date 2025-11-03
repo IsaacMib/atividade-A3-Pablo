@@ -1,14 +1,12 @@
 @use './../variables.scss';
 
 [data-theme=dark] {
+
+  // ===================================
+  // ESTILOS GERAIS (Aplicado a todos os modos)
+  // ===================================
   .acesso-rapido-wrapper {
     background-color: variables.$color-black;
-    border-top: 0.5px solid variables.$color-white;
-    border-bottom: 0.5px solid variables.$color-white;
-    @media (max-width: 767px) {
-      padding-top: 40px;
-      padding-bottom: 1px;
-    }
   }
 
   .quick-access {
@@ -22,15 +20,6 @@
     border-color: variables.$color-white;
   }
 
-  .quick-access-icon {
-    background-color: variables.$color-black;
-    border: 1px solid variables.$color-white;
-    
-    i {
-      color: variables.$color-white !important;
-    }
-  }
-
   .quick-access-title {
     color: variables.$color-white !important;
   }
@@ -38,10 +27,11 @@
   /* APENAS MOBILE - não afeta desktop */
   @media (max-width: 767px) {
     .acesso-rapido {
+      margin-top: 40px;
       background-color: variables.$color-black !important;
       box-shadow: none !important;
       border: 1px solid variables.$color-white !important;
-    }
+    }    
     
     .acesso-rapido > .row.g-4 > [class*="col-"] {
       border-bottom: 1px solid variables.$color-white !important;
@@ -56,9 +46,27 @@
     }
     
     .acesso-rapido > .row.g-4 > [class*="col-"] > a > .quick-access:hover {
-      background-color: variables.$color-white !important;
+      background-color: variables.$color-grey-900 !important;
+
+      .quick-access-wrapper > .quick-access-icon {
+        background-color: variables.$color-white !important; // Fundo do ícone
+        border-color: variables.$color-white !important;
+
+        i {
+          color: variables.$color-primary !important; // Cor do ícone
+        }
+      }
+      .quick-access-wrapper > .quick-access-title {
+        color: variables.$color-black !important;
+      }
     }
     
+    .acesso-rapido > .row.g-4 > [class*="col-"] > a > .quick-access > .quick-access-wrapper > .quick-access-icon {
+      border: 1px solid variables.$color-white;
+      i {
+        color: variables.$color-white !important;
+      }
+    }
     .acesso-rapido > .row.g-4 > [class*="col-"] > a > .quick-access > .quick-access-wrapper > .quick-access-icon {
       background-color: variables.$color-black !important;
     }
@@ -70,6 +78,56 @@
     /* Seta no final */
     .acesso-rapido > .row.g-4 > [class*="col-"] > a > .quick-access::after {
       color: variables.$color-white !important;
+    }
+  }
+
+  // ===================================
+  // MODO LISTA
+  // ===================================
+  .acesso-rapido-wrapper.modo-lista {
+    .lista-acessos-vertical {
+      .acesso-item-vertical {
+        color: variables.$color-white;
+        transition: background-color 0.2s ease-in-out;
+
+        &:hover {
+          background-color: variables.$color-grey-900;
+        }
+
+        .barra-vertical {
+          background-color: variables.$color-white;
+        }
+
+        .icone-ellipse {
+          background-color: variables.$color-black;
+          border: 1px solid variables.$color-white;
+          
+          i {
+            color: variables.$color-white;
+          }
+        }
+      }
+    }
+  }
+
+  // ===================================
+  // MODO GRID E BLOCOS
+  // ===================================
+  .acesso-rapido-wrapper.modo-grid,
+  .acesso-rapido-wrapper.modo-blocos {
+
+    .container.acesso-rapido {
+      color: variables.$color-black !important;
+      background-color: variables.$color-black !important;
+    }
+
+    .quick-access-icon-ellipse {
+      background-color: variables.$color-black;
+      border-radius: 50%;
+
+      i {
+        color: variables.$color-white !important;
+      }
     }
   }
 

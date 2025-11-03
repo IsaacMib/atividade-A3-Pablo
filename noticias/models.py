@@ -29,6 +29,7 @@ from core.utils import (
     get_page_title_with_counter,
     get_widget_input_with_counter
 )
+from core.models import SiteSettings
 
 from core.models import ApiSettings
 
@@ -309,7 +310,7 @@ class NoticiasPage(PageSitePadrao):
         return tags
 
     # Specifies parent to NoticiasPage as being NoticiasIndexPages
-    parent_page_types = ["NoticiasIndexPages"]
+    parent_page_types = ["NoticiasIndexPages", "intranet.IntranetHomePage"]
 
     # Specifies what content types can exist as children of NoticiasPage.
     # Empty list means that no child content types are allowed.
@@ -420,6 +421,7 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
     ]
 
     parent_page_types = [
+        "intranet.IntranetHomePage",
         "home.HomePage",
     ]
 

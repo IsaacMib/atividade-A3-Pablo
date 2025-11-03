@@ -1,3 +1,4 @@
+@use "sass:color";
 @use '../variables.scss' as variables;
 
 .formulario-bloco {
@@ -47,7 +48,7 @@
 
         .formulario-sucesso {
             background-color: variables.$color-success;
-            border-color: darken(variables.$color-success, 8%);
+            border-color: color.adjust(variables.$color-success, $lightness: -8%);
             color: variables.$color-on-success;
 
             .alert-heading {

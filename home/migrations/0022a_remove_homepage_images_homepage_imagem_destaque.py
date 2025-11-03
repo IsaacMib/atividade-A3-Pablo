@@ -7,17 +7,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('avisos', '0004_avisospage_images'),
+        ('home', '0021a_homepage_descricao_homepage_images'),
         ('wagtailimages', '0027_image_description'),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='avisospage',
+            model_name='homepage',
             name='images',
         ),
         migrations.AddField(
-            model_name='avisospage',
+            model_name='homepage',
             name='imagem_destaque',
             field=models.ForeignKey(blank=True, help_text='Imagem usada em destaque para SEO e redes sociais', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='wagtailimages.image', verbose_name='Imagem de Destaque'),
         ),

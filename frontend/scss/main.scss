@@ -1,6 +1,7 @@
 @use  './variables.scss';
 @use  './sprite.scss';
 @use  './swiper.scss';
+@use  './classes-personalizadas.scss';
 
 @use './sitepadrao/index.scss' as sitepadrao;
 @use './core/index.scss' as core;
@@ -12,10 +13,19 @@
 @use  './institucional/index.scss' as institucional;
 @use './search/index.scss' as search;
 @use  './agenda/index.scss' as agenda;
+@use './contatos/index.scss' as contatos;
 @use  './editais/index.scss' as editais;
+@use  './cursos/index.scss' as cursos;
+@use './documentos/index.scss' as documentos;
+@use './intranet/index.scss' as intranet;
 @use './breadcrumb.scss';
 @use './breadcrumb_escuro.scss';
 @use './cookieconsent.scss';
+
+// Project-specific partials added by assistant: widgets and banners
+@use './_widgets.scss' as widgets;
+@use './_widgets_dark.scss' as widgets_dark;
+@use './_banners.scss' as banners;
 
 /*Arquivo para customizar o bootstrap*/
 @use './customBT';

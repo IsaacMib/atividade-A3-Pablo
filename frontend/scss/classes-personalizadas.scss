@@ -1,0 +1,399 @@
+@use 'variables.scss';
+@use 'sass:color';
+
+// ============================================
+// SISTEMA DE CORES PERSONALIZADO
+// Substitui as classes de cores do Bootstrap
+// ============================================
+
+// Classes de texto
+.texto-muted {
+  color: variables.$color-grey-600 !important;
+}
+
+.texto-primario {
+  color: variables.$color-primary !important;
+}
+
+.texto-secundario {
+  color: variables.$color-secondary !important;
+}
+
+.texto-destaque {
+  color: variables.$color-on-surface !important;
+  font-weight: 600;
+}
+
+.texto-branco {
+  color: variables.$color-white !important;
+}
+
+.texto-escuro {
+  color: variables.$color-grey-900 !important;
+}
+
+// Classes de background
+.fundo-primario {
+  background-color: variables.$color-primary !important;
+  color: variables.$color-on-primary;
+}
+
+.fundo-secundario {
+  background-color: variables.$color-secondary !important;
+  color: variables.$color-on-secondary;
+}
+
+.fundo-superficie {
+  background-color: variables.$color-surface !important;
+  color: variables.$color-on-surface;
+}
+
+.fundo-aviso {
+  background-color: variables.$color-warning !important;
+  color: variables.$color-on-warning;
+}
+
+.fundo-sucesso {
+  background-color: variables.$color-success !important;
+  color: variables.$color-on-success;
+}
+
+.fundo-erro {
+  background-color: variables.$color-error !important;
+  color: variables.$color-on-error;
+}
+
+// Classes de botões personalizados
+.botao-primario {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  color: variables.$color-on-primary;
+  background-color: variables.$color-primary;
+  border: 1px solid variables.$color-primary;
+  border-radius: 8px;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px);
+    background-color: variables.$color-primary-dark;
+    border-color: variables.$color-primary-dark;
+    color: variables.$color-on-primary;
+    text-decoration: none;
+    box-shadow: 0 3px 8px rgba(variables.$color-primary, 0.25);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.15rem rgba(variables.$color-primary, 0.5);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.botao-secundario {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  color: variables.$color-grey-700;
+  background-color: variables.$color-grey-300;
+  border: 1px solid variables.$color-grey-300;
+  border-radius: 8px;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    background-color: variables.$color-grey-400;
+    border-color: variables.$color-grey-400;
+    color: variables.$color-grey-700;
+    text-decoration: none;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.15rem rgba(variables.$color-grey-400, 0.5);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.botao-outline-primario {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  color: variables.$color-primary;
+  background-color: transparent;
+  border: 1px solid variables.$color-primary;
+  border-radius: 8px;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: variables.$color-primary;
+    color: variables.$color-on-primary;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(variables.$color-primary, 0.3);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.15rem rgba(variables.$color-primary, 0.5);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.botao-outline-secundario {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  color: variables.$color-grey-600;
+  background-color: transparent;
+  border: 1px solid variables.$color-grey-400;
+  border-radius: 8px;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: variables.$color-grey-400;
+    color: variables.$color-grey-700;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(variables.$color-grey-400, 0.3);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.15rem rgba(variables.$color-grey-400, 0.5);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+// Tamanhos de botões
+.botao-pequeno {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.botao-grande {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+}
+
+// Classes de etiquetas/badges
+.etiqueta {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.375rem;
+}
+
+.etiqueta-importante {
+  background-color: variables.$color-warning;
+  color: variables.$color-on-warning;
+}
+
+.etiqueta-sucesso {
+  background-color: variables.$color-success;
+  color: variables.$color-on-success;
+}
+
+.etiqueta-erro {
+  background-color: variables.$color-error;
+  color: variables.$color-on-error;
+}
+
+.etiqueta-primaria {
+  background-color: variables.$color-primary;
+  color: variables.$color-on-primary;
+}
+
+.etiqueta-secundaria {
+  background-color: variables.$color-secondary;
+  color: variables.$color-on-secondary;
+}
+
+// Classes de alertas
+.alerta {
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+}
+
+.alerta-sucesso {
+  color: variables.$color-on-success;
+  background-color: variables.$color-success;
+  border-color: color.adjust(variables.$color-success, $lightness: -10%);
+}
+
+.alerta-aviso {
+  color: variables.$color-on-warning;
+  background-color: variables.$color-warning;
+  border-color: color.adjust(variables.$color-warning, $lightness: -10%);
+}
+
+.alerta-erro {
+  color: variables.$color-on-error;
+  background-color: variables.$color-error;
+  border-color: color.adjust(variables.$color-error, $lightness: -10%);
+}
+
+.alerta-info {
+  color: variables.$color-on-primary;
+  background-color: color.adjust(variables.$color-primary, $lightness: 30%);
+  border-color: variables.$color-primary;
+}
+
+// ============================================
+// TEMA ESCURO - SOBRESCRITAS
+// ============================================
+
+[data-theme="dark"] {
+  .texto-muted {
+    color: variables.$color-grey-400 !important;
+  }
+
+  .texto-destaque {
+    color: variables.$color-grey-100 !important;
+  }
+
+  .botao-primario {
+    background-color: variables.$color-primary-light;
+    border-color: variables.$color-primary-light;
+    color: variables.$color-grey-900;
+
+    &:hover {
+      background-color: variables.$color-primary;
+      border-color: variables.$color-primary;
+      color: variables.$color-grey-900;
+      box-shadow: 0 3px 8px rgba(variables.$color-primary, 0.3);
+    }
+  }
+
+  .botao-secundario {
+    background-color: variables.$color-primary-light;
+    border-color: variables.$color-primary-light;
+    color: variables.$color-grey-900;
+    
+    &:hover {
+      background-color: variables.$color-primary;
+      border-color: variables.$color-primary;
+      color: variables.$color-grey-900;
+      box-shadow: 0 3px 8px rgba(variables.$color-primary, 0.3);
+    }
+  }
+
+  .botao-outline-primario {
+    border-color: variables.$color-primary-light;
+    color: variables.$color-primary-light;
+    
+    &:hover {
+      background-color: variables.$color-primary-light;
+      color: variables.$color-grey-900;
+      box-shadow: 0 2px 4px rgba(variables.$color-primary-light, 0.3);
+    }
+  }
+
+  .botao-outline-secundario {
+    border-color: variables.$color-primary-lighter;
+    color: variables.$color-primary-lighter;
+    
+    &:hover {
+      background-color: variables.$color-primary-lighter;
+      color: variables.$color-grey-900;
+      box-shadow: 0 2px 4px rgba(variables.$color-primary-lighter, 0.3);
+    }
+  }
+
+  .fundo-superficie {
+    background-color: variables.$color-grey-800 !important;
+    color: variables.$color-grey-100;
+  }
+
+  .fundo-primario {
+    background-color: variables.$color-primary-light !important;
+    color: variables.$color-grey-900;
+  }
+}
+
+// ============================================
+// UTILITÁRIOS DE LAYOUT E ESPAÇAMENTO
+// ============================================
+
+.centralizar-texto {
+  text-align: center;
+}
+
+.texto-esquerda {
+  text-align: left;
+}
+
+.texto-direita {
+  text-align: right;
+}
+
+.texto-italico {
+  font-style: italic;
+}
+
+.texto-negrito {
+  font-weight: 600;
+}
+
+.sem-decoracao {
+  text-decoration: none !important;
+}
+
+// Loading/Spinner personalizado
+.carregamento {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 0.15rem solid variables.$color-grey-300;
+  border-radius: 50%;
+  border-top-color: variables.$color-primary;
+  animation: girar 0.8s ease-in-out infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+[data-theme="dark"] .carregamento {
+  border-color: variables.$color-grey-600;
+  border-top-color: variables.$color-primary-light;
+}

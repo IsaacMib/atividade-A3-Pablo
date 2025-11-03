@@ -1,0 +1,55 @@
+@use '../variables.scss';
+
+[data-theme=dark] {
+  .contatos {
+    color: variables.$color-white; // texto padrão branco
+
+    // Título da seção
+    .section-title {
+      color: variables.$color-white;
+    }
+
+    // Título do contato
+    .contato-simples {
+      color: variables.$color-white;
+
+      .contato-titulo {
+        color: variables.$color-white;
+      }
+
+      // Infos internas
+      .contato-infos {
+        .contato-info-item {
+          color: variables.$color-white;
+
+          .icone,
+          .texto {
+            color: variables.$color-white;
+          }
+        }
+      }
+    }
+
+    // Lista principal (marcadores)
+    .contatos-list {
+      color: variables.$color-white;
+
+      > li::before {
+        color: variables.$color-white; // marcador do título
+      }
+
+      .contato-infos li::before {
+        content: none !important;
+      }
+
+      .contato-infos {
+        color: variables.$color-white;
+      }
+    }
+
+    // Linha separadora
+    hr {
+      border-top: 1px solid variables.$color-white;
+    }
+  }
+}

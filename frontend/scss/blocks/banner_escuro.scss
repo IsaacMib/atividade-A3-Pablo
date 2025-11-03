@@ -1,7 +1,15 @@
 @use './../variables.scss';
 
-[data-theme=dark] {
-  .banner-container {
-    background-color: variables.$color-black;
+  [data-theme='dark'] {
+    .banner-container {
+      background-color: variables.$color-black;
+
+      .banner-image {
+        filter: brightness(0.9) contrast(1.05);
+      }
+
+      &:hover .banner-image {
+        filter: brightness(1) contrast(1.1);
+      }
+    }
   }
-}

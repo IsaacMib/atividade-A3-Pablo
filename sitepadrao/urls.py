@@ -23,6 +23,7 @@ urlpatterns = [
     path("health/", sitepadrao_views.health_check, name='health_check'),
     path("django-admin/", admin.site.urls),
     path("documents/", include(wagtaildocs_urls)),
+    path("docs/", include("documentos.urls")),  # URLs customizadas para documentos
     re_path(
         r"^images/([^/]*)/(\d*)/([^/]*)/[^/]*$",
         ServeView.as_view(),
@@ -40,6 +41,11 @@ urlpatterns = [
     path("api/v1/", include("api.urls", namespace="api")),
     path("noticias/", include("noticias.urls")),
 ]
+
+if settings.HABILITAR_SITE_INTRANET:
+    urlpatterns += [
+        path("logout/", sitepadrao_views.intranet_logout, name="intranet_logout"),
+    ]
 
 if settings.HABILITAR_SSO_LOGIN:
     urlpatterns += [

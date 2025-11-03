@@ -21,6 +21,7 @@ def formatar_wagtail_types(wagtail_types):
         "avisospage": "Avisos",
         "document": "Arquivo",
         "image": "Imagem",
+        "contatospage": "Contatos",
         # Adicione outros tipos conhecidos aqui se desejar
     }
     return [

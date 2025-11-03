@@ -10,6 +10,9 @@ ALLOWED_HOSTS = ["*"]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
+# Permite iframes para documentos (desenvolvimento)
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 # WAGTAILADMIN_BASE_URL required for notification emails
 WAGTAILADMIN_BASE_URL = config('WAGTAILADMIN_BASE_URL', default="http://localhost:8000")
 

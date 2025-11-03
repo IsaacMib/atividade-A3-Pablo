@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('avisos', '0005_remove_avisospage_images_avisospage_imagem_destaque'),
+        ('avisos', '0004_avisospage_images'),
     ]
 
     operations = [

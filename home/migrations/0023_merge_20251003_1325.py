@@ -4,9 +4,10 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+    """Merge de branches paralelas"""
 
     dependencies = [
-        ('home', '0021_homepage_descricao_homepage_images'),
+        ('home', '0021a_homepage_descricao_homepage_images'),
         ('home', '0022_alter_homepage_body'),
     ]
 

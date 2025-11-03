@@ -1,9 +1,22 @@
 @use './../../variables.scss';
 
+
 [data-theme=dark] {
   .lista-noticias--wrapper {
     background-color: variables.$color-black;
     border-top: 0.5px solid variables.$color-white;
     border-bottom: 0.5px solid variables.$color-white;
+
+    &.noticias-bg {
+      background-color: variables.$color-black;
+    }
+
+    p {
+      color: variables.$color-dark-theme-text;
+    }
+
+    .noticia-item-lista {
+      border-bottom: 1px solid variables.$color-dark-theme-border-light;
+    }
   }
 }

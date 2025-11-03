@@ -1,36 +1,49 @@
-{% load static navigation_tags %}
+{% load static navigation_tags wagtailcore_tags wagtailsettings_tags socialaccount %}
 
-<div class="header-wrapper d-none d-lg-block">
+<div class="header-wrapper d-none d-lg-block"> {# Cabeçalho para Desktop (LG e acima) #}
   <div class="container">
     <div class="header-layout row">
-      <div class="col-10 col-lg-auto d-flex align-items-center justify-content-center mt-4" >
-        <a href="/" aria-label="Inicio" >
-          <img class="header-logo" src="{% static 'img/logo_site.svg' %}" alt="{{ settings.core.SiteSettings.title_suffix }}">
-        </a>
+      <div class="col-10 col-lg-auto d-flex align-items-center justify-content-start mt-4">
+        {% if HABILITAR_SITE_INTRANET %}
+          <a href="/" aria-label="Início" class="text-decoration-none">
+            <img class="header-logo" src="{% static 'img/banner_intranet.png' %}" alt="{{ settings.core.SiteSettings.title_suffix }}">
+          </a>
+        {% else %}
+          <a href="/" aria-label="Início" class="text-decoration-none">
+            <img class="header-logo" src="{% static 'img/logo_site.svg' %}" alt="{{ settings.core.SiteSettings.title_suffix }}">
+          </a>
+        {% endif %}
       </div>
+
+      <!-- ============================ BUSCA ============================ -->
       <div class="col-12 col-lg-auto d-flex align-items-center justify-content-center mt-4" >
         <div>
           <form action="{% url 'search' %}" class="d-flex" role="search" method="get">
-            <input class="header-input-search" type="text" 
-                   placeholder="Qual serviço você procura hoje?" 
-                   aria-label="Search" name="query" value="{{ request.GET.query }}">
+            <input class="header-input-search" type="text"
+                 placeholder="Qual serviço você procura hoje?"
+                 aria-label="Search" 
+                 name="query" 
+                 value="{{ request.GET.query }}">
             <button class="header-btn-search" type="submit">
-                <div class="row">
-                    <div class="col-auto" style="align-content: center;">
-                        <svg width="17" height="18" viewBox="0 0 21 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="min-width: 18px;">
-                            <path d="M14.3924 8.70761C14.3156 10.2344 13.661 11.7221 12.4371 12.8283C11.2163 13.9352 9.67372 14.4368 8.14879 14.3606C6.62386 14.282 5.13854 13.6274 4.03293 12.4041C2.92976 11.1791 2.4312 9.63403 2.50556 8.10422C2.58357 6.57868 3.23755 5.09092 4.45896 3.98532C5.68098 2.87971 7.2242 2.37688 8.74852 2.45429C10.2747 2.53108 11.7582 3.18506 12.8632 4.40952C13.9676 5.63276 14.4667 7.17963 14.3924 8.70761ZM20.3842 19.5632L14.9799 13.5725C16.0776 12.1835 16.6822 10.5178 16.7681 8.82951C16.8785 6.69936 16.1684 4.5174 14.6301 2.81023C13.0899 1.10367 10.9927 0.179077 8.86859 0.0724167C6.74271 -0.0372907 4.5644 0.672151 2.86394 2.21537C1.15799 3.7592 0.236445 5.85705 0.129784 7.98476C0.0188581 10.1137 0.72769 12.2963 2.26725 14.0028C3.80803 15.7094 5.90405 16.6352 8.02933 16.7419C9.71456 16.8278 11.4321 16.3908 12.9217 15.4369L18.3235 21.427C18.8386 21.9974 19.7168 22.0407 20.2849 21.5263C20.8541 21.0113 20.898 20.1318 20.3842 19.5632Z" fill="white"/>
-                        </svg>  
-                    </div>
-                    <div class="col-auto header-btn-search-text">
-                        <span>Pesquisar</span>
-                    </div>
+              <div class="row">
+                <div class="col-auto d-flex align-items-center">
+                <!-- Ícone de lupa -->
+                  <svg class="header-btn-search-icon" width="17" height="18" viewBox="0 0 21 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14.3924 8.70761C14.3156 10.2344 13.661 11.7221 12.4371 12.8283C11.2163 13.9352 9.67372 14.4368 8.14879 14.3606C6.62386 14.282 5.13854 13.6274 4.03293 12.4041C2.92976 11.1791 2.4312 9.63403 2.50556 8.10422C2.58357 6.57868 3.23755 5.09092 4.45896 3.98532C5.68098 2.87971 7.2242 2.37688 8.74852 2.45429C10.2747 2.53108 11.7582 3.18506 12.8632 4.40952C13.9676 5.63276 14.4667 7.17963 14.3924 8.70761ZM20.3842 19.5632L14.9799 13.5725C16.0776 12.1835 16.6822 10.5178 16.7681 8.82951C16.8785 6.69936 16.1684 4.5174 14.6301 2.81023C13.0899 1.10367 10.9927 0.179077 8.86859 0.0724167C6.74271 -0.0372907 4.5644 0.672151 2.86394 2.21537C1.15799 3.7592 0.236445 5.85705 0.129784 7.98476C0.0188581 10.1137 0.72769 12.2963 2.26725 14.0028C3.80803 15.7094 5.90405 16.6352 8.02933 16.7419C9.71456 16.8278 11.4321 16.3908 12.9217 15.4369L18.3235 21.427C18.8386 21.9974 19.7168 22.0407 20.2849 21.5263C20.8541 21.0113 20.898 20.1318 20.3842 19.5632Z" fill="white"/>
+                  </svg>
                 </div>
+                <div class="col-auto header-btn-search-text">
+                  <span>Pesquisar</span>
+                </div>
+              </div>
             </button>
           </form>
         </div>
       </div>
+
+      <!-- ============================ ACESSIBILIDADE ============================ -->
       <div class="header-acessibilidade col-12 col-lg-auto d-flex align-items-center justify-content-center mt-4" >
-        <div class="header-acessibilidade--row row">
+        <div class="row">
           <div class="col-auto" >
             <a id="theme-toggle" class="header-acessibilidade--contraste" href="#">alto contraste</a>
           </div>
@@ -42,18 +55,26 @@
       <div class="col-12 col-lg-auto d-flex align-items-center justify-content-center mt-4">
         <div class="header-tools row">
           <div class="col-auto" >
-            <a class="header-acessibilidade--fonts tw:text-xl tw:font-bold" href="javascript:(function(){document.body.style.zoom = (parseFloat(document.body.style.zoom || 1) - 0.1)})()">A-</a>
+            <a class="header-acessibilidade--fonts" href="javascript:(function(){document.body.style.zoom = (parseFloat(document.body.style.zoom || 1) - 0.1)})()">A-</a>
           </div>
           <div class="col-auto" >
-            <a class="header-acessibilidade--fonts tw:text-xl tw:font-bold" href="javascript:(function(){document.body.style.zoom = (parseFloat(document.body.style.zoom || 1) + 0.1)})()">A+</a>
+            <a class="header-acessibilidade--fonts" href="javascript:(function(){document.body.style.zoom = (parseFloat(document.body.style.zoom || 1) + 0.1)})()">A+</a>
           </div>
           <div class="col-auto" >
-            <a class="header-acessibilidade--fonts tw:text-xl tw:font-bold" href="javascript:(function(){document.body.style.zoom = 1})()">A</a>
+            <a class="header-acessibilidade--fonts" href="javascript:(function(){document.body.style.zoom = 1})()">A</a>
           </div>
         </div>
       </div>
+
+      <!-- ============================ LOGIN / PERFIL ============================ -->
+      {% if HABILITAR_SITE_INTRANET %}
+        {% include 'include/perfil.html' with classes="col-12 col-lg-auto d-flex align-items-center justify-content-center mt-4" %}
+      {% endif %}
+
     </div>
   </div>
 </div>
+
+<!-- ============================ MENU PRINCIPAL ============================ -->
 {% get_site_root as site_root %}
 {% top_menu parent=site_root calling_page=self %}

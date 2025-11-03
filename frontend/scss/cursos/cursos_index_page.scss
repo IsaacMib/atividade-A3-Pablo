@@ -1,0 +1,151 @@
+@use '../variables.scss';
+
+.template-cursos-index-page {
+  background-color: variables.$color-background;
+  color: variables.$color-on-background;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  .cursos-container {
+    padding: 4rem 0;
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .titulo-section {
+      h1, h2, h3 {
+        color: variables.$color-primary;
+      }
+
+      p {
+        color: variables.$color-grey-600;
+      }
+    }
+
+    .cursos-wrapper {
+      margin-top: 3rem;
+
+      .curso-card {
+        background-color: variables.$color-surface;
+        color: variables.$color-on-surface;
+        border: 1px solid variables.$color-grey-210;
+        transition: all 0.25s ease;
+        box-shadow: 0 2px 8px variables.$color-card-shadow;
+
+        &:hover {
+          background-color: variables.$color-grey-50;
+          transform: translateY(-4px);
+          box-shadow: 0 6px 14px variables.$color-card-shadow-hover;
+        }
+
+        &.border.border-warning {
+          border-color: variables.$color-warning;
+          box-shadow: 0 0 10px rgba(variables.$color-warning, 0.3);
+        }
+
+        .curso-img {
+          position: relative;
+          min-height: 150px;
+
+          .bi-book {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+        }
+
+        .curso-icon-default {
+          color: variables.$color-primary;
+        }
+
+        .curso-icon-calendar {
+          color: variables.$color-dark-theme-text;
+        }
+
+        .curso-title {
+          font-size: 1.3rem;
+          font-weight: 700;
+          color: variables.$color-primary;
+          margin-bottom: 0.75rem;
+        }
+
+        .curso-desc-row {
+          display: flex;
+          align-items: flex-start;
+
+          .icon-col {
+            i {
+              color: variables.$color-primary;
+              font-size: 1.5rem;
+            }
+          }
+
+          .desc-col {
+            p.curso-descricao {
+              color: variables.$color-grey-700;
+              line-height: 1.6;
+            }
+
+            p.curso-data {
+              color: variables.$color-dark-theme-text;
+            }
+
+            .curso-tags {
+              a.badge {
+                background-color: variables.$color-grey-200;
+                color: variables.$color-grey-800;
+                border: 1px solid variables.$color-grey-300;
+                transition: all 0.2s ease;
+
+                &:hover {
+                  background-color: variables.$color-primary;
+                  border-color: variables.$color-primary;
+                  color: variables.$color-on-primary;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      p.text-center {
+        color: variables.$color-grey-600;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .curso-card {
+        padding: 1.5rem;
+        border-left: 4px solid transparent;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .curso-card:hover {
+        border-left-color: variables.$color-primary;
+        box-shadow: 0 0.5rem 1rem variables.$color-black-30;
+    }
+
+    .curso-img img {
+        max-height: 150px;
+        object-fit: cover;
+    }
+
+    .curso-title {
+      font-size: 1.2rem;
+    }
+
+    .curso-desc-row {
+      flex-direction: column;
+      gap: 0.8rem;
+
+      .icon-col {
+        i {
+          font-size: 1.4rem;
+        }
+      }
+    }
+  }
+}
