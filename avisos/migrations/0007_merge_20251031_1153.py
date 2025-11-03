@@ -7,7 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('avisos', '0005_alter_avisospage_body'),
-        ('avisos', '0006_alter_avisospage_options_remove_avisospage_subtitle_and_more'),
+        ('avisos', '0006_merge_linear'),
     ]
 
     operations = [

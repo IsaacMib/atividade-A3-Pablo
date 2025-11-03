@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0014_sitesettings_compartilhamento_copiar_link_and_more'),
+        ('core', '0014a_sitesettings_compartilhamento_copiar_link_and_more'),
         ('core', '0021_merge_20251030_1554'),
     ]
 
