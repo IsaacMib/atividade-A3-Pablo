@@ -42,7 +42,6 @@ $color-dark-theme-border-light: #B3B3B3;
 
 // Secondary
 $color-secondary: #03dac6;
-$color-secondary-light: #66fff9;
 $color-secondary-dark: #00a896;
 $color-on-secondary: #000000;
 
@@ -75,11 +74,7 @@ $caixa-eliptica-background-default: #31B0FF;
 $caixa-eliptica-background-default-dark: #0A0A0A;
 $shadow-offset: 28px;
 
-// Other (Material Design Guide)
-$color-primary-variant: #3700b3;
-$color-secondary-variant: #018786;
-
-// Example usage for your project
+// Other (Material Design Guide) - Removidas variantes não utilizadas
 $primary-color: $color-primary;
 $top-icons: invert(100%);
 $top-background-busca: #0f2f4e;
@@ -132,17 +127,11 @@ $color-link-navbar: #b7c5dc;
 $color-link-navbar-hover: $color-white;
 $color-link-navbar-hover-mobile: $color-grey-700;
 $color-link-navbar-mobile: $color-grey-700;
-$color-link-noticias: $color-primary;
-$color-link-noticias: $color-primary-active;
+$color-link-noticias: $color-primary-active; // Removido duplicação, usando apenas o valor ativo
 $color-link-noticias-hover: #052F4A;
 
 $font-size-itens-menu: 20px;
 $font-size-itens-sub-menu: 20px;
-
-// Footer
-$footer-color: $color-primary;
-
-
 
 // Footer
 $footer-color: $color-primary;
@@ -161,14 +150,12 @@ $color-agenda-column-border: #00000033;
 $color-agenda-column-shadow: #00000040;
 $color-agenda-column-btn: #94a3b8;
 
+// Shadows e overlays consolidados
 $color-warning-shadow-dark: rgba($color-warning, 0.3);
 $color-banner-shadow-hover: rgba(0, 0, 0, 0.15);
 $color-card-shadow-light: rgba(0, 0, 0, 0.1);
-$color-card-shadow: $color-black-10;
+$color-card-shadow: $color-black-10; // Reutiliza $color-black-10 que tem o mesmo valor
 $color-card-shadow-hover: #00000026;
-$color-card-shadow-light: rgba(0, 0, 0, 0.1);
-$color-banner-shadow-hover: rgba(0, 0, 0, 0.15);
-$color-warning-shadow-dark: rgba($color-warning, 0.3);
 
 $color-agenda-item-bg: #D9D9D91A;
 $color-agenda-item-bg-escuro: #161616;

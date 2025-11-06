@@ -20,6 +20,7 @@
 
     &.active {
       background-color: variables.$color-grey-800;
+      border: 1px solid variables.$color-white;
       color: variables.$color-warning;
 
       a {
