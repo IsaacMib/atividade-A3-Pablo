@@ -13,6 +13,8 @@
 
 .footer-wrapper {
   background-color: variables.$footer-color;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .footer-sic-logo {
@@ -23,5 +25,22 @@
 @media screen and (max-width: 767px) {
   .footer-layout {
     flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .footer-wrapper {
+    width: 100%;
+    max-width: 100vw;
+  }
+  
+  .footer-layout {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .footer-sic-logo {
+    max-width: 100%;
+    height: auto;
   }
 }
