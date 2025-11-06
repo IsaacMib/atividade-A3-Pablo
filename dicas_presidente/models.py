@@ -8,13 +8,17 @@ from django.core.exceptions import ValidationError
 from django.contrib import messages
 from django.shortcuts import redirect, render
 
-from wagtail.fields import StreamField
+from wagtail.fields import StreamField, RichTextField
 from wagtail.search import index
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.admin.panels import (
     ObjectList, FieldPanel, MultiFieldPanel, TabbedInterface
 )
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.blocks import (
+    StructBlock, CharBlock, TextBlock, URLBlock, 
+    StreamBlock, ChoiceBlock, RichTextBlock, ListBlock
+)
 
 from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
@@ -29,31 +33,146 @@ from core.utils import (
 
 
 # ============================================================
-# CHOICES
+# BLOCOS PERSONALIZADOS PARA DICAS DO PRESIDENTE
 # ============================================================
 
-TIPO_DICA_CHOICES = [
-    ('mensagem', 'Mensagem Pessoal'),
-    ('recomendacao', 'Recomendação/Estudo'),
-    ('noticia_interna', 'Notícia Interna'),
-    ('galeria', 'Galeria/Bastidores'),
-    ('frase', 'Frase da Semana'),
-]
+class MensagemPresidenteBlock(StructBlock):
+    """Bloco para mensagem pessoal do presidente."""
+    texto = RichTextBlock(
+        verbose_name="Texto da Mensagem",
+        help_text="Mensagem motivacional ou comunicado do presidente."
+    )
+    assinatura = CharBlock(
+        required=False,
+        max_length=100,
+        label="Assinatura",
+        help_text="Ex: 'João Silva, Presidente'"
+    )
+    
+    class Meta:
+        icon = 'doc-full'
+        label = 'Mensagem Pessoal'
+        template = 'dicas_presidente/blocks/mensagem_presidente_block.html'
 
-TIPO_RECOMENDACAO_CHOICES = [
-    ('artigo', 'Artigo'),
-    ('video', 'Vídeo'),
-    ('podcast', 'Podcast'),
-    ('livro', 'Livro'),
-    ('estudo', 'Estudo/Relatório'),
-]
 
-CATEGORIA_NOTICIA_CHOICES = [
-    ('conquista', 'Conquista'),
-    ('meta', 'Meta Alcançada'),
-    ('evento', 'Evento'),
-    ('comunicado', 'Comunicado Oficial'),
-]
+class RecomendacaoPresidenteBlock(StructBlock):
+    """Bloco para recomendação de conteúdo (artigo, vídeo, livro, etc)."""
+    
+    TIPO_CHOICES = [
+        ('artigo', 'Artigo'),
+        ('video', 'Vídeo'),
+        ('podcast', 'Podcast'),
+        ('livro', 'Livro'),
+        ('estudo', 'Estudo/Relatório'),
+    ]
+    
+    tipo = ChoiceBlock(
+        choices=TIPO_CHOICES,
+        label="Tipo de Recomendação",
+        help_text="Tipo de conteúdo recomendado."
+    )
+    link_externo = URLBlock(
+        required=False,
+        label="Link Externo",
+        help_text="URL do artigo, vídeo, livro ou estudo recomendado."
+    )
+    texto_link = CharBlock(
+        required=False,
+        max_length=200,
+        label="Texto do Link",
+        help_text="Texto customizado para o botão (deixe vazio para usar 'Acessar conteúdo recomendado')."
+    )
+    motivo = TextBlock(
+        required=False,
+        label="Por que recomendo",
+        help_text="Breve explicação do presidente sobre a recomendação."
+    )
+    conteudo_adicional = RichTextBlock(
+        required=False,
+        blank=True,
+        verbose_name="Conteúdo Adicional",
+        help_text="Informações extras sobre a recomendação."
+    )
+    
+    class Meta:
+        icon = 'doc-full'
+        label = 'Recomendação/Estudo'
+        template = 'dicas_presidente/blocks/recomendacao_presidente_block.html'
+
+
+class NoticiaInternaPresidenteBlock(StructBlock):
+    """Bloco para notícia interna (conquista, meta, evento, comunicado)."""
+    
+    CATEGORIA_CHOICES = [
+        ('conquista', 'Conquista'),
+        ('meta', 'Meta Alcançada'),
+        ('evento', 'Evento'),
+        ('comunicado', 'Comunicado Oficial'),
+    ]
+    
+    categoria = ChoiceBlock(
+        choices=CATEGORIA_CHOICES,
+        required=False,
+        label="Categoria da Notícia",
+        help_text="Tipo de notícia interna."
+    )
+    conteudo = RichTextBlock(
+        verbose_name="Conteúdo da Notícia",
+        help_text="Corpo completo da notícia interna."
+    )
+    
+    class Meta:
+        icon = 'doc-full'
+        label = 'Notícia Interna'
+        template = 'dicas_presidente/blocks/noticia_interna_presidente_block.html'
+
+
+class GaleriaPresidenteBlock(StructBlock):
+    """Bloco para galeria de imagens (bastidores, eventos, visitas)."""
+    imagens = ListBlock(
+        ImageChooserBlock(label="Imagem"),
+        label="Galeria de Imagens",
+        help_text="Fotos de eventos, visitas, bastidores."
+    )
+    legenda = TextBlock(
+        required=False,
+        label="Legenda da Galeria",
+        help_text="Descrição geral da galeria de imagens."
+    )
+    
+    class Meta:
+        icon = 'image'
+        label = 'Galeria/Bastidores'
+        template = 'dicas_presidente/blocks/galeria_presidente_block.html'
+
+
+class FrasePresidenteBlock(StructBlock):
+    """Bloco para frase inspiradora da semana."""
+    texto_frase = TextBlock(
+        label="Frase Inspiradora",
+        help_text="Frase motivacional ou provocativa."
+    )
+    autor = CharBlock(
+        required=False,
+        max_length=100,
+        label="Autor da Frase",
+        help_text="Quem disse a frase (opcional)."
+    )
+    
+    class Meta:
+        icon = 'openquote'
+        label = 'Frase da Semana'
+        template = 'dicas_presidente/blocks/frase_presidente_block.html'
+
+
+# StreamBlock principal que agrupa todos os tipos de dica
+class DicaPresidenteStreamBlock(StreamBlock):
+    """StreamBlock principal para conteúdo de dicas do presidente."""
+    mensagem = MensagemPresidenteBlock()
+    recomendacao = RecomendacaoPresidenteBlock()
+    noticia_interna = NoticiaInternaPresidenteBlock()
+    galeria = GaleriaPresidenteBlock()
+    frase = FrasePresidenteBlock()
 
 
 # ============================================================
@@ -75,16 +194,8 @@ class DicasPresidentePageTag(TaggedItemBase):
 class DicasPresidentePage(PageSitePadrao):
     """
     Página individual de uma dica do presidente.
-    Pode ser: mensagem, recomendação, notícia interna, galeria ou frase.
+    Usa StreamField para flexibilidade - cada dica pode ter múltiplos blocos.
     """
-    
-    tipo_dica = models.CharField(
-        "Tipo de Dica",
-        max_length=20,
-        choices=TIPO_DICA_CHOICES,
-        default='mensagem',
-        help_text="Selecione o tipo de conteúdo desta dica."
-    )
     
     descricao = models.TextField(
         "Descrição/Resumo",
@@ -107,96 +218,6 @@ class DicasPresidentePage(PageSitePadrao):
         help_text="Marque para exibir esta dica em destaque na página principal."
     )
     
-    # ============================================================
-    # CAMPOS ESPECÍFICOS POR TIPO
-    # ============================================================
-    
-    # Para Mensagem Pessoal
-    texto_mensagem = StreamField(
-        BaseStreamBlock(),
-        verbose_name="Texto da Mensagem",
-        blank=True,
-        null=True,
-        use_json_field=True,
-        help_text="Mensagem motivacional ou comunicado do presidente."
-    )
-    
-    assinatura = models.CharField(
-        "Assinatura",
-        max_length=100,
-        blank=True,
-        help_text="Ex: 'João Silva, Presidente'"
-    )
-    
-    # Para Recomendação/Estudo
-    tipo_recomendacao = models.CharField(
-        "Tipo de Recomendação",
-        max_length=20,
-        choices=TIPO_RECOMENDACAO_CHOICES,
-        blank=True,
-        help_text="Tipo de conteúdo recomendado."
-    )
-    
-    link_externo = models.URLField(
-        "Link Externo",
-        blank=True,
-        help_text="URL do artigo, vídeo, livro ou estudo recomendado."
-    )
-    
-    motivo_recomendacao = models.TextField(
-        "Por que recomendo",
-        blank=True,
-        help_text="Breve explicação do presidente sobre a recomendação."
-    )
-    
-    # Para Notícia Interna
-    categoria_noticia = models.CharField(
-        "Categoria da Notícia",
-        max_length=20,
-        choices=CATEGORIA_NOTICIA_CHOICES,
-        blank=True,
-        help_text="Tipo de notícia interna."
-    )
-    
-    body = StreamField(
-        BaseStreamBlock(),
-        verbose_name="Conteúdo Principal",
-        blank=True,
-        null=True,
-        use_json_field=True,
-        help_text="Corpo completo da dica (textos, imagens, vídeos, etc)."
-    )
-    
-    # Para Galeria/Bastidores
-    galeria_imagens = StreamField(
-        [("imagem", ImageChooserBlock(required=True, label="Imagem"))],
-        verbose_name="Galeria de Imagens",
-        blank=True,
-        null=True,
-        use_json_field=True,
-        help_text="Fotos de eventos, visitas, bastidores."
-    )
-    
-    legenda_galeria = models.TextField(
-        "Legenda da Galeria",
-        blank=True,
-        help_text="Descrição geral da galeria de imagens."
-    )
-    
-    # Para Frase da Semana
-    texto_frase = models.TextField(
-        "Frase Inspiradora",
-        blank=True,
-        help_text="Frase motivacional ou provocativa."
-    )
-    
-    autor_frase = models.CharField(
-        "Autor da Frase",
-        max_length=100,
-        blank=True,
-        help_text="Quem disse a frase (opcional)."
-    )
-    
     # Imagem de destaque (para todos os tipos)
     imagem_destaque = models.ForeignKey(
         'wagtailimages.Image',
@@ -206,6 +227,15 @@ class DicasPresidentePage(PageSitePadrao):
         related_name='+',
         verbose_name="Imagem de Destaque",
         help_text="Imagem principal da dica (usada em cards e compartilhamento)."
+    )
+    
+    # Conteúdo principal usando StreamField
+    conteudo = StreamField(
+        DicaPresidenteStreamBlock(),
+        verbose_name="Conteúdo",
+        use_json_field=True,
+        blank=True,
+        help_text="Adicione um ou mais blocos para compor a dica."
     )
     
     # Arquivos anexos (opcional)
@@ -219,40 +249,12 @@ class DicasPresidentePage(PageSitePadrao):
     )
     
     content_panels = get_page_title_with_counter(100) + [
-        FieldPanel("tipo_dica"),
         FieldPanel("destaque"),
         FieldPanel("descricao", widget=get_widget_input_with_counter()),
         FieldPanel("imagem_destaque"),
         FieldPanel("data_publicacao"),
         FieldPanel("tags"),
-        
-        # Campos condicionais por tipo (todos visíveis, admin escolhe quais preencher)
-        MultiFieldPanel([
-            FieldPanel("texto_mensagem"),
-            FieldPanel("assinatura"),
-        ], heading="Mensagem Pessoal", classname="collapsible"),
-        
-        MultiFieldPanel([
-            FieldPanel("tipo_recomendacao"),
-            FieldPanel("link_externo"),
-            FieldPanel("motivo_recomendacao"),
-        ], heading="Recomendação/Estudo", classname="collapsible"),
-        
-        MultiFieldPanel([
-            FieldPanel("categoria_noticia"),
-            FieldPanel("body"),
-        ], heading="Notícia Interna", classname="collapsible"),
-        
-        MultiFieldPanel([
-            FieldPanel("galeria_imagens"),
-            FieldPanel("legenda_galeria"),
-        ], heading="Galeria/Bastidores", classname="collapsible"),
-        
-        MultiFieldPanel([
-            FieldPanel("texto_frase"),
-            FieldPanel("autor_frase"),
-        ], heading="Frase da Semana", classname="collapsible"),
-        
+        FieldPanel("conteudo"),
         FieldPanel("arquivos"),
     ]
     
@@ -291,26 +293,94 @@ class DicasPresidentePage(PageSitePadrao):
         return tags
     
     def get_imagem_principal(self):
-        """Retorna a imagem de destaque ou primeira da galeria."""
+        """Retorna a imagem de destaque ou primeira imagem encontrada nos blocos."""
         if self.imagem_destaque:
             return self.imagem_destaque
         
-        if self.galeria_imagens:
-            for bloco in self.galeria_imagens:
-                if bloco.block_type == "imagem" and bloco.value:
-                    return bloco.value
+        # Busca imagem na galeria
+        for bloco in self.conteudo:
+            if bloco.block_type == "galeria" and bloco.value.get('imagens'):
+                imagens = bloco.value.get('imagens')
+                if imagens and len(imagens) > 0:
+                    return imagens[0]
+        
         return None
     
-    def get_tipo_dica_display_icon(self):
-        """Retorna ícone baseado no tipo de dica."""
-        icons = {
-            'mensagem': '<i class="bi bi-chat-dots-fill"></i>',
+    def get_tipo_dica_principal(self):
+        """Retorna o tipo do primeiro bloco de conteúdo."""
+        if self.conteudo and len(self.conteudo) > 0:
+            primeiro_bloco = self.conteudo[0]
+            return primeiro_bloco.block_type
+        return None
+    
+    def get_tipos_blocos(self):
+        """Retorna lista de todos os tipos de blocos presentes na dica."""
+        tipos = []
+        if self.conteudo:
+            for bloco in self.conteudo:
+                if bloco.block_type not in tipos:
+                    tipos.append(bloco.block_type)
+        return tipos
+    
+    def get_todos_icones_tipos(self):
+        """Retorna todos os ícones dos tipos de blocos presentes."""
+        icons_map = {
+            'mensagem': '<i class="bi bi-chat-dots"></i>',
             'recomendacao': '<i class="bi bi-journal-check"></i>',
             'noticia_interna': '<i class="bi bi-newspaper"></i>',
             'galeria': '<i class="bi bi-camera"></i>',
             'frase': '<i class="bi bi-chat-quote"></i>',
         }
-        return mark_safe(icons.get(self.tipo_dica, '<i class="bi bi-pin-angle"></i>'))
+        tipos = self.get_tipos_blocos()
+        icones = [icons_map.get(tipo, '') for tipo in tipos if tipo in icons_map]
+        return mark_safe(' '.join(icones))
+    
+    def get_todas_labels_tipos(self):
+        """Retorna todas as labels dos tipos de blocos presentes, separadas por ' • '."""
+        tipo_map = {
+            'mensagem': 'Mensagem Pessoal',
+            'recomendacao': 'Recomendação/Estudo',
+            'noticia_interna': 'Notícia Interna',
+            'galeria': 'Galeria/Bastidores',
+            'frase': 'Frase da Semana',
+        }
+        tipos = self.get_tipos_blocos()
+        labels = [tipo_map.get(tipo, '') for tipo in tipos if tipo in tipo_map]
+        return ' • '.join(labels)
+    
+    def get_tipo_dica_display(self):
+        """Retorna o nome legível do tipo de dica ou todos os tipos se houver múltiplos."""
+        tipo_map = {
+            'mensagem': 'Mensagem Pessoal',
+            'recomendacao': 'Recomendação/Estudo',
+            'noticia_interna': 'Notícia Interna',
+            'galeria': 'Galeria/Bastidores',
+            'frase': 'Frase da Semana',
+        }
+        
+        tipos = self.get_tipos_blocos()
+        
+        if len(tipos) > 1:
+            # Múltiplos tipos: retorna "Conteúdo Misto"
+            return 'Conteúdo Misto'
+        elif len(tipos) == 1:
+            # Um único tipo: retorna o nome
+            return tipo_map.get(tipos[0], 'Dica do Presidente')
+        else:
+            # Sem conteúdo
+            return 'Dica do Presidente'
+    
+    def get_tipo_dica_display_icon(self):
+        """Retorna ícone baseado no tipo do primeiro bloco."""
+        icons = {
+            'mensagem': '<i class="bi bi-chat-dots"></i>',
+            'recomendacao': '<i class="bi bi-journal-check"></i>',
+            'noticia_interna': '<i class="bi bi-newspaper"></i>',
+            'galeria': '<i class="bi bi-camera"></i>',
+            'frase': '<i class="bi bi-chat-quote"></i>',
+        }
+        tipo = self.get_tipo_dica_principal()
+        return mark_safe(icons.get(tipo, '<i class="bi bi-pin-angle"></i>'))
     
     def get_admin_display_title(self):
         """Exibe ícone do tipo + ★ se destaque."""
@@ -319,11 +389,13 @@ class DicasPresidentePage(PageSitePadrao):
         star = "★ " if self.destaque else ""
         return f"{star}{icon} {title}"
     
+    def eh_frase(self):
+        """Verifica se a dica é do tipo frase (para widgets)."""
+        return self.get_tipo_dica_principal() == 'frase'
+    
     search_fields = PageSitePadrao.search_fields + [
         index.SearchField('descricao'),
-        index.SearchField('texto_mensagem'),
-        index.SearchField('texto_frase'),
-        index.SearchField('body'),
+        index.SearchField('conteudo'),
     ]
 
 
@@ -364,7 +436,7 @@ class DicasPresidenteIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         ], heading="Banner do Presidente"),
     ]
     
-    parent_page_types = ["intranet.IntranetHomePage"]
+    parent_page_types = ["intranet.IntranetHomePage", "home.HomePage"]
     subpage_types = ["DicasPresidentePage"]
     
     class Meta:
@@ -382,34 +454,54 @@ class DicasPresidenteIndexPage(RoutablePageMixin, PageSitePadraoIndex):
             .order_by("-data_publicacao")[:quantidade]
         )
     
-    def get_ultimas_dicas(self, quantidade=6):
+    def get_todas_dicas(self):
         """
-        Retorna as últimas dicas publicadas.
-        Função centralizada para buscar dicas - modificações futuras
-        (como adicionar filtro de destaque) devem ser feitas aqui.
+        Retorna todas as dicas publicadas, ordenadas por data.
+        Função centralizada para buscar dicas - todas as modificações
+        de filtros e ordenação devem ser feitas aqui.
         """
         return (
             DicasPresidentePage.objects.live()
             .descendant_of(self)
-            .order_by("-data_publicacao")[:quantidade]
+            .order_by("-data_publicacao")
         )
+    
+    def get_ultimas_dicas(self, quantidade=6):
+        """
+        Retorna as últimas N dicas publicadas.
+        Usa get_todas_dicas() como base para manter consistência.
+        """
+        return self.get_todas_dicas()[:quantidade]
+    
+    def get_frases_aleatorias(self):
+        """Retorna todas as dicas que contêm blocos de frase."""
+        dicas = self.get_todas_dicas()
+        frases = []
+        for dica in dicas:
+            for bloco in dica.conteudo:
+                if bloco.block_type == 'frase':
+                    frases.append({
+                        'dica': dica,
+                        'bloco': bloco,
+                        'texto': bloco.value.get('texto_frase', ''),
+                        'autor': bloco.value.get('autor', ''),
+                    })
+        return frases
     
     def get_frase_aleatoria(self):
         """Retorna uma frase aleatória para widget."""
-        frases = (
-            DicasPresidentePage.objects.live()
-            .descendant_of(self)
-            .filter(tipo_dica='frase')
-            .order_by('?')
-        )
-        return frases.first() if frases.exists() else None
+        import random
+        frases = self.get_frases_aleatorias()
+        if frases:
+            return random.choice(frases)
+        return None
     
     def get_context(self, request):
         """Adiciona dicas paginadas ao contexto."""
         context = super().get_context(request)
         
-        # Busca todas as dicas
-        dicas = self.get_ultimas_dicas(quantidade=1000)  # Pega todas para paginar
+        # Busca todas as dicas usando função centralizada
+        dicas = self.get_todas_dicas()
         
         # Paginação
         paginator = Paginator(dicas, 12)
@@ -420,7 +512,7 @@ class DicasPresidenteIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         except (PageNotAnInteger, EmptyPage):
             posts = paginator.page(1)
         
-        # Contexto
+        # Contexto - todas as queries centralizadas
         context["posts"] = posts
         context["dicas_destaque"] = self.get_dicas_destaque()
         context["frase_aleatoria"] = self.get_frase_aleatoria()

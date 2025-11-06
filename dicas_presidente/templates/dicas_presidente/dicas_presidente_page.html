@@ -35,133 +35,45 @@
     
     <!-- Conteúdo por Tipo -->
     <div class="container">
-        <div class="dica-conteudo">
+        <div class="dica-conteudo mb-5">
             
-            <!-- Mensagem Pessoal -->
-            {% if page.tipo_dica == 'mensagem' and page.texto_mensagem %}
-            <div class="mensagem-presidente">
-                {% for block in page.texto_mensagem %}
+            <!-- Renderiza todos os blocos do StreamField -->
+            {% if page.conteudo %}
+                {% for block in page.conteudo %}
                     {% include_block block %}
                 {% endfor %}
-                
-                {% if page.assinatura %}
-                <p class="assinatura-presidente mt-4">
-                    <em>{{ page.assinatura }}</em>
-                </p>
-                {% endif %}
-            </div>
-            {% endif %}
-            
-            <!-- Recomendação/Estudo -->
-            {% if page.tipo_dica == 'recomendacao' %}
-            <div class="recomendacao-presidente">
-                {% if page.tipo_recomendacao %}
-                <p class="tipo-recomendacao">
-                    <strong>Tipo:</strong> {{ page.get_tipo_recomendacao_display }}
-                </p>
-                {% endif %}
-                
-                {% if page.motivo_recomendacao %}
-                <div class="motivo-recomendacao mb-4">
-                    <h3>Por que recomendo:</h3>
-                    <p>{{ page.motivo_recomendacao|linebreaks }}</p>
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> Esta dica ainda não possui conteúdo.
                 </div>
-                {% endif %}
-                
-                {% if page.link_externo %}
-                <a href="{{ page.link_externo }}" target="_blank" class="btn botao-primario">
-                    <i class="bi bi-box-arrow-up-right"></i> Acessar Conteúdo
-                </a>
-                {% endif %}
-                
-                {% if page.body %}
-                <div class="conteudo-adicional mt-4">
-                    {% for block in page.body %}
-                        {% include_block block %}
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </div>
-            {% endif %}
-            
-            <!-- Notícia Interna -->
-            {% if page.tipo_dica == 'noticia_interna' %}
-            <div class="noticia-interna-presidente">
-                {% if page.categoria_noticia %}
-                <span class="categoria-noticia-badge">{{ page.get_categoria_noticia_display }}</span>
-                {% endif %}
-                
-                {% if page.body %}
-                <div class="noticia-corpo">
-                    {% for block in page.body %}
-                        {% include_block block %}
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </div>
-            {% endif %}
-            
-            <!-- Galeria/Bastidores -->
-            {% if page.tipo_dica == 'galeria' and page.galeria_imagens %}
-            <div class="galeria-presidente">
-                {% if page.legenda_galeria %}
-                <p class="legenda-galeria mb-4">{{ page.legenda_galeria|linebreaks }}</p>
-                {% endif %}
-                
-                <div class="row g-3">
-                    {% for block in page.galeria_imagens %}
-                        <div class="col-md-4 col-sm-6">
-                            {% image block.value fill-400x300 as img %}
-                            <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid rounded">
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
-            
-            <!-- Frase da Semana -->
-            {% if page.tipo_dica == 'frase' and page.texto_frase %}
-            <div class="frase-presidente">
-                <blockquote class="frase-destaque">
-                    <p class="frase-texto">{{ page.texto_frase }}</p>
-                    {% if page.autor_frase %}
-                    <footer class="frase-autor">— {{ page.autor_frase }}</footer>
-                    {% endif %}
-                </blockquote>
-            </div>
             {% endif %}
             
             <!-- Arquivos Anexos -->
             {% if page.arquivos %}
-            <div class="arquivos-anexos mt-5">
-                <h3>📎 Arquivos Anexos</h3>
-                <ul class="lista-arquivos">
+            <div class="arquivos-anexos mt-5 p-4 border rounded bg-light">
+                <h3 class="mb-3"><i class="bi bi-paperclip"></i> Arquivos Anexos</h3>
+                <div class="list-group">
                     {% for block in page.arquivos %}
-                        <li>
-                            <a href="{{ block.value.url }}" target="_blank">
-                                <i class="bi bi-file-earmark-pdf"></i> {{ block.value.title }}
-                            </a>
-                        </li>
+                        <a href="{{ block.value.url }}" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center">
+                            <i class="bi bi-file-earmark-pdf me-3 text-danger fs-4"></i>
+                            <span>{{ block.value.title }}</span>
+                            <i class="bi bi-box-arrow-up-right ms-auto"></i>
+                        </a>
                     {% endfor %}
-                </ul>
+                </div>
             </div>
             {% endif %}
             
             <!-- Tags -->
             {% if page.get_tags %}
-            <div class="dica-tags mt-4">
-                <strong>Tags:</strong>
+            <div class="dica-tags mt-5 p-3 border-top">
+                <strong class="me-2"><i class="bi bi-tags"></i> Tags:</strong>
                 {% for tag in page.get_tags %}
-                    <a href="{{ tag.url }}" class="badge bg-secondary">{{ tag.name }}</a>
+                    <a href="{{ tag.url }}" class="badge bg-primary text-white me-2 mb-2 px-3 py-2">{{ tag.name }}</a>
                 {% endfor %}
             </div>
             {% endif %}
         </div>
-    </div>
-    
-    <!-- Compartilhamento -->
-    <div class="container mt-5">
-        {% compartilhamento_social %}
     </div>
     
     <!-- Botão Voltar -->

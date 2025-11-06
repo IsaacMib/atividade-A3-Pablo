@@ -6,6 +6,126 @@
 
 [data-theme=dark] {
   
+  // ============================================================
+  // BLOCOS - TEMA ESCURO
+  // ============================================================
+  
+  .dica-bloco {
+    background: variables.$color-grey-900;
+    border: 1px solid variables.$color-grey-800;
+    
+    &:hover {
+      border-color: variables.$color-grey-700;
+    }
+    
+    .dica-bloco-content {
+      color: variables.$color-grey-200;
+      
+      h4 {
+        color: variables.$color-primary-lighter;
+      }
+      
+      a {
+        color: variables.$color-primary-lighter;
+        
+        &:hover {
+          color: variables.$color-primary-light;
+        }
+      }
+    }
+  }
+  
+  // Mensagem Pessoal - Tema Escuro
+  .dica-bloco-mensagem {
+    border-left-color: variables.$color-primary;
+    
+    .mensagem-texto {
+      p:first-child {
+        color: variables.$color-primary-lighter;
+      }
+    }
+    
+    .mensagem-assinatura {
+      border-top-color: variables.$color-grey-800;
+      
+      p {
+        color: variables.$color-grey-400;
+      }
+    }
+  }
+  
+  // Recomendação - Tema Escuro
+  .dica-bloco-recomendacao {
+    .recomendacao-link {
+      a {
+        background: var(--cor-primaria) !important;
+        color: variables.$color-white !important;
+        border-color: var(--cor-primaria) !important;
+        
+        &:hover {
+          background: var(--cor-primaria-escura) !important;
+          color: variables.$color-white !important;
+          border-color: var(--cor-primaria-escura) !important;
+        }
+      }
+    }
+    
+    .recomendacao-motivo {
+      background: variables.$color-grey-800;
+      border-left-color: variables.$color-bloco-recomendacao-light;
+      
+      h4 {
+        color: variables.$color-bloco-recomendacao-hover;
+      }
+    }
+    
+    .recomendacao-conteudo-adicional {
+      border-top-color: variables.$color-grey-800;
+    }
+  }
+  
+  // Notícia - Tema Escuro
+  .dica-bloco-noticia {
+    .noticia-conteudo {
+      h4, h5, h6 {
+        color: variables.$color-bloco-noticia-success;
+      }
+      
+      blockquote {
+        border-left-color: variables.$color-bloco-noticia-success;
+        color: variables.$color-grey-400;
+      }
+    }
+  }
+  
+  // Galeria - Tema Escuro
+  .dica-bloco-galeria {
+    .galeria-legenda {
+      background: variables.$color-grey-800;
+      border-left-color: variables.$color-bloco-galeria-hover;
+    }
+  }
+  
+  // Frase - Tema Escuro
+  .dica-bloco-frase {
+    background: linear-gradient(135deg, variables.$color-grey-900 0%, variables.$color-grey-800 100%);
+    
+    .frase-destaque {
+      &::before {
+        color: variables.$color-primary;
+      }
+      
+      p {
+        color: variables.$color-grey-100;
+      }
+      
+      footer {
+        color: variables.$color-grey-400;
+        border-top-color: variables.$color-grey-800;
+      }
+    }
+  }
+  
   // Banner
   .banner-presidente {
     background: variables.$color-black !important;
@@ -196,7 +316,7 @@
   // ============================================================
   .filtros-dicas-form {
     background: variables.$color-black !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 8px variables.$color-overlay-30;
   }
   
   .filtro-dica-label {
@@ -288,7 +408,7 @@
         
         &:hover {
           border-color: variables.$color-white;
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 4px 16px variables.$color-overlay-40;
         }
         
         .dica-titulo-lista {
@@ -322,7 +442,7 @@
         
         &:hover {
           border-color: variables.$color-white;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 8px 24px variables.$color-overlay-50;
         }
         
         .dica-titulo-card {
@@ -354,4 +474,50 @@
       color: variables.$color-black;
     }
   }
+  
+  // ============================================================
+  // ARQUIVOS ANEXOS E TAGS - Tema Escuro
+  // ============================================================
+  
+  .arquivos-anexos {
+    background: variables.$color-grey-800 !important;
+    border-color: variables.$color-grey-700 !important;
+    
+    h3 {
+      color: variables.$color-grey-100;
+    }
+    
+    .list-group-item {
+      background: variables.$color-grey-900;
+      border-color: variables.$color-grey-700;
+      color: variables.$color-grey-200;
+      
+      &:hover {
+        background: variables.$color-grey-800;
+        border-color: variables.$color-primary;
+      }
+      
+      i {
+        color: variables.$color-error;
+      }
+    }
+  }
+  
+  .dica-tags {
+    border-top-color: variables.$color-grey-800 !important;
+    
+    strong {
+      color: variables.$color-grey-300;
+    }
+    
+    .badge {
+      background: variables.$color-primary !important;
+      color: variables.$color-white !important;
+      
+      &:hover {
+        background: variables.$color-primary-hover !important;
+      }
+    }
+  }
 }
+
