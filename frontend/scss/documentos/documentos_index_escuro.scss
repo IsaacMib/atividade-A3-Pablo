@@ -15,97 +15,8 @@
         color: variables.$color-on-warning;
       }
 
-      .botao-primario {
-        background-color: variables.$color-primary-light;
-        border-color: variables.$color-primary-light;
-        color: variables.$color-grey-900;
-
-        &:hover {
-          background-color: variables.$color-primary;
-          border-color: variables.$color-primary;
-          box-shadow: 0 3px 8px rgba(variables.$color-primary, 0.3);
-        }
-      }
-
-      .botao-secundario {
-        background-color: variables.$color-primary-light;
-        border-color: variables.$color-primary-light;
-        color: variables.$color-grey-900;
-        
-        &:hover {
-          background-color: variables.$color-primary;
-          border-color: variables.$color-primary;
-          box-shadow: 0 3px 8px rgba(variables.$color-primary, 0.3);
-        }
-      }
-
-      .botao-outline-primario {
-        border-color: variables.$color-primary-light;
-        color: variables.$color-primary-light;
-        
-        &:hover {
-          background-color: variables.$color-primary-light;
-          color: variables.$color-grey-900;
-          box-shadow: 0 2px 4px rgba(variables.$color-primary-light, 0.3);
-        }
-      }
-
-      .botao-outline-secundario {
-        border-color: variables.$color-primary-lighter;
-        color: variables.$color-primary-lighter;
-        
-        &:hover {
-          background-color: variables.$color-primary-lighter;
-          color: variables.$color-grey-900;
-          box-shadow: 0 2px 4px rgba(variables.$color-primary-lighter, 0.3);
-        }
-      }
-
       .border-bottom {
         border-color: variables.$color-grey-700 !important;
-      }
-      
-      form {
-        .form-group {
-          .form-label {
-            color: variables.$color-grey-300;
-          }
-        }
-
-        .form-select {
-          border-color: variables.$color-grey-700;
-          background-color: variables.$color-grey-800;
-          color: variables.$color-grey-100;
-          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23adb5bd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-          
-          &:hover {
-            border-color: variables.$color-primary-light;
-            background-color: variables.$color-grey-700;
-          }
-          
-          &:focus {
-            border-color: variables.$color-primary-light;
-            box-shadow: 0 0 0 0.15rem rgba(variables.$color-primary-light, 0.25);
-          }
-
-          &:disabled {
-            background-color: variables.$color-grey-800;
-            color: variables.$color-grey-500;
-          }
-
-          option {
-            background-color: variables.$color-grey-800;
-            color: variables.$color-grey-100;
-          }
-        }
-
-        .btn {
-          &:hover {
-            background-color: variables.$color-primary-light;
-            border-color: variables.$color-primary-light;
-            box-shadow: 0 3px 8px rgba(variables.$color-primary-light, 0.3);
-          }
-        }
       }
 
       .documentos-list {
@@ -128,14 +39,10 @@
             }
           }
 
-          .text-muted {
-            color: variables.$color-grey-400 !important;
-          }
-
-          .btn-sm.botao-outline-primario {
-            border-color: variables.$color-primary-light;
+          .btn-sm.botao-primario {
             color: variables.$color-primary-light;
-            
+            background: transparent;
+
             &:hover {
               background-color: variables.$color-primary-light;
               color: variables.$color-grey-900;
@@ -143,10 +50,10 @@
             }
           }
 
-          .btn-sm.botao-outline-secundario {
-            border-color: variables.$color-primary-lighter;
+          .btn-sm.botao-secundario {
             color: variables.$color-primary-lighter;
-            
+            background: transparent;
+
             &:hover {
               background-color: variables.$color-primary-lighter;
               color: variables.$color-grey-900;
@@ -154,118 +61,14 @@
             }
           }
         }
-
-        p.texto-muted {
-          color: variables.$color-grey-400;
-        }
       }
 
-      .modal {
-        .modal-content {
-          background-color: variables.$color-grey-800;
-          border-color: variables.$color-grey-700;
-          box-shadow: 0 10px 30px rgba(variables.$color-black, 0.5);
-          
-          .modal-header {
-            border-bottom-color: variables.$color-grey-700;
-            background-color: variables.$color-grey-800;
-            
-            .modal-title {
-              color: variables.$color-grey-100;
-            }
-            
-            .btn-close {
-              filter: invert(1) grayscale(100%) brightness(200%);
-            }
-          }
-          
-          .modal-body {
-            background-color: variables.$color-grey-800;
-            
-            #documentViewer {
-              background-color: variables.$color-grey-700;
-              border-color: variables.$color-grey-700;
-              
-              .spinner-border {
-                color: variables.$color-primary-light;
-              }
-            }
-          }
-          
-          .modal-footer {
-            border-top-color: variables.$color-grey-700;
-            background-color: variables.$color-grey-800;
-            
-            .botao-secundario {
-              background-color: variables.$color-primary-light;
-              border-color: variables.$color-primary-light;
-              color: variables.$color-grey-900;
-              
-              &:hover {
-                background-color: variables.$color-primary;
-                border-color: variables.$color-primary;
-                box-shadow: 0 3px 8px rgba(variables.$color-primary, 0.3);
-              }
-            }
-            
-            .botao-primario {
-              background-color: variables.$color-primary-light;
-              border-color: variables.$color-primary-light;
-              color: variables.$color-grey-900;
-              
-              &:hover {
-                background-color: variables.$color-primary;
-                border-color: variables.$color-primary;
-                box-shadow: 0 3px 8px rgba(variables.$color-primary, 0.3);
-              }
-            }
-          }
-        }
-      }
-
-      .pagination {
-        .page-link {
-          border-color: variables.$color-grey-700;
+      #documentViewer {
+        background-color: variables.$color-grey-700;
+        border-color: variables.$color-grey-700;
+        
+        .spinner-border {
           color: variables.$color-primary-light;
-          background-color: variables.$color-grey-800;
-
-          &:hover {
-            background-color: variables.$color-primary-light;
-            color: variables.$color-grey-900;
-            border-color: variables.$color-primary-light;
-          }
-        }
-
-        .page-item.active .page-link {
-          background-color: variables.$color-primary-light;
-          color: variables.$color-grey-900;
-          border-color: variables.$color-primary-light;
-          box-shadow: 0 0 0 0.15rem rgba(variables.$color-primary-light, 0.25);
-        }
-      }
-    }
-
-    // Sobrescritas responsivas específicas para tema escuro
-    @media (max-width: 768px) {
-      .documentos-container {
-        form {
-          .form-select {
-            background-color: variables.$color-grey-800;
-            border-color: variables.$color-grey-700;
-          }
-          
-          .btn:hover {
-            background-color: variables.$color-primary-light;
-          }
-        }
-      }
-    }
-
-    @media (max-width: 480px) {
-      .documentos-container {
-        .modal-content {
-          background-color: variables.$color-grey-800;
-          border-color: variables.$color-grey-700;
         }
       }
     }
