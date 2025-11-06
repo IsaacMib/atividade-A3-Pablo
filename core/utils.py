@@ -118,3 +118,15 @@ def get_widget_input_with_counter(
         'data-controller': 'char-count',
         'data-char-count-max-value': char_limit,
     })
+
+
+def get_parent_field(page_instance, field_name):
+    """
+    Retorna o valor de um campo específico da página pai.
+    Se a página pai não existir ou não tiver o campo, retorna uma string vazia.
+    """
+    parent = page_instance.get_parent()
+    if parent:
+        parent_specific = parent.specific
+        return getattr(parent_specific, field_name, "")
+    return ""

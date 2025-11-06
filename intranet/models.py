@@ -6,6 +6,7 @@ from wagtail.admin.panels import FieldPanel, TabbedInterface, ObjectList
 from wagtail.fields import StreamField
 from core.models import PageSitePadrao 
 from wagtail import blocks
+from django.conf import settings
 
 
 from blocks.models import (
@@ -115,6 +116,22 @@ class IntranetHomePage(PageSitePadrao):
   class Meta:
     verbose_name = "Página Principal da Intranet"
     verbose_name_plural = "Páginas Principais da Intranet"
+
+  @classmethod
+  def can_create_at(cls, parent):
+    """
+    Permite criar IntranetHomePage apenas abaixo da página raiz (Root)
+    e somente se HABILITAR_SITE_INTRANET estiver configurado como True.
+    """
+    # Verifica se a configuração HABILITAR_SITE_INTRANET está habilitada
+    intranet_habilitada = getattr(settings, 'HABILITAR_SITE_INTRANET', False)
+    
+    if not intranet_habilitada:
+        return False
+    
+    # Permite criar apenas abaixo da página raiz (Root)
+    # A página raiz tem depth=1 no Wagtail
+    return parent.depth == 1
 
   def get_context(self, request, *args, **kwargs):
     context = super().get_context(request, *args, **kwargs)
