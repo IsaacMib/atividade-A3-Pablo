@@ -1,0 +1,30 @@
+@use './../variables.scss';
+
+// Tema escuro para o modal de visualização de documentos
+
+[data-bs-theme="dark"] {
+  
+  // Iframe com borda mais clara no tema escuro
+  .pdf-iframe {
+    border-color: variables.$color-grey-600;
+  }
+  
+  // Ícone do PDF em tema escuro
+  .icone-pdf-grande {
+    color: variables.$color-primary-light;
+  }
+  
+  // Link alternativo em tema escuro
+  .link-alternativo {
+    color: variables.$color-primary-light;
+    
+    &:hover {
+      color: variables.$color-primary;
+    }
+  }
+  
+  // Link do visualizador
+  .link-visualizador {
+    color: variables.$color-primary-light;
+  }
+}

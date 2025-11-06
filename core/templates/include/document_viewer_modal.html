@@ -1,0 +1,161 @@
+<!-- Modal reutilizável para visualização de documentos -->
+<div class="modal fade" id="documentModal" tabindex="-1" aria-labelledby="documentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-fullscreen-md-down">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="documentModalLabel">Visualizar Documento</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="documentViewer" style="min-height: 400px; height: 87vh;">
+          <!-- O conteúdo será carregado aqui -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn botao-secundario" data-bs-dismiss="modal">Fechar</button>
+        <a id="documentDirectLink" href="#" target="_blank" class="btn botao-primario">Abrir em nova aba</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/**
+ * Funções reutilizáveis para visualização de documentos em modal
+ * Pode ser usado em qualquer página do projeto
+ */
+
+function showDocument(url, title) {
+    // Atualiza o título do modal
+    document.getElementById('documentModalLabel').textContent = title;
+    
+    // Atualiza o link direto
+    document.getElementById('documentDirectLink').href = url;
+    
+    // Limpa o viewer
+    const viewer = document.getElementById('documentViewer');
+    viewer.innerHTML = '<div class="centralizar-texto"><div class="carregamento" role="status"><span class="visually-hidden">Carregando...</span></div></div>';
+    
+    // Tenta diferentes métodos de exibição
+    const fileExtension = url.split('.').pop().toLowerCase();
+    
+    if (fileExtension === 'pdf') {
+        // Para PDFs, tenta múltiplas abordagens
+        tryPdfViewer(url, title, viewer);
+    } else if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension)) {
+        // Para imagens
+        viewer.innerHTML = `<img src="${url}" class="imagem-responsiva" alt="${title}" />`;
+    } else {
+        // Para outros tipos de arquivo
+        viewer.innerHTML = `
+            <div class="centralizar-texto">
+                <p class="texto-info-arquivo">Este tipo de arquivo não pode ser visualizado diretamente no navegador.</p>
+                <a href="${url}" target="_blank" class="botao-primario">Abrir documento</a>
+            </div>
+        `;
+    }
+    
+    // Mostra o modal
+    const modal = new bootstrap.Modal(document.getElementById('documentModal'));
+    modal.show();
+}
+
+function tryPdfViewer(url, title, viewer) {
+    // Detecta o tamanho da tela
+    const isMobile = window.innerWidth < 768;
+    const iframeHeight = isMobile ? '500px' : '800px';
+    
+    // Em mobile, muitos navegadores não suportam bem PDFs em iframe
+    // Oferece opção de abrir diretamente
+    if (isMobile) {
+        viewer.innerHTML = `
+            <div class="pdf-mobile-viewer">
+                <i class="bi bi-file-pdf icone-pdf-grande"></i>
+                <h5 class="titulo-pdf-mobile">${title}</h5>
+                <p class="texto-muted texto-info-mobile">Para melhor visualização em dispositivos móveis, abra o documento em uma nova aba.</p>
+                <a href="${url}" target="_blank" class="botao-primario botao-abrir-pdf">
+                    <i class="bi bi-box-arrow-up-right icone-espacamento"></i>Abrir documento
+                </a>
+                <button class="link-alternativo" onclick="forcePdfIframe('${url}', '${title}')">
+                    Tentar visualizar aqui mesmo
+                </button>
+            </div>
+        `;
+        return;
+    }
+    
+    // Desktop: usa iframe normalmente
+    let iframeHTML = `
+        <div class="iframe-container">
+            <iframe src="${url}" width="100%" height="${iframeHeight}" frameborder="0" class="pdf-iframe">
+                <p>Seu navegador não suporta iframes. <a href="\${url}" target="_blank">Clique aqui para abrir o documento</a>.</p>
+            </iframe>
+            <div class="centralizar-texto texto-ajuda-viewer">
+                <small class="texto-muted">Problemas para visualizar? 
+                    <button class="link-visualizador" onclick="tryAlternativeViewer('${url}', '${title}')">Tente o visualizador alternativo</button> 
+                    ou <a href="${url}" target="_blank">abra em nova aba</a>.
+                </small>
+            </div>
+        </div>
+    `;
+    
+    viewer.innerHTML = iframeHTML;
+    
+    viewer.innerHTML = iframeHTML;
+    
+    // Verifica se o iframe carregou depois de um tempo
+    setTimeout(() => {
+        const iframe = viewer.querySelector('iframe');
+        if (iframe) {
+            iframe.onload = function() {
+                console.log('PDF carregado no iframe');
+            };
+            iframe.onerror = function() {
+                console.log('Erro ao carregar PDF no iframe, tentando alternativa');
+                tryAlternativeViewer(url, title);
+            };
+        }
+    }, 100);
+}
+
+function forcePdfIframe(url, title) {
+    // Força o carregamento do iframe em mobile quando usuário solicita
+    const viewer = document.getElementById('documentViewer');
+    const iframeHeight = '500px';
+    
+    viewer.innerHTML = `
+        <div class="iframe-container">
+            <iframe src="${url}" width="100%" height="${iframeHeight}" frameborder="0" class="pdf-iframe">
+                <p>Seu navegador não suporta iframes. <a href="${url}" target="_blank">Clique aqui para abrir o documento</a>.</p>
+            </iframe>
+            <div class="centralizar-texto texto-ajuda-viewer">
+                <small class="texto-muted">
+                    Se não carregar, <a href="${url}" target="_blank">abra em nova aba</a>.
+                </small>
+            </div>
+        </div>
+    `;
+}
+
+function tryAlternativeViewer(url, title) {
+    const viewer = document.getElementById('documentViewer');
+    
+    // Detecta o tamanho da tela para ajustar a altura do embed
+    const isMobile = window.innerWidth < 768;
+    const embedHeight = isMobile ? '500px' : '800px';
+    
+    // Segunda tentativa: embed com altura responsiva
+    let embedHTML = `
+        <div class="iframe-container">
+            <embed src="${url}" type="application/pdf" width="100%" height="${embedHeight}" />
+            <div class="centralizar-texto texto-ajuda-viewer">
+                <small class="texto-muted">
+                    <a href="${url}" target="_blank" class="botao-primario botao-pequeno">Abrir em nova aba</a>
+                </small>
+            </div>
+        </div>
+    `;
+    
+    viewer.innerHTML = embedHTML;
+}
+</script>
