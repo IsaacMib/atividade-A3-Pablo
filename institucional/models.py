@@ -7,6 +7,7 @@ from blocks.institucional import LocalizacaoBlock
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from paginas.models import CorpoTecnicoIndexPage, CorpoTecnicoGrupoPageIndex, CorpoTecnicoPage
+from .blocks import ListGrupoSecretariadoBlock
 
 class InstitucionalIndexPage(PageSitePadraoIndex):
     """
@@ -66,6 +67,20 @@ class SecretariadoIndex(CorpoTecnicoIndexPage):
     subpage_types = ['institucional.SecretariadoGrupoPageIndex']
     
     template = 'paginas/corpo_tecnico_index_page.html'
+
+    # Sobrescreve o campo grupos_corpo_tecnico para usar o block específico do Secretariado
+    grupos_corpo_tecnico = StreamField(
+        [
+            ('grupo', ListGrupoSecretariadoBlock(label="Grupo do Secretariado")),
+        ],
+        verbose_name="Grupos do Secretariado",
+        null=True,
+        blank=True,
+    )
+
+    content_panels = CorpoTecnicoIndexPage.content_panels + [
+        FieldPanel('grupos_corpo_tecnico'),
+    ]
 
 class SecretariadoGrupoPageIndex(CorpoTecnicoGrupoPageIndex):
     """
