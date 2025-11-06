@@ -356,19 +356,12 @@ class DicasPresidenteIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         help_text="Foto para o banner da página."
     )
     
-    mostrar_filtro_tipo = models.BooleanField(
-        "Mostrar filtro por tipo",
-        default=True,
-        help_text="Permite filtrar dicas por tipo (mensagem, recomendação, etc)."
-    )
-    
     content_panels = PageSitePadraoIndex.content_panels + [
         FieldPanel("introduction"),
         MultiFieldPanel([
             FieldPanel("foto_presidente"),
             FieldPanel("mensagem_presidente"),
         ], heading="Banner do Presidente"),
-        FieldPanel("mostrar_filtro_tipo"),
     ]
     
     parent_page_types = ["intranet.IntranetHomePage"]
@@ -379,18 +372,6 @@ class DicasPresidenteIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         verbose_name_plural = "Páginas de Índice - Dicas do Presidente"
     
     icon = "folder-open-inverse"
-    
-    def get_dicas(self, tipo=None, tag=None):
-        """Retorna dicas filtradas por tipo e/ou tag."""
-        dicas = DicasPresidentePage.objects.live().descendant_of(self)
-        
-        if tipo:
-            dicas = dicas.filter(tipo_dica=tipo)
-        
-        if tag:
-            dicas = dicas.filter(tags=tag)
-        
-        return dicas.order_by("-data_publicacao")
     
     def get_dicas_destaque(self, quantidade=3):
         """Retorna dicas marcadas como destaque."""
@@ -424,22 +405,11 @@ class DicasPresidenteIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         return frases.first() if frases.exists() else None
     
     def get_context(self, request):
-        """Adiciona dicas paginadas e filtros ao contexto."""
+        """Adiciona dicas paginadas ao contexto."""
         context = super().get_context(request)
         
-        # Filtros
-        tipo_filtro = request.GET.get("tipo")
-        tag_slug = request.GET.get("tag")
-        tag_obj = None
-        
-        if tag_slug:
-            try:
-                tag_obj = Tag.objects.get(slug=tag_slug)
-            except Tag.DoesNotExist:
-                pass
-        
-        # Busca dicas
-        dicas = self.get_dicas(tipo=tipo_filtro, tag=tag_obj)
+        # Busca todas as dicas
+        dicas = self.get_ultimas_dicas(quantidade=1000)  # Pega todas para paginar
         
         # Paginação
         paginator = Paginator(dicas, 12)
@@ -454,34 +424,5 @@ class DicasPresidenteIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         context["posts"] = posts
         context["dicas_destaque"] = self.get_dicas_destaque()
         context["frase_aleatoria"] = self.get_frase_aleatoria()
-        context["tipo_filtro"] = tipo_filtro
-        context["tag"] = tag_obj
-        context["tipos_dica"] = TIPO_DICA_CHOICES
-        
-        # Tags disponíveis
-        context["tags"] = (
-            Tag.objects.filter(
-                dicas_presidente_dicaspresidentepagetag_items__content_object__live=True
-            )
-            .distinct()
-            .order_by("name")
-        )
         
         return context
-    
-    @route(r"^tags/([\w-]+)/$", name="tag_archive")
-    def tag_archive(self, request, tag=None):
-        """Rota para filtro por tag."""
-        try:
-            tag_obj = Tag.objects.get(slug=tag)
-        except Tag.DoesNotExist:
-            if tag:
-                messages.info(request, f'Não há dicas com a tag "{tag}".')
-            return redirect(self.url)
-        
-        dicas = self.get_dicas(tag=tag_obj)
-        return render(request, "dicas_presidente/dicas_presidente_index_page.html", {
-            "self": self,
-            "tag": tag_obj,
-            "posts": dicas,
-        })
