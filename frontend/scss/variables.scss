@@ -11,7 +11,7 @@ $color-black-40: #00000066;
 $color-black-50: #00000080;
 $color-black-60: #00000099;
 $color-black-70: #000000B3;
-$color-black-80: #00000080;
+$color-black-80: #000000CC; // 80% opacity
 
 $color-gradient-inicio: #396BBB;
 $color-gradient-fim: #1A3155;
@@ -114,6 +114,18 @@ $color-light-bg-hover: #e6e6f1; // Para erro base hover
 $color-light-border: #f1f3f5; // Para cookieconsent
 $color-timeline-secondary: #e8edf4; // Para linha do tempo
 
+// Cores adicionais
+$color-text-dark: #333; // Texto escuro comum
+$color-text-darker: #343a40; // Texto mais escuro (tabelas)
+$color-border-light: #a0a0a0; // Bordas claras
+$color-bg-light-grey: #f8f9fa; // Background cinza claro
+$color-bg-table-header: #e9ecef; // Background header tabela
+$color-text-table-header: #e9ecef; // Texto header tabela (dark mode)
+
+// Badges (banners admin)
+$color-badge-mode-bg: #2196F3; // Badge azul (modo)
+$color-badge-size-bg: #4CAF50; // Badge verde (tamanho)
+
 // Cores para cookieconsent
 $color-cookie-bg: #f9faff; // Background principal do cookie consent
 $color-cookie-secondary-bg: #dfe7f9; // Background do botão secundário
@@ -133,16 +145,10 @@ $color-link-navbar-hover: $color-white;
 $color-link-navbar-hover-mobile: $color-grey-700;
 $color-link-navbar-mobile: $color-grey-700;
 $color-link-noticias: $color-primary;
-$color-link-noticias: $color-primary-active;
 $color-link-noticias-hover: #052F4A;
 
 $font-size-itens-menu: 20px;
 $font-size-itens-sub-menu: 20px;
-
-// Footer
-$footer-color: $color-primary;
-
-
 
 // Footer
 $footer-color: $color-primary;
@@ -157,8 +163,8 @@ $color-overlay-50: rgba(0, 0, 0, 0.5);
 
 $color-title-redes-sociais: $color-primary;
 
-$color-agenda-column-border: #00000033;
-$color-agenda-column-shadow: #00000040;
+$color-agenda-column-border: $color-black-20;
+$color-agenda-column-shadow: $color-black-40;
 $color-agenda-column-btn: #94a3b8;
 
 $color-warning-shadow-dark: rgba($color-warning, 0.3);
@@ -166,9 +172,6 @@ $color-banner-shadow-hover: rgba(0, 0, 0, 0.15);
 $color-card-shadow-light: rgba(0, 0, 0, 0.1);
 $color-card-shadow: $color-black-10;
 $color-card-shadow-hover: #00000026;
-$color-card-shadow-light: rgba(0, 0, 0, 0.1);
-$color-banner-shadow-hover: rgba(0, 0, 0, 0.15);
-$color-warning-shadow-dark: rgba($color-warning, 0.3);
 
 $color-agenda-item-bg: #D9D9D91A;
 $color-agenda-item-bg-escuro: #161616;
@@ -189,8 +192,8 @@ $border-radius-search: 36px;
 $border-radius-md: 0.5rem;
 $border-radius-lg: 0.75rem;
 
-$color-site-menu-navbar-collapse-border: #00000033;
-$color-site-menu-navbar-collapse-shadow: #0000004D;
+$color-site-menu-navbar-collapse-border: $color-black-20;
+$color-site-menu-navbar-collapse-shadow: $color-black-30;
 $color-site-menu-nav-tools-border: #00000026;
 
 $background: $color-primary-hover;

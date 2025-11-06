@@ -287,7 +287,7 @@
             #documentViewer {
               border-radius: 8px;
               overflow: hidden;
-              background-color: #f8f9fa;
+              background-color: variables.$color-bg-light-grey;
               
               iframe, embed {
                 border-radius: 8px;
