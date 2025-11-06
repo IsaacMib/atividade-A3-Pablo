@@ -1,0 +1,88 @@
+<!-- Template tag de filtros (Ano e Tag) -->
+<div class="filtros-container">
+  <form method="get" class="filtros-form" id="filtrosForm">
+    {% if mostrar_ano and anos_disponiveis %}
+    <div class="filtro-grupo">
+      <label for="filtroAno" class="filtro-label texto-muted">Ano:</label>
+      <select name="ano" class="filtro-select" id="filtroAno">
+        <option value="">Todos</option>
+        {% for ano_item in anos_disponiveis %}
+          <option value="{{ ano_item.year }}" {% if ano_item.year|stringformat:"s" == ano %}selected{% endif %}>
+            {{ ano_item.year }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+
+    {% if mostrar_tag and tags %}
+    <div class="filtro-grupo">
+      <label for="filtroTag" class="filtro-label texto-muted">Tag:</label>
+      <select name="tag" class="filtro-select" id="filtroTag">
+        <option value="">Todas</option>
+        {% for t in tags %}
+          <option value="{{ t.slug }}" {% if tag and t.slug == tag.slug %}selected{% endif %}>
+            {{ t.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+
+    <div class="filtro-grupo filtro-botao-container">
+      <button class="botao-primario filtro-botao" type="submit">
+        {{ texto_botao }}
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+// Filtros automáticos
+(function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        const filtroAno = document.getElementById('filtroAno');
+        const filtroTag = document.getElementById('filtroTag');
+        const form = document.getElementById('filtrosForm');
+        
+        if (!form) return;
+        
+        // Função para submeter o formulário com loading
+        function submitFormWithLoading() {
+            const button = form.querySelector('button[type="submit"]');
+            if (!button) return;
+            
+            const originalText = button.textContent;
+            button.innerHTML = '<span class="carregamento-pequeno"></span>Filtrando...';
+            button.disabled = true;
+            
+            form.submit();
+        }
+        
+        // Event listeners para os selects
+        if (filtroAno) {
+            filtroAno.addEventListener('change', submitFormWithLoading);
+        }
+        
+        if (filtroTag) {
+            filtroTag.addEventListener('change', submitFormWithLoading);
+        }
+        
+        // Previne a submissão dupla
+        form.addEventListener('submit', function(e) {
+            const button = form.querySelector('button[type="submit"]');
+            if (button && button.disabled) {
+                e.preventDefault();
+                return false;
+            }
+            
+            if (button) {
+                setTimeout(() => {
+                    button.innerHTML = '<span class="carregamento-pequeno"></span>Filtrando...';
+                    button.disabled = true;
+                }, 100);
+            }
+        });
+    });
+})();
+</script>
