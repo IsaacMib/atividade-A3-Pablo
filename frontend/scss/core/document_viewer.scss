@@ -1,0 +1,124 @@
+@use './../variables.scss';
+
+// Estilos do modal de visualização de documentos (core)
+
+// Container do iframe/embed
+.iframe-container {
+  position: relative;
+}
+
+.pdf-iframe {
+  border: 1px solid variables.$color-grey-300;
+  border-radius: 4px;
+}
+
+// Visualizador mobile
+.pdf-mobile-viewer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.icone-pdf-grande {
+  font-size: 4rem;
+  color: variables.$color-primary;
+  margin-bottom: 1.5rem;
+}
+
+.titulo-pdf-mobile {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.texto-info-mobile {
+  margin-bottom: 2rem;
+  max-width: 400px;
+}
+
+.botao-abrir-pdf {
+  margin-bottom: 1.5rem;
+  
+  .icone-espacamento {
+    margin-right: 0.5rem;
+  }
+}
+
+// Link alternativo (estilo de link sem fundo)
+.link-alternativo {
+  background: none;
+  border: none;
+  color: variables.$color-primary;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 0;
+  
+  &:hover {
+    color: variables.$color-primary-dark;
+    text-decoration: none;
+  }
+}
+
+// Link do visualizador alternativo
+.link-visualizador {
+  background: none;
+  border: none;
+  color: variables.$color-primary;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Texto de ajuda abaixo do viewer
+.texto-ajuda-viewer {
+  margin-top: 1rem;
+  
+  small {
+    display: block;
+  }
+}
+
+// Imagem responsiva
+.imagem-responsiva {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+// Texto de informação sobre arquivo não suportado
+.texto-info-arquivo {
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .pdf-mobile-viewer {
+    padding: 1.5rem;
+  }
+  
+  .icone-pdf-grande {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .titulo-pdf-mobile {
+    font-size: 1.1rem;
+  }
+  
+  .texto-info-mobile {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+}
