@@ -1,19 +1,14 @@
 from wagtail.blocks import (
     CharBlock,
-    StructBlock,
-    DateBlock,
-    TimeBlock,
-    TextBlock,
-    ListBlock,
-    PageChooserBlock,
+    StructBlock
 )
-
-from django.core.exceptions import ValidationError
 
 class ListGrupoCorpoTecnicoBlock(StructBlock):
     titulo = CharBlock(required=False, max_length=255, label="Título do Grupo")
-    grupo_page = PageChooserBlock(
-        target_model="paginas.CorpoTecnicoGrupoPageIndex",
-        required=True,
-        label="Selecione a página do grupo"
-    )
+    # PageChooserBlock comentado pois referencia classe abstrata
+    # Deve ser reimplementado nas apps que usarem as classes concretas
+    # grupo_page = PageChooserBlock(
+    #     target_model="paginas.CorpoTecnicoGrupoPageIndex",
+    #     required=True,
+    #     label="Selecione a página do grupo"
+    # )

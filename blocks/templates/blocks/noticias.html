@@ -1,10 +1,15 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
 <div class="noticias-wrap">
-  <a href="{% pageurl noticias %}" class="text-decoration-none">
+  <a href="{% if noticias.is_remote %}{{ noticias.url }}{% else %}{% pageurl noticias %}{% endif %}" class="text-decoration-none" {% if noticias.is_remote %}target="_blank" rel="noopener noreferrer"{% endif %}>
     <div class="noticias-conteudo">
       <div class="col d-flex justify-content-center justify-content-md-start">
-          <p class="noticias-conteudo--data">{{ noticias.data_publicacao|date:"d/m/Y" }}</p>
+          <p class="noticias-conteudo--data">
+            {{ noticias.data_publicacao|date:"d/m/Y" }}
+            {% if noticias.categoria %}
+                - <span style="text-transform: none;">{{ noticias.categoria }}</span>
+            {% endif %}
+          </p>
       </div>
       <div class="col d-flex justify-content-center mb-0 heading-mobile d-flex d-sm-none">
         <h2 class="noticias-conteudo--heading{% if not noticias.get_imagem_destaque %} semImagem{% endif %}">
@@ -17,7 +22,11 @@
       </div>
       {% if noticias.get_imagem_destaque %}
           <div class="noticias-conteudo--imagem"> 
-            {% picture noticias.get_imagem_destaque format-{avif,webp,jpeg} fill-322x247 loading="lazy" %}
+            {% if noticias.is_remote %}
+              <img src="{{ noticias.get_imagem_destaque }}" alt="{{ noticias.title }}" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy"/> {# get_imagem_destaque agora retorna a URL para NoticiaRemota #}
+            {% else %}
+              {% picture noticias.get_imagem_destaque format-{avif,webp,jpeg} fill-322x247 loading="lazy" %}
+            {% endif %}
           </div>
       {% else %}
           <div class="noticias-conteudo--imagem semImagem">

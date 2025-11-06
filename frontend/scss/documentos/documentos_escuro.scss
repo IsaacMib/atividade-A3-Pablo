@@ -1,0 +1,84 @@
+@use '../variables.scss';
+
+[data-theme="dark"] {
+  .template-documentos-page {
+    background-color: variables.$color-grey-900;
+    color: variables.$color-grey-100;
+
+    .documento-detalhe-container {
+      .text-center {
+        h1, h2, h3, h4 {
+          color: variables.$color-primary-light;
+        }
+
+        .documento-detalhe-data {
+          color: variables.$color-grey-500;
+        }
+      }
+
+      .descricao {
+        color: variables.$color-grey-200;
+        background-color: variables.$color-grey-800;
+        box-shadow: 0 2px 6px rgba(variables.$color-black, 0.3);
+
+        &:hover {
+          box-shadow: 0 4px 10px rgba(variables.$color-black, 0.5);
+        }
+      }
+
+      .arquivo-container {
+        background-color: variables.$color-grey-800;
+        border-color: variables.$color-grey-700;
+        box-shadow: 0 3px 6px rgba(variables.$color-black, 0.3);
+
+        &:hover {
+          background-color: variables.$color-grey-700;
+          box-shadow: 0 6px 12px rgba(variables.$color-black, 0.5);
+        }
+
+        &__icon {
+          color: variables.$color-primary-light;
+        }
+
+        &__title {
+          color: variables.$color-grey-100;
+        }
+
+        &__link {
+          color: variables.$color-primary-light;
+
+          &:hover {
+            color: variables.$color-primary;
+          }
+        }
+      }
+
+      .documento-detalhe-no-file {
+        color: variables.$color-error;
+        font-weight: 500;
+      }
+
+      .tags {
+        &__title {
+          color: variables.$color-primary-light;
+        }
+
+        a {
+          background-color: variables.$color-grey-700;
+          color: variables.$color-grey-100;
+
+          &:hover {
+            background-color: variables.$color-primary;
+            color: variables.$color-on-primary;
+          }
+        }
+      }
+
+      .documento-detalhe-destaque {
+        background-color: variables.$color-warning;
+        color: variables.$color-on-warning;
+        box-shadow: 0 2px 6px rgba(variables.$color-warning, 0.3);
+      }
+    }
+  }
+}

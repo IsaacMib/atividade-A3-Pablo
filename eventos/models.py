@@ -148,7 +148,7 @@ class EventosPage(PageSitePadrao):
         return tags
 
     parent_page_types = ["EventosIndexPage"]
-    subpage_types = []
+    subpage_types = [] # EventosPage cannot have children
 
     def get_ultimos_eventos(self, quantidade=6):
         return EventosPage.objects.live().order_by("-data_publicacao")[:quantidade]
@@ -197,7 +197,7 @@ class EventosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         FieldPanel("introduction"),
     ]
 
-    parent_page_types = ["home.HomePage"]
+    parent_page_types = ["home.HomePage", "intranet.IntranetHomePage"]
     subpage_types = ["EventosPage"]
 
     def get_context(self, request):

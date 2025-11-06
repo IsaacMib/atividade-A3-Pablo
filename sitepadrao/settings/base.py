@@ -60,13 +60,19 @@ INSTALLED_APPS = [
     "core",
     "blocks",
     "noticias",
-    "links",
     "institucional",
     "agenda",
     "avisos",
+    "intranet",
+    "documentos",
     'editais',
+    "api",
     "eventos",
     "linhasdotempo",
+    "lgpd",
+    "cursos",
+    "contatos",
+
 
     "plone_migration",
     "auth_keycloak",
@@ -100,6 +106,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     "allauth.socialaccount.providers.openid_connect",
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -132,7 +140,6 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "wagtail.contrib.settings.context_processors.settings",
-                "sitepadrao.context_processors.conteudo_site",
                 "sitepadrao.context_processors.versao_context",
             ],
         },
@@ -352,11 +359,15 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 HABILITAR_SSO_LOGIN = get_bool("HABILITAR_SSO_LOGIN", False)
+HABILITAR_SITE_INTRANET = get_bool("HABILITAR_SITE_INTRANET", False)
+PORTAL_PROVEDOR_CONTEUDO = get_bool("PORTAL_PROVEDOR_CONTEUDO", False)
+API_CONTEUDO_AGRUPADO = get_bool("API_CONTEUDO_AGRUPADO", False)
 
 # URL para redirecionar após login bem-sucedido
 LOGIN_REDIRECT_URL = "/admin/"
 
 LOGIN_URL = '/admin/login/'
+ACCOUNT_LOGIN_URL = '/admin/login/'  # Adicionado para django-allauth
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*']

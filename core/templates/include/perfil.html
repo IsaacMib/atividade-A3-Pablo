@@ -1,0 +1,48 @@
+<li class="{% if classes %} {{ classes }}{% endif %}">
+  {% if user.is_authenticated %}
+    <div class="dropdown">
+      <a
+        href="#"
+        class="d-flex align-items-center text-decoration-none dropdown-toggle"
+        id="dropdownUser"
+        data-bs-toggle="dropdown"
+        aria-expanded="false">
+        <div class="header-intranet-user-icon-wrapper rounded-circle d-flex align-items-center justify-content-center me-2">
+          <svg class="header-intranet-user-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 16 16">
+            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+          </svg>
+        </div>
+        <span class="header-intranet-user-text">
+          Olá, {{ user.first_name|default:user.username }}
+        </span>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser">
+        {% comment %} <li><a class="dropdown-item" href="/intranet/">Intranet</a></li> {% endcomment %}
+        <li><a class="dropdown-item text-danger" href="{% url 'intranet_logout' %}">Sair</a></li>
+      </ul>
+    </div>
+  {% else %}
+    <div class="dropdown">
+      <a
+        href="#"
+        class="d-flex align-items-center text-decoration-none dropdown-toggle"
+        id="dropdownGuest"
+        data-bs-toggle="dropdown"
+        aria-expanded="false">
+        <div class="header-intranet-user-icon-wrapper rounded-circle d-flex align-items-center justify-content-center me-2">
+          <svg class="header-intranet-user-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 16 16">
+            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+          </svg>
+        </div>
+        <span class="header-intranet-user-text header-intranet-user-text--bold ">Intranet</span>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownGuest">
+        <li>
+          <a class="dropdown-item" href="{% url 'wagtailadmin_login' %}?next=/">
+            Entrar
+          </a>
+        </li>
+      </ul>
+    </div>
+  {% endif %}
+</li>

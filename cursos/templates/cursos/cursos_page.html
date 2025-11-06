@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags sharing_tags %}
+
+{% block body_class %}template-curso-page{% endblock %}
+
+{% block content %}
+
+<div class="curso-page-container avisos-page-container">
+    <div class="container d-flex flex-column justify-content-center">
+        <h2 class="aviso-page--title curso-page--title">{{ page.title }}</h2>
+    </div>
+    
+    <div class="aviso-barra-publicacao curso-barra-publicacao">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12">
+                    {% if page.data_publicacao %}
+                        <span class="aviso-page-publicacao meta">Publicado em {{ page.data_publicacao|date:"d/m/Y H:i" }}</span>
+                    {% endif %}
+                    {% if page.tags.all %}
+                        <div class="curso-tags mt-1">
+                            {% for tag in page.tags.all %}
+                                <a href="{{ page.get_parent.url }}tags/{{ tag.slug }}/" class="badge border text-decoration-none">
+                                    #{{ tag.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container d-flex flex-column justify-content-center">
+        <div class="aviso-conteudo curso-conteudo">
+
+            {% if page.imagem %}
+            <div class="curso-imagem text-center my-4">
+                <img src="{{ page.imagem.url }}" alt="{{ page.title }}" class="img-fluid rounded shadow-sm">
+            </div>
+            {% endif %}
+
+            {% if page.descricao %}
+            <div class="aviso-page-descricao curso-page-descricao intro align-self-start">
+                {{ page.descricao|richtext }}
+            </div>
+            {% endif %}
+
+            <div class="aviso-page-content curso-page-content body-content">
+                {% for block in page.body %}
+                    {% include_block block %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Compartilhamento colocado ao final da página -->
+    <div class="container">
+        {% compartilhamento_social %}
+    </div>
+</div>
+
+{% endblock %}

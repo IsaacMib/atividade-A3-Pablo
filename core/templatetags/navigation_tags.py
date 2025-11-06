@@ -1,6 +1,7 @@
 from django import template
 from wagtail.models import Site
 from core.models import SiteSettings  # Import necessário
+from django.conf import settings
 
 register = template.Library()
 # https://docs.djangoproject.com/en/stable/howto/custom-template-tags/
@@ -71,4 +72,6 @@ def top_menu(context, parent, calling_page=None, max_levels=None):
         # required by the pageurl tag that we want to use within this template
         "request": context["request"],
         "max_levels": max_levels,
+        "HABILITAR_SITE_INTRANET": context.get("HABILITAR_SITE_INTRANET", False),
     }
+

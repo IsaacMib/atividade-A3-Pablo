@@ -1,0 +1,128 @@
+@use '../variables.scss';
+
+.template-documentos-page {
+  background-color: variables.$color-background;
+  color: variables.$color-on-background;
+
+  .documento-detalhe-container {
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .text-center {
+      h1, h2, h3, h4 {
+        color: variables.$color-primary;
+      }
+
+      .documento-detalhe-data {
+        color: variables.$color-grey-500;
+      }
+    }
+
+    .descricao {
+      font-size: 1.05rem;
+      color: variables.$color-grey-700;
+      background-color: variables.$color-surface;
+      border-radius: 12px;
+      padding: 1.5rem;
+      line-height: 1.7;
+      box-shadow: 0 2px 6px variables.$color-card-shadow;
+      transition: box-shadow 0.2s ease;
+
+      &:hover {
+        box-shadow: 0 4px 10px variables.$color-card-shadow-hover;
+      }
+    }
+
+    .arquivo-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background-color: variables.$color-grey-100;
+      border: 1px solid variables.$color-grey-210;
+      border-radius: 1rem;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 3px 6px variables.$color-card-shadow;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: variables.$color-grey-200;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px variables.$color-card-shadow-hover;
+      }
+
+      &__icon {
+        color: variables.$color-primary;
+        font-size: 2.5rem;
+      }
+
+      &__title {
+        margin: 0;
+        font-weight: 600;
+        color: variables.$color-on-surface;
+      }
+
+      &__link {
+        color: variables.$color-primary;
+        font-weight: 500;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: variables.$color-primary-hover;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    p.text-red-500 {
+      color: variables.$color-error;
+      font-weight: 500;
+    }
+
+    .tags {
+      &__title {
+        color: variables.$color-primary;
+        margin-bottom: 0.5rem;
+        font-size: 1.25rem;
+      }
+
+      a {
+        background-color: variables.$color-grey-200;
+        color: variables.$color-grey-700;
+        font-size: 0.85rem;
+        padding: 0.4rem 0.9rem;
+        border-radius: 999px;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background-color: variables.$color-primary;
+          color: variables.$color-on-primary;
+        }
+      }
+    }
+
+    .documento-detalhe-destaque {
+      display: inline-block;
+      background-color: variables.$color-warning;
+      color: variables.$color-on-warning;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      box-shadow: 0 2px 6px rgba(variables.$color-warning, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .arquivo-container {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+
+        &__icon {
+          font-size: 1.8rem;
+        }
+      }
+    }
+  }
+}

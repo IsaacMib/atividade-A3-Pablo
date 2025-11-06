@@ -1,0 +1,77 @@
+@use '../variables.scss';
+
+[data-theme="dark"] {
+  .template-cursos-index-page {
+    background-color: variables.$color-grey-900;
+    color: variables.$color-grey-100;
+
+    .titulo-section {
+      h1, h2, h3 {
+        color: variables.$color-dark-theme-text;
+      }
+
+      p {
+        color: variables.$color-grey-400;
+      }
+    }
+
+    .cursos-wrapper {
+      .curso-card {
+        background-color: variables.$color-grey-800;
+        color: variables.$color-grey-100;
+        border-color: variables.$color-grey-700;
+        box-shadow: 0 2px 8px variables.$color-overlay-30;
+
+        &:hover {
+          background-color: variables.$color-grey-700;
+          box-shadow: 0 6px 14px variables.$color-overlay-50;
+        }
+
+        &.border.border-warning {
+          border-color: variables.$color-warning;
+          box-shadow: 0 0 10px variables.$color-warning-shadow-dark;
+        }
+
+        .curso-icon-default,
+        .curso-title,
+        .icon-col i {
+          color: variables.$color-dark-theme-text;
+        }
+
+        .curso-icon-calendar,
+        .desc-col p.curso-data {
+          color: variables.$color-on-primary;
+        }
+
+        .desc-col {
+          p.curso-descricao {
+            color: variables.$color-grey-300;
+          }
+
+          .curso-tags a.badge {
+            background-color: variables.$color-grey-700;
+            color: variables.$color-grey-200;
+            border-color: variables.$color-grey-600;
+
+            &:hover {
+              background-color: variables.$color-primary;
+              border-color: variables.$color-primary;
+              color: variables.$color-on-primary;
+            }
+          }
+        }
+      }
+
+      p.text-center {
+        color: variables.$color-grey-400;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .curso-card:hover {
+        border-left-color: variables.$color-primary-dark;
+        box-shadow: 0 0.5rem 1rem variables.$color-black;
+      }
+    }
+  }
+}

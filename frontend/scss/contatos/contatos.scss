@@ -1,0 +1,103 @@
+@use '../variables.scss';
+
+.contatos {
+  color: variables.$color-primary;
+
+  /* === GRID RESPONSIVO === */
+  &-grid {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 2rem;
+    
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* === TÍTULO DA SEÇÃO === */
+  .section-title {
+    color: variables.$color-primary;
+    font-weight: bold;
+    margin-bottom: 1rem;
+
+    &.small { font-size: 1.4rem; }
+    &.medium { font-size: 1.8rem; }
+    &.large { font-size: 2rem; }
+  }
+
+  /* === CONTATO SIMPLES === */
+  .contato-simples {
+    font-size: 1rem;
+    font-weight: normal;
+
+    .contato-titulo {
+      font-weight: bold;
+    }
+
+    .contato-info-details span {
+      margin-right: 0.5rem;
+    }
+  }
+
+  /* === LISTA PRINCIPAL === */
+  .contatos-list {
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style: none;
+    color: variables.$color-primary;
+
+    /* li de 1º nível: marcador apenas aqui */
+    > li {
+      position: relative;
+      padding-left: 1.6rem;
+      margin-bottom: 0.75rem;
+
+      &::before {
+        position: absolute;
+        left: 0;
+        top: 0.15rem;
+        color: variables.$color-primary;
+        content: "";
+        font-size: 1rem;
+        line-height: 1;
+      }
+    }
+
+    /* estilos de list_style */
+    &.none > li::before { content: ""; }
+    &.dot > li::before { content: "•"; }
+    &.diamond > li::before { content: "♦"; }
+    &.triangle > li::before { content: "►"; }
+    &.chevron > li::before { content: "›"; }
+    &.black_diamond > li::before { content: "◆"; }
+
+    /* lista interna sem marcador */
+    .contato-infos {
+      list-style: none !important;
+      padding-left: 0 !important;
+      margin-left: 1.5rem;
+
+      > li::before {
+        content: none !important;
+        display: none !important;
+      }
+
+      .contato-info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .icone,
+      .texto {
+        color: variables.$color-primary;
+      }
+    }
+  }
+
+  /* === LINHA SEPARADORA === */
+  hr {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+}

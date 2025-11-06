@@ -1,0 +1,141 @@
+@use '../variables.scss';
+
+.template-documentos-index-page {
+  .documentos-container {
+    max-width: 900px;
+    margin: 0 auto;
+
+    .texto-muted {
+      color: variables.$color-grey-600 !important;
+    }
+
+    .texto-destaque {
+      color: variables.$color-on-surface;
+      font-weight: 600;
+    }
+
+    .etiqueta-importante {
+      font-size: 0.75rem;
+      padding: 0.35rem 0.6rem;
+      border-radius: 6px;
+      background-color: variables.$color-warning;
+      color: variables.$color-on-warning;
+      text-transform: uppercase;
+      display: inline-block;
+    }
+
+    .border-bottom {
+      border-color: variables.$color-grey-210 !important;
+    }
+    
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .documentos-list {
+      .documento-item {
+        border-bottom: 1px solid variables.$color-grey-210;
+        transition: background 0.2s ease;
+
+        &:hover {
+          background-color: rgba(variables.$color-primary, 0.05);
+        }
+
+        .documento-dot {
+          color: variables.$color-primary;
+        }
+
+        .documento-link {
+          transition: color 0.2s ease;
+          color: variables.$color-on-surface;
+
+          &:hover {
+            color: variables.$color-primary;
+          }
+        }
+
+        .btn-sm {
+          background: transparent;
+          border: none;
+          padding: 0.35rem;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+          line-height: 1;
+          font-size: 2rem;
+          
+          &.botao-primario {
+            width: 50px;
+            color: variables.$color-primary;
+
+            &:hover {
+              color: variables.$color-on-primary;
+              background-color: variables.$color-primary;
+              transform: translateY(-1px);
+              box-shadow: 0 2px 4px rgba(variables.$color-primary, 0.3);
+            }
+          }
+
+          &.botao-secundario {
+            color: variables.$color-grey-600;
+
+            &:hover {
+              color: variables.$color-grey-700;
+              background-color: variables.$color-grey-400;
+              transform: translateY(-1px);
+              box-shadow: 0 2px 4px rgba(variables.$color-grey-400, 0.3);
+            }
+          }
+        }
+      }
+    }
+
+    #documentViewer {
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: #f8f9fa;
+      
+      iframe, embed {
+        border-radius: 8px;
+      }
+      
+      .spinner-border {
+        color: variables.$color-primary;
+        margin: 2rem auto;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .documentos-container {
+      padding: 1rem !important;
+
+      form {
+        .form-select, .btn {
+          width: 100%;
+          height: 48px;
+          font-size: 1rem;
+        }
+      }
+
+      .documentos-list .documento-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem 0;
+      }
+
+      #documentViewer {
+        min-height: 300px;
+      }
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .documentos-container #documentViewer {
+      min-height: 250px;
+    }
+  }
+}

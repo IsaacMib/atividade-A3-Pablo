@@ -1,8 +1,10 @@
 @use  './variables.scss';
 @use  './sprite.scss';
 @use  './swiper.scss';
+@use  './classes-personalizadas.scss';
 
 @use './sitepadrao/index.scss' as sitepadrao;
+@use './core/index.scss' as core;
 
 @use  './barraidentidadepb/index.scss' as barraidentidadepb;
 @use  './blocks/index.scss' as blocks;
@@ -11,10 +13,19 @@
 @use  './institucional/index.scss' as institucional;
 @use './search/index.scss' as search;
 @use  './agenda/index.scss' as agenda;
+@use './contatos/index.scss' as contatos;
 @use  './editais/index.scss' as editais;
+@use  './cursos/index.scss' as cursos;
+@use './documentos/index.scss' as documentos;
+@use './intranet/index.scss' as intranet;
 @use './breadcrumb.scss';
 @use './breadcrumb_escuro.scss';
 @use './cookieconsent.scss';
+
+// Project-specific partials added by assistant: widgets and banners
+@use './_widgets.scss' as widgets;
+@use './_widgets_dark.scss' as widgets_dark;
+@use './_banners.scss' as banners;
 
 /*Arquivo para customizar o bootstrap*/
 @use './customBT';
@@ -35,7 +46,7 @@ $global-link-hover-color: #30599B !default;
 @import "./rawline-font.scss";
 
 // 3. Your custom mixin overwrites of ukit.
-@mixin hook-card() { color: #000; }
+@mixin hook-card() { color: variables.$color-black; }
 
 @import "uikit/src/scss/uikit-theme.scss";
 
@@ -97,4 +108,30 @@ html, body {
 .richtext-image.fullwidth,
 .image-inline {
     float: none;
+}
+
+.video-container-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.video-responsive-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 800px; 
+  padding-top: 56.25%; 
+}
+
+.video-responsive-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
 }
