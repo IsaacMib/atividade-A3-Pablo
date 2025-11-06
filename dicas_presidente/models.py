@@ -401,6 +401,18 @@ class DicasPresidenteIndexPage(RoutablePageMixin, PageSitePadraoIndex):
             .order_by("-data_publicacao")[:quantidade]
         )
     
+    def get_ultimas_dicas(self, quantidade=6):
+        """
+        Retorna as últimas dicas publicadas.
+        Função centralizada para buscar dicas - modificações futuras
+        (como adicionar filtro de destaque) devem ser feitas aqui.
+        """
+        return (
+            DicasPresidentePage.objects.live()
+            .descendant_of(self)
+            .order_by("-data_publicacao")[:quantidade]
+        )
+    
     def get_frase_aleatoria(self):
         """Retorna uma frase aleatória para widget."""
         frases = (

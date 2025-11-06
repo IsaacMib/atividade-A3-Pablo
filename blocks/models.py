@@ -1402,7 +1402,7 @@ class ListaDicasPresidenteBlock(StructBlock):
         pagina_dicas_url = None
         
         if pagina_dicas:
-            dicas = pagina_dicas.get_children().live().specific().order_by('-first_published_at')[:quantidade]
+            dicas = pagina_dicas.get_ultimas_dicas(quantidade=quantidade)
             pagina_dicas_url = pagina_dicas.url
         
         context.update({
