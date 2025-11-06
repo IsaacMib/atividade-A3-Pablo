@@ -2,33 +2,45 @@ include:
   - component: $CI_SERVER_FQDN/cicd/components/pipeline@1
   - component: $CI_SERVER_FQDN/cicd/components/test@1
     inputs:
-      image: dockercodata.pb.gov.br/ci-base-images/python:3.13
+      image: $DOCKER_HUB_PROXY/debian
       script: |-
-        # Tentar instalar dependências do sistema (se possível)
-        echo "Tentando instalar dependências do sistema..."
-        if command -v apk > /dev/null 2>&1; then
-          # Alpine Linux
-          apk update && apk add --no-cache libmagic || echo "Falha ao instalar via apk, continuando..."
-        elif command -v apt-get > /dev/null 2>&1; then
-          # Debian/Ubuntu
-          apt-get update && apt-get install -y --no-install-recommends libmagic1 || echo "Falha ao instalar via apt-get, continuando..."
-        fi
+        # Instalar dependências do sistema
+        echo "Instalando dependências do sistema..."
+        apt-get update && apt-get install -y --no-install-recommends \
+          python3 \
+          python3-pip \
+          python3-venv \
+          python3-dev \
+          libmagic1 \
+          build-essential \
+          libpq-dev \
+          nodejs \
+          npm \
+          curl \
+          git
         
         # Instalar dependências Python
-        pip install -r requirements/test.txt
+        pip3 install -r requirements/test.txt
+        
+        # Validar build do webpack
+        echo "=== Validando build do webpack ==="
+        npm install
+        npm run build
+        echo "✅ Build do webpack executado com sucesso!"
+        
         mkdir -p test-report coverage-report
         
         # Configurar Django settings para testes
         export DJANGO_SETTINGS_MODULE=sitepadrao.settings.testing
         
         # Aguardar PostgreSQL estar pronto
-        until python -c "import psycopg; psycopg.connect(host='postgres', port=5432, user='postgres', password='postgres', dbname='test')"; do
+        until python3 -c "import psycopg; psycopg.connect(host='postgres', port=5432, user='postgres', password='postgres', dbname='test')"; do
           echo "Aguardando PostgreSQL..."
           sleep 2
         done
         
         # Executar migrações para preparar banco
-        python manage.py migrate --run-syncdb
+        python3 manage.py migrate --run-syncdb
         
         # Rodar todos os testes do projeto com cobertura
         echo "=== Executando todos os testes do projeto ==="
@@ -37,7 +49,7 @@ include:
         coverage xml -o coverage-report/coverage.xml
         
         # Executar testes novamente com xmlrunner para gerar relatório XML (sempre executar mesmo se teste falhou)
-        python manage.py test --testrunner=xmlrunner.extra.djangotestrunner.XMLTestRunner --verbosity=2 --keepdb || true
+        python3 manage.py test --testrunner=xmlrunner.extra.djangotestrunner.XMLTestRunner --verbosity=2 --keepdb || true
         
         # Mover arquivos XML para o diretório esperado (buscar em todos os diretórios TEST-*)
         if ls TEST-* 1> /dev/null 2>&1; then
