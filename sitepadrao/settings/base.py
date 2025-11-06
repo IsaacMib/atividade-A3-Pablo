@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     "core",
     "blocks",
     "noticias",
-    "links",
     "institucional",
     "agenda",
     "avisos",
@@ -141,7 +140,6 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "wagtail.contrib.settings.context_processors.settings",
-                "sitepadrao.context_processors.conteudo_site",
                 "sitepadrao.context_processors.versao_context",
             ],
         },
@@ -361,7 +359,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 HABILITAR_SSO_LOGIN = get_bool("HABILITAR_SSO_LOGIN", False)
-HABILITAR_SITE_INTRANET = get_bool("HABILITAR_SITE_INTRANET", True)
+HABILITAR_SITE_INTRANET = get_bool("HABILITAR_SITE_INTRANET", False)
 PORTAL_PROVEDOR_CONTEUDO = get_bool("PORTAL_PROVEDOR_CONTEUDO", False)
 API_CONTEUDO_AGRUPADO = get_bool("API_CONTEUDO_AGRUPADO", False)
 

@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 
 from core.models import PageSitePadrao, PageSitePadraoIndex
+from core.utils import get_parent_field
 from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel
 from django.shortcuts import redirect
@@ -144,14 +145,6 @@ class AgendaIndexPage(RoutablePageMixin, PageSitePadraoIndex):
 
         context["agendas"] = agendas_with_url
         return context
-
-
-def get_parent_field(self, field_name):
-    parent = self.get_parent()
-    if parent:
-        parent_specific = parent.specific
-        return getattr(parent_specific, field_name, "")
-    return ""
 
 
 class AgendaDoDiaPage(PageSitePadrao):

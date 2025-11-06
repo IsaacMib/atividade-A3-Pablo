@@ -2,17 +2,8 @@ from django import forms
 from wagtail.blocks import (
     StructBlock,
     CharBlock,
-    EmailBlock,
-    ChoiceBlock,
-    RichTextBlock,
-    StreamBlock,
     StructBlock,
     TextBlock,
-    ListBlock,
-    FloatBlock,
-    PageChooserBlock,
-    URLBlock,
-    IntegerBlock,
     BooleanBlock
 )
 from .utils import validate_file_size
