@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags filtros_tags %}
 
 {% block body_class %}template-documentos-index-page{% endblock %}
 
@@ -13,39 +13,7 @@
     <p class="texto-muted mb-4">{{ page.introduction }}</p>
   {% endif %}
 
-  <!-- SUBTÍTULO E FILTROS -->
-  <div class="d-flex justify-content-between align-items-center flex-wrap border-bottom pb-3 mb-4">
-
-    <form method="get" class="d-flex gap-3 align-items-center flex-wrap mt-2 mt-sm-0" id="filtrosForm">
-      <div class="form-group">
-        <label for="filtroAno" class="form-label small texto-muted mb-1">Ano:</label>
-        <select name="ano" class="form-select w-auto" id="filtroAno">
-          <option value="">Todos</option>
-          {% for ano_item in anos_disponiveis %}
-            <option value="{{ ano_item.year }}" {% if ano_item.year|stringformat:"s" == ano %}selected{% endif %}>
-              {{ ano_item.year }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="filtroTag" class="form-label small texto-muted mb-1">Tag:</label>
-        <select name="tag" class="form-select w-auto" id="filtroTag">
-          <option value="">Todos</option>
-          {% for t in tags %}
-            <option value="{{ t.slug }}" {% if t.slug == tag.slug %}selected{% endif %}>
-              {{ t.name }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="form-group align-self-end">
-        <button class="btn botao-primario px-4" type="submit">Filtrar</button>
-      </div>
-    </form>
-  </div>
+  {% filtros_ano_tag %}
 
   <!-- LISTA DE DOCUMENTOS -->
   <div class="documentos-list mt-3">
@@ -56,7 +24,7 @@
             <!-- Dot antes do título -->
             <span class="documento-dot fs-5 me-2">•</span>
 
-            <a href="{% url 'documentos:document_serve_inline' doc.arquivo.id doc.arquivo.filename %}" target="_blank" class="fw-semibold sem-decoracao documento-link hover-text-primary">
+            <a href="{% url 'core:document_serve_inline' doc.arquivo.id doc.arquivo.filename %}" target="_blank" class="fw-semibold sem-decoracao documento-link hover-text-primary">
               {{ doc.title }}
             </a>
 
@@ -69,12 +37,12 @@
 
           <!-- Botões de ação no final da linha -->
           <div class="d-flex gap-2 align-items-center">
-            <button class="btn btn-sm botao-outline-primario" onclick="showDocument('{% url 'documentos:document_serve_inline' doc.arquivo.id doc.arquivo.filename %}', '{{ doc.title|escapejs }}')">
-              <i class="bi bi-eye"></i> Visualizar
+            <button class="btn btn-sm botao-primario" onclick="showDocument('{% url 'core:document_serve_inline' doc.arquivo.id doc.arquivo.filename %}', '{{ doc.title|escapejs }}')">
+              <i class="bi bi-eye"></i>
             </button>
             
-            <a href="{{ doc.arquivo.url }}" class="btn btn-sm botao-outline-secundario" title="Download direto">
-              <i class="bi bi-download"></i> Baixar
+            <a href="{{ doc.arquivo.url }}" class="btn btn-sm botao-secundario" title="Download direto">
+              <i class="bi bi-download"></i>
             </a>
           </div>
         </div>
@@ -89,29 +57,11 @@
 
 </div>
 
-<!-- Modal para visualização de documentos -->
-<div class="modal fade" id="documentModal" tabindex="-1" aria-labelledby="documentModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="documentModalLabel">Visualizar Documento</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div id="documentViewer" style="min-height: 500px;">
-          <!-- O conteúdo será carregado aqui -->
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn botao-secundario" data-bs-dismiss="modal">Fechar</button>
-        <a id="documentDirectLink" href="#" target="_blank" class="btn botao-primario">Abrir em nova aba</a>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- Modal de visualização de documentos (reutilizável do core) -->
+{% include "include/document_viewer_modal.html" %}
 
 <script>
-// Filtros automáticos
+// Filtros automáticos específicos desta página
 document.addEventListener('DOMContentLoaded', function() {
     const filtroAno = document.getElementById('filtroAno');
     const filtroTag = document.getElementById('filtroTag');
@@ -156,92 +106,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
-// Funções para o modal de documentos
-function showDocument(url, title) {
-    // Atualiza o título do modal
-    document.getElementById('documentModalLabel').textContent = title;
-    
-    // Atualiza o link direto
-    document.getElementById('documentDirectLink').href = url;
-    
-    // Limpa o viewer
-    const viewer = document.getElementById('documentViewer');
-    viewer.innerHTML = '<div class="centralizar-texto"><div class="carregamento" role="status"><span class="visually-hidden">Carregando...</span></div></div>';
-    
-    // Tenta diferentes métodos de exibição
-    const fileExtension = url.split('.').pop().toLowerCase();
-    
-    if (fileExtension === 'pdf') {
-        // Para PDFs, tenta múltiplas abordagens
-        tryPdfViewer(url, title, viewer);
-    } else if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension)) {
-        // Para imagens
-        viewer.innerHTML = `<img src="${url}" class="img-fluid" alt="${title}" />`;
-    } else {
-        // Para outros tipos de arquivo
-        viewer.innerHTML = `
-            <div class="centralizar-texto">
-                <p class="mb-3">Este tipo de arquivo não pode ser visualizado diretamente no navegador.</p>
-                <a href="${url}" target="_blank" class="btn botao-primario">Abrir documento</a>
-            </div>
-        `;
-    }
-    
-    // Mostra o modal
-    const modal = new bootstrap.Modal(document.getElementById('documentModal'));
-    modal.show();
-}
-
-function tryPdfViewer(url, title, viewer) {
-    // Primeira tentativa: iframe
-    let iframeHTML = `
-        <div class="position-relative">
-            <iframe src="${url}" width="100%" height="500px" frameborder="0" style="border: 1px solid #ddd;">
-                <p>Seu navegador não suporta iframes. <a href="${url}" target="_blank">Clique aqui para abrir o documento</a>.</p>
-            </iframe>
-            <div class="mt-2 centralizar-texto">
-                <small class="texto-muted">Problemas para visualizar? 
-                    <button class="btn btn-link btn-sm p-0" onclick="tryAlternativeViewer('${url}', '${title}')">Tente o visualizador alternativo</button> 
-                    ou <a href="${url}" target="_blank">abra em nova aba</a>.
-                </small>
-            </div>
-        </div>
-    `;
-    
-    viewer.innerHTML = iframeHTML;
-    
-    // Verifica se o iframe carregou depois de um tempo
-    setTimeout(() => {
-        const iframe = viewer.querySelector('iframe');
-        if (iframe) {
-            iframe.onload = function() {
-                console.log('PDF carregado no iframe');
-            };
-            iframe.onerror = function() {
-                console.log('Erro ao carregar PDF no iframe, tentando alternativa');
-                tryAlternativeViewer(url, title);
-            };
-        }
-    }, 100);
-}
-
-function tryAlternativeViewer(url, title) {
-    const viewer = document.getElementById('documentViewer');
-    
-    // Segunda tentativa: embed
-    let embedHTML = `
-        <div class="position-relative">
-            <embed src="${url}" type="application/pdf" width="100%" height="500px" />
-            <div class="mt-2 centralizar-texto">
-                <small class="texto-muted">
-                    <a href="${url}" target="_blank" class="btn botao-primario botao-pequeno">Abrir em nova aba</a>
-                </small>
-            </div>
-        </div>
-    `;
-    
-    viewer.innerHTML = embedHTML;
-}
 </script>
 {% endblock %}

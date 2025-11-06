@@ -1,0 +1,89 @@
+@use '../variables.scss';
+
+// ============================================================
+// FILTROS (Template Tag)
+// ============================================================
+
+.filtros-container {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: variables.$border-radius-md;
+}
+
+.filtros-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filtro-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1 1 auto;
+  min-width: 150px;
+  
+  @media (max-width: 768px) {
+    min-width: 120px;
+  }
+}
+
+.filtro-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.filtro-select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid variables.$color-grey-300;
+  border-radius: variables.$border-radius-md;
+  background-color: variables.$color-white;
+  font-size: 1rem;
+  color: variables.$color-on-surface;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  
+  &:hover {
+    border-color: variables.$color-primary;
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: variables.$color-primary;
+    box-shadow: 0 0 0 3px rgba(variables.$color-primary, 0.1);
+  }
+}
+
+.filtro-botao-container {
+  flex: 0 0 auto;
+}
+
+.filtro-botao {
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+// Loading spinner pequeno
+.carregamento-pequeno {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(variables.$color-white, 0.3);
+  border-top-color: variables.$color-white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
