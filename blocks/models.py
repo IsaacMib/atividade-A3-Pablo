@@ -104,17 +104,62 @@ class VideoBlock(StructBlock):
     srcIframe = URLBlock(required=True, label="URL do vídeo (iframe YouTube)")
 
     def get_context(self, value, parent_context=None):
-        context = super().get_context(value, parent_context=parent_context)
-        url = value.get('srcIframe')
+        YOUTUBE_NOCOOKIE_EMBED_URL = "https://www.youtube-nocookie.com/embed/"
+        YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v="
 
-        # Transforma links padrão do YouTube em formato embed
-        if 'watch?v=' in url:
-            url = url.replace('watch?v=', 'embed/')
-        elif 'youtu.be/' in url:
-            url = url.replace('youtu.be/', 'www.youtube.com/embed/')
+        context = super().get_context(value, parent_context=parent_context)
+        url = value.get('srcIframe') or ''
+
+        # Normaliza vários formatos de URL do YouTube para URL de embed segura (nocookie)
+        video_id = None
+        try:
+            from urllib.parse import urlparse, parse_qs
+            parsed = urlparse(url)
+            host = (parsed.netloc or '').lower()
+            path = parsed.path or ''
+            qs = parse_qs(parsed.query or '')
+
+            # youtube.com/watch?v=ID
+            if 'watch' in path and 'v' in qs:
+                video_id = qs.get('v', [None])[0]
+            # youtu.be/ID
+            elif 'youtu.be' in host and path:
+                video_id = path.strip('/').split('/')[0]
+            # youtube.com/embed/ID
+            elif '/embed/' in path:
+                video_id = path.split('/embed/')[-1].split('/')[0]
+            # youtube.com/shorts/ID
+            elif '/shorts/' in path:
+                video_id = path.split('/shorts/')[-1].split('/')[0]
+        except Exception:
+            video_id = None
+
+        # Monta src de embed com domínio de privacidade; mantém alguns params úteis
+        if video_id:
+            base = f"{YOUTUBE_NOCOOKIE_EMBED_URL}{video_id}"
+            params = []
+            # parâmetros padrão recomendados
+            params.extend(["rel=0", "modestbranding=1"])
+            # preserva start (início em segundos) se existir
+            try:
+                from urllib.parse import urlparse, parse_qs
+                start_qs = parse_qs(urlparse(url).query or '')
+                if 'start' in start_qs:
+                    params.append(f"start={start_qs['start'][0]}")
+                if 't' in start_qs:  # suporte a t=1m30s não convertido aqui
+                    params.append(f"t={start_qs['t'][0]}")
+            except Exception:
+                pass
+            src = base + (('?' + '&'.join(params)) if params else '')
+            watch_url = f"{YOUTUBE_WATCH_URL}{video_id}"
+        else:
+            # fallback: usa URL original
+            src = url
+            watch_url = url
 
         context['titulo'] = value.get('titulo')
-        context['src'] = url
+        context['src'] = src
+        context['watch_url'] = watch_url
         return context
 
     class Meta:
