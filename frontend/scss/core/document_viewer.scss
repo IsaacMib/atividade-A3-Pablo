@@ -1,4 +1,4 @@
-@use '../variables' as *;
+@use './../variables.scss';
 
 // Estilos do modal de visualização de documentos (core)
 
@@ -59,7 +59,7 @@
   padding: 0;
   
   &:hover {
-    color: $color-primary-dark;
+    color: variables.$color-primary-dark;
     text-decoration: none;
   }
 }
