@@ -6,6 +6,8 @@ from blocks.utils import (
     GRID_IMAGENS_TYPES,
     GRID_IMAGENS_CLASSES,
     GRID_IMAGENS_DEFAULT_TYPE,
+    BANNER_MODES,
+    BANNER_SIZES,
     get_metabase_card_text_by_id,
     validate_file_size
 )
@@ -115,12 +117,7 @@ class BannerComLinkBlock(blocks.StructBlock):
     
     # Modo de renderização
     mode = blocks.ChoiceBlock(
-        choices=[
-            ('fill', 'Preencher (fill) - Recorta para preencher exatamente'),
-            ('max', 'Máximo (max) - Mantém proporção até tamanho máximo'),
-            ('min', 'Mínimo (min) - Garante tamanho mínimo sem estourar'),
-            ('original', 'Original - Sem redimensionamento'),
-        ],
+        choices=BANNER_MODES,
         default='fill',
         label="Modo de Ajuste",
         help_text="Define como a imagem será ajustada ao tamanho escolhido."
@@ -128,45 +125,7 @@ class BannerComLinkBlock(blocks.StructBlock):
     
     # Tamanho
     size = blocks.ChoiceBlock(
-        choices=[
-            ('original', '🖼️ Original (sem redimensionar)'),
-            
-            # Ícones e miniaturas
-            ('16x16', '🔹 Mini ícone (16x16)'),
-            ('32x32', '🔹 Ícone pequeno (32x32)'),
-            ('64x64', '🔹 Ícone médio (64x64)'),
-            ('128x128', '🔹 Ícone grande (128x128)'),
-            
-            # Miniaturas quadradas
-            ('200x200', '🟦 Miniatura quadrada (200x200)'),
-            ('230x230', '🟦 Miniatura média (230x230)'),
-            ('273x273', '🟦 Miniatura grande (273x273)'),
-            ('370x370', '🟦 Thumbnail padrão (370x370)'),
-            ('400x400', '🟦 Quadrado médio (400x400)'),
-            ('468x468', '🟦 Quadrado grande (468x468)'),
-            ('565x565', '🟦 Quadrado XL (565x565)'),
-            ('663x663', '🟦 Quadrado XXL (663x663)'),
-            ('760x760', '🟦 Quadrado 4:4 (760x760)'),
-            ('1150x1150', '🟦 Capa quadrada (1150x1150)'),
-            
-            # Horizontais e widescreen
-            ('128x85', '📺 Mini horizontal (128x85)'),
-            ('238x133', '📺 Banner pequeno (238x133)'),
-            ('750x420', '📺 Banner médio (750x420)'),
-            ('768x420', '📺 Banner padrão (768x420)'),
-            ('1150x650', '📺 Capa Desktop (1150x650)'),
-            ('1200x450', '📺 Capa Wide (1200x450)'),
-            ('1366x768', '📺 Full HD 16:9 (1366x768)'),
-            ('1920x1080', '📺 HD 16:9 (1920x1080)'),
-            ('2560x1440', '📺 QHD 16:9 (2560x1440)'),
-            ('3840x2160', '📺 4K Ultra HD (3840x2160)'),
-            
-            # Verticais e retratos
-            ('480x640', '📱 Retrato pequeno (480x640)'),
-            ('720x1080', '📱 Retrato padrão (720x1080)'),
-            ('1080x1350', '📱 Retrato social (1080x1350)'),
-            ('1080x1920', '📱 Story / Vertical (1080x1920)'),
-        ],
+        choices=BANNER_SIZES,
         default='1920x1080',
         label="Tamanho do Banner",
         help_text="Selecione o tamanho desejado do banner."
