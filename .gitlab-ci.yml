@@ -17,7 +17,14 @@ include:
           nodejs \
           npm \
           curl \
-          git
+          git \
+          locales
+        
+        # Configurar locale pt_BR.UTF-8
+        echo "pt_BR.UTF-8 UTF-8" >> /etc/locale.gen
+        locale-gen
+        export LANG=pt_BR.UTF-8
+        export LC_ALL=pt_BR.UTF-8
         
         # Criar e ativar ambiente virtual Python
         python3 -m venv /tmp/venv
