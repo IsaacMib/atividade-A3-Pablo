@@ -19,8 +19,12 @@ include:
           curl \
           git
         
-        # Instalar dependências Python
-        pip3 install -r requirements/test.txt
+        # Criar e ativar ambiente virtual Python
+        python3 -m venv /tmp/venv
+        . /tmp/venv/bin/activate
+        
+        # Instalar dependências Python no ambiente virtual
+        pip install -r requirements/test.txt
         
         # Validar build do webpack
         echo "=== Validando build do webpack ==="
@@ -34,22 +38,22 @@ include:
         export DJANGO_SETTINGS_MODULE=sitepadrao.settings.testing
         
         # Aguardar PostgreSQL estar pronto
-        until python3 -c "import psycopg; psycopg.connect(host='postgres', port=5432, user='postgres', password='postgres', dbname='test')"; do
+        until /tmp/venv/bin/python -c "import psycopg; psycopg.connect(host='postgres', port=5432, user='postgres', password='postgres', dbname='test')"; do
           echo "Aguardando PostgreSQL..."
           sleep 2
         done
         
         # Executar migrações para preparar banco
-        python3 manage.py migrate --run-syncdb
+        /tmp/venv/bin/python manage.py migrate --run-syncdb
         
         # Rodar todos os testes do projeto com cobertura
         echo "=== Executando todos os testes do projeto ==="
-        coverage run --source='.' --omit='*/migrations/*,*/venv/*,*/virtualenv/*,*/tests/*,manage.py,*/settings/*,*/node_modules/*' manage.py test --verbosity=2 --keepdb
+        /tmp/venv/bin/coverage run --source='.' --omit='*/migrations/*,*/venv/*,*/virtualenv/*,*/tests/*,manage.py,*/settings/*,*/node_modules/*' manage.py test --verbosity=2 --keepdb
         TEST_EXIT_CODE=$?
-        coverage xml -o coverage-report/coverage.xml
+        /tmp/venv/bin/coverage xml -o coverage-report/coverage.xml
         
         # Executar testes novamente com xmlrunner para gerar relatório XML (sempre executar mesmo se teste falhou)
-        python3 manage.py test --testrunner=xmlrunner.extra.djangotestrunner.XMLTestRunner --verbosity=2 --keepdb || true
+        /tmp/venv/bin/python manage.py test --testrunner=xmlrunner.extra.djangotestrunner.XMLTestRunner --verbosity=2 --keepdb || true
         
         # Mover arquivos XML para o diretório esperado (buscar em todos os diretórios TEST-*)
         if ls TEST-* 1> /dev/null 2>&1; then
