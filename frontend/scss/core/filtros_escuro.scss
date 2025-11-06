@@ -1,0 +1,27 @@
+@use '../variables.scss';
+
+// ============================================================
+// FILTROS (Template Tag) - Tema Escuro
+// ============================================================
+
+body[data-bs-theme="dark"] {
+  .filtros-container {
+    background-color: variables.$color-grey-900;
+    border-color: variables.$color-grey-700;
+  }
+
+  .filtro-select {
+    background-color: variables.$color-grey-800;
+    border-color: variables.$color-grey-700;
+    color: variables.$color-grey-100;
+    
+    &:hover {
+      border-color: variables.$color-primary;
+    }
+    
+    &:focus {
+      border-color: variables.$color-primary;
+      box-shadow: 0 0 0 3px rgba(variables.$color-primary, 0.2);
+    }
+  }
+}

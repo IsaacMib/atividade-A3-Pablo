@@ -56,55 +56,39 @@
           }
         }
 
-        .curso-icon-default {
+        .curso-icon-default,
+        .curso-title,
+        .icon-col i {
           color: variables.$color-primary;
-        }
-
-        .curso-icon-calendar {
-          color: variables.$color-dark-theme-text;
         }
 
         .curso-title {
           font-size: 1.3rem;
           font-weight: 700;
-          color: variables.$color-primary;
           margin-bottom: 0.75rem;
         }
 
-        .curso-desc-row {
-          display: flex;
-          align-items: flex-start;
+        .curso-icon-calendar,
+        .desc-col p.curso-data {
+          color: variables.$color-dark-theme-text;
+        }
 
-          .icon-col {
-            i {
-              color: variables.$color-primary;
-              font-size: 1.5rem;
-            }
+        .desc-col {
+          p.curso-descricao {
+            color: variables.$color-grey-700;
+            line-height: 1.6;
           }
 
-          .desc-col {
-            p.curso-descricao {
-              color: variables.$color-grey-700;
-              line-height: 1.6;
-            }
+          .curso-tags a.badge {
+            background-color: variables.$color-grey-200;
+            color: variables.$color-grey-800;
+            border: 1px solid variables.$color-grey-300;
+            transition: all 0.2s ease;
 
-            p.curso-data {
-              color: variables.$color-dark-theme-text;
-            }
-
-            .curso-tags {
-              a.badge {
-                background-color: variables.$color-grey-200;
-                color: variables.$color-grey-800;
-                border: 1px solid variables.$color-grey-300;
-                transition: all 0.2s ease;
-
-                &:hover {
-                  background-color: variables.$color-primary;
-                  border-color: variables.$color-primary;
-                  color: variables.$color-on-primary;
-                }
-              }
+            &:hover {
+              background-color: variables.$color-primary;
+              border-color: variables.$color-primary;
+              color: variables.$color-on-primary;
             }
           }
         }
@@ -118,19 +102,19 @@
 
   @media (max-width: 768px) {
     .curso-card {
-        padding: 1.5rem;
-        border-left: 4px solid transparent;
-        transition: border-color 0.3s, box-shadow 0.3s;
-    }
+      padding: 1.5rem;
+      border-left: 4px solid transparent;
+      transition: border-color 0.3s, box-shadow 0.3s;
 
-    .curso-card:hover {
+      &:hover {
         border-left-color: variables.$color-primary;
         box-shadow: 0 0.5rem 1rem variables.$color-black-30;
-    }
+      }
 
-    .curso-img img {
+      .curso-img img {
         max-height: 150px;
         object-fit: cover;
+      }
     }
 
     .curso-title {
@@ -141,10 +125,8 @@
       flex-direction: column;
       gap: 0.8rem;
 
-      .icon-col {
-        i {
-          font-size: 1.4rem;
-        }
+      .icon-col i {
+        font-size: 1.4rem;
       }
     }
   }
