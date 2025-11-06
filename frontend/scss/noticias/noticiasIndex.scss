@@ -47,7 +47,7 @@
 }
 
 .lista-arquivos__list {
-  padding-left: 0;
+  padding-left: 0px;
 }
 
 .noticias-pagination-item {
@@ -61,7 +61,7 @@
   height: 40px;
   min-width: 40px;
   min-height: 40px;
-  margin: 0 8px;
+  margin: 0px 8px;
 
   a {
     color: variables.$color-black;
@@ -70,7 +70,7 @@
 
   &.active {
     background-color: variables.$color-primary-active;
-    border-color: variables.$color-primary;
+    border: 1px solid variables.$color-primary;
     color: variables.$color-primary;
 
     a {
@@ -83,7 +83,7 @@
     border: none;
 
     &.with-border {
-      border-color: variables.$color-grey-410;
+      border: 1px solid variables.$color-grey-410;
     }
   }
 }

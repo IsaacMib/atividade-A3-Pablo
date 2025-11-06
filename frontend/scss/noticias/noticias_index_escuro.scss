@@ -11,7 +11,7 @@
 
   .noticias-pagination-item {
     --paginator-svg-color: #{variables.$color-white};
-    border-color: variables.$color-white;
+    border: 1px solid variables.$color-white;
     color: variables.$color-white;
 
     a {
@@ -32,7 +32,7 @@
       border: none;
 
       &.with-border {
-        border-color: variables.$color-grey-800;
+        border: 1px solid variables.$color-grey-800;
       }
     }
   }
