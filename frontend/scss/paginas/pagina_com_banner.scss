@@ -1,0 +1,21 @@
+@use '../variables.scss';
+
+.pagina-banner-title {
+  text-align: center;
+  padding-bottom: 24px;
+}
+
+h1 {
+  &.pagina-banner-title-text {
+    color: variables.$color-primary;
+  }
+}
+
+.pagina-banner-page {
+    .page-header,
+    .pagina-banner-content,
+    .pagina-banner-content-sections {
+      padding: 0 20%;
+    }
+    
+}
