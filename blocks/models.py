@@ -104,31 +104,64 @@ class AcessoRapidoWidget(StructBlock):
 
 
 
-class BannerComLinkBlock(blocks.StructBlock):
+class ImagemConfiguracao(blocks.StructBlock):
+    """Bloco para configuração de imagem com suas propriedades de renderização"""
     imagem = ImageChooserBlock(
         required=True,
-        label="Imagem do Banner (Desktop)"
+        label="Imagem"
     )
-    imagem_mobile = ImageChooserBlock(
-        required=False,
-        label="Imagem do Banner (Mobile)",
-        help_text="Imagem alternativa para dispositivos menores."
-    )
-    
-    # Modo de renderização
     mode = blocks.ChoiceBlock(
         choices=BANNER_MODES,
         default='fill',
         label="Modo de Ajuste",
         help_text="Define como a imagem será ajustada ao tamanho escolhido."
     )
-    
-    # Tamanho
     size = blocks.ChoiceBlock(
         choices=BANNER_SIZES,
         default='1920x1080',
-        label="Tamanho do Banner",
-        help_text="Selecione o tamanho desejado do banner."
+        label="Tamanho",
+        help_text="Selecione o tamanho desejado."
+    )
+
+    class Meta:
+        label = "Configuração de Imagem"
+        icon = "image"
+
+
+class ImagemMobileConfiguracao(blocks.StructBlock):
+    """Bloco para configuração de imagem mobile com suas propriedades de renderização"""
+    imagem = ImageChooserBlock(
+        required=False,
+        label="Imagem"
+    )
+    mode = blocks.ChoiceBlock(
+        choices=BANNER_MODES,
+        default='fill',
+        label="Modo de Ajuste",
+        help_text="Define como a imagem será ajustada ao tamanho escolhido."
+    )
+    size = blocks.ChoiceBlock(
+        choices=BANNER_SIZES,
+        default='1920x1080',
+        label="Tamanho",
+        help_text="Selecione o tamanho desejado."
+    )
+
+    class Meta:
+        label = "Configuração de Imagem Mobile"
+        icon = "mobile"
+
+
+class BannerComLinkBlock(blocks.StructBlock):
+    # Configurações de imagem agrupadas
+    imagem_desktop = ImagemConfiguracao(
+        label="🖥️ Configuração Desktop/Tablet",
+        help_text="Configurações da imagem que será exibida em desktops e tablets."
+    )
+    imagem_mobile = ImagemMobileConfiguracao(
+        required=False,
+        label="📱 Configuração Mobile (Opcional)",
+        help_text="Configurações da imagem alternativa para dispositivos menores. Se não preenchido, usará a configuração desktop."
     )
     
     link = blocks.URLBlock(
@@ -146,65 +179,86 @@ class BannerComLinkBlock(blocks.StructBlock):
         label="Abrir em nova aba?"
     )
     
-    def get_rendition(self, image, mode, size):
-        """
-        Retorna a rendition apropriada da imagem baseada no modo e tamanho.
-        """
-        if mode == "original" or size == "original":
-            return image
-        
-        # Constrói o filtro no formato: "fill-1920x1080", "max-400x400", etc.
-        filter_spec = f"{mode}-{size}"
-        return image.get_rendition(filter_spec)
-    
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
         
-        imagem = value.get('imagem')
-        imagem_mobile = value.get('imagem_mobile')
-        mode = value.get('mode', 'fill')
-        size = value.get('size', '1920x1080')
+        # Configurações da imagem desktop
+        imagem_desktop_config = value.get('imagem_desktop', {})
+        imagem_desktop = imagem_desktop_config.get('imagem')
+        mode_desktop = imagem_desktop_config.get('mode', 'fill')
+        size_desktop = imagem_desktop_config.get('size', '1920x1080')
+        
+        # Configurações da imagem mobile
+        imagem_mobile_config = value.get('imagem_mobile', {})
+        imagem_mobile = imagem_mobile_config.get('imagem') if imagem_mobile_config else None
+        mode_mobile = imagem_mobile_config.get('mode', mode_desktop) if imagem_mobile_config else mode_desktop
+        size_mobile = imagem_mobile_config.get('size', size_desktop) if imagem_mobile_config else size_desktop
         
         # Processa imagem desktop
-        if imagem:
-            if mode == "original" or size == "original":
-                context['rendition_desktop'] = imagem
+        if imagem_desktop:
+            # Se mode E size forem original → não faz alteração alguma
+            if mode_desktop == "original" and size_desktop == "original":
+                context['rendition_desktop'] = None
+            # Se apenas size for original → não faz redimensionamento mesmo com modo selecionado
+            elif size_desktop == "original":
+                context['rendition_desktop'] = None
+            # Se apenas mode for original → usa o size selecionado para redimensionar
+            elif mode_desktop == "original":
+                try:
+                    # Usa apenas o tamanho para redimensionar (sem modo específico - usa 'max' como padrão)
+                    filter_spec = f"max-{size_desktop}"
+                    context['rendition_desktop'] = imagem_desktop.get_rendition(filter_spec)
+                except Exception as e:
+                    # Em caso de erro, deixa como None para usar a imagem original
+                    context['rendition_desktop'] = None
+            # Mode e size normais → aplica filtro completo
             else:
                 try:
-                    filter_spec = f"{mode}-{size}"
-                    context['rendition_desktop'] = imagem.get_rendition(filter_spec)
-                except:
-                    context['rendition_desktop'] = imagem
+                    filter_spec = f"{mode_desktop}-{size_desktop}"
+                    context['rendition_desktop'] = imagem_desktop.get_rendition(filter_spec)
+                except Exception as e:
+                    # Em caso de erro, deixa como None para usar a imagem original
+                    context['rendition_desktop'] = None
+        else:
+            context['rendition_desktop'] = None
         
         # Processa imagem mobile
         if imagem_mobile:
-            if mode == "original" or size == "original":
-                context['rendition_mobile'] = imagem_mobile
+            # Se mode E size forem original → não faz alteração alguma
+            if mode_mobile == "original" and size_mobile == "original":
+                context['rendition_mobile'] = None
+            # Se apenas size for original → não faz redimensionamento mesmo com modo selecionado
+            elif size_mobile == "original":
+                context['rendition_mobile'] = None
+            # Se apenas mode for original → usa o size selecionado para redimensionar
+            elif mode_mobile == "original":
+                try:
+                    # Usa apenas o tamanho para redimensionar (sem modo específico - usa 'max' como padrão)
+                    filter_spec = f"max-{size_mobile}"
+                    context['rendition_mobile'] = imagem_mobile.get_rendition(filter_spec)
+                except Exception as e:
+                    # Em caso de erro, deixa como None para usar a imagem original
+                    context['rendition_mobile'] = None
+            # Mode e size normais → aplica filtro completo
             else:
                 try:
-                    filter_spec = f"{mode}-{size}"
+                    filter_spec = f"{mode_mobile}-{size_mobile}"
                     context['rendition_mobile'] = imagem_mobile.get_rendition(filter_spec)
-                except:
-                    context['rendition_mobile'] = imagem_mobile
+                except Exception as e:
+                    # Em caso de erro, deixa como None para usar a imagem original
+                    context['rendition_mobile'] = None
+        else:
+            context['rendition_mobile'] = None
         
         return context
 
     def clean(self, value):
         cleaned_data = super().clean(value)
-        proporcao = cleaned_data.get('proporcao')
-        altura_personalizada = cleaned_data.get('altura_personalizada')
-
-        errors = {}
-        if proporcao == 'custom':
-            if not altura_personalizada:
-                errors['altura_personalizada'] = ValidationError("Este campo é obrigatório quando a proporção é 'Altura Personalizada'.")
-            else:
-                # Valida se o valor corresponde a um formato de altura CSS comum (ex: 300px, 50vh, 80%)
-                if not re.match(r'^\d+(\.\d+)?(px|vh|vw|%|rem|em)$', altura_personalizada.strip()):
-                    errors['altura_personalizada'] = ValidationError("Formato inválido. Use um valor seguido de uma unidade (ex: '300px', '50vh', '80%').")
-
-        if errors:
-            raise ValidationError('Erros de validação no Banner com Link', params=errors)
+        
+        # Validação básica: verificar se pelo menos a imagem desktop está configurada
+        imagem_desktop_config = cleaned_data.get('imagem_desktop', {})
+        if not imagem_desktop_config.get('imagem'):
+            raise ValidationError('A imagem para desktop é obrigatória.')
 
         return cleaned_data
 

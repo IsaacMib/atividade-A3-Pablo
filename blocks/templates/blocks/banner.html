@@ -6,7 +6,7 @@
 {# Tamanhos: De ícones (16x16) até 4K (3840x2160) #}
 {# A imagem mantém suas proporções originais sem deformação #}
 
-<div class="banner-wrapper banner-mode-{{ self.mode }} banner-size-{{ self.size }}">
+<div class="banner-wrapper banner-mode-{{ self.imagem_desktop.mode }} banner-size-{{ self.imagem_desktop.size }}">
   <div class="banner-container">
     <a href="{{ self.link }}" 
        {% if self.abrir_nova_aba %}target="_blank" rel="noopener noreferrer"{% endif %} 
@@ -15,41 +15,48 @@
       
       <picture class="banner-picture">
         {# Imagem Mobile (se fornecida) #}
-        {% if self.imagem_mobile %}
+        {% if self.imagem_mobile.imagem %}
           {% if rendition_mobile %}
+            {# Imagem mobile processada #}
             <source media="(max-width: 768px)" srcset="{{ rendition_mobile.url }}">
           {% else %}
-            <source media="(max-width: 768px)" srcset="{{ self.imagem_mobile.url }}">
+            {# Imagem mobile original #}
+            <source media="(max-width: 768px)" srcset="{{ self.imagem_mobile.imagem.file.url }}">
           {% endif %}
         {% endif %}
         
         {# Imagem Desktop #}
-        {% if rendition_desktop %}
-          <source media="(min-width: 769px)" srcset="{{ rendition_desktop.url }}">
-          <img
-            src="{{ rendition_desktop.url }}"
-            alt="{{ self.alt_texto|default:self.imagem.title|default:'Banner' }}"
-            class="banner-image"
-            loading="lazy"
-            width="{{ rendition_desktop.width }}"
-            height="{{ rendition_desktop.height }}"
-          >
-        {% elif self.imagem %}
-          {# Fallback para original se rendition falhar #}
-          <img
-            src="{{ self.imagem.url }}"
-            alt="{{ self.alt_texto|default:self.imagem.title|default:'Banner' }}"
-            class="banner-image"
-            loading="lazy"
-          >
+        {% if self.imagem_desktop.imagem %}
+          {% if rendition_desktop %}
+            {# Imagem desktop processada #}
+            <source media="(min-width: 769px)" srcset="{{ rendition_desktop.url }}">
+            <img
+              src="{{ rendition_desktop.url }}"
+              alt="{{ self.alt_texto|default:self.imagem_desktop.imagem.title|default:'Banner' }}"
+              class="banner-image"
+              loading="lazy"
+              width="{{ rendition_desktop.width }}"
+              height="{{ rendition_desktop.height }}"
+            >
+          {% else %}
+            {# Imagem desktop original #}
+            <img
+              src="{{ self.imagem_desktop.imagem.file.url }}"
+              alt="{{ self.alt_texto|default:self.imagem_desktop.imagem.title|default:'Banner' }}"
+              class="banner-image"
+              loading="lazy"
+              width="{{ self.imagem_desktop.imagem.width }}"
+              height="{{ self.imagem_desktop.imagem.height }}"
+            >
+          {% endif %}
         {% endif %}
       </picture>
       
       {# Badge informativo (apenas no preview do admin) #}
       {% if request.is_preview %}
         <div class="banner-info-badge">
-          <span class="badge-mode">{{ self.get_mode_display }}</span>
-          <span class="badge-size">{{ self.size }}</span>
+          <span class="badge-mode">{{ self.imagem_desktop.mode }}</span>
+          <span class="badge-size">{{ self.imagem_desktop.size }}</span>
         </div>
       {% endif %}
     </a>
