@@ -101,7 +101,7 @@ class RecomendacaoPresidenteBlock(StructBlock):
 
 
 class NoticiaInternaPresidenteBlock(StructBlock):
-    """Bloco para notícia interna (conquista, meta, evento, comunicado)."""
+    """Bloco para post interno (conquista, meta, evento, comunicado)."""
     
     CATEGORIA_CHOICES = [
         ('conquista', 'Conquista'),
@@ -113,17 +113,17 @@ class NoticiaInternaPresidenteBlock(StructBlock):
     categoria = ChoiceBlock(
         choices=CATEGORIA_CHOICES,
         required=False,
-        label="Categoria da Notícia",
-        help_text="Tipo de notícia interna."
+        label="Categoria do Post",
+        help_text="Tipo de post interno."
     )
     conteudo = RichTextBlock(
-        verbose_name="Conteúdo da Notícia",
-        help_text="Corpo completo da notícia interna."
+        verbose_name="Conteúdo do Post",
+        help_text="Corpo completo do post interno."
     )
     
     class Meta:
         icon = 'doc-full'
-        label = 'Notícia Interna'
+        label = 'Post Interno'
         template = 'dicas_presidente/blocks/noticia_interna_presidente_block.html'
 
 
@@ -218,15 +218,20 @@ class DicasPresidentePage(PageSitePadrao):
         help_text="Marque para exibir esta dica em destaque na página principal."
     )
     
-    # Imagem de destaque (para todos os tipos)
-    imagem_destaque = models.ForeignKey(
-        'wagtailimages.Image',
-        null=True,
+    # Coleção de imagens (seguindo padrão de notícias e avisos)
+    imagens_dica = StreamField(
+        [("imagem", ImageChooserBlock(required=True, label="Imagem da dica"))],
+        verbose_name="Imagens da Dica",
         blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name="Imagem de Destaque",
-        help_text="Imagem principal da dica (usada em cards e compartilhamento)."
+        null=True,
+        use_json_field=True,
+        help_text="Adicione uma ou mais imagens para a dica."
+    )
+    
+    slideshow_imagens = models.BooleanField(
+        "Ativar slideshow de imagens",
+        default=False,
+        help_text="Exibir as imagens como slideshow.",
     )
     
     # Conteúdo principal usando StreamField
@@ -251,7 +256,13 @@ class DicasPresidentePage(PageSitePadrao):
     content_panels = get_page_title_with_counter(100) + [
         FieldPanel("destaque"),
         FieldPanel("descricao", widget=get_widget_input_with_counter()),
-        FieldPanel("imagem_destaque"),
+        MultiFieldPanel(
+            [
+                FieldPanel("slideshow_imagens"),
+                FieldPanel("imagens_dica"),
+            ],
+            heading="Imagens da Dica",
+        ),
         FieldPanel("data_publicacao"),
         FieldPanel("tags"),
         FieldPanel("conteudo"),
@@ -293,11 +304,14 @@ class DicasPresidentePage(PageSitePadrao):
         return tags
     
     def get_imagem_principal(self):
-        """Retorna a imagem de destaque ou primeira imagem encontrada nos blocos."""
-        if self.imagem_destaque:
-            return self.imagem_destaque
+        """Retorna a primeira imagem da dica ou primeira imagem encontrada nos blocos."""
+        # Primeiro tenta pegar da coleção de imagens da dica
+        if self.imagens_dica and len(self.imagens_dica):
+            for bloco in self.imagens_dica:
+                if bloco.block_type == "imagem" and bloco.value:
+                    return bloco.value
         
-        # Busca imagem na galeria
+        # Busca imagem na galeria do conteúdo
         for bloco in self.conteudo:
             if bloco.block_type == "galeria" and bloco.value.get('imagens'):
                 imagens = bloco.value.get('imagens')
@@ -349,7 +363,7 @@ class DicasPresidentePage(PageSitePadrao):
         tipo_map = {
             'mensagem': 'Mensagem Pessoal',
             'recomendacao': 'Recomendação/Estudo',
-            'noticia_interna': 'Notícia Interna',
+            'noticia_interna': 'Post Interno',
             'galeria': 'Galeria/Bastidores',
             'frase': 'Frase da Semana',
         }
@@ -362,7 +376,7 @@ class DicasPresidentePage(PageSitePadrao):
         tipo_map = {
             'mensagem': 'Mensagem Pessoal',
             'recomendacao': 'Recomendação/Estudo',
-            'noticia_interna': 'Notícia Interna',
+            'noticia_interna': 'Post Interno',
             'galeria': 'Galeria/Bastidores',
             'frase': 'Frase da Semana',
         }

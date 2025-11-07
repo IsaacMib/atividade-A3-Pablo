@@ -46,6 +46,10 @@
   }
   
   .mensagem-presidente {
+    color: variables.$color-white !important;
+    background: linear-gradient(135deg, 
+    variables.$color-bloco-mensagem-5-dark 0%,
+    variables.$color-bloco-mensagem-5-light 100%);
     font-size: 1.15rem;
     line-height: 1.7;
     opacity: 0.95;
@@ -80,6 +84,27 @@
   i {
     color: variables.$color-primary;
     margin-right: 0.5rem;
+  }
+}
+
+// Wrapper para cards clicáveis
+.card-link-wrapper {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    text-decoration: none;
+    transform: translateY(-4px);
+    
+    .card {
+      box-shadow: 0 8px 16px variables.$color-black-80;
+    }
+  }
+  
+  .card-title {
+    color: variables.$color-on-surface;
   }
 }
 
@@ -186,6 +211,22 @@
     height: 220px;
     object-fit: cover;
     transition: transform 0.3s ease;
+    
+    // Imagem padrão com opacity reduzida
+    &[src*="img_noticia_default"] {
+      opacity: 0.6;
+      background: variables.$color-grey-100;
+    }
+  }
+  
+  // Imagens padrão - versão clara visível por padrão
+  .default-img-light {
+    display: block;
+  }
+  
+  // Imagens padrão - versão escura oculta por padrão
+  .default-img-dark {
+    display: none;
   }
   
   &:hover .card-img-top {
@@ -289,7 +330,7 @@
 }
 
 .badge-destaque {
-  background: linear-gradient(135deg, variables.$color-warning 0%, #f39c12 100%);
+  background: linear-gradient(135deg, variables.$color-warning 0%, variables.$global-link-color 100%);
   color: variables.$color-on-warning;
   padding: 0.35rem 0.75rem;
   border-radius: 50px;
@@ -688,7 +729,7 @@
   border-radius: 20px;
   padding: 2.5rem;
   margin-bottom: 3rem;
-  box-shadow: 0 8px 24px rgba(167, 0, 0, 0.3);
+  box-shadow: 0 8px 24px variables.$color-bloco-frase-3-dark;
   position: relative;
   overflow: hidden;
   
@@ -699,7 +740,7 @@
     left: 20px;
     font-size: 150px;
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.15);
+    color: variables.$color-text-darker;
     font-family: Georgia, serif;
     line-height: 1;
   }
@@ -736,7 +777,7 @@
         
         footer {
           font-size: 1rem;
-          color: rgba(255, 255, 255, 0.95);
+          color: variables.$color-grey-100;
           font-weight: 600;
           text-shadow: 0 1px 2px variables.$color-black-20;
           

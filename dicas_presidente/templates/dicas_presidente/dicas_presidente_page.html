@@ -9,7 +9,7 @@
     <div class="container">
         <!-- Tipo e Data -->
         <div class="dica-meta mb-3">
-            <span class="dica-tipo-badge">{{ page.get_tipo_dica_display_icon }} {{ page.get_tipo_dica_display }}</span>
+            <span class="dica-tipo-badge">{{ page.get_tipo_dica_display }}</span>
             {% if page.destaque %}
             <span class="etiqueta etiqueta-importante ms-2"><i class="bi bi-star-fill"></i> Destaque</span>
             {% endif %}
@@ -25,9 +25,9 @@
         {% endif %}
         
         <!-- Imagem de Destaque -->
-        {% if page.imagem_destaque %}
+        {% if page.get_imagem_principal %}
         <div class="dica-imagem-destaque mb-4">
-            {% image page.imagem_destaque fill-1200x600 as img %}
+            {% image page.get_imagem_principal fill-1200x600 as img %}
             <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid rounded">
         </div>
         {% endif %}

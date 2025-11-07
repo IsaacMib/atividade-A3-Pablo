@@ -6,6 +6,15 @@
 
 [data-theme=dark] {
   
+  // Controle de imagens padrão no tema escuro
+  .default-img-light {
+    display: none;
+  }
+  
+  .default-img-dark {
+    display: block;
+  }
+  
   // ============================================================
   // BLOCOS - TEMA ESCURO
   // ============================================================
@@ -131,6 +140,13 @@
     background: variables.$color-black !important;
   }
   
+  // Wrapper para cards clicáveis - tema escuro
+  .card-link-wrapper {
+    .card-title {
+      color: variables.$color-grey-100;
+    }
+  }
+
   // Cards
   .dica-card,
   .dica-card-destaque {
@@ -206,6 +222,12 @@
     
     .card-text {
       color: variables.$color-grey-300;
+    }
+    
+    // Imagem padrão no tema escuro
+    .card-img-top[src*="img_noticia_default"] {
+      opacity: 0.4;
+      background: variables.$color-grey-800;
     }
   }
   
@@ -298,7 +320,7 @@
       variables.$color-bloco-frase-5-dark 100%
     );
     border-color: transparent;
-    box-shadow: 0 8px 24px rgba(234, 46, 46, 0.3);
+    box-shadow: 0 8px 24px variables.$color-bloco-frase-3-dark;
     
     .frase-widget {
       .frase-conteudo {
