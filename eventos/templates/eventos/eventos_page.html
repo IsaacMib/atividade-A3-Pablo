@@ -1,29 +1,42 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags sharing_tags %}
 
 {% block body_class %}template-evento-page{% endblock %}
 
 {% block content %}
 
 <div class="eventos-page-container">
-    <div class="container d-flex flex-column align-items-center justify-content-center">
+    <div class="container d-flex flex-column justify-content-center">
         <h2 class="evento-page--title">{{ page.title }}</h2>
-
-        {% if page.data_publicacao %}
-            <h5 class="evento-page-publicacao meta align-self-start">Publicado em {{ page.data_publicacao|date:"d/m/Y H:i" }}</h5>
-        {% endif %}
-
-        <div class="evento-page-descricao intro align-self-start">
-            {{ page.descricao|richtext }}
-        </div>
-
-        <hr>
-
-        <div class="evento-page-content body-content">
-            {% for block in page.body %}
-                {% include_block block %}
-            {% endfor %}
+    </div>
+    
+    <div class="evento-barra-publicacao">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <span class="evento-page-publicacao meta">Publicado em {{ page.data_publicacao|date:"d/m/Y H:i" }}</span>
+                </div>
+            </div>
         </div>
     </div>
+    
+    <div class="container d-flex flex-column justify-content-center">
+        <div class="evento-conteudo">
+            <div class="evento-page-descricao intro align-self-start">
+                {{ page.descricao|richtext }}
+            </div>
+            <div class="evento-page-content body-content">
+                {% for block in page.body %}
+                {% include_block block %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Compartilhamento colocado ao final da página -->
+    <div class="container">
+        {% compartilhamento_social %}
+    </div>
+
 </div>
 {% endblock %}

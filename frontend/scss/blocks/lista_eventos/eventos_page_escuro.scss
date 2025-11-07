@@ -1,19 +1,66 @@
 @use './../../variables.scss';
 
-[data-theme=dark] {
+[data-theme="dark"] {
   .eventos-page-container {
     background-color: variables.$color-black;
-  }
-  .evento-page--title {
-    color: variables.$color-white !important;
-  }
-  .evento-page-publicacao {
-    color: variables.$color-white !important;
-  }
-  .evento-page-descricao {
-    color: variables.$color-white !important;
-  }
-  .evento-page-content {
-    color: variables.$color-white !important;
+    color: variables.$color-white;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    // Título principal
+    .evento-page--title {
+      color: variables.$color-white;
+      transition: color 0.3s ease;
+    }
+
+    // Barra de publicação
+    .evento-barra-publicacao {
+      background-color: transparent;
+    }
+
+    // Data de publicação
+    .evento-page-publicacao {
+      color: variables.$color-grey-300;
+      transition: color 0.3s ease;
+    }
+
+    // Descrição do evento
+    .evento-page-descricao {
+      color: variables.$color-grey-100;
+      transition: color 0.3s ease;
+    }
+
+    // Texto e corpo do evento
+    .evento-page-content {
+      color: variables.$color-grey-100;
+      transition: color 0.3s ease;
+
+      a {
+        color: variables.$color-primary;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.2s ease, text-shadow 0.2s ease;
+
+        &:hover {
+          color: variables.$color-primary-light;
+          text-shadow: 0 0 5px rgba(variables.$color-primary-light, 0.4);
+        }
+      }
+    }
+
+    // Compartilhamento social
+    .social-sharing {
+      .social-links a {
+        background-color: rgba(variables.$color-white, 0.08);
+        color: variables.$color-primary;
+        transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
+
+        &:hover {
+          background-color: variables.$color-primary;
+          color: variables.$color-on-primary;
+          transform: scale(1.1);
+          box-shadow: 0 0 10px rgba(variables.$color-primary, 0.6);
+        }
+      }
+    }
   }
 }
