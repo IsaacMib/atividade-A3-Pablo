@@ -15,7 +15,7 @@
           {% for dica in dicas %}
             <div class="col-12 dica-item-lista mb-4">
               <a href="{% pageurl dica %}" class="text-decoration-none">
-                <article class="dica-card-lista">
+                <article class="dica-card-lista {% if dica.get_tipos_blocos|length > 1 %}dica-tipo-misto{% else %}dica-tipo-{{ dica.get_tipo_dica_principal }}{% endif %}">
                   <div class="row align-items-center g-0">
                     {% if dica.get_imagem_principal %}
                       <div class="col-md-3">
@@ -31,7 +31,11 @@
                         <div class="dica-conteudo">
                           <div class="d-flex align-items-center gap-2 mb-3">
                             <span class="dica-tipo-badge">
-                              {{ dica.get_tipo_dica_display_icon }} {{ dica.get_tipo_dica_display }}
+                              {% if dica.get_tipos_blocos|length > 1 %}
+                                {{ dica.get_todos_icones_tipos }} Conteúdo Misto
+                              {% else %}
+                                {{ dica.get_tipo_dica_display_icon }} {{ dica.get_tipo_dica_display }}
+                              {% endif %}
                             </span>
                             {% if dica.destaque %}
                               <span class="badge badge-destaque">
@@ -70,10 +74,14 @@
           {% for dica in dicas %}
             <div class="col-12 col-md-6 col-lg-6 d-flex justify-content-center mb-4">
               <a href="{% pageurl dica %}" class="text-decoration-none w-100">
-                <article class="dica-card h-100">
+                <article class="dica-card {% if dica.get_tipos_blocos|length > 1 %}dica-tipo-misto{% else %}dica-tipo-{{ dica.get_tipo_dica_principal }}{% endif %} h-100">
                   <div class="d-flex align-items-center gap-2 mb-3">
                     <span class="dica-tipo-badge">
-                      {{ dica.get_tipo_dica_display_icon }} {{ dica.get_tipo_dica_display }}
+                      {% if dica.get_tipos_blocos|length > 1 %}
+                        {{ dica.get_todos_icones_tipos }} Conteúdo Misto
+                      {% else %}
+                        {{ dica.get_tipo_dica_display_icon }} {{ dica.get_tipo_dica_display }}
+                      {% endif %}
                     </span>
                     {% if dica.destaque %}
                       <span class="badge badge-destaque">

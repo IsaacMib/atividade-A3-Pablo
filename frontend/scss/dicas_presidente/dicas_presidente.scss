@@ -11,72 +11,294 @@
 .banner-presidente {
   background: linear-gradient(135deg, variables.$color-primary 0%, variables.$color-primary-darker 100%);
   color: variables.$color-white;
-  padding: 3rem 0;
-  margin-bottom: 2rem;
+  padding: 4rem 0;
+  margin-bottom: 3rem;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
   
   .foto-presidente {
-    border: 4px solid variables.$color-white;
-    box-shadow: 0 4px 12px variables.$color-card-shadow-hover;
+    border: 5px solid variables.$color-white;
+    box-shadow: 0 8px 24px variables.$color-black-40;
+    transition: transform 0.3s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
   }
   
   .titulo-presidente {
     color: variables.$color-white;
-    font-size: 2.5rem;
+    font-size: 2.75rem;
+    font-weight: 700;
     margin-bottom: 1rem;
+    text-shadow: 0 2px 4px variables.$color-black-30;
   }
   
   .mensagem-presidente {
-    font-size: 1.1rem;
-    line-height: 1.6;
+    font-size: 1.15rem;
+    line-height: 1.7;
     opacity: 0.95;
+    text-shadow: 0 1px 2px variables.$color-black-20;
+  }
+}
+
+// Seções
+.secao-titulo {
+  font-size: 2rem;
+  font-weight: 700;
+  color: variables.$color-on-surface;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid variables.$color-primary;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, 
+      variables.$color-bloco-mensagem-light 0%, 
+      variables.$color-bloco-recomendacao-light 50%,
+      variables.$color-bloco-noticia-light 100%
+    );
+  }
+  
+  i {
+    color: variables.$color-primary;
+    margin-right: 0.5rem;
   }
 }
 
 // Cards de Dicas
 .dica-card,
 .dica-card-destaque {
-  border: 1px solid variables.$color-grey-300;
-  border-radius: variables.$border-radius-md;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+  background: variables.$color-white;
+  box-shadow: 0 2px 8px variables.$color-card-shadow-light, 0 1px 3px variables.$color-card-shadow;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+      variables.$color-bloco-mensagem-4-light 0%, 
+      variables.$color-bloco-recomendacao-4-light 20%,
+      variables.$color-bloco-noticia-4-light 40%,
+      variables.$color-bloco-galeria-5-light 60%,
+      variables.$color-bloco-frase-3-light 80%,
+      variables.$color-bloco-mensagem-4-light 100%
+    );
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+  }
+  
+  // Variações por tipo
+  &.dica-tipo-mensagem::before {
+    background: linear-gradient(90deg, 
+      variables.$color-bloco-mensagem-1-light 0%, 
+      variables.$color-bloco-mensagem-3-light 33%,
+      variables.$color-bloco-mensagem-4-light 66%,
+      variables.$color-bloco-mensagem-5-light 100%
+    );
+  }
+  
+  &.dica-tipo-recomendacao::before {
+    background: linear-gradient(90deg, 
+      variables.$color-bloco-recomendacao-1-light 0%, 
+      variables.$color-bloco-recomendacao-3-light 33%,
+      variables.$color-bloco-recomendacao-4-light 66%,
+      variables.$color-bloco-recomendacao-5-light 100%
+    );
+  }
+  
+  &.dica-tipo-noticia::before,
+  &.dica-tipo-noticia_interna::before {
+    background: linear-gradient(90deg, 
+      variables.$color-bloco-noticia-1-light 0%, 
+      variables.$color-bloco-noticia-3-light 33%,
+      variables.$color-bloco-noticia-4-light 66%,
+      variables.$color-bloco-noticia-5-light 100%
+    );
+  }
+  
+  &.dica-tipo-galeria::before {
+    background: linear-gradient(90deg, 
+      variables.$color-bloco-galeria-1-light 0%, 
+      variables.$color-bloco-galeria-3-light 33%,
+      variables.$color-bloco-galeria-4-light 66%,
+      variables.$color-bloco-galeria-5-light 100%
+    );
+  }
+  
+  &.dica-tipo-frase::before {
+    background: linear-gradient(90deg, 
+      variables.$color-bloco-frase-1-light 0%, 
+      variables.$color-bloco-frase-2-light 25%,
+      variables.$color-bloco-frase-3-light 50%,
+      variables.$color-bloco-frase-4-light 75%,
+      variables.$color-bloco-frase-5-light 100%
+    );
+  }
+  
+  &.dica-tipo-misto::before {
+    background: linear-gradient(90deg, 
+      variables.$color-bloco-mensagem-4-light 0%, 
+      variables.$color-bloco-recomendacao-4-light 20%,
+      variables.$color-bloco-noticia-4-light 40%,
+      variables.$color-bloco-galeria-5-light 60%,
+      variables.$color-bloco-frase-3-light 80%,
+      variables.$color-bloco-mensagem-4-light 100%
+    );
+  }
   
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px variables.$color-banner-shadow-hover;
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px variables.$color-banner-shadow-hover, 0 4px 8px variables.$color-card-shadow;
+    
+    &::before {
+      opacity: 1;
+      height: 5px;
+    }
   }
   
   .card-img-top {
-    height: 200px;
+    height: 220px;
     object-fit: cover;
+    transition: transform 0.3s ease;
   }
   
-  .card-title a {
-    color: variables.$color-on-surface;
-    text-decoration: none;
+  &:hover .card-img-top {
+    transform: scale(1.05);
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
     
-    &:hover {
-      color: variables.$color-primary;
+    a {
+      color: variables.$color-on-surface;
+      text-decoration: none;
+      transition: color 0.2s ease;
+      
+      &:hover {
+        color: variables.$color-primary;
+      }
     }
+  }
+  
+  .card-text {
+    color: variables.$color-text-dark;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
   }
 }
 
 .dica-card-destaque {
-  border-color: variables.$color-primary;
-  border-width: 2px;
-  background: linear-gradient(to bottom, variables.$color-white 0%, variables.$color-primary-06 100%);
+  background: linear-gradient(135deg, variables.$color-white 0%, variables.$color-primary-06 100%);
+  box-shadow: 0 4px 16px variables.$color-primary-50, 0 2px 8px variables.$color-card-shadow;
+  
+  &::before {
+    height: 5px;
+    background: linear-gradient(90deg, 
+      variables.$color-primary 0%, 
+      variables.$color-primary-hover 100%
+    );
+  }
+  
+  &:hover {
+    box-shadow: 0 16px 32px variables.$color-primary-50, 0 8px 16px variables.$color-card-shadow;
+  }
+  
+  .dica-tipo-badge {
+    background: variables.$color-primary;
+    color: variables.$color-white;
+  }
 }
 
 // Tipo de Dica Badge
 .dica-tipo-badge,
 .dica-tipo {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  background-color: variables.$color-primary-12;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, variables.$color-primary-12 0%, variables.$color-primary-06 100%);
   color: variables.$color-primary;
-  border-radius: 1rem;
+  border-radius: 50px;
   font-size: 0.875rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 2px 4px variables.$color-card-shadow-light;
+  transition: all 0.2s ease;
+  
+  i {
+    font-size: 1rem;
+  }
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px variables.$color-card-shadow;
+  }
+}
+
+// Footer do Card
+.dica-footer,
+.dica-meta-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid variables.$color-grey-200;
+  margin-top: auto;
+  
+  .texto-muted {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: variables.$color-grey-600;
+    font-size: 0.875rem;
+  }
+}
+
+.badge-destaque {
+  background: linear-gradient(135deg, variables.$color-warning 0%, #f39c12 100%);
+  color: variables.$color-on-warning;
+  padding: 0.35rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 2px 6px rgba(variables.$color-warning, 0.4);
 }
 
 // ============================================================
@@ -259,6 +481,57 @@
       justify-content: center;
     }
   }
+  
+  // Cards responsivos
+  .dica-card,
+  .dica-card-destaque {
+    .card-img-top {
+      height: 180px;
+    }
+    
+    .card-title {
+      font-size: 1.1rem;
+    }
+  }
+  
+  // Banner responsivo
+  .banner-presidente {
+    padding: 2.5rem 0;
+    
+    .titulo-presidente {
+      font-size: 2rem;
+    }
+    
+    .mensagem-presidente {
+      font-size: 1rem;
+    }
+  }
+  
+  // Widget frase responsivo
+  .widget-frase-presidente {
+    padding: 1.5rem;
+    
+    &::before {
+      font-size: 100px;
+      top: -10px;
+    }
+    
+    .frase-widget {
+      .frase-icone {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+      
+      .frase-conteudo blockquote p {
+        font-size: 1.1rem;
+      }
+    }
+  }
+  
+  // Seção título responsivo
+  .secao-titulo {
+    font-size: 1.5rem;
+  }
 }
 
 // Página Individual
@@ -383,33 +656,94 @@
 }
 
 // Widget de Frase (sidebar)
+// Seções de Listagem
+.dicas-destaque,
+.dicas-listagem {
+  margin-bottom: 4rem;
+  
+  .row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 1.5rem;
+  }
+}
+
+.dicas-presidente-container {
+  min-height: 60vh;
+  
+  .container {
+    max-width: 1200px;
+  }
+}
+
+// Widget Frase (na página de listagem)
 .widget-frase-presidente {
-  background: variables.$color-primary-06;
-  border: 2px solid variables.$color-primary-12;
-  border-radius: variables.$border-radius-md;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  background: linear-gradient(135deg, 
+    variables.$color-bloco-frase-1-light 0%,
+    variables.$color-bloco-frase-2-light 25%,
+    variables.$color-bloco-frase-3-light 50%,
+    variables.$color-bloco-frase-4-light 75%,
+    variables.$color-bloco-frase-5-light 100%
+  );
+  border: none;
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 8px 24px rgba(167, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '"';
+    position: absolute;
+    top: -20px;
+    left: 20px;
+    font-size: 150px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.15);
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
   
   .frase-widget {
     text-align: center;
+    position: relative;
+    z-index: 1;
     
     .frase-icone {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      color: variables.$color-white;
+      opacity: 0.9;
+      
+      i {
+        filter: drop-shadow(0 2px 4px variables.$color-black-30);
+      }
     }
     
     .frase-conteudo {
-      p {
-        font-size: 1.1rem;
-        font-style: italic;
-        color: variables.$color-primary-darker;
-        margin-bottom: 0.5rem;
-      }
-      
-      footer {
-        font-size: 0.9rem;
-        color: variables.$color-primary;
-        font-weight: 500;
+      blockquote {
+        margin: 0;
+        
+        p {
+          font-size: 1.35rem;
+          font-style: italic;
+          color: variables.$color-white;
+          margin-bottom: 1rem;
+          line-height: 1.6;
+          font-weight: 500;
+          text-shadow: 0 2px 4px variables.$color-black-20;
+        }
+        
+        footer {
+          font-size: 1rem;
+          color: rgba(255, 255, 255, 0.95);
+          font-weight: 600;
+          text-shadow: 0 1px 2px variables.$color-black-20;
+          
+          &::before {
+            content: '— ';
+          }
+        }
       }
     }
   }
@@ -586,11 +920,96 @@
       padding: 1.5rem;
       transition: all 0.3s ease;
       display: block;
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, 
+          variables.$color-bloco-mensagem-4-light 0%, 
+          variables.$color-bloco-recomendacao-4-light 20%,
+          variables.$color-bloco-noticia-4-light 40%,
+          variables.$color-bloco-galeria-5-light 60%,
+          variables.$color-bloco-frase-3-light 80%,
+          variables.$color-bloco-mensagem-4-light 100%
+        );
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+      }
+      
+      // Variações por tipo
+      &.dica-tipo-mensagem::before {
+        background: linear-gradient(180deg, 
+          variables.$color-bloco-mensagem-1-light 0%, 
+          variables.$color-bloco-mensagem-3-light 33%,
+          variables.$color-bloco-mensagem-4-light 66%,
+          variables.$color-bloco-mensagem-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-recomendacao::before {
+        background: linear-gradient(180deg, 
+          variables.$color-bloco-recomendacao-1-light 0%, 
+          variables.$color-bloco-recomendacao-3-light 33%,
+          variables.$color-bloco-recomendacao-4-light 66%,
+          variables.$color-bloco-recomendacao-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-noticia::before,
+      &.dica-tipo-noticia_interna::before {
+        background: linear-gradient(180deg, 
+          variables.$color-bloco-noticia-1-light 0%, 
+          variables.$color-bloco-noticia-3-light 33%,
+          variables.$color-bloco-noticia-4-light 66%,
+          variables.$color-bloco-noticia-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-galeria::before {
+        background: linear-gradient(180deg, 
+          variables.$color-bloco-galeria-1-light 0%, 
+          variables.$color-bloco-galeria-3-light 33%,
+          variables.$color-bloco-galeria-4-light 66%,
+          variables.$color-bloco-galeria-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-frase::before {
+        background: linear-gradient(180deg, 
+          variables.$color-bloco-frase-1-light 0%, 
+          variables.$color-bloco-frase-2-light 25%,
+          variables.$color-bloco-frase-3-light 50%,
+          variables.$color-bloco-frase-4-light 75%,
+          variables.$color-bloco-frase-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-misto::before {
+        background: linear-gradient(180deg, 
+          variables.$color-bloco-mensagem-4-light 0%, 
+          variables.$color-bloco-recomendacao-4-light 20%,
+          variables.$color-bloco-noticia-4-light 40%,
+          variables.$color-bloco-galeria-5-light 60%,
+          variables.$color-bloco-frase-3-light 80%,
+          variables.$color-bloco-mensagem-4-light 100%
+        );
+      }
       
       &:hover {
         border-color: variables.$color-primary;
         box-shadow: 0 4px 12px variables.$color-card-shadow-light;
         transform: translateX(8px);
+        
+        &::before {
+          opacity: 1;
+          width: 5px;
+        }
       }
       
       .dica-imagem-wrapper {
@@ -670,11 +1089,96 @@
       display: flex;
       flex-direction: column;
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, 
+          variables.$color-bloco-mensagem-4-light 0%, 
+          variables.$color-bloco-recomendacao-4-light 20%,
+          variables.$color-bloco-noticia-4-light 40%,
+          variables.$color-bloco-galeria-5-light 60%,
+          variables.$color-bloco-frase-3-light 80%,
+          variables.$color-bloco-mensagem-4-light 100%
+        );
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+      }
+      
+      // Variações por tipo
+      &.dica-tipo-mensagem::before {
+        background: linear-gradient(90deg, 
+          variables.$color-bloco-mensagem-1-light 0%, 
+          variables.$color-bloco-mensagem-3-light 33%,
+          variables.$color-bloco-mensagem-4-light 66%,
+          variables.$color-bloco-mensagem-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-recomendacao::before {
+        background: linear-gradient(90deg, 
+          variables.$color-bloco-recomendacao-1-light 0%, 
+          variables.$color-bloco-recomendacao-3-light 33%,
+          variables.$color-bloco-recomendacao-4-light 66%,
+          variables.$color-bloco-recomendacao-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-noticia::before,
+      &.dica-tipo-noticia_interna::before {
+        background: linear-gradient(90deg, 
+          variables.$color-bloco-noticia-1-light 0%, 
+          variables.$color-bloco-noticia-3-light 33%,
+          variables.$color-bloco-noticia-4-light 66%,
+          variables.$color-bloco-noticia-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-galeria::before {
+        background: linear-gradient(90deg, 
+          variables.$color-bloco-galeria-1-light 0%, 
+          variables.$color-bloco-galeria-3-light 33%,
+          variables.$color-bloco-galeria-4-light 66%,
+          variables.$color-bloco-galeria-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-frase::before {
+        background: linear-gradient(90deg, 
+          variables.$color-bloco-frase-1-light 0%, 
+          variables.$color-bloco-frase-2-light 25%,
+          variables.$color-bloco-frase-3-light 50%,
+          variables.$color-bloco-frase-4-light 75%,
+          variables.$color-bloco-frase-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-misto::before {
+        background: linear-gradient(90deg, 
+          variables.$color-bloco-mensagem-4-light 0%, 
+          variables.$color-bloco-recomendacao-4-light 20%,
+          variables.$color-bloco-noticia-4-light 40%,
+          variables.$color-bloco-galeria-5-light 60%,
+          variables.$color-bloco-frase-3-light 80%,
+          variables.$color-bloco-mensagem-4-light 100%
+        );
+      }
       
       &:hover {
         border-color: variables.$color-primary;
         box-shadow: 0 8px 20px variables.$color-card-shadow-hover;
         transform: translateY(-4px);
+        
+        &::before {
+          opacity: 1;
+          height: 5px;
+        }
       }
       
       .dica-titulo-card {

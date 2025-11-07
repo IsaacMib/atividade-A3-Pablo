@@ -109,6 +109,14 @@ $color-light-bg-hover: #e6e6f1; // Para erro base hover
 $color-light-border: #f1f3f5; // Para cookieconsent
 $color-timeline-secondary: #e8edf4; // Para linha do tempo
 
+// Cores adicionais para textos e backgrounds
+$color-text-dark: #333; // Texto escuro comum
+$color-text-darker: #343a40; // Texto mais escuro (tabelas)
+$color-border-light: #a0a0a0; // Bordas claras
+$color-bg-light-grey: #f8f9fa; // Background cinza claro
+$color-bg-table-header: #e9ecef; // Background header tabela
+$color-text-table-header: #e9ecef; // Texto header tabela (dark mode)
+
 // Cores para cookieconsent
 $color-cookie-bg: #f9faff; // Background principal do cookie consent
 $color-cookie-secondary-bg: #dfe7f9; // Background do botão secundário
@@ -187,19 +195,94 @@ $color-aviso-barra-border-dark: #afafaf;
 $color-aviso-barra-shadow-dark: #afafaf;
 
 // Cores dos blocos - Dicas do Presidente
-$color-bloco-mensagem-light: #4a90e2;
-$color-bloco-mensagem-dark: #357abd;
-$color-bloco-recomendacao-light: #f39c12;
-$color-bloco-recomendacao-dark: #e67e22;
-$color-bloco-recomendacao-hover: #ffa726;
-$color-bloco-noticia-light: #27ae60;
-$color-bloco-noticia-dark: #229954;
-$color-bloco-noticia-success: #4caf50;
-$color-bloco-galeria-light: #9b59b6;
-$color-bloco-galeria-dark: #8e44ad;
-$color-bloco-galeria-hover: #ba68c8;
-$color-bloco-frase-light: #e74c3c;
-$color-bloco-frase-dark: #c0392b;
+// Paleta Mensagem Pessoal (Azul)
+$color-bloco-mensagem-1-light: #e3f3f8;
+$color-bloco-mensagem-2-light: #d3edf6;
+$color-bloco-mensagem-3-light: #bce7f4;
+$color-bloco-mensagem-4-light: #73c6ea;
+$color-bloco-mensagem-5-light: #339ac7;
+
+$color-bloco-mensagem-1-dark: #050827;
+$color-bloco-mensagem-2-dark: #0e1143;
+$color-bloco-mensagem-3-dark: #141654;
+$color-bloco-mensagem-4-dark: #1c1e70;
+$color-bloco-mensagem-5-dark: #24298c;
+
+// Paleta Recomendação (Laranja)
+$color-bloco-recomendacao-1-light: #ffb677;
+$color-bloco-recomendacao-2-light: #ffc88a;
+$color-bloco-recomendacao-3-light: #ffcba3;
+$color-bloco-recomendacao-4-light: #ff9e4d;
+$color-bloco-recomendacao-5-light: #ff8c3d;
+
+$color-bloco-recomendacao-1-dark: #a54803;
+$color-bloco-recomendacao-2-dark: #b85102;
+$color-bloco-recomendacao-3-dark: #cf6308;
+$color-bloco-recomendacao-4-dark: #e78e1b;
+$color-bloco-recomendacao-5-dark: #f7b530;
+
+// Paleta Notícia (Verde)
+$color-bloco-noticia-1-light: #ecfae5;
+$color-bloco-noticia-2-light: #e6fade;
+$color-bloco-noticia-3-light: #ddf6d2;
+$color-bloco-noticia-4-light: #cae8bd;
+$color-bloco-noticia-5-light: #b9e0a6;
+
+$color-bloco-noticia-1-dark: #eeff69;
+$color-bloco-noticia-2-dark: #b3e662;
+$color-bloco-noticia-3-dark: #5acb4e;
+$color-bloco-noticia-4-dark: #3ba641;
+$color-bloco-noticia-5-dark: #0b7220;
+
+// Paleta Galeria (Rosa/Roxo)
+$color-bloco-galeria-1-light: #f4cccc;
+$color-bloco-galeria-2-light: #ffb4b4;
+$color-bloco-galeria-3-light: #deb2b2;
+$color-bloco-galeria-4-light: #ce9797;
+$color-bloco-galeria-5-light: #ff9797;
+
+$color-bloco-galeria-1-dark: #a75399;
+$color-bloco-galeria-2-dark: #be50ab;
+$color-bloco-galeria-3-dark: #d146b9;
+$color-bloco-galeria-4-dark: #df3bc3;
+$color-bloco-galeria-5-dark: #f020cc;
+
+// Paleta Frase (Vermelho)
+$color-bloco-frase-1-light: #ffbaba;
+$color-bloco-frase-2-light: #ff7b7b;
+$color-bloco-frase-3-light: #ff5252;
+$color-bloco-frase-4-light: #ff0000;
+$color-bloco-frase-5-light: #a70000;
+
+$color-bloco-frase-1-dark: #ea2e2e;
+$color-bloco-frase-2-dark: #a70000;
+$color-bloco-frase-3-dark: #5b1414;
+$color-bloco-frase-4-dark: #a70000;
+$color-bloco-frase-5-dark: #ea2e2e;
+
+// Atalhos para facilitar uso (mantém compatibilidade)
+$color-bloco-mensagem-light: $color-bloco-mensagem-4-light;
+$color-bloco-mensagem-dark: $color-bloco-mensagem-5-light;
+$color-bloco-mensagem-dark-theme: $color-bloco-mensagem-4-dark;
+
+$color-bloco-recomendacao-light: $color-bloco-recomendacao-4-light;
+$color-bloco-recomendacao-dark: $color-bloco-recomendacao-5-light;
+$color-bloco-recomendacao-hover: $color-bloco-recomendacao-2-light;
+$color-bloco-recomendacao-dark-theme: $color-bloco-recomendacao-5-dark;
+
+$color-bloco-noticia-light: $color-bloco-noticia-4-light;
+$color-bloco-noticia-dark: $color-bloco-noticia-5-light;
+$color-bloco-noticia-success: $color-bloco-noticia-3-dark;
+$color-bloco-noticia-dark-theme: $color-bloco-noticia-3-dark;
+
+$color-bloco-galeria-light: $color-bloco-galeria-5-light;
+$color-bloco-galeria-dark: $color-bloco-galeria-4-light;
+$color-bloco-galeria-hover: $color-bloco-galeria-2-light;
+$color-bloco-galeria-dark-theme: $color-bloco-galeria-4-dark;
+
+$color-bloco-frase-light: $color-bloco-frase-3-light;
+$color-bloco-frase-dark: $color-bloco-frase-5-light;
+$color-bloco-frase-dark-theme: $color-bloco-frase-1-dark;
 
 $widget-icon-size: 2rem;
 $widget-icon-bg: $primary-color !default;

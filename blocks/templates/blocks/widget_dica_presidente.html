@@ -12,7 +12,11 @@
               <div class="widget-item-barra"></div>
               <div class="widget-item-conteudo">
                 <div class="widget-item-icone">
-                  {{ dica.get_tipo_dica_display_icon }}
+                  {% if dica.get_tipos_blocos|length > 1 %}
+                    {{ dica.get_todos_icones_tipos }}
+                  {% else %}
+                    {{ dica.get_tipo_dica_display_icon }}
+                  {% endif %}
                 </div>
                 <div class="widget-item-texto">
                   <span class="widget-item-titulo">{{ dica.title }}</span>

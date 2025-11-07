@@ -324,6 +324,13 @@ class DicasPresidentePage(PageSitePadrao):
     
     def get_todos_icones_tipos(self):
         """Retorna todos os ícones dos tipos de blocos presentes."""
+        tipos = self.get_tipos_blocos()
+        
+        # Se houver múltiplos tipos, usa ícone de caneta para conteúdo misto
+        if len(tipos) > 1:
+            return mark_safe('<i class="bi bi-pen"></i>')
+        
+        # Se houver apenas um tipo, retorna o ícone específico
         icons_map = {
             'mensagem': '<i class="bi bi-chat-dots"></i>',
             'recomendacao': '<i class="bi bi-journal-check"></i>',
@@ -331,9 +338,11 @@ class DicasPresidentePage(PageSitePadrao):
             'galeria': '<i class="bi bi-camera"></i>',
             'frase': '<i class="bi bi-chat-quote"></i>',
         }
-        tipos = self.get_tipos_blocos()
-        icones = [icons_map.get(tipo, '') for tipo in tipos if tipo in icons_map]
-        return mark_safe(' '.join(icones))
+        
+        if len(tipos) == 1:
+            return mark_safe(icons_map.get(tipos[0], '<i class="bi bi-pin-angle"></i>'))
+        
+        return mark_safe('<i class="bi bi-pin-angle"></i>')
     
     def get_todas_labels_tipos(self):
         """Retorna todas as labels dos tipos de blocos presentes, separadas por ' • '."""

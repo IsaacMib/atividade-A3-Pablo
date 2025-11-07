@@ -1326,9 +1326,9 @@ class DicaPresidenteWidget(StructBlock):
         required=False,
         default=3,
         min_value=1,
-        max_value=5,
+        max_value=6,
         label="Quantidade de dicas",
-        help_text="Número de dicas a exibir (1 a 5)"
+        help_text="Número de dicas a exibir (1 a 6)"
     )
     
     class Meta:

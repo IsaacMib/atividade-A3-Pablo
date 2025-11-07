@@ -48,7 +48,7 @@
             <div class="row g-4">
                 {% for dica in dicas_destaque %}
                 <div class="col-md-4">
-                    <div class="card dica-card-destaque h-100">
+                    <div class="card dica-card-destaque {% if dica.get_tipos_blocos|length > 1 %}dica-tipo-misto{% else %}dica-tipo-{{ dica.get_tipo_dica_principal }}{% endif %} h-100">
                         {% if dica.imagem_destaque %}
                         <a href="{% pageurl dica %}">
                             {% image dica.imagem_destaque fill-400x250 as img %}
@@ -59,7 +59,7 @@
                         <div class="card-body">
                             <div class="dica-tipo-badge mb-2">
                                 {% if dica.get_tipos_blocos|length > 1 %}
-                                    {{ dica.get_todos_icones_tipos }} {{ dica.get_todas_labels_tipos }}
+                                    {{ dica.get_todos_icones_tipos }} Conteúdo Misto
                                 {% else %}
                                     {{ dica.get_tipo_dica_display_icon }} {{ dica.get_tipo_dica_display }}
                                 {% endif %}
@@ -84,15 +84,17 @@
         
         <!-- Frase Aleatória (Widget Lateral) -->
         {% if frase_aleatoria %}
-        <aside class="widget-frase-presidente mb-5">
+        <aside class="widget-frase-presidente">
             <div class="frase-widget">
-                <div class="frase-icone"><i class="bi bi-cloud"></i></div>
-                <blockquote class="frase-conteudo">
-                    <p>"{{ frase_aleatoria.texto_frase }}"</p>
-                    {% if frase_aleatoria.autor_frase %}
-                    <footer>— {{ frase_aleatoria.autor_frase }}</footer>
-                    {% endif %}
-                </blockquote>
+                <div class="frase-icone"><i class="bi bi-chat-quote-fill"></i></div>
+                <div class="frase-conteudo">
+                    <blockquote>
+                        <p>{{ frase_aleatoria.texto }}</p>
+                        {% if frase_aleatoria.autor %}
+                        <footer>{{ frase_aleatoria.autor }}</footer>
+                        {% endif %}
+                    </blockquote>
+                </div>
             </div>
         </aside>
         {% endif %}
@@ -105,7 +107,7 @@
             <div class="row g-4">
                 {% for dica in posts %}
                 <div class="col-md-6 col-lg-4">
-                    <article class="card dica-card h-100">
+                    <article class="card dica-card {% if dica.get_tipos_blocos|length > 1 %}dica-tipo-misto{% else %}dica-tipo-{{ dica.get_tipo_dica_principal }}{% endif %} h-100">
                         {% if dica.get_imagem_principal %}
                         <a href="{% pageurl dica %}">
                             {% image dica.get_imagem_principal fill-400x250 as img %}
@@ -114,14 +116,13 @@
                         {% endif %}
                         
                         <div class="card-body">
-                                                <div class="destaque-conteudo">
-                        <div class="dica-tipo-badge mb-2">
-                            {% if dica.get_tipos_blocos|length > 1 %}
-                                {{ dica.get_todos_icones_tipos }} {{ dica.get_todas_labels_tipos }}
-                            {% else %}
-                                {{ dica.get_tipo_dica_display_icon }} {{ dica.get_tipo_dica_display }}
-                            {% endif %}
-                        </div>
+                            <div class="dica-tipo-badge mb-2">
+                                {% if dica.get_tipos_blocos|length > 1 %}
+                                    {{ dica.get_todos_icones_tipos }} Conteúdo Misto
+                                {% else %}
+                                    {{ dica.get_tipo_dica_display_icon }} {{ dica.get_tipo_dica_display }}
+                                {% endif %}
+                            </div>
                             
                             <h3 class="card-title h5">
                                 <a href="{% pageurl dica %}" class="sem-decoracao">{{ dica.title }}</a>
@@ -131,11 +132,11 @@
                             
                             <div class="dica-footer mt-auto">
                                 <small class="texto-muted">
-                                    <i class="bi bi-calendar"></i> {{ dica.data_publicacao|date:"d/m/Y" }}
+                                    <i class="bi bi-calendar3"></i> {{ dica.data_publicacao|date:"d/m/Y" }}
                                 </small>
                                 
                                 {% if dica.destaque %}
-                                <span class="badge badge-destaque"><i class="bi bi-star-fill"></i> Destaque</span>
+                                <span class="badge-destaque"><i class="bi bi-star-fill"></i> Destaque</span>
                                 {% endif %}
                             </div>
                         </div>

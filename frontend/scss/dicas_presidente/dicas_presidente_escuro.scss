@@ -137,6 +137,65 @@
     background-color: variables.$color-grey-800;
     border-color: variables.$color-grey-700;
     
+    // Gradientes por tipo - versão dark theme
+    &.dica-tipo-mensagem::before {
+      background: linear-gradient(90deg, 
+        variables.$color-bloco-mensagem-1-dark 0%, 
+        variables.$color-bloco-mensagem-3-dark 33%,
+        variables.$color-bloco-mensagem-4-dark 66%,
+        variables.$color-bloco-mensagem-5-dark 100%
+      ) !important;
+    }
+    
+    &.dica-tipo-recomendacao::before {
+      background: linear-gradient(90deg, 
+        variables.$color-bloco-recomendacao-1-dark 0%, 
+        variables.$color-bloco-recomendacao-3-dark 33%,
+        variables.$color-bloco-recomendacao-4-dark 66%,
+        variables.$color-bloco-recomendacao-5-dark 100%
+      ) !important;
+    }
+    
+    &.dica-tipo-noticia::before,
+    &.dica-tipo-noticia_interna::before {
+      background: linear-gradient(90deg, 
+        variables.$color-bloco-noticia-1-dark 0%, 
+        variables.$color-bloco-noticia-3-dark 33%,
+        variables.$color-bloco-noticia-4-dark 66%,
+        variables.$color-bloco-noticia-5-dark 100%
+      ) !important;
+    }
+    
+    &.dica-tipo-galeria::before {
+      background: linear-gradient(90deg, 
+        variables.$color-bloco-galeria-1-dark 0%, 
+        variables.$color-bloco-galeria-3-dark 33%,
+        variables.$color-bloco-galeria-4-dark 66%,
+        variables.$color-bloco-galeria-5-dark 100%
+      ) !important;
+    }
+    
+    &.dica-tipo-frase::before {
+      background: linear-gradient(90deg, 
+        variables.$color-bloco-frase-1-dark 0%, 
+        variables.$color-bloco-frase-2-dark 25%,
+        variables.$color-bloco-frase-3-dark 50%,
+        variables.$color-bloco-frase-4-dark 75%,
+        variables.$color-bloco-frase-5-dark 100%
+      ) !important;
+    }
+    
+    &.dica-tipo-misto::before {
+      background: linear-gradient(90deg, 
+        variables.$color-bloco-mensagem-4-dark 0%, 
+        variables.$color-bloco-recomendacao-4-dark 20%,
+        variables.$color-bloco-noticia-4-dark 40%,
+        variables.$color-bloco-galeria-5-dark 60%,
+        variables.$color-bloco-frase-3-dark 80%,
+        variables.$color-bloco-mensagem-4-dark 100%
+      ) !important;
+    }
+    
     .card-title a {
       color: variables.$color-grey-100;
       
@@ -158,8 +217,9 @@
   // Tipo Badge
   .dica-tipo-badge,
   .dica-tipo {
-    background-color: variables.$color-grey-700;
-    color: variables.$color-white;
+    background: linear-gradient(135deg, variables.$color-grey-800 0%, variables.$color-grey-700 100%);
+    color: variables.$color-grey-200;
+    box-shadow: 0 2px 4px variables.$color-black-40;
   }
   
   // Página Individual
@@ -230,8 +290,15 @@
   
   // Widget Frase
   .widget-frase-presidente {
-    background: variables.$color-grey-900;
-    border-color: variables.$color-grey-700;
+    background: linear-gradient(135deg, 
+      variables.$color-bloco-frase-1-dark 0%,
+      variables.$color-bloco-frase-2-dark 25%,
+      variables.$color-bloco-frase-3-dark 50%,
+      variables.$color-bloco-frase-4-dark 75%,
+      variables.$color-bloco-frase-5-dark 100%
+    );
+    border-color: transparent;
+    box-shadow: 0 8px 24px rgba(234, 46, 46, 0.3);
     
     .frase-widget {
       .frase-conteudo {
@@ -240,7 +307,7 @@
         }
         
         footer {
-          color: variables.$color-primary;
+          color: variables.$color-white;
         }
       }
     }
@@ -406,6 +473,65 @@
         background: variables.$color-grey-900;
         border-color: variables.$color-grey-700;
         
+        // Gradientes por tipo - versão dark theme (lateral)
+        &.dica-tipo-mensagem::before {
+          background: linear-gradient(180deg, 
+            variables.$color-bloco-mensagem-1-dark 0%, 
+            variables.$color-bloco-mensagem-3-dark 33%,
+            variables.$color-bloco-mensagem-4-dark 66%,
+            variables.$color-bloco-mensagem-5-dark 100%
+          ) !important;
+        }
+        
+        &.dica-tipo-recomendacao::before {
+          background: linear-gradient(180deg, 
+            variables.$color-bloco-recomendacao-1-dark 0%, 
+            variables.$color-bloco-recomendacao-3-dark 33%,
+            variables.$color-bloco-recomendacao-4-dark 66%,
+            variables.$color-bloco-recomendacao-5-dark 100%
+          ) !important;
+        }
+        
+        &.dica-tipo-noticia::before,
+        &.dica-tipo-noticia_interna::before {
+          background: linear-gradient(180deg, 
+            variables.$color-bloco-noticia-1-dark 0%, 
+            variables.$color-bloco-noticia-3-dark 33%,
+            variables.$color-bloco-noticia-4-dark 66%,
+            variables.$color-bloco-noticia-5-dark 100%
+          ) !important;
+        }
+        
+        &.dica-tipo-galeria::before {
+          background: linear-gradient(180deg, 
+            variables.$color-bloco-galeria-1-dark 0%, 
+            variables.$color-bloco-galeria-3-dark 33%,
+            variables.$color-bloco-galeria-4-dark 66%,
+            variables.$color-bloco-galeria-5-dark 100%
+          ) !important;
+        }
+        
+        &.dica-tipo-frase::before {
+          background: linear-gradient(180deg, 
+            variables.$color-bloco-frase-1-dark 0%, 
+            variables.$color-bloco-frase-2-dark 25%,
+            variables.$color-bloco-frase-3-dark 50%,
+            variables.$color-bloco-frase-4-dark 75%,
+            variables.$color-bloco-frase-5-dark 100%
+          ) !important;
+        }
+        
+        &.dica-tipo-misto::before {
+          background: linear-gradient(180deg, 
+            variables.$color-bloco-mensagem-4-dark 0%, 
+            variables.$color-bloco-recomendacao-4-dark 20%,
+            variables.$color-bloco-noticia-4-dark 40%,
+            variables.$color-bloco-galeria-5-dark 60%,
+            variables.$color-bloco-frase-3-dark 80%,
+            variables.$color-bloco-mensagem-4-dark 100%
+          ) !important;
+        }
+        
         &:hover {
           border-color: variables.$color-white;
           box-shadow: 0 4px 16px variables.$color-overlay-40;
@@ -420,8 +546,8 @@
         }
         
         .dica-tipo-badge {
-          background-color: variables.$color-grey-800;
-          color: variables.$color-white;
+          background: linear-gradient(135deg, variables.$color-grey-800 0%, variables.$color-grey-700 100%);
+          color: variables.$color-grey-200;
         }
         
         .dica-descricao {
@@ -440,6 +566,65 @@
         background: variables.$color-grey-900;
         border-color: variables.$color-grey-700;
         
+        // Gradientes por tipo - versão dark theme (topo)
+        &.dica-tipo-mensagem::before {
+          background: linear-gradient(90deg, 
+            variables.$color-bloco-mensagem-1-dark 0%, 
+            variables.$color-bloco-mensagem-3-dark 33%,
+            variables.$color-bloco-mensagem-4-dark 66%,
+            variables.$color-bloco-mensagem-5-dark 100%
+          ) !important;
+        }
+        
+        &.dica-tipo-recomendacao::before {
+          background: linear-gradient(90deg, 
+            variables.$color-bloco-recomendacao-1-dark 0%, 
+            variables.$color-bloco-recomendacao-3-dark 33%,
+            variables.$color-bloco-recomendacao-4-dark 66%,
+            variables.$color-bloco-recomendacao-5-dark 100%
+          ) !important;
+        }
+        
+        &.dica-tipo-noticia::before,
+        &.dica-tipo-noticia_interna::before {
+          background: linear-gradient(90deg, 
+            variables.$color-bloco-noticia-1-dark 0%, 
+            variables.$color-bloco-noticia-3-dark 33%,
+            variables.$color-bloco-noticia-4-dark 66%,
+            variables.$color-bloco-noticia-5-dark 100%
+          ) !important;
+        }
+        
+        &.dica-tipo-galeria::before {
+          background: linear-gradient(90deg, 
+            variables.$color-bloco-galeria-1-dark 0%, 
+            variables.$color-bloco-galeria-3-dark 33%,
+            variables.$color-bloco-galeria-4-dark 66%,
+            variables.$color-bloco-galeria-5-dark 100%
+          ) !important;
+        }
+        
+        &.dica-tipo-frase::before {
+          background: linear-gradient(90deg, 
+            variables.$color-bloco-frase-1-dark 0%, 
+            variables.$color-bloco-frase-2-dark 25%,
+            variables.$color-bloco-frase-3-dark 50%,
+            variables.$color-bloco-frase-4-dark 75%,
+            variables.$color-bloco-frase-5-dark 100%
+          ) !important;
+        }
+        
+        &.dica-tipo-misto::before {
+          background: linear-gradient(90deg, 
+            variables.$color-bloco-mensagem-4-dark 0%, 
+            variables.$color-bloco-recomendacao-4-dark 20%,
+            variables.$color-bloco-noticia-4-dark 40%,
+            variables.$color-bloco-galeria-5-dark 60%,
+            variables.$color-bloco-frase-3-dark 80%,
+            variables.$color-bloco-mensagem-4-dark 100%
+          ) !important;
+        }
+        
         &:hover {
           border-color: variables.$color-white;
           box-shadow: 0 8px 24px variables.$color-overlay-50;
@@ -454,8 +639,8 @@
         }
         
         .dica-tipo-badge {
-          background-color: variables.$color-grey-800;
-          color: variables.$color-primary;
+          background: linear-gradient(135deg, variables.$color-grey-800 0%, variables.$color-grey-700 100%);
+          color: variables.$color-grey-200;
         }
         
         .dica-descricao {
