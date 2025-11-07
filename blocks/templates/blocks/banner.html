@@ -1,78 +1,64 @@
 {% load static %}
 {% load wagtailimages_tags %}
 
-{% comment %} Use Wagtail renditions (server-side) to crop images to desired proportions. Falls back to original if not available. {% endcomment %}
-{% if self.imagem %}
-  {% if self.proporcao == "1-1" %}
-    {% image self.imagem fill-800x800 as desktop_img %}
-  {% elif self.proporcao == "3-2" %}
-    {% image self.imagem fill-900x600 as desktop_img %}
-  {% elif self.proporcao == "4-3" %}
-    {% image self.imagem fill-1024x768 as desktop_img %}
-  {% elif self.proporcao == "18-6" %}
-    {% image self.imagem fill-1800x600 as desktop_img %}
-  {% else %}
-    {% image self.imagem fill-1200x675 as desktop_img %}
-  {% endif %}
-{% endif %}
-{% if self.imagem_mobile %}
-  {% comment %} mobile renditions smaller to save bandwidth {% endcomment %}
-  {% if self.proporcao == "1-1" %}
-    {% image self.imagem_mobile fill-400x400 as mobile_img %}
-  {% else %}
-    {% image self.imagem_mobile fill-600x338 as mobile_img %}
-  {% endif %}
-{% endif %}
+{# Sistema de Banner com Renditions Personalizadas #}
+{# Suporta: fill, max, min, original #}
+{# Tamanhos: De ícones (16x16) até 4K (3840x2160) #}
+{# A imagem mantém suas proporções originais sem deformação #}
 
-{# Define proporção e altura personalizada #}
-{% with "" as proporcao_class %}
-  {% with "" as height_style %}
-
-    {% if self.proporcao == "custom" and self.altura_personalizada %}
-      {% with "ratio-custom" as proporcao_class %}
-      {% with "height:"|add:self.altura_personalizada as height_style %}
-      {% endwith %}
-      {% endwith %}
-    {% elif self.proporcao == "1-1" %}
-      {% with "ratio-1-1" as proporcao_class %}
-      {% endwith %}
-    {% elif self.proporcao == "3-2" %}
-      {% with "ratio-3-2" as proporcao_class %}
-      {% endwith %}
-    {% elif self.proporcao == "4-3" %}
-      {% with "ratio-4-3" as proporcao_class %}
-      {% endwith %}
-    {% elif self.proporcao == "18-6" %}
-      {% with "ratio-18-6" as proporcao_class %}
-      {% endwith %}
-    {% else %}
-      {% with "ratio-16-9" as proporcao_class %}
-      {% endwith %}
-    {% endif %}
-
-    <div class="banner-wrapper {{ proporcao_class }} {% if self.is_fullwidth %}banner--standalone{% endif %}" {% if height_style %}style="{{ height_style }}"{% endif %}>
-      <div class="banner-container">
-        <div class="banner-inner">
-          <a href="{{ self.link }}" {% if self.abrir_nova_aba %}target="_blank" rel="noopener noreferrer"{% endif %} aria-label="{{ self.alt_texto }}">
-            <picture class="banner-picture">
-              {% if self.imagem_mobile and mobile_img %}
-                <source media="(max-width: 768px)" srcset="{{ mobile_img.url }}">
-              {% endif %}
-              {% if self.imagem and desktop_img %}
-                <source media="(min-width: 769px)" srcset="{{ desktop_img.url }}">
-                <img
-                  src="{{ desktop_img.url }}"
-                  alt="{{ self.alt_texto|default:desktop_img.alt|default:'' }}"
-                  class="banner-image"
-                  loading="lazy"
-                >
-              {% endif %}
-            </picture>
-          </a>
+<div class="banner-wrapper banner-mode-{{ self.imagem_desktop.mode }} banner-size-{{ self.imagem_desktop.size }}">
+  <div class="banner-container">
+    <a href="{{ self.link }}" 
+       {% if self.abrir_nova_aba %}target="_blank" rel="noopener noreferrer"{% endif %} 
+       aria-label="{{ self.alt_texto|default:'Banner' }}"
+       class="banner-link">
+      
+      <picture class="banner-picture">
+        {# Imagem Mobile (se fornecida) #}
+        {% if self.imagem_mobile.imagem %}
+          {% if rendition_mobile %}
+            {# Imagem mobile processada #}
+            <source media="(max-width: 768px)" srcset="{{ rendition_mobile.url }}">
+          {% else %}
+            {# Imagem mobile original #}
+            <source media="(max-width: 768px)" srcset="{{ self.imagem_mobile.imagem.file.url }}">
+          {% endif %}
+        {% endif %}
+        
+        {# Imagem Desktop #}
+        {% if self.imagem_desktop.imagem %}
+          {% if rendition_desktop %}
+            {# Imagem desktop processada #}
+            <source media="(min-width: 769px)" srcset="{{ rendition_desktop.url }}">
+            <img
+              src="{{ rendition_desktop.url }}"
+              alt="{{ self.alt_texto|default:self.imagem_desktop.imagem.title|default:'Banner' }}"
+              class="banner-image"
+              loading="lazy"
+              width="{{ rendition_desktop.width }}"
+              height="{{ rendition_desktop.height }}"
+            >
+          {% else %}
+            {# Imagem desktop original #}
+            <img
+              src="{{ self.imagem_desktop.imagem.file.url }}"
+              alt="{{ self.alt_texto|default:self.imagem_desktop.imagem.title|default:'Banner' }}"
+              class="banner-image"
+              loading="lazy"
+              width="{{ self.imagem_desktop.imagem.width }}"
+              height="{{ self.imagem_desktop.imagem.height }}"
+            >
+          {% endif %}
+        {% endif %}
+      </picture>
+      
+      {# Badge informativo (apenas no preview do admin) #}
+      {% if request.is_preview %}
+        <div class="banner-info-badge">
+          <span class="badge-mode">{{ self.imagem_desktop.mode }}</span>
+          <span class="badge-size">{{ self.imagem_desktop.size }}</span>
         </div>
-      </div>
-    </div>
-
-  {% endwith %}
-{% endwith %}
-
+      {% endif %}
+    </a>
+  </div>
+</div>
