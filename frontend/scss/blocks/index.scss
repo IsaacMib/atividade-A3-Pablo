@@ -6,7 +6,8 @@
 @use './banner_escuro.scss';
 
 @use './lista_noticias/index.scss' as listaNoticias;
-@use './lista_avisos/index.scss';
+// @use './lista_avisos/index.scss'; // Migrado para paginas_codata
+@use './../paginas_codata/index.scss' as paginasCodata;
 
 
 
@@ -53,6 +54,6 @@
 @use './table.scss';
 @use './table_escuro.scss';
 
-@use './lista_eventos/index.scss' as listaEventos; // alias aqui
+// @use './lista_eventos/index.scss' as listaEventos; // Migrado para paginas_codata
 
 @use './lgpd_page.scss';

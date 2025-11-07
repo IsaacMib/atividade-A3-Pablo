@@ -1,0 +1,185 @@
+@use './../variables.scss';
+
+// Container genérico para listagem
+.avisos-container,
+.eventos-container {
+  background-color: variables.$color-white;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 0;
+}
+
+// Wrapper de listagem
+.avisos-wrapper,
+.eventos-wrapper {
+  padding-bottom: 3rem;
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+
+// Link do card
+.aviso-link,
+.evento-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover .aviso-card,
+  &:hover .evento-card {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 10px variables.$color-card-shadow-hover;
+  }
+}
+
+// Card genérico
+.aviso-card,
+.evento-card {
+  background-color: variables.$color-white;
+  border-radius: 8px;
+  border: 1px solid variables.$color-grey-210;
+  box-shadow: 0 1px 4px variables.$color-card-shadow;
+  padding: 1.25rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  cursor: pointer;
+  margin: 20px 10px;
+  min-height: 240px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 10px variables.$color-card-shadow-hover;
+
+    &::before {
+      transform: scaleY(1);
+    }
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background-color: variables.$color-primary;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.3s ease;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    z-index: 5;
+  }
+}
+
+// Título do card
+.aviso-title,
+.evento-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: variables.$color-primary;
+  margin-bottom: 1rem;
+  text-align: left;
+  max-height: 124px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1.4;
+}
+
+// Subtítulo (específico de eventos)
+.evento-subtitle {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: variables.$color-grey-800;
+  margin-bottom: 0.8rem;
+  text-align: left;
+}
+
+// Descrição do card
+.aviso-card > .aviso-descricao,
+.evento-descricao {
+  margin: 0;
+  line-height: 1.8;
+  word-break: break-word;
+  color: variables.$color-grey-700;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  max-height: 124px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+// Info do card
+.aviso-info,
+.evento-desc-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+// Ícone
+.aviso-icon,
+.icon-col {
+  font-size: 1.25rem;
+  color: variables.$color-primary;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+
+// Data
+.aviso-data,
+.evento-data {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: variables.$color-primary;
+}
+
+.aviso-info .aviso-data,
+.desc-col .evento-data {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: variables.$color-grey-600;
+}
+
+// Descrição curta
+.aviso-descricao-curta {
+  margin-bottom: 0.25rem;
+  color: variables.$color-grey-600;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+// Coluna de descrição
+.desc-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+// Mensagem vazia
+.aviso-empty {
+  color: variables.$color-grey-700;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+// Responsividade
+@media (max-width: 991px) {
+  .avisos-wrapper,
+  .eventos-wrapper {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+}

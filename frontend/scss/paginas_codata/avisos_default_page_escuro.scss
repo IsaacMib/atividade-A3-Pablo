@@ -1,0 +1,192 @@
+@use '../variables.scss';
+
+[data-theme="dark"] {
+  .avisos-page-container,
+  .eventos-page-container {
+    background-color: variables.$color-black;
+    color: variables.$color-white;
+    padding: 4rem 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    // Título principal
+    .aviso-page--title,
+    .evento-page--title {
+      font-weight: 900;
+      font-size: 3rem;
+      margin-bottom: 3rem;
+      color: variables.$color-white;
+      text-shadow: 0 0 10px rgba(variables.$color-primary, 0.3);
+      letter-spacing: 1px;
+      transition: text-shadow 0.3s ease, color 0.3s ease;
+    }
+
+    // Barra de publicação
+    .aviso-barra-publicacao,
+    .evento-barra-publicacao {
+      background-color: transparent;
+    }
+
+    // Data de publicação
+    .aviso-page-publicacao,
+    .evento-page-publicacao {
+      color: variables.$color-grey-300;
+      font-size: 1rem;
+      font-style: italic;
+      margin-bottom: 1rem;
+      transition: color 0.3s ease;
+    }
+
+    // Descrição
+    .aviso-page-descricao,
+    .evento-page-descricao {
+      color: variables.$color-grey-100;
+      transition: color 0.3s ease;
+    }
+
+    // Texto e corpo
+    .aviso-page-content,
+    .evento-page-content {
+      margin-bottom: 5rem;
+      font-size: 1.5rem;
+      line-height: 2;
+      text-indent: 2rem;
+      max-width: 800px;
+      white-space: pre-line;
+      color: variables.$color-grey-100;
+      transition: color 0.3s ease;
+
+      a {
+        color: variables.$color-primary;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.2s ease, text-shadow 0.2s ease;
+
+        &:hover {
+          color: variables.$color-primary-light;
+          text-shadow: 0 0 5px rgba(variables.$color-primary-light, 0.4);
+        }
+      }
+    }
+
+    // Linha divisória
+    .linha-divisao {
+      border: none;
+      border-top: 1px solid rgba(variables.$color-white, 0.2);
+      margin: 1rem 0;
+      transition: border-color 0.3s ease;
+    }
+
+    // Seção de compartilhamento
+    .aviso-social,
+    .social-sharing {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+
+      span {
+        color: variables.$color-grey-100;
+        font-weight: 600;
+        font-size: 1.1rem;
+        letter-spacing: 0.5px;
+        transition: color 0.3s ease;
+      }
+
+      ul.social,
+      .social-links {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li,
+        a {
+          a,
+          & {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background-color: rgba(variables.$color-white, 0.08);
+            color: variables.$color-primary;
+            font-size: 1.5rem;
+            transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
+
+            &:hover {
+              background-color: variables.$color-primary;
+              color: variables.$color-on-primary;
+              transform: scale(1.1);
+              box-shadow: 0 0 10px rgba(variables.$color-primary, 0.6);
+            }
+
+            i {
+              pointer-events: none;
+            }
+          }
+
+          &[data-tooltip] {
+            position: relative;
+
+            &::after {
+              content: attr(data-tooltip);
+              position: absolute;
+              bottom: -1.8rem;
+              left: 50%;
+              transform: translateX(-50%);
+              background: rgba(variables.$color-grey-800, 0.9);
+              color: variables.$color-white;
+              padding: 0.25rem 0.5rem;
+              border-radius: 4px;
+              font-size: 0.75rem;
+              opacity: 0;
+              pointer-events: none;
+              transition: opacity 0.2s ease, bottom 0.2s ease;
+            }
+
+            &:hover::after {
+              opacity: 1;
+              bottom: -2.2rem;
+            }
+          }
+        }
+      }
+    }
+
+    // Transições suaves entre temas
+    * {
+      transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    // Responsividade
+    @media (max-width: 768px) {
+      padding: 2rem 1.5rem;
+
+      .aviso-page--title,
+      .evento-page--title {
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+      }
+
+      .aviso-page-content,
+      .evento-page-content {
+        font-size: 1.2rem;
+      }
+
+      .aviso-social ul.social li a,
+      .social-sharing .social-links a {
+        width: 38px;
+        height: 38px;
+        font-size: 1.3rem;
+      }
+    }
+  }
+}
