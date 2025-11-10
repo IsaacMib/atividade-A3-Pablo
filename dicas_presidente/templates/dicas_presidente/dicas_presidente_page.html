@@ -23,15 +23,53 @@
         {% if page.descricao %}
         <p class="dica-descricao lead">{{ page.descricao }}</p>
         {% endif %}
-        
-        <!-- Imagem de Destaque -->
-        {% if page.get_imagem_principal %}
-        <div class="dica-imagem-destaque mb-4">
-            {% image page.get_imagem_principal fill-1200x600 as img %}
-            <img src="{{ img.url }}" alt="{{ page.title }}" class="img-fluid rounded">
-        </div>
-        {% endif %}
     </div>
+    
+    <!-- Galeria de Imagens ou Imagem de Destaque -->
+    {% if page.images and page.images|length > 1 %}
+        <div class="dica-presidente-imagem-destaque--wrapper">
+            <div class="swiper dicas-mySwiper2">
+                <div class="swiper-wrapper">
+                    {% for imagem in page.images %}
+                        <div class="swiper-slide swiper-slide-dicas">
+                            {% if page.is_remote %}
+                                <img src="{{ imagem.url }}" alt="{{ imagem.title }}" class="image-dica-carrossel" loading="lazy">
+                            {% else %}
+                                {% image imagem.value max-1200x500 class="image-dica-carrossel" loading="lazy" %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+
+            <div thumbsSlider="" class="swiper dicas-mySwiper">
+                <div class="swiper-wrapper">
+                    {% for imagem in page.images %}
+                        <div class="swiper-slide swiper-slide-dicas">
+                            {% if page.is_remote %}
+                                <img src="{{ imagem.url }}" alt="{{ imagem.title }}" class="image-dica-carrossel" loading="lazy">
+                            {% else %}
+                                {% image imagem.value max-200x100 class="image-dica-carrossel" loading="lazy" %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    {% elif page.get_imagem_principal %}
+        <div class="dica-presidente-imagem-destaque--wrapper">
+            <div class="dica-imagem-destaque">
+                {% if page.is_remote %}
+                    <img src="{{ page.get_imagem_principal }}" alt="{{ page.title }}" loading="lazy">
+                {% else %}
+                    {% image page.get_imagem_principal max-1200x500 loading="lazy" %}
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
     
     <!-- Conteúdo por Tipo -->
     <div class="container">
@@ -75,13 +113,29 @@
             {% endif %}
         </div>
     </div>
-    
-    <!-- Botão Voltar -->
-    <div class="container mt-4 mb-5">
-        <a href="{{ page.get_parent.url }}" class="btn botao-outline-primario">
-            <i class="bi bi-arrow-left"></i> Voltar para Dicas do Presidente
-        </a>
-    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const swiperThumbs = new Swiper(".dicas-mySwiper", {
+    loop: true,
+    spaceBetween: 0,
+    slidesPerView: 4,
+    freeMode: true,
+    watchSlidesProgress: true,
+  });
+
+  const swiperMain = new Swiper(".dicas-mySwiper2", {
+    loop: true,
+    spaceBetween: 10,
+    autoHeight: true,
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    thumbs: { swiper: swiperThumbs },
+  });
+});
+</script>
 
 {% endblock %}

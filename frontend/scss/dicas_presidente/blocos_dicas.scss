@@ -10,7 +10,7 @@
     overflow: hidden;
     box-shadow: 0 2px 8px variables.$color-card-shadow;
     transition: all 0.3s ease;
-    background: var(--cor-fundo-card);
+    background: variables.$color-white;
 
     &:hover {
         box-shadow: 0 4px 16px variables.$color-card-shadow-hover;
@@ -20,8 +20,8 @@
     // Header comum para todos os blocos
     .dica-bloco-header {
         padding: 1.5rem 2rem;
-        background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-primaria-escura) 100%);
-        color: white;
+        background: linear-gradient(135deg, variables.$color-primary 0%, variables.$color-primary-dark 100%);
+        color: variables.$color-white;
         display: flex;
         align-items: center;
         gap: 1rem;
@@ -43,10 +43,10 @@
     .dica-bloco-content {
         padding: 2rem;
         line-height: 1.8;
-        color: var(--cor-texto);
+        color: variables.$color-grey-900;
 
         h4 {
-            color: var(--cor-primaria);
+            color: variables.$color-primary;
             font-size: 1.25rem;
             font-weight: 600;
             margin-top: 1.5rem;
@@ -58,13 +58,13 @@
         }
 
         a {
-            color: var(--cor-primaria);
+            color: variables.$color-primary;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.2s ease;
 
             &:hover {
-                color: var(--cor-primaria-escura);
+                color: variables.$color-primary-dark;
                 text-decoration: underline;
             }
 
@@ -80,8 +80,7 @@
 // ============================================================
 
 .dica-bloco-mensagem {
-    background: var(--cor-fundo-card);
-    border-left: 4px solid var(--cor-primaria);
+    background: variables.$color-white;
 
     .dica-bloco-header {
         background: linear-gradient(135deg, variables.$color-bloco-mensagem-light 0%, variables.$color-bloco-mensagem-dark 100%);
@@ -90,12 +89,12 @@
     .mensagem-texto {
         font-size: 1.1rem;
         line-height: 1.9;
-        color: var(--cor-texto);
+        color: variables.$color-grey-900;
 
         p:first-child {
             font-size: 1.15rem;
             font-weight: 500;
-            color: var(--cor-primaria);
+            color: variables.$color-black;
         }
     }
 
@@ -107,7 +106,7 @@
 
         p {
             font-style: italic;
-            color: var(--cor-texto-secundario);
+            color: variables.$color-grey-700;
             font-size: 1.05rem;
             margin: 0;
         }
@@ -126,38 +125,46 @@
     .recomendacao-link {
         margin-bottom: 2rem;
 
-        a {
+        a, .botao-recomendacao {
             display: inline-flex;
             align-items: center;
             gap: 0.75rem;
             padding: 1rem 2rem;
-            background: var(--cor-primaria);
-            color: var(--cor-primaria) !important;
+            background: variables.$color-white;
+            color: variables.$color-bloco-recomendacao-5-light !important;
             border-radius: 8px;
             font-weight: 600;
             font-size: 1.1rem;
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px variables.$color-card-shadow;
-            background: variables.$color-white;
-            border: 2px solid var(--cor-primaria);
+            border: 2px solid variables.$color-bloco-recomendacao-5-light;
+
+            .recomendacao-texto {
+                color: variables.$color-bloco-recomendacao-5-light !important;
+                transition: color 0.3s ease;
+            }
 
             &:hover {
-                background: var(--cor-primaria);
-                color: variables.$color-white !important;
+                background: variables.$color-bloco-recomendacao-1-light;
                 transform: translateY(-2px);
                 box-shadow: 0 6px 20px variables.$color-card-shadow-hover;
                 text-decoration: none !important;
+
+                .recomendacao-texto {
+                    color: variables.$color-white !important;
+                }
             }
 
             i {
                 font-size: 1.2rem;
                 margin-left: 0.25rem;
+                color: inherit;
             }
         }
     }
 
     .recomendacao-motivo {
-        background: var(--cor-fundo-destaque);
+        background: variables.$color-grey-100;
         padding: 1.5rem;
         border-radius: 8px;
         border-left: 4px solid variables.$color-bloco-recomendacao-light;
@@ -215,7 +222,7 @@
             padding-left: 1.5rem;
             margin: 2rem 0;
             font-style: italic;
-            color: var(--cor-texto-secundario);
+            color: variables.$color-grey-700;
         }
     }
 }
@@ -232,10 +239,10 @@
     .galeria-legenda {
         margin-bottom: 2rem;
         font-size: 1.05rem;
-        color: var(--cor-texto-secundario);
+        color: variables.$color-grey-700;
         font-style: italic;
         padding: 1rem;
-        background: var(--cor-fundo-destaque);
+        background: variables.$color-grey-100;
         border-radius: 6px;
         border-left: 4px solid variables.$color-bloco-galeria-light;
     }
@@ -252,6 +259,7 @@
             overflow: hidden;
             box-shadow: 0 2px 8px variables.$color-card-shadow;
             transition: all 0.3s ease;
+            max-height: 250px;
 
             &:hover {
                 transform: scale(1.05);
@@ -274,7 +282,7 @@
 // ============================================================
 
 .dica-bloco-frase {
-    background: linear-gradient(135deg, var(--cor-fundo-card) 0%, var(--cor-fundo-destaque) 100%);
+    background: variables.$color-white;
     border: none;
 
     .dica-bloco-header {
@@ -296,7 +304,7 @@
             left: 50%;
             transform: translateX(-50%);
             font-size: 6rem;
-            color: var(--cor-primaria);
+            color: variables.$color-primary;
             opacity: 0.15;
             font-family: Georgia, serif;
             line-height: 1;
@@ -306,7 +314,7 @@
             font-size: 1.75rem;
             font-weight: 500;
             line-height: 1.6;
-            color: var(--cor-texto);
+            color: variables.$color-grey-900;
             margin: 0 0 1.5rem 0;
             font-style: italic;
             position: relative;
@@ -315,7 +323,7 @@
 
         footer {
             font-size: 1.1rem;
-            color: var(--cor-texto-secundario);
+            color: variables.$color-grey-900;
             font-weight: 600;
             margin-top: 1.5rem;
             padding-top: 1rem;

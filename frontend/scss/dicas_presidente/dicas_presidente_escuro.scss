@@ -67,14 +67,14 @@
   .dica-bloco-recomendacao {
     .recomendacao-link {
       a {
-        background: var(--cor-primaria) !important;
+        background: variables.$color-primary !important;
         color: variables.$color-white !important;
-        border-color: var(--cor-primaria) !important;
+        border-color: variables.$color-primary !important;
         
         &:hover {
-          background: var(--cor-primaria-escura) !important;
+          background: variables.$color-primary-dark !important;
           color: variables.$color-white !important;
-          border-color: var(--cor-primaria-escura) !important;
+          border-color: variables.$color-primary-dark !important;
         }
       }
     }
@@ -252,6 +252,73 @@
     
     .dica-descricao {
       color: variables.$color-grey-300;
+    }
+  }
+  
+  // ============================================================
+  // CARROSSEL DE IMAGENS - Tema Escuro
+  // ============================================================
+  
+  .dica-presidente-imagem-destaque--wrapper {
+    background: variables.$color-grey-900;
+    
+    .dica-imagem-destaque {
+      background: variables.$color-grey-900;
+      
+      img {
+        object-fit: cover;
+      }
+    }
+    
+    .dicas-mySwiper2 {
+      --swiper-navigation-color: #{variables.$color-white};
+      background: variables.$color-grey-900;
+      overflow: hidden;
+      
+      .swiper-slide {
+        background: variables.$color-grey-800;
+        max-height: 500px;
+        overflow: hidden;
+      }
+      
+      .swiper-button-next,
+      .swiper-button-prev {
+        background-color: variables.$color-grey-800;
+        box-shadow: 0 2px 8px variables.$color-black-60;
+        
+        &::after {
+          color: variables.$color-white;
+        }
+        
+        &:hover {
+          background-color: variables.$color-primary;
+          box-shadow: 0 4px 12px variables.$color-primary-50;
+          
+          &::after {
+            color: variables.$color-white;
+          }
+        }
+      }
+      
+      img {
+        max-height: 500px;
+        object-fit: cover;
+      }
+    }
+    
+    .dicas-mySwiper {
+      .swiper-slide-dicas {
+        img {
+          opacity: 0.8;
+          transition: opacity 0.3s ease;
+          object-fit: cover;
+        }
+      }
+      
+      .swiper-slide-thumb-active img {
+        opacity: 1;
+        border-color: variables.$color-primary;
+      }
     }
   }
   
