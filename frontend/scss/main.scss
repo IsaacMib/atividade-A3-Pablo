@@ -26,7 +26,7 @@
 // Project-specific partials added by assistant: widgets and banners
 @use './_widgets.scss' as widgets;
 @use './_widgets_dark.scss' as widgets_dark;
-@use './_banners.scss' as banners;
+// @use './_banners.scss' as banners;
 
 /*Arquivo para customizar o bootstrap*/
 @use './customBT';
@@ -70,11 +70,26 @@ body {
     }
 }
 
+@media (max-width: 500px) {
+    .container, .container-fluid {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+    
+    * {
+        max-width: 100%;
+    }
+}
+
 html, body {
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
+    max-width: 100%;
+    width: 100%;
 }
 #site-conteudo-main {
     flex: 1;

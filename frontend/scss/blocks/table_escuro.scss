@@ -1,3 +1,5 @@
+@use '../variables';
+
 /*
  * Estilos para o modo escuro da tabela personalizada do Wagtail.
  * Estes estilos são aplicados quando a classe 'dark-mode' está presente
@@ -5,7 +7,7 @@
  */
 body.dark-mode {
     .custom-wagtail-table {
-        color: #e9ecef; // Cor do texto padrão para a tabela
+        color: variables.$color-text-table-header; // Cor do texto padrão para a tabela
     }
 
     .custom-wagtail-table th,
