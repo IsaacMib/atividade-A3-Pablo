@@ -40,11 +40,40 @@
         {% if page.introduction %}
         <p class="texto-muted mb-4">{{ page.introduction }}</p>
         {% endif %}
+                
+        <!-- Frase Aleatória (Widget Lateral) -->
+        {% if frase_aleatoria %}
+        <aside class="widget-frase-presidente">
+            <div class="frase-widget">
+                <div class="frase-icone"><i class="bi bi-chat-quote-fill"></i></div>
+                <div class="frase-conteudo">
+                    <blockquote>
+                        <p>{{ frase_aleatoria.texto }}</p>
+                        {% if frase_aleatoria.autor %}
+                        <footer>{{ frase_aleatoria.autor }}</footer>
+                        {% endif %}
+                    </blockquote>
+                </div>
+            </div>
+        </aside>
+        {% endif %}
         
         <!-- Dicas em Destaque -->
         {% if dicas_destaque %}
         <section class="dicas-destaque mb-5">
             <h2 class="secao-titulo"><i class="bi bi-star-fill"></i> Destaques</h2>
+            
+            <!-- Barra de Progresso da Paginação -->
+            {% if posts.paginator.num_pages > 1 %}
+            <div class="pagination-progress-bar mb-3">
+                <div class="pagination-progress-fill" 
+                     data-current-page="{{ posts.number }}" 
+                     data-total-pages="{{ posts.paginator.num_pages }}"
+                     style="width: {% widthratio posts.number posts.paginator.num_pages 100 %}%;">
+                </div>
+            </div>
+            {% endif %}
+            
             <div class="row g-4">
                 {% for dica in dicas_destaque %}
                 <div class="col-md-4">
@@ -83,26 +112,20 @@
         </section>
         {% endif %}
         
-        <!-- Frase Aleatória (Widget Lateral) -->
-        {% if frase_aleatoria %}
-        <aside class="widget-frase-presidente">
-            <div class="frase-widget">
-                <div class="frase-icone"><i class="bi bi-chat-quote-fill"></i></div>
-                <div class="frase-conteudo">
-                    <blockquote>
-                        <p>{{ frase_aleatoria.texto }}</p>
-                        {% if frase_aleatoria.autor %}
-                        <footer>{{ frase_aleatoria.autor }}</footer>
-                        {% endif %}
-                    </blockquote>
-                </div>
-            </div>
-        </aside>
-        {% endif %}
-        
         <!-- Listagem de Dicas -->
         <section class="dicas-listagem">
-            <h2 class="secao-titulo">Todas as Dicas</h2>
+            <h2 class="secao-titulo"><i class="bi bi-pen-fill"></i> Todas as Dicas</h2>
+            
+            <!-- Barra de Progresso da Paginação -->
+            {% if posts.paginator.num_pages > 1 %}
+            <div class="pagination-progress-bar mb-3">
+                <div class="pagination-progress-fill" 
+                     data-current-page="{{ posts.number }}" 
+                     data-total-pages="{{ posts.paginator.num_pages }}"
+                     style="width: {% widthratio posts.number posts.paginator.num_pages 100 %}%;">
+                </div>
+            </div>
+            {% endif %}
             
             {% if posts %}
             <div class="row g-4">

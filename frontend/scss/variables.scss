@@ -24,6 +24,7 @@ $color-primary-active: #396BBB38;
 $color-primary-hover: #25447a;
 
 $color-primary-06: #F3F5F9;
+$color-primary-08: #E9EDF5;
 $color-primary-12: #E6EBF3;
 
 $color-primary-70: #30599bb3;
@@ -152,9 +153,11 @@ $footer-color: $color-primary;
 $color-overlay-8: rgba(0, 0, 0, 0.08);
 $color-overlay-10: rgba(0, 0, 0, 0.1);
 $color-overlay-20: rgba(0, 0, 0, 0.2);
+$color-overlay-25: rgba(0, 0, 0, 0.25);
 $color-overlay-30: rgba(0, 0, 0, 0.3);
 $color-overlay-40: rgba(0, 0, 0, 0.4);
 $color-overlay-50: rgba(0, 0, 0, 0.5);
+$color-overlay-60: rgba(0, 0, 0, 0.6);
 
 $color-title-redes-sociais: $color-primary;
 
@@ -199,70 +202,74 @@ $color-aviso-barra-border-dark: #afafaf;
 $color-aviso-barra-shadow-dark: #afafaf;
 
 // Cores dos blocos - Dicas do Presidente
-// Paleta Mensagem Pessoal (Azul)
-$color-bloco-mensagem-1-light: #e3f3f8;
-$color-bloco-mensagem-2-light: #d3edf6;
-$color-bloco-mensagem-3-light: #bce7f4;
-$color-bloco-mensagem-4-light: #73c6ea;
-$color-bloco-mensagem-5-light: #339ac7;
+// Mensagem Pessoal (Azul)
+$color-bloco-mensagem-1-light: #e0f3fa;
+$color-bloco-mensagem-2-light: #b9e3f5;
+$color-bloco-mensagem-3-light: #8ad0ee;
+$color-bloco-mensagem-4-light: #54add8;
+$color-bloco-mensagem-5-light: #2b7fb1;
 
-$color-bloco-mensagem-1-dark: #24298c;
-$color-bloco-mensagem-2-dark: #1c1e70;
-$color-bloco-mensagem-3-dark: #191d61;
-$color-bloco-mensagem-4-dark: #0e1143;
-$color-bloco-mensagem-5-dark: #050827;
+$color-bloco-mensagem-1-dark: #0a142a;
+$color-bloco-mensagem-2-dark: #101d3d;
+$color-bloco-mensagem-3-dark: #162754;
+$color-bloco-mensagem-4-dark: #1d3470;
+$color-bloco-mensagem-5-dark: #27418c;
 
-// Paleta Recomendação (Laranja)
-$color-bloco-recomendacao-1-light: #ffcba3;
-$color-bloco-recomendacao-2-light: #ffc88a;
-$color-bloco-recomendacao-3-light: #ffb677;
-$color-bloco-recomendacao-4-light: #ff9e4d;
-$color-bloco-recomendacao-5-light: #ff8c3d;
 
-$color-bloco-recomendacao-1-dark: #a75400;
-$color-bloco-recomendacao-2-dark: #8a4100;
-$color-bloco-recomendacao-3-dark: #6b3000;
-$color-bloco-recomendacao-4-dark: #522300;
-$color-bloco-recomendacao-5-dark: #3b1800;
+// Recomendação (Laranja)
+$color-bloco-recomendacao-1-light: #ffe0b8;
+$color-bloco-recomendacao-2-light: #ffd199;
+$color-bloco-recomendacao-3-light: #ffb86b;
+$color-bloco-recomendacao-4-light: #ff9840;
+$color-bloco-recomendacao-5-light: #d86b1e;
 
-// Paleta Notícia (Verde)
-$color-bloco-noticia-1-light: #ecfae5;
-$color-bloco-noticia-2-light: #e6fade;
-$color-bloco-noticia-3-light: #ddf6d2;
-$color-bloco-noticia-4-light: #cae8bd;
-$color-bloco-noticia-5-light: #b9e0a6;
+$color-bloco-recomendacao-1-dark: #3a1a00;
+$color-bloco-recomendacao-2-dark: #532600;
+$color-bloco-recomendacao-3-dark: #6f3400;
+$color-bloco-recomendacao-4-dark: #8f4c06;
+$color-bloco-recomendacao-5-dark: #b1681a;
 
-$color-bloco-noticia-1-dark: #3e9b47;
-$color-bloco-noticia-2-dark: #31843a;
-$color-bloco-noticia-3-dark: #276b2d;
-$color-bloco-noticia-4-dark: #1f5323;
-$color-bloco-noticia-5-dark: #193f1b;
 
-// Paleta Galeria (Rosa/Roxo)
-$color-bloco-galeria-1-light: #f4cccc;
-$color-bloco-galeria-2-light: #ffb4b4;
-$color-bloco-galeria-3-light: #deb2b2;
-$color-bloco-galeria-4-light: #ce9797;
-$color-bloco-galeria-5-light: #ff9797;
+// Notícia (Verde)
+$color-bloco-noticia-1-light: #e9f8e3;
+$color-bloco-noticia-2-light: #d6f3cf;
+$color-bloco-noticia-3-light: #c1ebb8;
+$color-bloco-noticia-4-light: #a4dc98;
+$color-bloco-noticia-5-light: #7ec46b;
 
-$color-bloco-galeria-1-dark: #a3328d;
-$color-bloco-galeria-2-dark: #852671;
-$color-bloco-galeria-3-dark: #6b1e59;
-$color-bloco-galeria-4-dark: #521443;
-$color-bloco-galeria-5-dark: #3a0a2f;
+$color-bloco-noticia-1-dark: #1a2e13;
+$color-bloco-noticia-2-dark: #20401a;
+$color-bloco-noticia-3-dark: #285626;
+$color-bloco-noticia-4-dark: #337134;
+$color-bloco-noticia-5-dark: #449b46;
 
-// Paleta Frase (Vermelho)
-$color-bloco-frase-1-light: #ffbaba;
-$color-bloco-frase-2-light: #ff7b7b;
-$color-bloco-frase-3-light: #ff5252;
-$color-bloco-frase-4-light: #ff0000;
+
+// Galeria (Rosa/Roxo)
+$color-bloco-galeria-1-light: #fbe3f5;
+$color-bloco-galeria-2-light: #f5b8e7;
+$color-bloco-galeria-3-light: #ee8fd6;
+$color-bloco-galeria-4-light: #e066c2;
+$color-bloco-galeria-5-light: #b23a99;
+
+$color-bloco-galeria-1-dark: #2e0931;
+$color-bloco-galeria-2-dark: #43154a;
+$color-bloco-galeria-3-dark: #5c1c64;
+$color-bloco-galeria-4-dark: #78207f;
+$color-bloco-galeria-5-dark: #9a25a3;
+
+
+// Frase (Vermelho)
+$color-bloco-frase-1-light: #ffd6d6;
+$color-bloco-frase-2-light: #ff9b9b;
+$color-bloco-frase-3-light: #ff6c6c;
+$color-bloco-frase-4-light: #e63a3a;
 $color-bloco-frase-5-light: #a70000;
 
-$color-bloco-frase-1-dark: #8a0000; 
-$color-bloco-frase-2-dark: #750000;
-$color-bloco-frase-3-dark: #5e0000; 
-$color-bloco-frase-4-dark: #470000; 
-$color-bloco-frase-5-dark: #300000;
+$color-bloco-frase-1-dark: #4b0a0a;
+$color-bloco-frase-2-dark: #5e0b0b;
+$color-bloco-frase-3-dark: #730d0d;
+$color-bloco-frase-4-dark: #8c1010;
+$color-bloco-frase-5-dark: #a51a1a;
 
 // Atalhos para facilitar uso (mantém compatibilidade)
 $color-bloco-mensagem-light: $color-bloco-mensagem-4-light;

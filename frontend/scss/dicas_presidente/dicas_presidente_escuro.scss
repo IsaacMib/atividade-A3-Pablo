@@ -157,8 +157,9 @@
     &.dica-tipo-mensagem::before {
       background: linear-gradient(90deg, 
         variables.$color-bloco-mensagem-1-dark 0%, 
-        variables.$color-bloco-mensagem-3-dark 33%,
-        variables.$color-bloco-mensagem-4-dark 66%,
+        variables.$color-bloco-mensagem-2-dark 25%,
+        variables.$color-bloco-mensagem-3-dark 50%,
+        variables.$color-bloco-mensagem-4-dark 75%,
         variables.$color-bloco-mensagem-5-dark 100%
       ) !important;
     }
@@ -166,8 +167,9 @@
     &.dica-tipo-recomendacao::before {
       background: linear-gradient(90deg, 
         variables.$color-bloco-recomendacao-1-dark 0%, 
-        variables.$color-bloco-recomendacao-3-dark 33%,
-        variables.$color-bloco-recomendacao-4-dark 66%,
+        variables.$color-bloco-recomendacao-2-dark 25%,
+        variables.$color-bloco-recomendacao-3-dark 50%,
+        variables.$color-bloco-recomendacao-4-dark 75%,
         variables.$color-bloco-recomendacao-5-dark 100%
       ) !important;
     }
@@ -176,8 +178,9 @@
     &.dica-tipo-noticia_interna::before {
       background: linear-gradient(90deg, 
         variables.$color-bloco-noticia-1-dark 0%, 
-        variables.$color-bloco-noticia-3-dark 33%,
-        variables.$color-bloco-noticia-4-dark 66%,
+        variables.$color-bloco-noticia-2-dark 25%,
+        variables.$color-bloco-noticia-3-dark 50%,
+        variables.$color-bloco-noticia-4-dark 75%,
         variables.$color-bloco-noticia-5-dark 100%
       ) !important;
     }
@@ -185,8 +188,9 @@
     &.dica-tipo-galeria::before {
       background: linear-gradient(90deg, 
         variables.$color-bloco-galeria-1-dark 0%, 
-        variables.$color-bloco-galeria-3-dark 33%,
-        variables.$color-bloco-galeria-4-dark 66%,
+        variables.$color-bloco-galeria-2-dark 25%,
+        variables.$color-bloco-galeria-3-dark 50%,
+        variables.$color-bloco-galeria-4-dark 75%,
         variables.$color-bloco-galeria-5-dark 100%
       ) !important;
     }
@@ -203,12 +207,12 @@
     
     &.dica-tipo-misto::before {
       background: linear-gradient(90deg, 
-        variables.$color-bloco-mensagem-4-dark 0%, 
-        variables.$color-bloco-recomendacao-4-dark 20%,
-        variables.$color-bloco-noticia-4-dark 40%,
-        variables.$color-bloco-galeria-5-dark 60%,
-        variables.$color-bloco-frase-3-dark 80%,
-        variables.$color-bloco-mensagem-4-dark 100%
+        variables.$color-bloco-mensagem-1-dark 0%, 
+        variables.$color-bloco-recomendacao-1-dark 20%,
+        variables.$color-bloco-noticia-1-dark 40%,
+        variables.$color-bloco-galeria-1-dark 60%,
+        variables.$color-bloco-frase-1-dark 80%,
+        variables.$color-bloco-mensagem-1-dark 100%
       ) !important;
     }
     
@@ -325,7 +329,7 @@
   // Mensagem Pessoal
   .mensagem-presidente {
     background: variables.$color-grey-900;
-    border-left-color: variables.$color-primary;
+    border-left-color: variables.$color-white;
     
     .assinatura-presidente {
       color: variables.$color-primary;
@@ -388,7 +392,11 @@
     );
     border-color: transparent;
     box-shadow: 0 8px 24px variables.$color-bloco-frase-3-dark;
-    
+
+    &:before {
+      color: variables.$color-white;
+    }
+
     .frase-widget {
       .frase-conteudo {
         p {
@@ -449,7 +457,11 @@
   // Seção Título
   .secao-titulo {
     color: variables.$color-white !important;
-    border-bottom-color: variables.$color-grey-700;
+    border-bottom: none;
+
+    i {
+      color: variables.$color-white;
+    }
   }
   
   // Arquivos Anexos
@@ -612,11 +624,11 @@
         
         &.dica-tipo-misto::before {
           background: linear-gradient(180deg, 
-            variables.$color-bloco-mensagem-4-dark 0%, 
-            variables.$color-bloco-recomendacao-4-dark 20%,
-            variables.$color-bloco-noticia-4-dark 40%,
-            variables.$color-bloco-galeria-5-dark 60%,
-            variables.$color-bloco-frase-3-dark 80%,
+            variables.$color-bloco-mensagem-4-dark 0%,
+            variables.$color-bloco-noticia-4-dark 22%,
+            variables.$color-bloco-recomendacao-4-dark 45%,
+            variables.$color-bloco-frase-3-dark 70%,
+            variables.$color-bloco-galeria-4-dark 88%,
             variables.$color-bloco-mensagem-4-dark 100%
           ) !important;
         }
@@ -793,5 +805,26 @@
       }
     }
   }
+  
+  // ============================================================
+  // BARRA DE PROGRESSO DA PAGINAÇÃO - Tema Escuro
+  // ============================================================
+  
+  .pagination-progress-bar {
+    background: variables.$color-primary;
+    opacity: 0.3;
+  }
+  
+  .pagination-progress-fill {
+    background: linear-gradient(90deg, 
+      variables.$color-bloco-mensagem-1-dark 0%, 
+      variables.$color-bloco-recomendacao-2-dark 20%,
+      variables.$color-bloco-noticia-3-dark 40%,
+      variables.$color-primary 60%,
+      variables.$color-bloco-galeria-4-dark 80%,
+      variables.$color-bloco-frase-5-dark 100%
+    );
+    box-shadow: 0 0 12px variables.$color-primary-70;
+    opacity: 1;
+  }
 }
-

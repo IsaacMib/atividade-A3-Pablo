@@ -15,11 +15,12 @@
   margin-bottom: 3rem;
   position: relative;
   overflow: hidden;
+  border-radius: 12px;
   
   &::before {
     content: '';
     position: absolute;
-    top: -50%;
+    top: -40%;
     right: -10%;
     width: 500px;
     height: 500px;
@@ -28,58 +29,46 @@
   }
   
   .foto-presidente {
-    border: 5px solid variables.$color-white;
-    box-shadow: 0 8px 24px variables.$color-black-40;
-    transition: transform 0.3s ease;
+    border: 4px solid variables.$color-white;
+    box-shadow: 0 6px 18px variables.$color-black-40;
+    transition: transform 0.35s ease;
     
     &:hover {
-      transform: scale(1.05);
+      transform: scale(1.04);
     }
   }
   
   .titulo-presidente {
     color: variables.$color-white;
-    font-size: 2.75rem;
+    font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
-    text-shadow: 0 2px 4px variables.$color-black-30;
+    text-shadow: 0 2px 6px variables.$color-black-30;
   }
   
   .mensagem-presidente {
     color: variables.$color-white !important;
     background: linear-gradient(135deg, 
-    variables.$color-bloco-mensagem-5-dark 0%,
-    variables.$color-bloco-mensagem-5-light 100%);
-    font-size: 1.15rem;
+      variables.$color-bloco-mensagem-4-dark 0%,
+      variables.$color-bloco-mensagem-5-light 100%
+    );
+    font-size: 1.1rem;
     line-height: 1.7;
-    opacity: 0.95;
-    text-shadow: 0 1px 2px variables.$color-black-20;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px variables.$color-black-20;
   }
 }
 
 // Seções
 .secao-titulo {
-  font-size: 2rem;
+  font-size: 1.9rem;
   font-weight: 700;
   color: variables.$color-on-surface;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 3px solid variables.$color-primary;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0;
+  border-bottom: none;
   position: relative;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    left: 0;
-    width: 80px;
-    height: 3px;
-    background: linear-gradient(90deg, 
-      variables.$color-bloco-mensagem-light 0%, 
-      variables.$color-bloco-recomendacao-light 50%,
-      variables.$color-bloco-noticia-light 100%
-    );
-  }
   
   i {
     color: variables.$color-primary;
@@ -118,6 +107,7 @@
   background: variables.$color-white;
   box-shadow: 0 2px 8px variables.$color-card-shadow-light, 0 1px 3px variables.$color-card-shadow;
   position: relative;
+  border: 1px solid variables.$color-grey-100;
   
   &::before {
     content: '';
@@ -135,15 +125,16 @@
       variables.$color-bloco-mensagem-4-light 100%
     );
     opacity: 0.8;
-    transition: opacity 0.3s ease;
+    transition: all 0.3s ease;
   }
   
   // Variações por tipo
   &.dica-tipo-mensagem::before {
     background: linear-gradient(90deg, 
       variables.$color-bloco-mensagem-1-light 0%, 
-      variables.$color-bloco-mensagem-3-light 33%,
-      variables.$color-bloco-mensagem-4-light 66%,
+      variables.$color-bloco-mensagem-2-light 25%,
+      variables.$color-bloco-mensagem-3-light 50%,
+      variables.$color-bloco-mensagem-4-light 75%,
       variables.$color-bloco-mensagem-5-light 100%
     );
   }
@@ -151,8 +142,9 @@
   &.dica-tipo-recomendacao::before {
     background: linear-gradient(90deg, 
       variables.$color-bloco-recomendacao-1-light 0%, 
-      variables.$color-bloco-recomendacao-3-light 33%,
-      variables.$color-bloco-recomendacao-4-light 66%,
+      variables.$color-bloco-recomendacao-2-light 25%,
+      variables.$color-bloco-recomendacao-3-light 50%,
+      variables.$color-bloco-recomendacao-4-light 75%,
       variables.$color-bloco-recomendacao-5-light 100%
     );
   }
@@ -161,8 +153,9 @@
   &.dica-tipo-noticia_interna::before {
     background: linear-gradient(90deg, 
       variables.$color-bloco-noticia-1-light 0%, 
-      variables.$color-bloco-noticia-3-light 33%,
-      variables.$color-bloco-noticia-4-light 66%,
+      variables.$color-bloco-noticia-2-light 25%,
+      variables.$color-bloco-noticia-3-light 50%,
+      variables.$color-bloco-noticia-4-light 75%,
       variables.$color-bloco-noticia-5-light 100%
     );
   }
@@ -170,8 +163,9 @@
   &.dica-tipo-galeria::before {
     background: linear-gradient(90deg, 
       variables.$color-bloco-galeria-1-light 0%, 
-      variables.$color-bloco-galeria-3-light 33%,
-      variables.$color-bloco-galeria-4-light 66%,
+      variables.$color-bloco-galeria-2-light 25%,
+      variables.$color-bloco-galeria-3-light 50%,
+      variables.$color-bloco-galeria-4-light 75%,
       variables.$color-bloco-galeria-5-light 100%
     );
   }
@@ -188,18 +182,18 @@
   
   &.dica-tipo-misto::before {
     background: linear-gradient(90deg, 
-      variables.$color-bloco-mensagem-4-light 0%, 
-      variables.$color-bloco-recomendacao-4-light 20%,
-      variables.$color-bloco-noticia-4-light 40%,
-      variables.$color-bloco-galeria-5-light 60%,
-      variables.$color-bloco-frase-3-light 80%,
-      variables.$color-bloco-mensagem-4-light 100%
+      variables.$color-bloco-mensagem-1-light 0%,   
+      variables.$color-bloco-noticia-1-light 20%,  
+      variables.$color-bloco-recomendacao-1-light 40%,
+      variables.$color-bloco-frase-1-light 65%,    
+      variables.$color-bloco-galeria-1-light 85%,     
+      variables.$color-bloco-mensagem-1-light 100%  
     );
   }
   
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px variables.$color-banner-shadow-hover, 0 4px 8px variables.$color-card-shadow;
+    transform: translateY(-6px);
+    box-shadow: 0 10px 20px variables.$color-banner-shadow-hover, 0 4px 8px variables.$color-card-shadow;
     
     &::before {
       opacity: 1;
@@ -211,6 +205,7 @@
     height: 220px;
     object-fit: cover;
     transition: transform 0.3s ease;
+    background-color: variables.$color-grey-100;
     
     // Imagem padrão com opacity reduzida
     &[src*="img_noticia_default"] {
@@ -238,7 +233,7 @@
   }
   
   .card-title {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 600;
     margin-bottom: 0.75rem;
     line-height: 1.4;
@@ -246,7 +241,7 @@
     a {
       color: variables.$color-on-surface;
       text-decoration: none;
-      transition: color 0.2s ease;
+      transition: color 0.25s ease;
       
       &:hover {
         color: variables.$color-primary;
@@ -263,7 +258,7 @@
 }
 
 .dica-card-destaque {
-  background: linear-gradient(135deg, variables.$color-white 0%, variables.$color-primary-06 100%);
+  background: linear-gradient(135deg, variables.$color-white 0%, variables.$color-primary-08 100%);
   box-shadow: 0 4px 16px variables.$color-primary-50, 0 2px 8px variables.$color-card-shadow;
   
   &::before {
@@ -419,7 +414,7 @@
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -434,6 +429,11 @@
   &:active {
     transform: translateY(0);
   }
+  
+  &:focus {
+    outline: 2px solid variables.$color-primary;
+    outline-offset: 2px;
+  }
 }
 
 .btn-limpar-filtros {
@@ -446,7 +446,7 @@
   font-size: 0.95rem;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -850,16 +850,17 @@
 .frase-presidente {
   background: linear-gradient(135deg, variables.$color-primary-06 0%, variables.$color-primary-12 100%);
   border-radius: variables.$border-radius-lg;
-  padding: 3rem;
+  padding: 3rem 2rem;
   text-align: center;
   margin: 3rem 0;
+  box-shadow: 0 2px 8px variables.$color-card-shadow-light;
   
   .frase-destaque {
     margin: 0;
     
     .frase-texto {
-      font-size: 2rem;
-      font-weight: 300;
+      font-size: 1.9rem;
+      font-weight: 400;
       font-style: italic;
       color: variables.$color-primary-darker;
       line-height: 1.6;
@@ -904,8 +905,8 @@
 // Widget Frase (na página de listagem)
 .widget-frase-presidente {
   background: linear-gradient(135deg, 
-    variables.$color-bloco-frase-1-light 0%,
-    variables.$color-bloco-frase-2-light 25%,
+    variables.$color-bloco-frase-5-light 0%,
+    variables.$color-bloco-frase-4-light 25%,
     variables.$color-bloco-frase-3-light 50%,
     variables.$color-bloco-frase-4-light 75%,
     variables.$color-bloco-frase-5-light 100%
@@ -925,7 +926,7 @@
     left: 20px;
     font-size: 150px;
     font-weight: 700;
-    color: variables.$color-text-darker;
+    color: variables.$color-white;
     font-family: Georgia, serif;
     line-height: 1;
   }
@@ -1071,9 +1072,9 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: variables.$color-primary;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 3px solid variables.$color-primary-12;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0;
+  border-bottom: none;
 }
 
 // Dicas Destaque Section
@@ -1467,5 +1468,61 @@
     i {
       font-size: 0.625rem;
     }
+  }
+}
+
+// ============================================================
+// BARRA DE PROGRESSO DA PAGINAÇÃO
+// ============================================================
+
+.pagination-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: variables.$color-grey-600;
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
+  opacity: 0.2;
+  margin-bottom: 2rem;
+}
+
+.pagination-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, 
+    variables.$color-bloco-mensagem-light 0%, 
+    variables.$color-bloco-recomendacao-light 20%,
+    variables.$color-bloco-noticia-light 40%,
+    variables.$color-primary 60%,
+    variables.$color-bloco-galeria-light 80%,
+    variables.$color-bloco-frase-light 100%
+  );
+  border-radius: 0;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px variables.$color-primary-50;
+  position: relative;
+  opacity: 1;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(90deg, 
+      transparent 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 100%
+    );
+    animation: shimmer 2.5s infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
   }
 }
