@@ -5,7 +5,7 @@ from datetime import datetime, date, timedelta
 from dateutil.relativedelta import relativedelta
 import json
 
-from wagtail.models import Page
+from wagtail.models import Page, Site
 from wagtail.test.utils import WagtailPageTestCase
 
 from agenda.models import AgendaPage, AgendaDoDiaPage
@@ -14,10 +14,20 @@ from home.models import HomePage
 
 class AgendaDoDiaPageTestCase(WagtailPageTestCase, TestCase):
     
+    @classmethod
+    def setUpTestData(cls):
+        """Configuração de dados de teste que são compartilhados entre os testes"""
+        # Garante que existe uma página root
+        root = Page.get_first_root_node()
+        if not root:
+            root = Page.add_root(title="Root", slug="root")
+        
+        cls.root_page = root
+    
     def setUp(self):
         """Configuração inicial para os testes"""
-        # Obtém a página raiz padrão do Wagtail
-        self.root_page = Page.objects.get(depth=1)
+        # Usa a página raiz criada no setUpTestData
+        self.root_page = self.__class__.root_page
         
         self.home_page = HomePage(title="Home Test", slug="home-test")
         self.root_page.add_child(instance=self.home_page)
@@ -73,10 +83,20 @@ class AgendaDoDiaPageTestCase(WagtailPageTestCase, TestCase):
 
 class RecorrenciaLogicTestCase(TestCase):
     
+    @classmethod
+    def setUpTestData(cls):
+        """Configuração de dados de teste que são compartilhados entre os testes"""
+        # Garante que existe uma página root
+        root = Page.get_first_root_node()
+        if not root:
+            root = Page.add_root(title="Root", slug="root")
+        
+        cls.root_page = root
+    
     def setUp(self):
         """Configuração para testes de lógica de recorrência"""
-        # Obtém a página raiz padrão do Wagtail
-        self.root_page = Page.objects.get(depth=1)
+        # Usa a página raiz criada no setUpTestData
+        self.root_page = self.__class__.root_page
         
         self.home_page = HomePage(title="Home Test", slug="home-test-2")
         self.root_page.add_child(instance=self.home_page)
@@ -232,11 +252,21 @@ class RecorrenciaLogicTestCase(TestCase):
 
 class APIEndpointsTestCase(TestCase):
     
+    @classmethod
+    def setUpTestData(cls):
+        """Configuração de dados de teste que são compartilhados entre os testes"""
+        # Garante que existe uma página root
+        root = Page.get_first_root_node()
+        if not root:
+            root = Page.add_root(title="Root", slug="root")
+        
+        cls.root_page = root
+    
     def setUp(self):
         """Configuração para testes de API"""
         self.client = Client()
-        # Obtém a página raiz padrão do Wagtail
-        self.root_page = Page.objects.get(depth=1)
+        # Usa a página raiz criada no setUpTestData
+        self.root_page = self.__class__.root_page
         
         self.home_page = HomePage(title="Home Test", slug="home-test-3")
         self.root_page.add_child(instance=self.home_page)
@@ -283,10 +313,20 @@ class APIEndpointsTestCase(TestCase):
 
 class ValidationTestCase(TestCase):
     
+    @classmethod
+    def setUpTestData(cls):
+        """Configuração de dados de teste que são compartilhados entre os testes"""
+        # Garante que existe uma página root
+        root = Page.get_first_root_node()
+        if not root:
+            root = Page.add_root(title="Root", slug="root")
+        
+        cls.root_page = root
+    
     def setUp(self):
         """Configuração para testes de validação"""
-        # Obtém a página raiz padrão do Wagtail
-        self.root_page = Page.objects.get(depth=1)
+        # Usa a página raiz criada no setUpTestData
+        self.root_page = self.__class__.root_page
         
         self.home_page = HomePage(title="Home Test", slug="home-test-4")
         self.root_page.add_child(instance=self.home_page)

@@ -21,8 +21,12 @@ class AgendaAPIViewsTestCase(TestCase):
             password='testpass123'
         )
         
-        # Obtém a página raiz padrão do Wagtail
-        cls.root_page = Page.objects.get(depth=1)
+        # Garante que existe uma página root
+        root = Page.get_first_root_node()
+        if not root:
+            root = Page.add_root(title="Root", slug="root")
+        
+        cls.root_page = root
         
         cls.home_page = HomePage(title="Home Test Views", slug="home-test-views")
         cls.root_page.add_child(instance=cls.home_page)

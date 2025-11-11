@@ -25,13 +25,23 @@ def setup_request_with_messages(request):
 class WagtailHooksSimplifiedTestCase(TestCase):
     """Testes simplificados para wagtail hooks"""
     
+    @classmethod
+    def setUpTestData(cls):
+        """Configuração de dados de teste que são compartilhados entre os testes"""
+        # Garante que existe uma página root
+        root = Page.get_first_root_node()
+        if not root:
+            root = Page.add_root(title="Root", slug="root")
+        
+        cls.root_page = root
+    
     def setUp(self):
         """Configuração básica para testes"""
         self.factory = RequestFactory()
         self.request = setup_request_with_messages(self.factory.get('/'))
         
-        # Página raiz
-        self.root_page = Page.objects.get(depth=1)
+        # Usa a página raiz criada no setUpTestData
+        self.root_page = self.__class__.root_page
         
         # Configuração do Site
         Site.objects.filter(is_default_site=True).delete()

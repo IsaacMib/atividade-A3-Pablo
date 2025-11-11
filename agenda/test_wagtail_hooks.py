@@ -28,14 +28,24 @@ def setup_request_with_messages(request):
 
 class WagtailHooksTestCase(TestCase):
     
+    @classmethod
+    def setUpTestData(cls):
+        """Configuração de dados de teste que são compartilhados entre os testes"""
+        # Garante que existe uma página root
+        root = Page.get_first_root_node()
+        if not root:
+            root = Page.add_root(title="Root", slug="root")
+        
+        cls.root_page = root
+    
     def setUp(self):
         """Configuração inicial para os testes"""
         # Configuração do RequestFactory para mock de requests
         self.factory = RequestFactory()
         self.request = setup_request_with_messages(self.factory.get('/'))
         
-        # Obtém a página raiz padrão do Wagtail
-        self.root_page = Page.objects.get(depth=1)
+        # Usa a página raiz criada no setUpTestData
+        self.root_page = self.__class__.root_page
         
         self.home_page = HomePage(title="Home Test Hooks", slug="home-test-hooks")
         self.root_page.add_child(instance=self.home_page)
@@ -299,14 +309,24 @@ class WagtailHooksTestCase(TestCase):
 
 class IntegrationTestCase(TestCase):
     
+    @classmethod
+    def setUpTestData(cls):
+        """Configuração de dados de teste que são compartilhados entre os testes"""
+        # Garante que existe uma página root
+        root = Page.get_first_root_node()
+        if not root:
+            root = Page.add_root(title="Root", slug="root")
+        
+        cls.root_page = root
+    
     def setUp(self):
         """Configuração para testes de integração"""
         # Configuração do RequestFactory para mock de requests
         self.factory = RequestFactory()
         self.request = setup_request_with_messages(self.factory.get('/'))
         
-        # Obtém a página raiz padrão do Wagtail
-        self.root_page = Page.objects.get(depth=1)
+        # Usa a página raiz criada no setUpTestData
+        self.root_page = self.__class__.root_page
         
         self.home_page = HomePage(title="Home Integration", slug="home-integration")
         self.root_page.add_child(instance=self.home_page)
