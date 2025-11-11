@@ -14,6 +14,7 @@ from blocks.utils import (
 
 from django.db import models
 
+import re
 import requests
 import re
 from django.core.cache import cache
@@ -281,26 +282,24 @@ class VideoBlock(StructBlock):
 
         # Normaliza vários formatos de URL do YouTube para URL de embed segura (nocookie)
         video_id = None
-        try:
-            from urllib.parse import urlparse, parse_qs
-            parsed = urlparse(url)
-            host = (parsed.netloc or '').lower()
-            path = parsed.path or ''
-            qs = parse_qs(parsed.query or '')
+        # YouTube URL patterns with named constants
+        YOUTUBE_BE_PATTERN = (r'youtu\.be/([^#\&\?]*)', 1)  # youtu.be/ID
+        YOUTUBE_EMBED_PATTERN = (r'/embed/([^#\&\?/]*)', 1)  # youtube.com/embed/ID
+        YOUTUBE_SHORTS_PATTERN = (r'/shorts/([^#\&\?/]*)', 1)  # youtube.com/shorts/ID
+        YOUTUBE_WATCH_PATTERN = (r'[?&]v=([^#\&\?]*)', 1)  # youtube.com/watch?v=ID
 
-            # youtube.com/watch?v=ID
-            if 'watch' in path and 'v' in qs:
-                video_id = qs.get('v', [None])[0]
-            # youtu.be/ID
-            elif 'youtu.be' in host and path:
-                video_id = path.strip('/').split('/')[0]
-            # youtube.com/embed/ID
-            elif '/embed/' in path:
-                video_id = path.split('/embed/')[-1].split('/')[0]
-            # youtube.com/shorts/ID
-            elif '/shorts/' in path:
-                video_id = path.split('/shorts/')[-1].split('/')[0]
-        except Exception:
+        # Try each pattern in order
+        for pattern, group in [
+            YOUTUBE_BE_PATTERN,
+            YOUTUBE_EMBED_PATTERN,
+            YOUTUBE_SHORTS_PATTERN,
+            YOUTUBE_WATCH_PATTERN
+        ]:
+            match = re.search(pattern, url, re.IGNORECASE)
+            if match and match.group(group):
+                video_id = match.group(group)
+                break
+        else:
             video_id = None
 
         # Monta src de embed com domínio de privacidade; mantém alguns params úteis
