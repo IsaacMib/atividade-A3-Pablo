@@ -108,6 +108,9 @@
   box-shadow: 0 2px 8px variables.$color-card-shadow-light, 0 1px 3px variables.$color-card-shadow;
   position: relative;
   border: 1px solid variables.$color-grey-100;
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
   
   &::before {
     content: '';
@@ -203,9 +206,11 @@
   
   .card-img-top {
     height: 220px;
+    width: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
     background-color: variables.$color-grey-100;
+    flex-shrink: 0;
     
     // Imagem padrão com opacity reduzida
     &[src*="img_noticia_default"] {
@@ -230,6 +235,9 @@
   
   .card-body {
     padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
   }
   
   .card-title {

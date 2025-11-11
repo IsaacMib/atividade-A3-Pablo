@@ -470,7 +470,6 @@ class DicasPresidenteIndexPage(RoutablePageMixin, PageSitePadraoIndex):
     icon = "folder-open-inverse"
     
     def get_dicas_destaque(self, quantidade=3):
-        """Retorna dicas marcadas como destaque."""
         return (
             DicasPresidentePage.objects.live()
             .descendant_of(self)
@@ -524,8 +523,13 @@ class DicasPresidenteIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         """Adiciona dicas paginadas ao contexto."""
         context = super().get_context(request)
         
-        # Busca todas as dicas usando função centralizada
-        dicas = self.get_todas_dicas()
+        # Busca dicas de destaque (fixas no topo)
+        dicas_destaque = self.get_dicas_destaque()
+        
+        # Busca todas as dicas EXCLUINDO as que estão em destaque
+        # para evitar duplicação na listagem
+        dicas_destaque_ids = [dica.id for dica in dicas_destaque]
+        dicas = self.get_todas_dicas().exclude(id__in=dicas_destaque_ids)
         
         # Paginação
         paginator = Paginator(dicas, 12)
@@ -538,7 +542,7 @@ class DicasPresidenteIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         
         # Contexto - todas as queries centralizadas
         context["posts"] = posts
-        context["dicas_destaque"] = self.get_dicas_destaque()
+        context["dicas_destaque"] = dicas_destaque
         context["frase_aleatoria"] = self.get_frase_aleatoria()
         
         return context
