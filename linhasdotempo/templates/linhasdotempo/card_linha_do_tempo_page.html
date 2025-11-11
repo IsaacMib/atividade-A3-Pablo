@@ -7,7 +7,7 @@
             <h1 class="linha-do-tempo-page__titulo">{{ page.title }}</h1>
             <p class="linha-do-tempo-page__data">Publicado em {{ page.data_publicacao|date:"d/m/Y" }}</p>
             {% if page.imagem %}
-                <div class="card-image">
+                <div class="banner-container card-image">
                     {% image page.imagem width-800 class="card-img-top" alt=page.texto_alternativo|default:page.title %}
                 </div>
             {% endif %}
