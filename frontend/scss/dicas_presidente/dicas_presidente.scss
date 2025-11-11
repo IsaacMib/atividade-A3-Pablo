@@ -274,8 +274,7 @@
   }
   
   .dica-tipo-badge {
-    background: variables.$color-primary;
-    color: variables.$color-white;
+    color: variables.$color-primary !important;
   }
 }
 

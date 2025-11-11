@@ -238,6 +238,10 @@
   .dica-card-destaque {
     background: linear-gradient(to bottom, variables.$color-grey-800 0%, variables.$color-grey-900 100%);
     border-color: variables.$color-primary;
+    
+    .dica-tipo-badge {
+      color: variables.$color-white !important;
+    }
   }
   
   // Tipo Badge
