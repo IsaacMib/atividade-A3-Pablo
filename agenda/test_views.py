@@ -1,32 +1,62 @@
+from django.conf import settings
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
 from datetime import date, datetime
 import json
 
-from wagtail.models import Page, Site
+from wagtail.coreutils import get_supported_content_language_variant
+from wagtail.models import Page, Site, Locale
 from agenda.models import AgendaPage, AgendaDoDiaPage
 from home.models import HomePage
 
 
+def ensure_root_page(locale_code: str | None = None) -> Page:
+    if locale_code is None:
+        locale_code = settings.LANGUAGE_CODE
+
+    try:
+        normalized_code = get_supported_content_language_variant(locale_code)
+    except LookupError:
+        normalized_code = locale_code
+
+    locale, _ = Locale.objects.get_or_create(language_code=normalized_code)
+
+    root = Page.get_first_root_node()
+    if not root:
+        root = Page.add_root(title="Root", slug="root")
+
+    root.refresh_from_db()
+
+    fields_to_update: list[str] = []
+
+    if root.numchild is None:
+        root.numchild = 0
+        fields_to_update.append("numchild")
+
+    if root.locale_id != locale.id:
+        root.locale = locale
+        fields_to_update.append("locale")
+
+    if fields_to_update:
+        root.save(update_fields=fields_to_update)
+
+    return root
+
+
 class AgendaAPIViewsTestCase(TestCase):
-    
+
     @classmethod
     def setUpTestData(cls):
-        """Setup executado uma vez para toda a classe de teste"""
+        cls.root_page = ensure_root_page()
+        
         # Criar usuário para autenticação
         cls.user = User.objects.create_user(
             username='testuser',
             email='testuser@example.com',
             password='testpass123'
         )
-        
-        # Garante que existe uma página root
-        root = Page.get_first_root_node()
-        if not root:
-            root = Page.add_root(title="Root", slug="root")
-        
-        cls.root_page = root
+        cls.root_page.refresh_from_db()
         
         cls.home_page = HomePage(title="Home Test Views", slug="home-test-views")
         cls.root_page.add_child(instance=cls.home_page)

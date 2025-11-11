@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.test import TestCase
 from django.test import RequestFactory
 from django.contrib.messages.storage.fallback import FallbackStorage
@@ -6,7 +7,8 @@ from django.contrib.sessions.middleware import SessionMiddleware
 from agenda.models import AgendaDoDiaPage, AgendaPage
 from agenda.wagtail_hooks import do_after_agendadodia_page_edit
 from home.models import HomePage
-from wagtail.models import Page, Site
+from wagtail.coreutils import get_supported_content_language_variant
+from wagtail.models import Page, Site, Locale
 from datetime import date
 
 
@@ -22,18 +24,45 @@ def setup_request_with_messages(request):
     return request
 
 
+def ensure_root_page(locale_code: str | None = None) -> Page:
+    if locale_code is None:
+        locale_code = settings.LANGUAGE_CODE
+
+    try:
+        normalized_code = get_supported_content_language_variant(locale_code)
+    except LookupError:
+        normalized_code = locale_code
+
+    locale, _ = Locale.objects.get_or_create(language_code=normalized_code)
+
+    root = Page.get_first_root_node()
+    if not root:
+        root = Page.add_root(title="Root", slug="root")
+
+    root.refresh_from_db()
+
+    fields_to_update: list[str] = []
+
+    if root.numchild is None:
+        root.numchild = 0
+        fields_to_update.append("numchild")
+
+    if root.locale_id != locale.id:
+        root.locale = locale
+        fields_to_update.append("locale")
+
+    if fields_to_update:
+        root.save(update_fields=fields_to_update)
+
+    return root
+
+
 class WagtailHooksSimplifiedTestCase(TestCase):
     """Testes simplificados para wagtail hooks"""
-    
+
     @classmethod
     def setUpTestData(cls):
-        """Configuração de dados de teste que são compartilhados entre os testes"""
-        # Garante que existe uma página root
-        root = Page.get_first_root_node()
-        if not root:
-            root = Page.add_root(title="Root", slug="root")
-        
-        cls.root_page = root
+        cls.root_page = ensure_root_page()
     
     def setUp(self):
         """Configuração básica para testes"""
@@ -42,6 +71,7 @@ class WagtailHooksSimplifiedTestCase(TestCase):
         
         # Usa a página raiz criada no setUpTestData
         self.root_page = self.__class__.root_page
+        self.root_page.refresh_from_db()
         
         # Configuração do Site
         Site.objects.filter(is_default_site=True).delete()
