@@ -6,7 +6,11 @@
         <div class="linha-do-tempo-page__content">
             <h1 class="linha-do-tempo-page__titulo">{{ page.title }}</h1>
             <p class="linha-do-tempo-page__data">Publicado em {{ page.data_publicacao|date:"d/m/Y" }}</p>
-            {% include 'blocks/banner.html' with banner=self %}
+            {% if page.imagem %}
+                <div class="card-image">
+                    {% image page.imagem width-800 class="card-img-top" alt=page.texto_alternativo|default:page.title %}
+                </div>
+            {% endif %}
             <div class="linha-do-tempo-page__descricao">{{ page.descricao }}</div>
             <div class="linha-do-tempo-page__lista-videos">
                 {% for block in page.lista_videos %}
