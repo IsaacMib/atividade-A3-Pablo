@@ -439,22 +439,11 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
     def get_context(self, request):
         context = super().get_context(request)
         
-        # 1. Busca as notícias locais
-        noticias_locais = list(NoticiasPage.objects.descendant_of(
-            self).live().order_by("-data_publicacao")
-        )
+        # Usa a função get_ultimas_noticias para obter todas as notícias ordenadas
+        # (primeiro as em destaque, depois as normais)
+        all_posts = self.get_ultimas_noticias(quantidade=-1)  # -1 para pegar todas as notícias disponíveis
 
-        # 2. Busca notícias da API externa
-        noticias_remotas = self._fetch_remote_noticias()
-
-        # 3. Combina e ordena as listas
-        all_posts = sorted(
-            noticias_locais + noticias_remotas,
-            key=lambda x: x.data_publicacao,
-            reverse=True
-        )
-
-        # 4. Paginação
+        # Paginação
         paginator = Paginator(all_posts, 12)
         page = request.GET.get("page")
         try:
@@ -583,18 +572,34 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
         return tags
 
     def get_ultimas_noticias(self, quantidade=6):
+        # 1. Busca as notícias locais separando destaque das demais
+        noticias_locais_destaque = list(NoticiasPage.objects.live().descendant_of(self).filter(destaque=True).order_by("-data_publicacao"))
+        noticias_locais_normais = list(NoticiasPage.objects.live().descendant_of(self).filter(destaque=False).order_by("-data_publicacao"))
 
-        noticias_locais = list(NoticiasPage.objects.live().descendant_of(self).order_by("-data_publicacao"))
-
+        # 2. Busca notícias remotas
         noticias_remotas = self._fetch_remote_noticias()
+        
+        # 3. Separa notícias remotas em destaque e normais
+        noticias_remotas_destaque = [n for n in noticias_remotas if getattr(n, 'destaque', False)]
+        noticias_remotas_normais = [n for n in noticias_remotas if not getattr(n, 'destaque', False)]
 
-        all_posts = sorted(
-            noticias_locais + noticias_remotas,
+        # 4. Combina e ordena as listas: primeiro as em destaque, depois as normais
+        destaques_combinados = sorted(
+            noticias_locais_destaque + noticias_remotas_destaque,
             key=lambda x: x.data_publicacao,
             reverse=True
         )
         
-        # 4. Retorna a quantidade solicitada
+        normais_combinadas = sorted(
+            noticias_locais_normais + noticias_remotas_normais,
+            key=lambda x: x.data_publicacao,
+            reverse=True
+        )
+        
+        # 5. Junta destaques primeiro, depois normais
+        all_posts = destaques_combinados + normais_combinadas
+        
+        # 6. Retorna a quantidade solicitada (se quantidade for -1, retorna todos)
+        if quantidade == -1:
+            return all_posts
         return all_posts[:quantidade]
-    
-        # return NoticiasPage.objects.live().descendant_of(self).order_by('-data_publicacao')[:quantidade]
