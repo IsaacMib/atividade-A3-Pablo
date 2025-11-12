@@ -36,7 +36,7 @@
                     {% comment %} <p class="card-linha-do-tempo__date">{{ card.data|date:"d/m/Y" }}</p> {% endcomment %}
                     <span class="card-description-wrapper inline">
                         {% comment %} Mostra descrição do card {% endcomment %}
-                        {% with card.descricao|default_if_none:'' as html %}
+                        {% with card.descricao_linha_do_tempo|default_if_none:'' as html %}
                             {% with html|striptags as plain %}
                                 <p lang="pt-BR" class="card-linha-do-tempo__description">
                                     {% if plain|length > 180 %}
