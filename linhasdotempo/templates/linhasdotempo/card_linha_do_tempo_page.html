@@ -6,10 +6,65 @@
         <div class="linha-do-tempo-page__content">
             <h1 class="linha-do-tempo-page__titulo">{{ page.title }}</h1>
             <p class="linha-do-tempo-page__data">Publicado em {{ page.data_publicacao|date:"d/m/Y" }}</p>
-            {% if page.imagem %}
-                <div class="banner-container card-image">
-                    {% image page.imagem width-800 class="card-img-top" alt=page.texto_alternativo|default:page.title %}
-                </div>
+            {% if page.imagens and page.imagens|length > 0 %}
+                {% if page.imagens|length > 1 %}
+                    <div class="noticias-img-destaque tw:pb-12">
+                        <!-- Main Slider -->
+                        <div class="swiper noticias-mySwiper2">
+                            <div class="swiper-wrapper">
+                                {% for block in page.imagens %}
+                                    <div class="swiper-slide swiper-slide-noticias">
+                                        {% if page.is_remote %}
+                                            <img src="{{ block.value.image.file.url }}" 
+                                                 alt="{{ block.value.alt_text|default:block.value.image.title }}" 
+                                                 class="image-noticia-carrossel" 
+                                                 style="width: 100%; height: auto; object-fit: contain;" 
+                                                 loading="lazy">
+                                        {% else %}
+                                            {% image block.value.image original class="image-noticia-carrossel" alt=block.value.alt_text|default:block.value.image.title %}
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
+                        </div>
+
+                        <!-- Thumbnail Slider -->
+                        <div thumbsSlider="" class="swiper noticias-mySwiper">
+                            <div class="swiper-wrapper">
+                                {% for block in page.imagens %}
+                                    <div class="swiper-slide swiper-slide-noticias">
+                                        {% if page.is_remote %}
+                                            <img src="{{ block.value.image.file.url }}" 
+                                                 alt="{{ block.value.alt_text|default:block.value.image.title }}" 
+                                                 class="image-noticia-carrossel" 
+                                                 style="width: 100%; height: auto; object-fit: contain;" 
+                                                 loading="lazy">
+                                        {% else %}
+                                            {% image block.value.image fill-100x100-c100 class="image-noticia-carrossel" alt=block.value.alt_text|default:block.value.image.title %}
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- Single Image -->
+                    <div class="d-flex justify-content-center noticias-img-destaque tw:pb-12">
+                        {% with block=page.imagens.0 %}
+                            {% if page.is_remote %}
+                                <img src="{{ block.value.image.file.url }}" 
+                                     alt="{{ block.value.alt_text|default:block.value.image.title }}" 
+                                     class="img-fluid" 
+                                     style="width: 100%; height: auto; object-fit: cover;" 
+                                     loading="lazy">
+                            {% else %}
+                                {% image block.value.image original class="img-fluid" alt=block.value.alt_text|default:block.value.image.title %}
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                {% endif %}
             {% endif %}
             <div class="linha-do-tempo-page__descricao">{{ page.descricao_linha_do_tempo }}</div>
             <div class="linha-do-tempo-page__lista-videos">

@@ -4,10 +4,14 @@ from wagtail.admin.panels import FieldPanel
 from core.models import PageSitePadrao, PageSitePadraoIndex
 from wagtail.fields import StreamField
 from wagtail.images.blocks import ImageChooserBlock
-from wagtail.blocks import RichTextBlock
+from wagtail.blocks import (
+    StructBlock,
+    CharBlock,
+    RichTextBlock,
+)
 
 from blocks.models import (
-  ListaVideosBlock,
+    ListaVideosBlock,
 )
 
 # Create your models here.
@@ -66,19 +70,26 @@ class CardLinhaDoTempoPage(PageSitePadrao):
     data_evento = models.DateField(
         "Data do evento", default=datetime.now, blank=True, null=True
     )
-    imagem = models.ForeignKey(
-        'wagtailimages.Image',
-        null=True,
-        blank=False,
-        on_delete=models.SET_NULL,
-        verbose_name='Imagem'
-    )
-    texto_alternativo = models.TextField(
-        max_length=255,
+    # Keeping the old field for backward compatibility, but making it optional
+    imagens = StreamField(
+        [
+            ('imagem', StructBlock([
+                ('image', ImageChooserBlock(required=True, label="Imagem")),
+                ('alt_text', CharBlock(
+                    required=False,
+                    label="Texto alternativo",
+                    help_text="Texto descritivo para acessibilidade (será usado como alt text)",
+                    max_length=255,
+                ))
+            ], icon='image', label="Imagem"))
+        ],
+        verbose_name="Coleção de Imagens",
         blank=True,
         null=True,
-        verbose_name='Texto alternativo da imagem'
+        use_json_field=True,
+        help_text="Adicione uma ou mais imagens para esta linha do tempo."
     )
+    # Removed texto_alternativo field as it's now handled per-image
     descricao_linha_do_tempo = StreamField(
         [
             ("paragraph", RichTextBlock(
@@ -102,7 +113,7 @@ class CardLinhaDoTempoPage(PageSitePadrao):
         null=True,
         use_json_field=True,
     )
-    
+
     lista_videos = StreamField(
         [
             ('lista_videos', ListaVideosBlock()),
@@ -121,8 +132,7 @@ class CardLinhaDoTempoPage(PageSitePadrao):
     content_panels = [
         PageSitePadrao.content_panels[0],  # Título da página
         FieldPanel("data_evento"),
-        FieldPanel("imagem"),
-        FieldPanel("texto_alternativo"),
+        FieldPanel("imagens"),
         FieldPanel("descricao_linha_do_tempo"),
         FieldPanel("lista_videos"),
         FieldPanel("data_publicacao"),
@@ -135,7 +145,13 @@ class CardLinhaDoTempoPage(PageSitePadrao):
     class Meta:
         verbose_name = "Página de Card da Linha do Tempo"
 
-    # @property
+    @property
+    def imagem(self):
+        """Returns the first image from the imagens StreamField or None if empty."""
+        if self.imagens and len(self.imagens) > 0:
+            return self.imagens[0].value['image']
+        return None
+
     # def descricao(self):
     #     try:
     #         # Join rendered strings of blocks in descricao_completa
