@@ -1,0 +1,48 @@
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+<div class="cursos-destaques-wrapper container my-5">
+    {% if mostrar_titulo %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="section-title">{{ titulo }}</h2>
+                <hr class="title-divider">
+            </div>
+        </div>
+    {% endif %}
+
+    {% if mostrar_destaques %}
+    {% include 'blocks/cursos/destaque_cursos.html' %}
+    {% endif %}
+
+    <!-- Listagem de Cursos -->
+    {% if cursos %}
+        {% if layout == 'lista' %}
+        {% include 'blocks/cursos/list_cursos.html' %}
+        {% else %}
+        {% include 'blocks/cursos/grid_cursos.html' %}
+        {% endif %}
+    {% else %}
+        {% if not mostrar_destaques or not curso_mes and not curso_destaque %}
+            <div class="row">
+                <div class="col-12">
+                    <div class="empty-state">
+                        <i class="bi bi-inbox"></i>
+                        <p>Nenhum curso disponível no momento.</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <!-- Botão Ver Todos (somente se não mostrar destaques) -->
+    {% if cursos_index_page_url and not mostrar_destaques %}
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <a href="{{ cursos_index_page_url }}" class="btn btn-primary btn-lg btn-ver-todos">
+                    {{ texto_link }}
+                    <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>

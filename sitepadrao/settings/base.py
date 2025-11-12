@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     "lgpd",
     "cursos",
     "contatos",
+    "treinamento",
 
 
     "plone_migration",

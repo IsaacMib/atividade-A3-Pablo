@@ -801,6 +801,122 @@ class AvisosListBlock(StructBlock):
         icon = "warning"
         label = "Avisos"
 
+
+class CursosDestaquesBlock(StructBlock):
+    """Bloco unificado para exibir cursos em destaque e listagem."""
+    
+    titulo = CharBlock(
+        required=False,
+        default="Cursos",
+        help_text="Título exibido acima da seção"
+    )
+
+    cursos_index_page = PageChooserBlock(
+        required=True,
+        target_model='cursos.CursosIndexPage',
+        help_text="Selecione a página de índice de cursos"
+    )
+
+    mostrar_destaques = blocks.BooleanBlock(
+        required=False,
+        default=True,
+        label="Mostrar Curso do Mês e Curso em Destaque",
+        help_text="Exibe dois cards em destaque antes da listagem"
+    )
+
+    quantidade = IntegerBlock(
+        required=False,
+        default=6,
+        min_value=1,
+        label="Quantidade de cursos na listagem"
+    )
+
+    layout = blocks.ChoiceBlock(
+        choices=[
+            ('lista', 'Lista'),
+            ('grid', 'Blocos/Cards'),
+        ],
+        default='grid',
+        required=False,
+        label="Layout da listagem"
+    )
+
+    texto_link = CharBlock(
+        required=False,
+        default="Ver todos os cursos",
+        label="Texto do link para ver todos"
+    )
+
+    mostrar_titulo = blocks.BooleanBlock(
+        required=False,
+        default=True,
+        label="Mostrar título"
+    )
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+
+        cursos_index_page = value.get('cursos_index_page')
+        mostrar_destaques = value.get('mostrar_destaques', True)
+        quantidade = value.get('quantidade') or 6
+        
+        curso_mes = None
+        curso_destaque = None
+        cursos = []
+        cursos_index_page_url = None
+
+        if cursos_index_page:
+            from cursos.models import CursosPage
+            
+            cursos_index_page_url = cursos_index_page.url
+            
+            if mostrar_destaques:
+                # Curso do Mês: curso mais recente publicado
+                curso_mes = CursosPage.objects.descendant_of(
+                    cursos_index_page
+                ).live().order_by("-data_publicacao").first()
+                
+                # Curso em Destaque: curso marcado como destaque (mais recente)
+                curso_destaque = CursosPage.objects.descendant_of(
+                    cursos_index_page
+                ).live().filter(destaque=True).order_by("-data_publicacao").first()
+                
+                # Lista de cursos: exclui os que estão nos destaques
+                cursos_ids_excluir = []
+                if curso_mes:
+                    cursos_ids_excluir.append(curso_mes.id)
+                if curso_destaque and curso_destaque.id != (curso_mes.id if curso_mes else None):
+                    cursos_ids_excluir.append(curso_destaque.id)
+                
+                cursos = CursosPage.objects.descendant_of(
+                    cursos_index_page
+                ).live().exclude(id__in=cursos_ids_excluir).order_by("-data_publicacao")[:quantidade]
+            else:
+                # Sem destaques: apenas lista todos os cursos
+                cursos = CursosPage.objects.descendant_of(
+                    cursos_index_page
+                ).live().order_by("-data_publicacao")[:quantidade]
+
+        context.update({
+            'titulo': value.get('titulo'),
+            'mostrar_destaques': mostrar_destaques,
+            'curso_mes': curso_mes,
+            'curso_destaque': curso_destaque,
+            'cursos': cursos,
+            'cursos_index_page_url': cursos_index_page_url,
+            'texto_link': value.get('texto_link') or "Ver todos os cursos",
+            'mostrar_titulo': value.get('mostrar_titulo', True),
+            'layout': value.get('layout', 'grid'),
+        })
+
+        return context
+
+    class Meta:
+        template = 'blocks/cursos/block_cursos.html'
+        icon = 'list-ul'
+        label = 'Cursos com Destaques'
+
+
 class LinkStructBlock(StructBlock):
     link_text = CharBlock(required=True, help_text="Texto")
     internal_page = PageChooserBlock(

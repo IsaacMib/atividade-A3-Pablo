@@ -1,0 +1,989 @@
+// ========================================
+// TREINAMENTO E CURSOS - SCSS ORGANIZADO
+// ========================================
+
+// ----------------------------------------
+// 1. VARIÁVEIS
+// ----------------------------------------
+$treinamento-colors: (
+  primary: #007bff,
+  primary-dark: #0056b3,
+  secondary: #6c757d,
+  success: #28a745,
+  warning: #ffc107,
+  warning-dark: #ff9800,
+  danger: #dc3545,
+  light: #f8f9fa,
+  dark: #343a40,
+  text: #2c3e50,
+  border: #dee2e6,
+  
+  // Gradientes
+  gradient-purple-start: #667eea,
+  gradient-purple-end: #764ba2,
+);
+
+$treinamento-shadows: (
+  sm: 0 2px 4px rgba(0, 0, 0, 0.08),
+  md: 0 4px 12px rgba(0, 0, 0, 0.12),
+  lg: 0 8px 24px rgba(0, 0, 0, 0.15),
+  xl: 0 12px 32px rgba(0, 0, 0, 0.18),
+);
+
+$treinamento-transitions: (
+  fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+  normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+  slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+);
+
+$treinamento-spacing: (
+  xs: 0.5rem,
+  sm: 1rem,
+  md: 1.5rem,
+  lg: 2rem,
+  xl: 3rem,
+  xxl: 4rem,
+);
+
+$treinamento-breakpoints: (
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+);
+
+// ----------------------------------------
+// 2. MIXINS
+// ----------------------------------------
+
+@mixin respond-to($breakpoint) {
+  @if map-has-key($treinamento-breakpoints, $breakpoint) {
+    @media (max-width: map-get($treinamento-breakpoints, $breakpoint)) {
+      @content;
+    }
+  }
+}
+
+@mixin card-hover-effect($lift: -8px) {
+  transition: map-get($treinamento-transitions, normal);
+  
+  &:hover {
+    transform: translateY($lift);
+    box-shadow: map-get($treinamento-shadows, lg);
+  }
+}
+
+@mixin gradient-bg($start, $end, $angle: 135deg) {
+  background: linear-gradient($angle, $start 0%, $end 100%);
+}
+
+@mixin image-zoom-effect($scale: 1.08) {
+  img {
+    transition: map-get($treinamento-transitions, slow);
+  }
+  
+  &:hover img {
+    transform: scale($scale);
+  }
+}
+
+@mixin text-truncate($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ----------------------------------------
+// 3. PÁGINA PRINCIPAL DE TREINAMENTO
+// ----------------------------------------
+
+.treinamento-page-header {
+  @include gradient-bg(
+    map-get($treinamento-colors, gradient-purple-start),
+    map-get($treinamento-colors, gradient-purple-end)
+  );
+  color: white;
+  padding: map-get($treinamento-spacing, xl) 0;
+  margin-bottom: map-get($treinamento-spacing, xl);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.3;
+  }
+  
+  h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: map-get($treinamento-spacing, sm);
+    position: relative;
+    z-index: 1;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    
+    @include respond-to(lg) {
+      font-size: 2.5rem;
+    }
+    
+    @include respond-to(md) {
+      font-size: 2rem;
+    }
+    
+    @include respond-to(sm) {
+      font-size: 1.75rem;
+    }
+  }
+  
+  .lead {
+    font-size: 1.25rem;
+    font-weight: 300;
+    position: relative;
+    z-index: 1;
+    opacity: 0.95;
+    
+    @include respond-to(md) {
+      font-size: 1rem;
+    }
+  }
+}
+
+// ----------------------------------------
+// 4. SEÇÃO DE CURSOS DESTAQUES
+// ----------------------------------------
+
+.cursos-destaques-wrapper {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  
+  .section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: map-get($treinamento-colors, text);
+    margin-bottom: map-get($treinamento-spacing, sm);
+    position: relative;
+    display: inline-block;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      @include gradient-bg(
+        map-get($treinamento-colors, primary),
+        map-get($treinamento-colors, primary-dark),
+        90deg
+      );
+      border-radius: 2px;
+    }
+    
+    @include respond-to(lg) {
+      font-size: 1.75rem;
+    }
+    
+    @include respond-to(md) {
+      font-size: 1.5rem;
+    }
+  }
+  
+  .title-divider {
+    width: 80px;
+    height: 3px;
+    @include gradient-bg(
+      map-get($treinamento-colors, primary),
+      map-get($treinamento-colors, primary-dark),
+      90deg
+    );
+    border: none;
+    margin: 0 0 map-get($treinamento-spacing, lg) 0;
+    opacity: 0.8;
+  }
+}
+
+// NOVA SEÇÃO DE DESTAQUES
+.cursos-destaques-section {
+  margin-bottom: map-get($treinamento-spacing, xl);
+  
+  // Título do destaque
+  .destaque-titulo-card {
+    margin-bottom: 1.25rem;
+    
+    .destaque-titulo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: map-get($treinamento-colors, text);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 0;
+      
+      i {
+        font-size: 1.75rem;
+        
+        &.bi-star-fill {
+          color: map-get($treinamento-colors, warning);
+        }
+        
+        &.bi-trophy-fill {
+          color: map-get($treinamento-colors, warning-dark);
+        }
+      }
+    }
+  }
+  
+  // Card do destaque
+  .curso-destaque-card {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    transition: map-get($treinamento-transitions, normal);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: map-get($treinamento-shadows, xl);
+      border-color: map-get($treinamento-colors, primary);
+    }
+    
+    // Imagem do curso
+    .curso-destaque-imagem {
+      height: 220px;
+      overflow: hidden;
+      position: relative;
+      background: #f8f9fa;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: map-get($treinamento-transitions, slow);
+      }
+      
+      &.curso-sem-imagem {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        @include gradient-bg(#f5f7fa, #c3cfe2);
+        
+        img {
+          opacity: 0.4;
+        }
+      }
+    }
+    
+    // Corpo do card
+    .curso-destaque-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      
+      .curso-destaque-title {
+        color: map-get($treinamento-colors, text);
+        font-weight: 600;
+        line-height: 1.4;
+        transition: map-get($treinamento-transitions, fast);
+      }
+      
+      .curso-destaque-meta {
+        color: map-get($treinamento-colors, secondary);
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+        
+        i {
+          color: map-get($treinamento-colors, primary);
+        }
+      }
+      
+      .curso-destaque-descricao {
+        color: #6c757d;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+    }
+  }
+  
+  // Card vazio
+  .curso-destaque-card.curso-vazio {
+    background: map-get($treinamento-colors, light);
+    border: 2px dashed rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+  
+  // Variantes
+  .curso-mes-card {
+    .curso-destaque-imagem::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255, 193, 7, 0.1) 0%, transparent 100%);
+      pointer-events: none;
+    }
+  }
+  
+  .curso-destaque-especial-card {
+    .curso-destaque-imagem::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(102, 126, 234, 0.1) 0%, transparent 100%);
+      pointer-events: none;
+    }
+  }
+  
+  // Link do curso
+  .curso-destaque-link {
+    display: block;
+    height: 100%;
+    
+    &:hover {
+      .curso-destaque-imagem img {
+        transform: scale(1.1);
+      }
+      
+      .curso-destaque-title {
+        color: map-get($treinamento-colors, primary);
+      }
+    }
+  }
+  
+  // Responsivo
+  @include respond-to(md) {
+    .destaque-titulo-card .destaque-titulo {
+      font-size: 1.25rem;
+      
+      i {
+        font-size: 1.5rem;
+      }
+    }
+    
+    .curso-destaque-card .curso-destaque-imagem {
+      height: 200px;
+    }
+  }
+}
+
+// ----------------------------------------
+// 5. CARDS DE DESTAQUE (ANTIGO - MANTER PARA COMPATIBILIDADE)
+// ----------------------------------------
+
+.destaques-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: map-get($treinamento-spacing, lg);
+  margin-bottom: map-get($treinamento-spacing, xl);
+  
+  @include respond-to(md) {
+    grid-template-columns: 1fr;
+    gap: map-get($treinamento-spacing, md);
+  }
+}
+
+.card-destaque {
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  background: white;
+  @include card-hover-effect(-10px);
+  
+  .card-header {
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 1.25rem 1.5rem;
+    border-bottom: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    i {
+      font-size: 1.3rem;
+    }
+  }
+  
+  &.card-mes .card-header {
+    @include gradient-bg(
+      map-get($treinamento-colors, primary),
+      map-get($treinamento-colors, primary-dark)
+    );
+    color: white;
+  }
+  
+  &.card-destaque-especial .card-header {
+    @include gradient-bg(
+      map-get($treinamento-colors, warning),
+      map-get($treinamento-colors, warning-dark)
+    );
+    color: map-get($treinamento-colors, dark);
+  }
+  
+  .card-body {
+    padding: 0;
+  }
+  
+  a {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    
+    &:hover .card-title {
+      color: map-get($treinamento-colors, primary) !important;
+      transition: map-get($treinamento-transitions, fast);
+    }
+  }
+}
+
+// ----------------------------------------
+// 6. IMAGENS DOS CURSOS
+// ----------------------------------------
+
+.curso-imagem,
+.curso-imagem-lista,
+.curso-imagem-grid {
+  position: relative;
+  overflow: hidden;
+  background: map-get($treinamento-colors, light);
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: map-get($treinamento-transitions, slow);
+  }
+}
+
+.curso-imagem {
+  height: 280px;
+  
+  @include respond-to(lg) {
+    height: 240px;
+  }
+}
+
+.curso-imagem-lista {
+  height: 100%;
+  min-height: 220px;
+  
+  @include respond-to(md) {
+    min-height: 180px;
+  }
+}
+
+.curso-imagem-grid {
+  height: 220px;
+  
+  @include respond-to(md) {
+    height: 200px;
+  }
+  
+  @include respond-to(sm) {
+    height: 180px;
+  }
+}
+
+.card-destaque:hover .curso-imagem img,
+.card-curso-lista:hover .curso-imagem-lista img,
+.card-curso-grid:hover .curso-imagem-grid img {
+  transform: scale(1.08);
+}
+
+.curso-sem-imagem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @include gradient-bg(
+    map-get($treinamento-colors, gradient-purple-start),
+    map-get($treinamento-colors, gradient-purple-end)
+  );
+  position: relative;
+  
+  &::before {
+    content: '📚';
+    font-size: 4rem;
+    position: absolute;
+    opacity: 0.3;
+  }
+  
+  img {
+    opacity: 0.6;
+    filter: brightness(1.2);
+  }
+}
+
+// ----------------------------------------
+// 7. LISTAGEM DE CURSOS
+// ----------------------------------------
+
+.cursos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: map-get($treinamento-spacing, md);
+  
+  @include respond-to(lg) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @include respond-to(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card-curso-grid,
+.card-curso-lista {
+  border: 1px solid map-get($treinamento-colors, border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  height: 100%;
+  @include card-hover-effect(-6px);
+  
+  &:hover {
+    border-color: map-get($treinamento-colors, primary);
+  }
+  
+  .card-body {
+    padding: map-get($treinamento-spacing, md);
+  }
+  
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: map-get($treinamento-colors, text);
+    margin-bottom: map-get($treinamento-spacing, sm);
+  }
+  
+  .card-text {
+    color: map-get($treinamento-colors, secondary);
+    line-height: 1.6;
+    
+    &.small {
+      font-size: 0.875rem;
+    }
+  }
+  
+  a {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    
+    &:hover .card-title {
+      color: map-get($treinamento-colors, primary) !important;
+    }
+  }
+}
+
+.card-curso-lista {
+  .row {
+    height: 100%;
+  }
+}
+
+// ----------------------------------------
+// 8. PÁGINA INDEX DE CURSOS
+// ----------------------------------------
+
+.cursos-avisos-container {
+  padding: map-get($treinamento-spacing, xl) 0;
+  background: map-get($treinamento-colors, light);
+  min-height: 70vh;
+}
+
+.cursos-avisos-wrapper {
+  margin-top: map-get($treinamento-spacing, lg);
+}
+
+.curso-card {
+  background: white;
+  border: 1px solid map-get($treinamento-colors, border);
+  @include card-hover-effect(-8px);
+  cursor: pointer;
+  
+  &:hover {
+    border-color: map-get($treinamento-colors, primary);
+  }
+  
+  .curso-img {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include gradient-bg(
+      map-get($treinamento-colors, gradient-purple-start),
+      map-get($treinamento-colors, gradient-purple-end)
+    );
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    
+    @include respond-to(sm) {
+      height: 160px;
+    }
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  
+  .curso-icon-default {
+    color: white;
+    opacity: 0.8;
+    font-size: 4rem !important;
+  }
+  
+  .curso-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: map-get($treinamento-colors, text);
+    margin-bottom: map-get($treinamento-spacing, sm);
+    line-height: 1.4;
+    
+    @include respond-to(sm) {
+      font-size: 1.1rem;
+    }
+  }
+  
+  .curso-icon-calendar {
+    color: map-get($treinamento-colors, primary);
+  }
+  
+  .curso-descricao {
+    font-size: 0.95rem;
+    color: map-get($treinamento-colors, secondary);
+    line-height: 1.6;
+  }
+  
+  .curso-data {
+    color: map-get($treinamento-colors, text);
+    font-size: 0.875rem;
+  }
+  
+  .curso-tags .badge {
+    margin-right: 0.25rem;
+    padding: 0.35rem 0.65rem;
+    font-weight: 500;
+    background: map-get($treinamento-colors, light);
+    color: map-get($treinamento-colors, primary);
+    border: 1px solid map-get($treinamento-colors, primary);
+    transition: map-get($treinamento-transitions, fast);
+    
+    &:hover {
+      background: map-get($treinamento-colors, primary);
+      color: white;
+    }
+  }
+}
+
+// ----------------------------------------
+// 9. PÁGINA INDIVIDUAL DO CURSO
+// ----------------------------------------
+
+.curso-page-container {
+  padding: map-get($treinamento-spacing, lg) 0 map-get($treinamento-spacing, xxl);
+  background: white;
+  
+  .curso-page--title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: map-get($treinamento-colors, text);
+    margin: map-get($treinamento-spacing, lg) 0;
+    line-height: 1.3;
+    
+    @include respond-to(md) {
+      font-size: 2rem;
+    }
+    
+    @include respond-to(sm) {
+      font-size: 1.75rem;
+      margin: map-get($treinamento-spacing, md) 0;
+    }
+  }
+  
+  .curso-barra-publicacao {
+    background: map-get($treinamento-colors, light);
+    padding: map-get($treinamento-spacing, md) 0;
+    margin-bottom: map-get($treinamento-spacing, lg);
+    border-top: 1px solid map-get($treinamento-colors, border);
+    border-bottom: 1px solid map-get($treinamento-colors, border);
+    
+    .aviso-page-publicacao {
+      font-size: 0.95rem;
+      color: map-get($treinamento-colors, secondary);
+      font-weight: 500;
+    }
+  }
+  
+  .curso-imagem {
+    margin: map-get($treinamento-spacing, lg) 0;
+    
+    img {
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: map-get($treinamento-shadows, md);
+    }
+  }
+  
+  .curso-page-descricao {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: map-get($treinamento-colors, secondary);
+    margin-bottom: map-get($treinamento-spacing, lg);
+    padding: map-get($treinamento-spacing, md);
+    background: map-get($treinamento-colors, light);
+    border-left: 4px solid map-get($treinamento-colors, primary);
+    border-radius: 4px;
+    
+    @include respond-to(md) {
+      font-size: 1rem;
+    }
+  }
+  
+  .curso-page-content {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: map-get($treinamento-colors, text);
+    
+    h2, h3, h4 {
+      color: map-get($treinamento-colors, text);
+      font-weight: 600;
+      margin-top: map-get($treinamento-spacing, lg);
+      margin-bottom: map-get($treinamento-spacing, sm);
+    }
+    
+    h2 {
+      font-size: 2rem;
+      border-bottom: 2px solid map-get($treinamento-colors, border);
+      padding-bottom: map-get($treinamento-spacing, xs);
+      
+      @include respond-to(md) {
+        font-size: 1.5rem;
+      }
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      
+      @include respond-to(md) {
+        font-size: 1.25rem;
+      }
+    }
+    
+    h4 {
+      font-size: 1.25rem;
+    }
+    
+    p {
+      margin-bottom: 1.25rem;
+    }
+    
+    ul, ol {
+      margin-bottom: map-get($treinamento-spacing, md);
+      padding-left: 2rem;
+    }
+    
+    li {
+      margin-bottom: map-get($treinamento-spacing, xs);
+    }
+    
+    a {
+      color: map-get($treinamento-colors, primary);
+      text-decoration: underline;
+      transition: map-get($treinamento-transitions, fast);
+      
+      &:hover {
+        color: map-get($treinamento-colors, primary-dark);
+      }
+    }
+    
+    blockquote {
+      border-left: 4px solid map-get($treinamento-colors, warning);
+      padding-left: map-get($treinamento-spacing, md);
+      margin: map-get($treinamento-spacing, lg) 0;
+      font-style: italic;
+      color: map-get($treinamento-colors, secondary);
+    }
+    
+    code {
+      background: map-get($treinamento-colors, light);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: map-get($treinamento-colors, danger);
+    }
+    
+    pre {
+      background: map-get($treinamento-colors, dark);
+      color: white;
+      padding: map-get($treinamento-spacing, md);
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: map-get($treinamento-spacing, lg) 0;
+      
+      code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+      }
+    }
+    
+    table {
+      width: 100%;
+      margin: map-get($treinamento-spacing, lg) 0;
+      border-collapse: collapse;
+      
+      th, td {
+        padding: 0.75rem;
+        border: 1px solid map-get($treinamento-colors, border);
+      }
+      
+      th {
+        background: map-get($treinamento-colors, light);
+        font-weight: 600;
+        text-align: left;
+      }
+      
+      tr:hover {
+        background: map-get($treinamento-colors, light);
+      }
+    }
+  }
+}
+
+// ----------------------------------------
+// 10. BOTÕES
+// ----------------------------------------
+
+.btn-ver-todos {
+  border-radius: 50px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  box-shadow: map-get($treinamento-shadows, sm);
+  @include card-hover-effect(-2px);
+}
+
+// ----------------------------------------
+// 11. ESTADOS VAZIOS E LOADING
+// ----------------------------------------
+
+.empty-state {
+  text-align: center;
+  padding: map-get($treinamento-spacing, xxl) map-get($treinamento-spacing, lg);
+  
+  i {
+    font-size: 5rem;
+    color: map-get($treinamento-colors, border);
+    margin-bottom: map-get($treinamento-spacing, sm);
+  }
+  
+  p {
+    color: map-get($treinamento-colors, secondary);
+    font-size: 1.1rem;
+  }
+}
+
+.curso-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: map-get($treinamento-colors, secondary);
+  
+  &::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 4px solid map-get($treinamento-colors, light);
+    border-top-color: map-get($treinamento-colors, primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to { 
+    transform: rotate(360deg); 
+  }
+}
+
+// ----------------------------------------
+// 12. ANIMAÇÕES
+// ----------------------------------------
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-destaque,
+.card-curso-lista,
+.card-curso-grid {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.card-destaque:nth-child(1) { 
+  animation-delay: 0.1s; 
+}
+
+.card-destaque:nth-child(2) { 
+  animation-delay: 0.2s; 
+}
+
+// ----------------------------------------
+// 13. ACESSIBILIDADE
+// ----------------------------------------
+
+.card-destaque a:focus,
+.card-curso-lista a:focus,
+.card-curso-grid a:focus {
+  outline: 2px solid map-get($treinamento-colors, primary);
+  outline-offset: 4px;
+}
+
+// ----------------------------------------
+// 14. IMPRESSÃO
+// ----------------------------------------
+
+@media print {
+  .treinamento-page-header {
+    background: white;
+    color: black;
+  }
+  
+  .card-destaque,
+  .card-curso-lista,
+  .card-curso-grid {
+    box-shadow: none !important;
+    border: 1px solid #ddd;
+    page-break-inside: avoid;
+  }
+  
+  .btn-ver-todos {
+    display: none;
+  }
+}

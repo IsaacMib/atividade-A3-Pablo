@@ -1,0 +1,114 @@
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+<!-- Seção de Destaques de Cursos -->
+<section class="cursos-destaques-section mb-5">
+    <div class="row g-4 align-items-stretch mb-4">
+        <!-- Curso do Mês -->
+        <div class="col-lg-6 col-md-6 col-12">
+            <div class="destaque-titulo-card">
+                <h3 class="destaque-titulo">
+                    <i class="bi bi-star-fill"></i>
+                    Curso do Mês
+                </h3>
+            </div>
+            
+            {% if curso_mes %}
+                <a href="{% pageurl curso_mes %}" class="text-decoration-none curso-destaque-link">
+                    <article class="curso-destaque-card curso-mes-card p-0 h-100 rounded-4 shadow-sm">
+                        {% if curso_mes.images %}
+                            <div class="curso-destaque-imagem">
+                                {% with curso_mes.images.0 as first_image %}
+                                    {% image first_image.value fill-400x300 class="img-fluid w-100" loading="lazy" %}
+                                {% endwith %}
+                            </div>
+                        {% else %}
+                            <div class="curso-destaque-imagem curso-sem-imagem">
+                                <img src="{% static 'img/img_noticia_default.png' %}" alt="{{ curso_mes.title }}" class="img-fluid w-100">
+                            </div>
+                        {% endif %}
+                        
+                        <div class="curso-destaque-body p-4">
+                            <h4 class="curso-destaque-title h5 mb-3">{{ curso_mes.title }}</h4>
+                            
+                            <div class="curso-destaque-meta mb-3">
+                                <i class="bi bi-calendar3 me-2"></i>
+                                <span class="small">{{ curso_mes.data_publicacao|date:"d/m/Y" }}</span>
+                            </div>
+                            
+                            {% if curso_mes.descricao %}
+                                <p class="curso-destaque-descricao mb-0">
+                                    {{ curso_mes.descricao|striptags|truncatewords:25 }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </article>
+                </a>
+            {% else %}
+                <div class="curso-destaque-card curso-vazio p-4 h-100 rounded-4 shadow-sm text-center">
+                    <i class="bi bi-inbox display-4 mb-3 text-muted"></i>
+                    <p class="mb-0 text-muted">Nenhum curso disponível no momento.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Curso em Destaque -->
+        <div class="col-lg-6 col-md-6 col-12">
+            <div class="destaque-titulo-card">
+                <h3 class="destaque-titulo">
+                    <i class="bi bi-trophy-fill"></i>
+                    Curso em Destaque
+                </h3>
+            </div>
+            
+            {% if curso_destaque %}
+                <a href="{% pageurl curso_destaque %}" class="text-decoration-none curso-destaque-link">
+                    <article class="curso-destaque-card curso-destaque-especial-card p-0 h-100 rounded-4 shadow-sm">
+                        {% if curso_destaque.images %}
+                            <div class="curso-destaque-imagem">
+                                {% with curso_destaque.images.0 as first_image %}
+                                    {% image first_image.value fill-400x300 class="img-fluid w-100" loading="lazy" %}
+                                {% endwith %}
+                            </div>
+                        {% else %}
+                            <div class="curso-destaque-imagem curso-sem-imagem">
+                                <img src="{% static 'img/img_noticia_default.png' %}" alt="{{ curso_destaque.title }}" class="img-fluid w-100">
+                            </div>
+                        {% endif %}
+                        
+                        <div class="curso-destaque-body p-4">
+                            <h4 class="curso-destaque-title h5 mb-3">{{ curso_destaque.title }}</h4>
+                            
+                            <div class="curso-destaque-meta mb-3">
+                                <i class="bi bi-calendar3 me-2"></i>
+                                <span class="small">{{ curso_destaque.data_publicacao|date:"d/m/Y" }}</span>
+                            </div>
+                            
+                            {% if curso_destaque.descricao %}
+                                <p class="curso-destaque-descricao mb-0">
+                                    {{ curso_destaque.descricao|striptags|truncatewords:25 }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </article>
+                </a>
+            {% else %}
+                <div class="curso-destaque-card curso-vazio p-4 h-100 rounded-4 shadow-sm text-center">
+                    <i class="bi bi-inbox display-4 mb-3 text-muted"></i>
+                    <p class="mb-0 text-muted">Nenhum curso em destaque no momento.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Botão Ver Todos (Embaixo dos cards, centralizado) -->
+    {% if cursos_index_page_url %}
+    <div class="row" style="margin-top: 5rem;">
+        <div class="col-12 text-center">
+            <a href="{{ cursos_index_page_url }}" class="btn btn-primary btn-lg rounded-pill px-5 py-3" title="{{ texto_link }}">
+                {{ texto_link }}
+                <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</section>
