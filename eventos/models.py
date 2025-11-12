@@ -9,7 +9,7 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.admin.panels import ObjectList, FieldPanel, MultiFieldPanel, TabbedInterface
 from wagtail.search import index
 from core.models import PageSitePadraoIndex
-from paginas_codata.models import AvisosDefaultPage
+from paginas.models import AvisosDefaultPage
 from datetime import datetime
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from core.utils import get_page_title_with_counter, get_widget_input_with_counter
@@ -62,7 +62,7 @@ class EventosPage(AvisosDefaultPage):
     parent_page_types = ["EventosIndexPage"]
     subpage_types = []
 
-    template = "paginas_codata/avisos_default_page.html"
+    template = "paginas/avisos_default_page.html"
 
     def generate_unique_slug(self, base_slug):
         slug = base_slug
@@ -130,7 +130,7 @@ class EventosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
     parent_page_types = ["home.HomePage", "intranet.IntranetHomePage"]
     subpage_types = ["EventosPage"]
 
-    template = "paginas_codata/avisos_default_index_page.html"
+    template = "paginas/avisos_default_index_page.html"
 
     def get_context(self, request):
         context = super(EventosIndexPage, self).get_context(request)
@@ -163,7 +163,7 @@ class EventosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         context = self.get_context(request)
         context["tag"] = tag_obj
         context["posts"] = posts
-        return render(request, "paginas_codata/avisos_default_index_page.html", context)
+        return render(request, "paginas/avisos_default_index_page.html", context)
 
     def get_posts(self, tag=None):
         posts = EventosPage.objects.live().descendant_of(self)

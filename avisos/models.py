@@ -20,7 +20,7 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import Tag, TaggedItemBase
 
 from core.models import PageSitePadraoIndex
-from paginas_codata.models import AvisosDefaultPage
+from paginas.models import AvisosDefaultPage
 from core.utils import (
     get_page_title_with_counter,
     get_widget_input_with_counter
@@ -107,7 +107,7 @@ class AvisosPage(AvisosDefaultPage):
     parent_page_types = ["AvisosIndexPage"]
     subpage_types = []
 
-    template = "paginas_codata/avisos_default_page.html"
+    template = "paginas/avisos_default_page.html"
 
     def clean(self):
         """Validação de limite de destaques."""
@@ -183,7 +183,7 @@ class AvisosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
     subpage_types = ["AvisosPage"]
     icon = "list-ul"
 
-    template = "paginas_codata/avisos_default_index_page.html"
+    template = "paginas/avisos_default_index_page.html"
 
     def children(self):
         return self.get_children().specific().live()
@@ -218,7 +218,7 @@ class AvisosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
             return redirect(self.url)
 
         posts = self.get_posts(tag=tag_obj)
-        return render(request, "paginas_codata/avisos_default_index_page.html", {
+        return render(request, "paginas/avisos_default_index_page.html", {
             "self": self,
             "tag": tag_obj,
             "posts": posts,
