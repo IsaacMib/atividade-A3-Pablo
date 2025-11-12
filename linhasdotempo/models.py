@@ -75,7 +75,7 @@ class CardLinhaDoTempoPage(PageSitePadrao):
         null=True,
         verbose_name='Texto alternativo da imagem'
     )
-    descricao = StreamField(
+    descricao_linha_do_tempo = StreamField(
         [
             ("paragraph", RichTextBlock(
                 icon="pilcrow",
@@ -106,7 +106,7 @@ class CardLinhaDoTempoPage(PageSitePadrao):
         FieldPanel("data_evento"),
         FieldPanel("imagem"),
         FieldPanel("texto_alternativo"),
-        FieldPanel("descricao"),
+        FieldPanel("descricao_linha_do_tempo"),
         FieldPanel("data_publicacao"),
     ]
 
