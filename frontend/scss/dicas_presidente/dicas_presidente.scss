@@ -653,32 +653,6 @@
     justify-content: center;
     overflow: hidden;
     
-    .swiper-button-next,
-    .swiper-button-prev {
-      background-color: variables.$color-white;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      box-shadow: 0 2px 8px variables.$color-black-40;
-      transition: all 0.3s ease;
-      
-      &::after {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: variables.$color-primary;
-      }
-      
-      &:hover {
-        background-color: variables.$color-primary;
-        transform: scale(1.1);
-        box-shadow: 0 4px 12px variables.$color-black-50;
-        
-        &::after {
-          color: variables.$color-white;
-        }
-      }
-    }
-    
     .swiper-slide {
       display: flex;
       align-items: center;
@@ -749,47 +723,6 @@
       
       img {
         object-fit: cover;
-      }
-    }
-    
-    .dicas-mySwiper2 {
-      aspect-ratio: 16/9;
-      max-height: 300px;
-      
-      .swiper-button-next,
-      .swiper-button-prev {
-        width: 36px;
-        height: 36px;
-        
-        &::after {
-          font-size: 1rem;
-        }
-      }
-      
-      .swiper-slide {
-        max-height: 300px;
-        overflow: hidden;
-      }
-      
-      img {
-        max-height: 300px;
-        object-fit: cover;
-      }
-    }
-    
-    .dicas-mySwiper {
-      height: 70px;
-      
-      &.swiper-thumbs {
-        height: 70px;
-        
-        .swiper-slide-dicas {
-          height: 70px;
-        }
-        
-        img {
-          height: 70px;
-        }
       }
     }
   }

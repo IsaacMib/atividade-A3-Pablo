@@ -288,6 +288,11 @@ class DicasPresidentePage(PageSitePadrao):
     
     icon = "doc-full"
     
+    @property
+    def is_remote(self):
+        """Indica se a dica é remota (vindo de API externa). Sempre False para dicas locais."""
+        return False
+    
     def clean(self):
         super().clean()
         if len(self.title) > 100:
@@ -303,6 +308,14 @@ class DicasPresidentePage(PageSitePadrao):
         for tag in tags:
             tag.url = f"{base_url}tags/{tag.slug}/"
         return tags
+    
+    @property
+    def images(self):
+        """
+        Propriedade para compatibilidade com o template.
+        Retorna o campo imagens_dica.
+        """
+        return self.imagens_dica
     
     def get_imagem_principal(self):
         """Retorna a primeira imagem da dica ou primeira imagem encontrada nos blocos."""
