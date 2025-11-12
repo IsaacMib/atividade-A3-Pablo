@@ -6,12 +6,15 @@ from blocks.utils import (
     GRID_IMAGENS_TYPES,
     GRID_IMAGENS_CLASSES,
     GRID_IMAGENS_DEFAULT_TYPE,
+    BANNER_MODES,
+    BANNER_SIZES,
     get_metabase_card_text_by_id,
     validate_file_size
 )
 
 from django.db import models
 
+import re
 import requests
 import re
 from django.core.cache import cache
@@ -41,7 +44,7 @@ from wagtail.images import get_image_model
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from django.conf import settings
-import re
+
 import uuid
 
 import magic
@@ -70,10 +73,11 @@ _CACHE_TIMEOUT = 10*60  # 10 minutos em segundos
 class AcessoRapidoItemBlock(StructBlock):
     titulo = CharBlock(required=True, max_length=100)
     link = URLBlock(required=True)
-    icone = ChoiceBlock(choices=ICONES_ACESSO_RAPIDO, required=True, label="Ícone")
+    icone = ChoiceBlock(choices=ICONES_ACESSO_RAPIDO,
+                        required=True, label="Ícone")
 
     class Meta:
-        icon = "link"
+        icon = 'link'
         label = "Item de Acesso Rápido"
 
 
@@ -102,16 +106,66 @@ class AcessoRapidoWidget(StructBlock):
 
 
 
-class BannerComLinkBlock(blocks.StructBlock):
+class ImagemConfiguracao(blocks.StructBlock):
+    """Bloco para configuração de imagem com suas propriedades de renderização"""
     imagem = ImageChooserBlock(
         required=True,
-        label="Imagem do Banner (Desktop)"
+        label="Imagem"
     )
-    imagem_mobile = ImageChooserBlock(
+    mode = blocks.ChoiceBlock(
+        choices=BANNER_MODES,
+        default='fill',
+        label="Modo de Ajuste",
+        help_text="Define como a imagem será ajustada ao tamanho escolhido."
+    )
+    size = blocks.ChoiceBlock(
+        choices=BANNER_SIZES,
+        default='1920x1080',
+        label="Tamanho",
+        help_text="Selecione o tamanho desejado."
+    )
+
+    class Meta:
+        label = "Configuração de Imagem"
+        icon = "image"
+
+
+class ImagemMobileConfiguracao(blocks.StructBlock):
+    """Bloco para configuração de imagem mobile com suas propriedades de renderização"""
+    imagem = ImageChooserBlock(
         required=False,
-        label="Imagem do Banner (Mobile)",
-        help_text="Imagem alternativa para dispositivos menores."
+        label="Imagem"
     )
+    mode = blocks.ChoiceBlock(
+        choices=BANNER_MODES,
+        default='fill',
+        label="Modo de Ajuste",
+        help_text="Define como a imagem será ajustada ao tamanho escolhido."
+    )
+    size = blocks.ChoiceBlock(
+        choices=BANNER_SIZES,
+        default='1920x1080',
+        label="Tamanho",
+        help_text="Selecione o tamanho desejado."
+    )
+
+    class Meta:
+        label = "Configuração de Imagem Mobile"
+        icon = "mobile"
+
+
+class BannerComLinkBlock(blocks.StructBlock):
+    # Configurações de imagem agrupadas
+    imagem_desktop = ImagemConfiguracao(
+        label="🖥️ Configuração Desktop/Tablet",
+        help_text="Configurações da imagem que será exibida em desktops e tablets."
+    )
+    imagem_mobile = ImagemMobileConfiguracao(
+        required=False,
+        label="📱 Configuração Mobile (Opcional)",
+        help_text="Configurações da imagem alternativa para dispositivos menores. Se não preenchido, usará a configuração desktop."
+    )
+    
     link = blocks.URLBlock(
         required=True,
         label="URL do Banner"
@@ -126,34 +180,87 @@ class BannerComLinkBlock(blocks.StructBlock):
         default=False,
         label="Abrir em nova aba?"
     )
-    proporcao = blocks.ChoiceBlock(
-        choices=[
-            ("1-1", "Quadrado (1:1)"),
-            ("3-2", "Padrão (3:2)"),
-            ("4-3", "Clássico (4:3)"),
-            ("16-9", "Wide (16:9)"),
-            ("18-6", "Super Wide (18:6)"),
-        ],
-        default="16-9",
-        label="Proporção do Banner"
-    )
+    
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        
+        # Configurações da imagem desktop
+        imagem_desktop_config = value.get('imagem_desktop', {})
+        imagem_desktop = imagem_desktop_config.get('imagem')
+        mode_desktop = imagem_desktop_config.get('mode', 'fill')
+        size_desktop = imagem_desktop_config.get('size', '1920x1080')
+        
+        # Configurações da imagem mobile
+        imagem_mobile_config = value.get('imagem_mobile', {})
+        imagem_mobile = imagem_mobile_config.get('imagem') if imagem_mobile_config else None
+        mode_mobile = imagem_mobile_config.get('mode', mode_desktop) if imagem_mobile_config else mode_desktop
+        size_mobile = imagem_mobile_config.get('size', size_desktop) if imagem_mobile_config else size_desktop
+        
+        # Processa imagem desktop
+        if imagem_desktop:
+            # Se mode E size forem original → não faz alteração alguma
+            if mode_desktop == "original" and size_desktop == "original":
+                context['rendition_desktop'] = None
+            # Se apenas size for original → não faz redimensionamento mesmo com modo selecionado
+            elif size_desktop == "original":
+                context['rendition_desktop'] = None
+            # Se apenas mode for original → usa o size selecionado para redimensionar
+            elif mode_desktop == "original":
+                try:
+                    # Usa apenas o tamanho para redimensionar (sem modo específico - usa 'max' como padrão)
+                    filter_spec = f"max-{size_desktop}"
+                    context['rendition_desktop'] = imagem_desktop.get_rendition(filter_spec)
+                except Exception as e:
+                    # Em caso de erro, deixa como None para usar a imagem original
+                    context['rendition_desktop'] = None
+            # Mode e size normais → aplica filtro completo
+            else:
+                try:
+                    filter_spec = f"{mode_desktop}-{size_desktop}"
+                    context['rendition_desktop'] = imagem_desktop.get_rendition(filter_spec)
+                except Exception as e:
+                    # Em caso de erro, deixa como None para usar a imagem original
+                    context['rendition_desktop'] = None
+        else:
+            context['rendition_desktop'] = None
+        
+        # Processa imagem mobile
+        if imagem_mobile:
+            # Se mode E size forem original → não faz alteração alguma
+            if mode_mobile == "original" and size_mobile == "original":
+                context['rendition_mobile'] = None
+            # Se apenas size for original → não faz redimensionamento mesmo com modo selecionado
+            elif size_mobile == "original":
+                context['rendition_mobile'] = None
+            # Se apenas mode for original → usa o size selecionado para redimensionar
+            elif mode_mobile == "original":
+                try:
+                    # Usa apenas o tamanho para redimensionar (sem modo específico - usa 'max' como padrão)
+                    filter_spec = f"max-{size_mobile}"
+                    context['rendition_mobile'] = imagem_mobile.get_rendition(filter_spec)
+                except Exception as e:
+                    # Em caso de erro, deixa como None para usar a imagem original
+                    context['rendition_mobile'] = None
+            # Mode e size normais → aplica filtro completo
+            else:
+                try:
+                    filter_spec = f"{mode_mobile}-{size_mobile}"
+                    context['rendition_mobile'] = imagem_mobile.get_rendition(filter_spec)
+                except Exception as e:
+                    # Em caso de erro, deixa como None para usar a imagem original
+                    context['rendition_mobile'] = None
+        else:
+            context['rendition_mobile'] = None
+        
+        return context
 
     def clean(self, value):
         cleaned_data = super().clean(value)
-        proporcao = cleaned_data.get('proporcao')
-        altura_personalizada = cleaned_data.get('altura_personalizada')
-
-        errors = {}
-        if proporcao == 'custom':
-            if not altura_personalizada:
-                errors['altura_personalizada'] = ValidationError("Este campo é obrigatório quando a proporção é 'Altura Personalizada'.")
-            else:
-                # Valida se o valor corresponde a um formato de altura CSS comum (ex: 300px, 50vh, 80%)
-                if not re.match(r'^\d+(\.\d+)?(px|vh|vw|%|rem|em)$', altura_personalizada.strip()):
-                    errors['altura_personalizada'] = ValidationError("Formato inválido. Use um valor seguido de uma unidade (ex: '300px', '50vh', '80%').")
-
-        if errors:
-            raise ValidationError('Erros de validação no Banner com Link', params=errors)
+        
+        # Validação básica: verificar se pelo menos a imagem desktop está configurada
+        imagem_desktop_config = cleaned_data.get('imagem_desktop', {})
+        if not imagem_desktop_config.get('imagem'):
+            raise ValidationError('A imagem para desktop é obrigatória.')
 
         return cleaned_data
 
@@ -167,29 +274,60 @@ class VideoBlock(StructBlock):
     srcIframe = URLBlock(required=True, label="URL do vídeo (iframe YouTube)")
 
     def get_context(self, value, parent_context=None):
+        YOUTUBE_NOCOOKIE_EMBED_URL = "https://www.youtube-nocookie.com/embed/"
+        YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v="
+
         context = super().get_context(value, parent_context=parent_context)
-        original_url = value.get('srcIframe')
+        url = value.get('srcIframe') or ''
+
+        # Normaliza vários formatos de URL do YouTube para URL de embed segura (nocookie)
         video_id = None
+        # YouTube URL patterns with named constants
+        YOUTUBE_BE_PATTERN = (r'youtu\.be/([^#\&\?]*)', 1)  # youtu.be/ID
+        YOUTUBE_EMBED_PATTERN = (r'/embed/([^#\&\?/]*)', 1)  # youtube.com/embed/ID
+        YOUTUBE_SHORTS_PATTERN = (r'/shorts/([^#\&\?/]*)', 1)  # youtube.com/shorts/ID
+        YOUTUBE_WATCH_PATTERN = (r'[?&]v=([^#\&\?]*)', 1)  # youtube.com/watch?v=ID
 
-        # Regex para extrair o ID do vídeo de diferentes formatos de URL do YouTube
-        # Suporta: youtube.com/watch?v=... , youtu.be/... , youtube.com/embed/...
-        regex_patterns = [
-            r'(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})',
-            r'(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})',
-            r'(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})',
-        ]
-
-        for pattern in regex_patterns:
-            match = re.search(pattern, original_url)
-            if match:
-                video_id = match.group(1)
+        # Try each pattern in order
+        for pattern, group in [
+            YOUTUBE_BE_PATTERN,
+            YOUTUBE_EMBED_PATTERN,
+            YOUTUBE_SHORTS_PATTERN,
+            YOUTUBE_WATCH_PATTERN
+        ]:
+            match = re.search(pattern, url, re.IGNORECASE)
+            if match and match.group(group):
+                video_id = match.group(group)
                 break
+        else:
+            video_id = None
 
-        # Constrói a URL de embed final ou usa a original como fallback
-        url = f"https://www.youtube.com/embed/{video_id}" if video_id else original_url
-        
+        # Monta src de embed com domínio de privacidade; mantém alguns params úteis
+        if video_id:
+            base = f"{YOUTUBE_NOCOOKIE_EMBED_URL}{video_id}"
+            params = []
+            # parâmetros padrão recomendados
+            params.extend(["rel=0", "modestbranding=1"])
+            # preserva start (início em segundos) se existir
+            try:
+                from urllib.parse import urlparse, parse_qs
+                start_qs = parse_qs(urlparse(url).query or '')
+                if 'start' in start_qs:
+                    params.append(f"start={start_qs['start'][0]}")
+                if 't' in start_qs:  # suporte a t=1m30s não convertido aqui
+                    params.append(f"t={start_qs['t'][0]}")
+            except Exception:
+                pass
+            src = base + (('?' + '&'.join(params)) if params else '')
+            watch_url = f"{YOUTUBE_WATCH_URL}{video_id}"
+        else:
+            # fallback: usa URL original
+            src = url
+            watch_url = url
+
         context['titulo'] = value.get('titulo')
-        context['src'] = url
+        context['src'] = src
+        context['watch_url'] = watch_url
         return context
 
     class Meta:
@@ -231,7 +369,7 @@ class ListRedeSocial(StructBlock):
         label = "Lista de Redes Sociais"
         template = "blocks/redes_sociais.html"
 
-class ListRedesSociais(blocks.StructBlock):
+class ListRedesSocial(StructBlock):
 
     ICONES_REDES = [
         ("facebook", "Facebook"),
@@ -248,8 +386,8 @@ class ListRedesSociais(blocks.StructBlock):
         ("messenger", "Messenger"),
     ]
 
-    redes = blocks.ListBlock(
-        blocks.ChoiceBlock(choices=ICONES_REDES, label="Rede de compartilhamento"),
+    redes = ListBlock(
+        ChoiceBlock(choices=ICONES_REDES, label="Rede de compartilhamento"),
         label="Selecionar Redes de Compartilhamento",
         help_text="Selecione as redes sociais nas quais o conteúdo poderá ser compartilhado."
     )
@@ -1179,7 +1317,6 @@ class AcordeonBlock(StructBlock):
         label = "Acordeão"
         icon = "collapse-down"
         template = "blocks/bloco_informativo.html"
-
 class CustomFormBlock(StructBlock):
     titulo_geral = CharBlock(default="Formulário", label="Título Principal do Formulário", help_text="Título que será exibido acima do formulário.")
     descricao = RichTextBlock(required=False, label="Descrição/Introdução")
