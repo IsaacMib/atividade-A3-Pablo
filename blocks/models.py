@@ -14,6 +14,7 @@ from blocks.utils import (
 
 from django.db import models
 
+import re
 import requests
 import re
 from django.core.cache import cache
@@ -43,7 +44,7 @@ from wagtail.images import get_image_model
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from django.conf import settings
-import re
+
 import uuid
 
 import magic
@@ -72,10 +73,11 @@ _CACHE_TIMEOUT = 10*60  # 10 minutos em segundos
 class AcessoRapidoItemBlock(StructBlock):
     titulo = CharBlock(required=True, max_length=100)
     link = URLBlock(required=True)
-    icone = ChoiceBlock(choices=ICONES_ACESSO_RAPIDO, required=True, label="Ícone")
+    icone = ChoiceBlock(choices=ICONES_ACESSO_RAPIDO,
+                        required=True, label="Ícone")
 
     class Meta:
-        icon = "link"
+        icon = 'link'
         label = "Item de Acesso Rápido"
 
 
@@ -272,29 +274,60 @@ class VideoBlock(StructBlock):
     srcIframe = URLBlock(required=True, label="URL do vídeo (iframe YouTube)")
 
     def get_context(self, value, parent_context=None):
+        YOUTUBE_NOCOOKIE_EMBED_URL = "https://www.youtube-nocookie.com/embed/"
+        YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v="
+
         context = super().get_context(value, parent_context=parent_context)
-        original_url = value.get('srcIframe')
+        url = value.get('srcIframe') or ''
+
+        # Normaliza vários formatos de URL do YouTube para URL de embed segura (nocookie)
         video_id = None
+        # YouTube URL patterns with named constants
+        YOUTUBE_BE_PATTERN = (r'youtu\.be/([^#\&\?]*)', 1)  # youtu.be/ID
+        YOUTUBE_EMBED_PATTERN = (r'/embed/([^#\&\?/]*)', 1)  # youtube.com/embed/ID
+        YOUTUBE_SHORTS_PATTERN = (r'/shorts/([^#\&\?/]*)', 1)  # youtube.com/shorts/ID
+        YOUTUBE_WATCH_PATTERN = (r'[?&]v=([^#\&\?]*)', 1)  # youtube.com/watch?v=ID
 
-        # Regex para extrair o ID do vídeo de diferentes formatos de URL do YouTube
-        # Suporta: youtube.com/watch?v=... , youtu.be/... , youtube.com/embed/...
-        regex_patterns = [
-            r'(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})',
-            r'(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})',
-            r'(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})',
-        ]
-
-        for pattern in regex_patterns:
-            match = re.search(pattern, original_url)
-            if match:
-                video_id = match.group(1)
+        # Try each pattern in order
+        for pattern, group in [
+            YOUTUBE_BE_PATTERN,
+            YOUTUBE_EMBED_PATTERN,
+            YOUTUBE_SHORTS_PATTERN,
+            YOUTUBE_WATCH_PATTERN
+        ]:
+            match = re.search(pattern, url, re.IGNORECASE)
+            if match and match.group(group):
+                video_id = match.group(group)
                 break
+        else:
+            video_id = None
 
-        # Constrói a URL de embed final ou usa a original como fallback
-        url = f"https://www.youtube.com/embed/{video_id}" if video_id else original_url
-        
+        # Monta src de embed com domínio de privacidade; mantém alguns params úteis
+        if video_id:
+            base = f"{YOUTUBE_NOCOOKIE_EMBED_URL}{video_id}"
+            params = []
+            # parâmetros padrão recomendados
+            params.extend(["rel=0", "modestbranding=1"])
+            # preserva start (início em segundos) se existir
+            try:
+                from urllib.parse import urlparse, parse_qs
+                start_qs = parse_qs(urlparse(url).query or '')
+                if 'start' in start_qs:
+                    params.append(f"start={start_qs['start'][0]}")
+                if 't' in start_qs:  # suporte a t=1m30s não convertido aqui
+                    params.append(f"t={start_qs['t'][0]}")
+            except Exception:
+                pass
+            src = base + (('?' + '&'.join(params)) if params else '')
+            watch_url = f"{YOUTUBE_WATCH_URL}{video_id}"
+        else:
+            # fallback: usa URL original
+            src = url
+            watch_url = url
+
         context['titulo'] = value.get('titulo')
-        context['src'] = url
+        context['src'] = src
+        context['watch_url'] = watch_url
         return context
 
     class Meta:
@@ -336,7 +369,7 @@ class ListRedeSocial(StructBlock):
         label = "Lista de Redes Sociais"
         template = "blocks/redes_sociais.html"
 
-class ListRedesSociais(blocks.StructBlock):
+class ListRedesSocial(StructBlock):
 
     ICONES_REDES = [
         ("facebook", "Facebook"),
@@ -353,8 +386,8 @@ class ListRedesSociais(blocks.StructBlock):
         ("messenger", "Messenger"),
     ]
 
-    redes = blocks.ListBlock(
-        blocks.ChoiceBlock(choices=ICONES_REDES, label="Rede de compartilhamento"),
+    redes = ListBlock(
+        ChoiceBlock(choices=ICONES_REDES, label="Rede de compartilhamento"),
         label="Selecionar Redes de Compartilhamento",
         help_text="Selecione as redes sociais nas quais o conteúdo poderá ser compartilhado."
     )
@@ -1400,7 +1433,6 @@ class AcordeonBlock(StructBlock):
         label = "Acordeão"
         icon = "collapse-down"
         template = "blocks/bloco_informativo.html"
-
 class CustomFormBlock(StructBlock):
     titulo_geral = CharBlock(default="Formulário", label="Título Principal do Formulário", help_text="Título que será exibido acima do formulário.")
     descricao = RichTextBlock(required=False, label="Descrição/Introdução")
