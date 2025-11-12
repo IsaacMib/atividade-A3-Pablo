@@ -10,7 +10,7 @@ from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
 from wagtail.images.blocks import ImageChooserBlock
 
-from blocks.models import ListRedeSocial, ListRedesSociais
+from blocks.models import ListRedeSocial
 from wagtail.models import Page
 
 
@@ -174,21 +174,6 @@ class SiteSettings(BaseSiteSetting):
         help_text="Defina as redes sociais do Portal."
     )
 
-    compartilhar_redes_sociais = models.BooleanField(
-        verbose_name="Ativar Compartilhamento em Redes Sociais",
-        default=False,
-        help_text="Ative para exibir os botões de compartilhamento nas páginas."
-    )
-
-    compartilhar_rede_social = StreamField(
-        [("redes_compartilhar", ListRedesSociais())],
-        verbose_name="Selecionar Redes para Compartilhamento",
-        blank=True,
-        use_json_field=True,
-        help_text=("Escolha quais redes sociais estarão disponíveis para compartilhamento. "
-                   "Cada tipo de rede só pode ser adicionado uma vez (máx. 1 por tipo).")
-    )
-
     # --- Menu ---
     menu_max_levels = models.PositiveIntegerField(
         verbose_name="Níveis máximos do menu",
@@ -315,10 +300,8 @@ class SiteSettings(BaseSiteSetting):
         MultiFieldPanel(
             [
                 FieldPanel("redes_sociais"),
-                FieldPanel("compartilhar_redes_sociais"),
-                FieldPanel("compartilhar_rede_social"),
             ],
-            heading="Redes Sociais e Compartilhamento"
+            heading="Redes Sociais"
         ),
         MultiFieldPanel(
             [
@@ -380,117 +363,6 @@ class SiteSettings(BaseSiteSetting):
             return self.periodo_eleitoral_inicio <= hoje <= self.periodo_eleitoral_fim
         return False
 
-    def get_redes_ativas(self, absolute_url, page_title=None):
-        """Gera a lista de redes sociais ativas com URLs de compartilhamento."""
-        if not self.compartilhar_redes_sociais or not self.compartilhar_rede_social:
-            return []
-
-        redes_ativas = []
-        seen_names = set()
-        for bloco in self.compartilhar_rede_social:
-            # bloco.value can be a list of choice strings (from ListRedesSociais)
-            # or a list of Struct values (legacy). Normalize both cases.
-            inner = bloco.value
-            # If inner is a dict with key 'redes' (StructBlock shape), extract list
-            if isinstance(inner, dict) and 'redes' in inner:
-                redes_list = inner.get('redes') or []
-                # redes_list typically is a list of strings (choice values)
-                for nome in redes_list:
-                    if not nome:
-                        continue
-                    # avoid duplicates
-                    if nome in seen_names:
-                        continue
-                    seen_names.add(nome)
-                    icone = f"fa-brands fa-{nome}"
-                    url = ""
-                    # construct sharing URL by type
-                    if nome == "messenger":
-                        url = f"https://www.facebook.com/dialog/send?link={absolute_url}&app_id=YOUR_APP_ID&redirect_uri={absolute_url}"
-                    elif nome == "linkedin":
-                        url = f"https://www.linkedin.com/shareArticle?mini=true&url={absolute_url}&title={escape(page_title or '')}"
-                    elif nome == "pinterest":
-                        url = f"https://pinterest.com/pin/create/button/?url={absolute_url}&description={escape(page_title or '')}"
-                    elif nome == "x":
-                        url = f"https://twitter.com/intent/tweet?url={absolute_url}&text={escape(page_title or '')}"
-                    elif nome == "reddit":
-                        url = f"https://www.reddit.com/submit?url={absolute_url}&title={escape(page_title or '')}"
-                    elif nome == "whatsapp":
-                        url = f"https://api.whatsapp.com/send?text={escape(page_title or '')} {absolute_url}"
-                    elif nome == "telegram":
-                        url = f"https://t.me/share/url?url={absolute_url}&text={escape(page_title or '')}"
-                    elif nome == "email":
-                        url = f"mailto:?subject={escape(page_title or '')}&body={absolute_url}"
-                    elif nome == "facebook":
-                        url = f"https://www.facebook.com/sharer/sharer.php?u={absolute_url}"
-                    elif nome == "sms":
-                        url = f"sms:?body={escape(page_title or '')} {absolute_url}"
-                    elif nome == "print":
-                        url = "javascript:window.print();"
-                    elif nome == "copy":
-                        url = absolute_url
-
-                    redes_ativas.append({"nome": nome, "icone": icone, "url": url})
-                continue
-
-            # Otherwise, try to iterate as before over bloco.value items
-            for rede in inner:
-                # Some stored values may be plain strings or unexpected structures
-                # (e.g. older DB migrations). Guard against that by extracting
-                # the underlying mapping safely.
-                if hasattr(rede, "value"):
-                    dados = rede.value
-                elif isinstance(rede, dict):
-                    dados = rede
-                elif isinstance(rede, str):
-                    dados = {"nome": rede, "habilitado": True}
-                else:
-                    # Skip entries we can't interpret as a social item
-                    continue
-
-                if not isinstance(dados, dict):
-                    continue
-
-                if dados.get("habilitado", False):
-                    nome = dados.get("nome")
-                    if not nome:
-                        continue
-                    # avoid duplicates
-                    if nome in seen_names:
-                        continue
-                    seen_names.add(nome)
-                    icone = dados.get("icone") or f"fa-brands fa-{nome}"
-                    url = ""
-
-                    if nome == "messenger":
-                        url = f"https://www.facebook.com/dialog/send?link={absolute_url}&app_id=YOUR_APP_ID&redirect_uri={absolute_url}"
-                    elif nome == "linkedin":
-                        url = f"https://www.linkedin.com/shareArticle?mini=true&url={absolute_url}&title={escape(page_title or '')}"
-                    elif nome == "pinterest":
-                        url = f"https://pinterest.com/pin/create/button/?url={absolute_url}&description={escape(page_title or '')}"
-                    elif nome == "x":
-                        url = f"https://twitter.com/intent/tweet?url={absolute_url}&text={escape(page_title or '')}"
-                    elif nome == "reddit":
-                        url = f"https://www.reddit.com/submit?url={absolute_url}&title={escape(page_title or '')}"
-                    elif nome == "whatsapp":
-                        url = f"https://api.whatsapp.com/send?text={escape(page_title or '')} {absolute_url}"
-                    elif nome == "telegram":
-                        url = f"https://t.me/share/url?url={absolute_url}&text={escape(page_title or '')}"
-                    elif nome == "email":
-                        url = f"mailto:?subject={escape(page_title or '')}&body={absolute_url}"
-                    elif nome == "facebook":
-                        url = f"https://www.facebook.com/sharer/sharer.php?u={absolute_url}"
-                    elif nome == "sms":
-                        url = f"sms:?body={escape(page_title or '')} {absolute_url}"
-                    elif nome == "print":
-                        url = "javascript:window.print();"
-                    elif nome == "copy":
-                        url = absolute_url
-
-                    redes_ativas.append({"nome": nome, "icone": icone, "url": url})
-
-        return redes_ativas
-
     # --- Validações ---
     def deve_exibir_cookies(self):
         """Retorna True se o aviso de cookies deve ser exibido."""
@@ -524,45 +396,6 @@ class SiteSettings(BaseSiteSetting):
 
     def clean(self):
         super().clean()
-
-        # Validate compartilhar_rede_social: ensure no duplicate network types
-        try:
-            selected = []
-            for bloco in self.compartilhar_rede_social:
-                inner = bloco.value
-                if isinstance(inner, dict) and 'redes' in inner:
-                    redes_list = inner.get('redes') or []
-                    for nome in redes_list:
-                        if nome:
-                            selected.append(nome)
-                else:
-                    # iterate items if list-like
-                    try:
-                        for item in inner:
-                            if hasattr(item, 'value') and isinstance(item.value, dict):
-                                nome = item.value.get('nome')
-                                if nome:
-                                    selected.append(nome)
-                            elif isinstance(item, str):
-                                selected.append(item)
-                    except Exception:
-                        # ignore unexpected shapes here; will be caught earlier if needed
-                        pass
-
-            # find duplicates
-            from collections import Counter
-            counts = Counter(selected)
-            duplicates = [k for k, v in counts.items() if v > 1]
-            if duplicates:
-                raise ValidationError({
-                    'compartilhar_rede_social': ValidationError(
-                        f"Duplicatas encontradas nas redes de compartilhamento: {', '.join(duplicates)}. Remova duplicatas (máx. 1 de cada tipo)."
-                    )
-                })
-        except Exception:
-            # don't break saving for unexpected shapes; be conservative and allow save
-            pass
-
 
         if self.menu_max_levels > 3:
             raise ValidationError({
