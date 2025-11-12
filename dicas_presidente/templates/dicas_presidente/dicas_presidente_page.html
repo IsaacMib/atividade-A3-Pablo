@@ -9,7 +9,7 @@
     <div class="container">
         <!-- Tipo e Data -->
         <div class="dica-meta mb-3">
-            <span class="dica-tipo-badge">{{ page.get_tipo_dica_display }}</span>
+            <span class="dica-tipo-badge">{{ page.get_tipo_dica_display_icon }} {{ page.get_tipo_dica_display }}</span>
             {% if page.destaque %}
             <span class="etiqueta etiqueta-importante ms-2"><i class="bi bi-star-fill"></i> Destaque</span>
             {% endif %}
