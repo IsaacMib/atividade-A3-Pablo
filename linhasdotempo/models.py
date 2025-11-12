@@ -102,7 +102,8 @@ class CardLinhaDoTempoPage(PageSitePadrao):
         "Data de publicação do aviso", default=datetime.now, blank=True, null=True
     )
 
-    content_panels = PageSitePadrao.content_panels + [
+    content_panels = [
+        PageSitePadrao.content_panels[0],  # Título da página
         FieldPanel("data_evento"),
         FieldPanel("imagem"),
         FieldPanel("texto_alternativo"),
