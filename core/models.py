@@ -10,7 +10,7 @@ from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
 from wagtail.images.blocks import ImageChooserBlock
 
-from blocks.models import ListRedeSocial, ListRedesSociais
+from blocks.models import ListRedeSocial, ListRedesSocial
 from wagtail.models import Page
 
 
@@ -181,7 +181,7 @@ class SiteSettings(BaseSiteSetting):
     )
 
     compartilhar_rede_social = StreamField(
-        [("redes_compartilhar", ListRedesSociais())],
+        [("redes_compartilhar", ListRedesSocial())],
         verbose_name="Selecionar Redes para Compartilhamento",
         blank=True,
         use_json_field=True,
