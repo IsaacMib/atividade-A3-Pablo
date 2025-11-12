@@ -289,25 +289,6 @@
         overflow: hidden;
       }
       
-      .swiper-button-next,
-      .swiper-button-prev {
-        background-color: variables.$color-grey-800;
-        box-shadow: 0 2px 8px variables.$color-black-60;
-        
-        &::after {
-          color: variables.$color-white;
-        }
-        
-        &:hover {
-          background-color: variables.$color-primary;
-          box-shadow: 0 4px 12px variables.$color-primary-50;
-          
-          &::after {
-            color: variables.$color-white;
-          }
-        }
-      }
-      
       img {
         max-height: 500px;
         object-fit: cover;
