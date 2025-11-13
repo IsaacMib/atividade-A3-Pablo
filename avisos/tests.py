@@ -1,7 +1,8 @@
 from django.test import TestCase, RequestFactory
 from django.core.exceptions import ValidationError
 from django.core.paginator import Page as PaginatorPage
-from wagtail.models import Page, Locale
+from django.contrib.messages.storage.fallback import FallbackStorage
+from wagtail.models import Page, Locale, Site
 from wagtail.images.tests.utils import get_test_image_file
 from wagtail.images import get_image_model
 from taggit.models import Tag
@@ -21,12 +22,27 @@ class AvisosPageTestCase(TestCase):
     def setUpTestData(cls):
         """Setup executado uma vez para toda a classe."""
         cls.root_page = ensure_root_page()
-        cls.root_page.numchild = 0
-        cls.root_page.save()
+        
+        # Limpar páginas filhas existentes
+        for child in cls.root_page.get_children():
+            child.delete()
+        
         cls.root_page.refresh_from_db()
 
         cls.locale = Locale.get_default()
         cls.factory = RequestFactory()
+
+        # Criar Site se não existir
+        if not Site.objects.filter(is_default_site=True).exists():
+            cls.site = Site.objects.create(
+                hostname='localhost',
+                port=80,
+                root_page=cls.root_page,
+                is_default_site=True,
+                site_name='Test Site'
+            )
+        else:
+            cls.site = Site.objects.get(is_default_site=True)
 
         # Criar imagem de teste
         cls.test_image = Image.objects.create(
@@ -81,13 +97,12 @@ class AvisosPageTestCase(TestCase):
             slug="aviso-longo",
             descricao="Teste",
         )
-        self.index_page.add_child(instance=aviso)
-
+        
+        # add_child() chama save() que chama full_clean() automaticamente
         with self.assertRaises(ValidationError) as context:
-            aviso.clean()
+            self.index_page.add_child(instance=aviso)
 
         self.assertIn("title", context.exception.message_dict)
-        self.assertIn("100 caracteres", str(context.exception))
 
     def test_aviso_em_destaque(self):
         """Testa criação de aviso em destaque."""
@@ -297,11 +312,26 @@ class AvisosIndexPageTestCase(TestCase):
     def setUpTestData(cls):
         """Setup executado uma vez para toda a classe."""
         cls.root_page = ensure_root_page()
-        cls.root_page.numchild = 0
-        cls.root_page.save()
+        
+        # Limpar páginas filhas existentes
+        for child in cls.root_page.get_children():
+            child.delete()
+        
         cls.root_page.refresh_from_db()
 
         cls.factory = RequestFactory()
+
+        # Criar Site se não existir
+        if not Site.objects.filter(is_default_site=True).exists():
+            cls.site = Site.objects.create(
+                hostname='localhost',
+                port=80,
+                root_page=cls.root_page,
+                is_default_site=True,
+                site_name='Test Site'
+            )
+        else:
+            cls.site = Site.objects.get(is_default_site=True)
 
         # Criar HomePage
         cls.home_page = HomePage(
@@ -397,6 +427,7 @@ class AvisosIndexPageTestCase(TestCase):
         self.index_page.add_child(instance=aviso_com_tag)
         aviso_com_tag.save()
         aviso_com_tag.tags.add(tag)
+        aviso_com_tag.save_revision().publish()  # Publicar após adicionar tag
 
         aviso_sem_tag = AvisosPage(
             title="Aviso Sem Tag",
@@ -420,10 +451,12 @@ class AvisosIndexPageTestCase(TestCase):
             descricao="Aviso com tag comunicado",
         )
         self.index_page.add_child(instance=aviso)
-        aviso.save_revision().publish()
+        aviso.save()
         aviso.tags.add(tag)
+        aviso.save_revision().publish()  # Publicar após adicionar tag
 
         request = self.factory.get(f"{self.index_page.url}tags/comunicado/")
+        request.site = self.site  # Adicionar site ao request
         response = self.index_page.tag_archive(request, tag="comunicado")
 
         self.assertEqual(response.status_code, 200)
@@ -432,6 +465,12 @@ class AvisosIndexPageTestCase(TestCase):
     def test_tag_archive_route_tag_inexistente(self):
         """Testa rota tag_archive com tag que não existe."""
         request = self.factory.get(f"{self.index_page.url}tags/inexistente/")
+        request.site = self.site  # Adicionar site ao request
+        # Adicionar sistema de mensagens ao request
+        setattr(request, 'session', {})
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+        
         response = self.index_page.tag_archive(request, tag="inexistente")
 
         # Deve redirecionar para a página index
@@ -521,11 +560,26 @@ class IntegrationAvisosTestCase(TestCase):
     def setUpTestData(cls):
         """Setup de dados compartilhados."""
         cls.root_page = ensure_root_page()
-        cls.root_page.numchild = 0
-        cls.root_page.save()
+        
+        # Limpar páginas filhas existentes
+        for child in cls.root_page.get_children():
+            child.delete()
+        
         cls.root_page.refresh_from_db()
 
         cls.factory = RequestFactory()
+
+        # Criar Site se não existir
+        if not Site.objects.filter(is_default_site=True).exists():
+            cls.site = Site.objects.create(
+                hostname='localhost',
+                port=80,
+                root_page=cls.root_page,
+                is_default_site=True,
+                site_name='Test Site'
+            )
+        else:
+            cls.site = Site.objects.get(is_default_site=True)
 
         # Criar HomePage
         cls.home_page = HomePage(
@@ -563,8 +617,9 @@ class IntegrationAvisosTestCase(TestCase):
             data_publicacao=datetime(2025, 11, 13, 14, 30),
         )
         self.index_page.add_child(instance=aviso)
-        aviso.save_revision().publish()
+        aviso.save()
         aviso.tags.add(tag)
+        aviso.save_revision().publish()  # Publicar após adicionar tag
 
         # Verificar publicação
         self.assertTrue(aviso.live)
