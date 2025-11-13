@@ -90,9 +90,7 @@ class EventosPage(AvisosDefaultPage):
 
     icon = "calendar"
 
-    search_fields = AvisosDefaultPage.search_fields + [
-        index.SearchField('subtitle'),
-    ]
+    search_fields = AvisosDefaultPage.search_fields
 
 
 class EventosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
