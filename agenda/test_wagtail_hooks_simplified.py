@@ -5,7 +5,11 @@ from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.sessions.middleware import SessionMiddleware
 
 from agenda.models import AgendaDoDiaPage, AgendaPage
-from agenda.wagtail_hooks import do_after_agendadodia_page_edit
+from agenda.wagtail_hooks import (
+    do_after_agendadodia_page_create,
+    do_after_agendadodia_page_publish,
+    atualizar_titulo_slug_agenda_recorrente
+)
 from home.models import HomePage
 from wagtail.models import Page, Site, Locale
 from core.utils_test import ensure_root_page
@@ -77,7 +81,7 @@ class WagtailHooksSimplifiedTestCase(TestCase):
         
         # Testa que o hook não gera erros
         try:
-            do_after_agendadodia_page_edit(self.request, agenda)
+            do_after_agendadodia_page_publish(self.request, agenda)
             self.assertTrue(True)  # Sucesso se chegou aqui
         except Exception as e:
             self.fail(f"Hook não deveria gerar erro: {e}")
@@ -96,7 +100,7 @@ class WagtailHooksSimplifiedTestCase(TestCase):
         
         # Testa que o hook não gera erros
         try:
-            do_after_agendadodia_page_edit(self.request, agenda_recorrente)
+            do_after_agendadodia_page_publish(self.request, agenda_recorrente)
             self.assertTrue(True)  # Sucesso se chegou aqui
         except Exception as e:
             self.fail(f"Hook com recorrência não deveria gerar erro: {e}")
@@ -104,7 +108,7 @@ class WagtailHooksSimplifiedTestCase(TestCase):
     def test_hook_ignora_outros_tipos_pagina(self):
         """Testa que o hook ignora outros tipos de página"""
         try:
-            do_after_agendadodia_page_edit(self.request, self.agenda_page)
+            do_after_agendadodia_page_publish(self.request, self.agenda_page)
             self.assertTrue(True)  # Sucesso se chegou aqui
         except Exception as e:
             self.fail(f"Hook não deveria gerar erro para outras páginas: {e}")
@@ -126,7 +130,7 @@ class WagtailHooksSimplifiedTestCase(TestCase):
                 agenda.save_revision().publish()
                 
                 try:
-                    do_after_agendadodia_page_edit(self.request, agenda)
+                    do_after_agendadodia_page_publish(self.request, agenda)
                     self.assertTrue(True)  # Sucesso se chegou aqui
                 except Exception as e:
                     self.fail(f"Hook com tipo {tipo} não deveria gerar erro: {e}")

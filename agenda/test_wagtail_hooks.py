@@ -9,7 +9,9 @@ from wagtail.signals import page_published
 
 from agenda.models import AgendaDoDiaPage, AgendaPage
 from agenda.wagtail_hooks import (
-    do_after_agendadodia_page_edit
+    do_after_agendadodia_page_create,
+    do_after_agendadodia_page_publish,
+    atualizar_titulo_slug_agenda_recorrente
 )
 from home.models import HomePage
 from core.utils_test import ensure_root_page
@@ -84,7 +86,7 @@ class WagtailHooksTestCase(TestCase):
         agenda_normal.save_revision().publish()
         
         # Chama a função do hook
-        do_after_agendadodia_page_edit(self.request, agenda_normal)
+        do_after_agendadodia_page_publish(self.request, agenda_normal)
         
         # Verifica se o título não foi alterado
         self.assertEqual(agenda_normal.title, "Reunião Importante")
@@ -103,7 +105,7 @@ class WagtailHooksTestCase(TestCase):
         agenda_diaria.save_revision().publish()
         
         # Chama a função do hook
-        do_after_agendadodia_page_edit(self.request, agenda_diaria)
+        do_after_agendadodia_page_publish(self.request, agenda_diaria)
         
         # Verifica se o título foi alterado corretamente
         self.assertIn("Agenda Recorrente Diária", agenda_diaria.title)
@@ -122,7 +124,7 @@ class WagtailHooksTestCase(TestCase):
         self.agenda_page.add_child(instance=agenda_semanal)
         agenda_semanal.save_revision().publish()
         
-        do_after_agendadodia_page_edit(self.request, agenda_semanal)
+        do_after_agendadodia_page_publish(self.request, agenda_semanal)
         
         self.assertIn("Agenda Recorrente Mensal", agenda_semanal.title)
         self.assertIn("recorrente", agenda_semanal.slug)
@@ -139,7 +141,7 @@ class WagtailHooksTestCase(TestCase):
         self.agenda_page.add_child(instance=agenda_mensal)
         agenda_mensal.save_revision().publish()
         
-        do_after_agendadodia_page_edit(self.request, agenda_mensal)
+        do_after_agendadodia_page_publish(self.request, agenda_mensal)
         
         self.assertIn("Agenda Recorrente Mensal", agenda_mensal.title)
         self.assertIn("recorrente", agenda_mensal.slug)
@@ -156,7 +158,7 @@ class WagtailHooksTestCase(TestCase):
         self.agenda_page.add_child(instance=agenda_anual)
         agenda_anual.save_revision().publish()
         
-        do_after_agendadodia_page_edit(self.request, agenda_anual)
+        do_after_agendadodia_page_publish(self.request, agenda_anual)
         
         self.assertIn("Agenda Recorrente Anual", agenda_anual.title)
         self.assertIn("recorrente", agenda_anual.slug)
@@ -174,7 +176,7 @@ class WagtailHooksTestCase(TestCase):
         self.agenda_page.add_child(instance=agenda_com_pai)
         agenda_com_pai.save_revision().publish()
         
-        do_after_agendadodia_page_edit(self.request, agenda_com_pai)
+        do_after_agendadodia_page_publish(self.request, agenda_com_pai)
         
         # Verifica se inclui o título da página pai
         expected_title = f"{self.agenda_page.title} - Reunião Especial - Agenda Recorrente Semanal"
@@ -192,7 +194,7 @@ class WagtailHooksTestCase(TestCase):
         self.agenda_page.add_child(instance=agenda_teste)
         agenda_teste.save_revision().publish()
         
-        do_after_agendadodia_page_edit(self.request, agenda_teste)
+        do_after_agendadodia_page_publish(self.request, agenda_teste)
         
         # Conta quantas vezes 'recorrente' aparece no slug
         slug_parts = agenda_teste.slug.split('-')
@@ -219,7 +221,7 @@ class WagtailHooksTestCase(TestCase):
                 self.agenda_page.add_child(instance=agenda)
                 agenda.save_revision().publish()
                 
-                do_after_agendadodia_page_edit(self.request, agenda)
+                do_after_agendadodia_page_publish(self.request, agenda)
                 
                 self.assertIn(texto_esperado, agenda.title)
     
@@ -242,7 +244,7 @@ class WagtailHooksTestCase(TestCase):
         titulo_antes = agenda.title
         
         # Simula o hook diretamente
-        do_after_agendadodia_page_edit(request, agenda)
+        do_after_agendadodia_page_publish(request, agenda)
         
         # Verifica se o título foi modificado (indica que o hook foi executado)
         self.assertNotEqual(agenda.title, titulo_antes)
@@ -258,7 +260,7 @@ class WagtailHooksTestCase(TestCase):
         
         # Simula o hook (não deve fazer nada)
         try:
-            do_after_agendadodia_page_edit(request, other_page)
+            do_after_agendadodia_page_publish(request, other_page)
             # Se chegou aqui, não houve erro (comportamento esperado)
             self.assertTrue(True)
         except Exception as e:
@@ -278,7 +280,7 @@ class WagtailHooksTestCase(TestCase):
         titulo_original = agenda_sem_recorrencia.title
         slug_original = agenda_sem_recorrencia.slug
         
-        do_after_agendadodia_page_edit(self.request, agenda_sem_recorrencia)
+        do_after_agendadodia_page_publish(self.request, agenda_sem_recorrencia)
         
         # Título e slug não devem ter mudado
         self.assertEqual(agenda_sem_recorrencia.title, titulo_original)
@@ -297,7 +299,7 @@ class WagtailHooksTestCase(TestCase):
         self.agenda_page.add_child(instance=agenda_especial)
         agenda_especial.save_revision().publish()
         
-        do_after_agendadodia_page_edit(self.request, agenda_especial)
+        do_after_agendadodia_page_publish(self.request, agenda_especial)
         
         # Verifica se os caracteres especiais foram preservados no título
         self.assertIn("Reunião & Café - 100% Participação", agenda_especial.title)
@@ -349,7 +351,7 @@ class IntegrationTestCase(TestCase):
         agenda.save_revision().publish()
         
         # Aplica os hooks
-        do_after_agendadodia_page_edit(self.request, agenda)
+        do_after_agendadodia_page_publish(self.request, agenda)
         
         # Verifica se o título foi modificado corretamente
         expected_title = f"{self.agenda_page.title} - Reunião Semanal da Equipe - Agenda Recorrente Semanal"
@@ -385,7 +387,7 @@ class IntegrationTestCase(TestCase):
         slug_inicial = agenda.slug
         
         # Aplica hooks (não deve alterar nada)
-        do_after_agendadodia_page_edit(self.request, agenda)
+        do_after_agendadodia_page_publish(self.request, agenda)
         self.assertEqual(agenda.title, titulo_inicial)
         self.assertEqual(agenda.slug, slug_inicial)
         
@@ -397,7 +399,7 @@ class IntegrationTestCase(TestCase):
         agenda.save()
         
         # Aplica hooks novamente
-        do_after_agendadodia_page_edit(self.request, agenda)
+        do_after_agendadodia_page_publish(self.request, agenda)
         
         # Verifica se foi alterado corretamente
         self.assertIn("Agenda Recorrente Mensal", agenda.title)
