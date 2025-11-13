@@ -1,3 +1,4 @@
+
 from django.db import models
 from core.models import PageSitePadrao, PageSitePadraoIndex
 from wagtail.fields import StreamField
@@ -8,6 +9,11 @@ from blocks.models import BaseStreamCorpoTecnicoBlock
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from wagtail.models.panels import PanelPlaceholder
+
+from blocks.models import BaseStreamBlock
+from wagtail import blocks
+from wagtail.fields import RichTextField
+
 
 # Create your models here.
 
@@ -125,3 +131,34 @@ class CorpoTecnicoPage(PageSitePadrao):
         FieldPanel('imagem'),
         FieldPanel('bio'),
     ]
+
+# Página genérica para uso em qualquer lugar do site
+class RichTextPage(PageSitePadrao):
+    """
+    Página que permite a criação de conteúdo rico usando StreamField.
+    Herda de PageSitePadrao para manter a consistência com o restante do site.
+    """
+    template = 'paginas/rich_text_page.html'
+    
+    # Defina os tipos de páginas que podem ser pais desta página
+    parent_page_types = ['home.HomePage']  # Ajuste conforme necessário para sua estrutura
+    
+    # Campos do modelo
+    body = StreamField(
+        BaseStreamBlock(),  # Usa o BaseStreamBlock que já existe no seu projeto
+        verbose_name="Conteúdo",
+        use_json_field=True,
+        blank=True,
+        null=True,
+        help_text="Adicione o conteúdo da página utilizando os blocos disponíveis."
+    )
+    
+    # Painéis de conteúdo que aparecerão no admin do Wagtail
+    content_panels = PageSitePadrao.content_panels + [
+        FieldPanel('body'),
+    ]
+    
+    # Configurações adicionais, os nomes que aparecerão no admin
+    class Meta:
+        verbose_name = "Página de Texto Rico"
+        verbose_name_plural = "Páginas de Texto Rico"
