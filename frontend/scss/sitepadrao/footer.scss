@@ -17,6 +17,13 @@
   overflow-x: hidden;
 }
 
+.footer-info {
+  h2 {
+    color: variables.$color-white;
+    font-size: 1rem;
+  }
+}
+
 .footer-sic-logo {
   width: 180px;
   height: auto;

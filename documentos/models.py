@@ -91,12 +91,6 @@ class DocumentosPage(PageSitePadrao):
         verbose_name = "Documento"
         verbose_name_plural = "Documentos"
 
-    def save(self, *args, **kwargs):
-        if not self.slug and self.title:
-            base_slug = slugify(self.title)
-            self.slug = self.generate_unique_slug(base_slug)
-        super().save(*args, **kwargs)
-
     def clean(self):
         super().clean()
         if len(self.title) > 50:

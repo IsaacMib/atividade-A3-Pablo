@@ -81,6 +81,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'test-media')
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'test-static')
 
+# CRÍTICO: Usar StaticFilesStorage simples em testes (não ManifestStaticFilesStorage)
+# ManifestStaticFilesStorage requer collectstatic, que não é executado em testes
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
 # Log simplificado
 LOGGING = {
     'version': 1,
