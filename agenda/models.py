@@ -59,13 +59,6 @@ class AgendaPage(RoutablePageMixin, PageSitePadrao):
         FieldPanel("nome_autoridade"),
         FieldPanel("brasao"),
         FieldPanel("local_padrao"),
-        FieldPanel("imagem_destaque"),
-    ]
-
-    # Remove imagem_destaque do promote_panels (já está no content_panels)
-    promote_panels = [
-        panel for panel in PageSitePadrao.promote_panels 
-        if not (hasattr(panel, 'field_name') and panel.field_name == 'imagem_destaque')
     ]
 
     @route(r'^dia/(?P<data>[\w-]+)/$')
@@ -348,6 +341,9 @@ class AgendaDoDiaPage(RoutablePageMixin, PageSitePadrao):
     # Restringir o pai da AgendaDoDiaPage para ser apenas AgendaPage
     parent_page_types = ['agenda.AgendaPage']
     subpage_types = []  # Não pode ter filhos
+
+    class Meta:
+        verbose_name = "Agenda do Dia"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

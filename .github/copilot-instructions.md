@@ -79,8 +79,107 @@ site-padrao/
 - ✅ Condicionar exibição de componentes com flags booleanas
 - ✅ Exemplo: `{% if page.slideshow_imagens and page.images|length > 1 %}`
 - ✅ Usar `{% load %}` para carregar templatetags necessárias
+- ❌ NUNCA usar classes Bootstrap para cores (ex: `badge-primary`, `alert-info`)
+- ✅ Criar classes personalizadas seguindo nomenclatura BEM
 
-### 6. **Git/Commits**
+### 6. **CSS/SCSS - Organização e Padrões**
+
+#### 6.1 Organização por App
+- ✅ SEMPRE criar arquivos SCSS dentro da pasta do app correspondente
+- ✅ Estrutura: `frontend/scss/{nome_do_app}/`
+- ✅ Apenas componentes globais vão em `frontend/scss/core/`
+- ❌ NÃO usar pasta `components/` genérica
+
+```
+frontend/scss/
+├── agenda/              # App agenda
+│   ├── index.scss      # Importa todos os arquivos do app
+│   ├── _agenda.scss
+│   ├── _agenda_escuro.scss
+│   ├── _componente.scss
+│   ├── _componente_cores.scss
+│   └── _componente_cores_escuro.scss
+├── noticias/           # App noticias
+├── core/               # Apenas componentes globais
+└── variables.scss      # Variáveis globais de cor
+```
+
+#### 6.2 Separação de Layout e Cores
+- ✅ Criar 3 arquivos para cada componente:
+  1. `_componente.scss` - Layout, estrutura, espaçamentos (SEM cores)
+  2. `_componente_cores.scss` - Cores para tema claro
+  3. `_componente_cores_escuro.scss` - Cores para tema escuro (envolvido em `[data-theme=dark]`)
+
+**Importante**: No arquivo `_cores_escuro.scss`, SEMPRE envolver as regras com `[data-theme=dark] { }`
+
+```scss
+// ❌ ERRADO - _componente_cores_escuro.scss
+.meu-componente {
+  background-color: $color-dark-theme-bg;
+}
+
+// ✅ CORRETO - _componente_cores_escuro.scss
+[data-theme=dark] {
+  .meu-componente {
+    background-color: $color-dark-theme-bg;
+  }
+}
+```
+
+#### 6.3 Uso de Variáveis de Cores
+- ❌ NUNCA usar cores diretas: `#333`, `blue`, `rgba(...)`
+- ✅ SEMPRE usar variáveis de `variables.scss`:
+  - `$color-primary`, `$color-primary-darker`
+  - `$color-on-primary` (texto sobre primary)
+  - `$color-dark-theme-text`, `$color-dark-theme-border`
+  - `$color-grey-600`, `$color-white`, `$color-black`
+
+```scss
+// ❌ ERRADO
+.meu-componente {
+  background-color: #396BBB;
+  color: #fff;
+}
+
+// ✅ CORRETO
+.meu-componente {
+  background-color: $color-primary;
+  color: $color-on-primary;
+}
+```
+
+#### 6.4 Criação de Novas Cores
+- Se cor não existe em `variables.scss`:
+  1. Adicionar variável em `variables.scss` com nome semântico
+  2. Criar versão escura se necessário
+  3. Usar a variável nos arquivos de cores
+
+#### 6.5 Nomenclatura BEM
+- ✅ Usar padrão BEM (Block Element Modifier):
+  - Bloco: `.agenda-recorrente`
+  - Elemento: `.agenda-recorrente__info`, `.agenda-recorrente__title`
+  - Modificador: `.agenda-recorrente__badge--highlight`
+
+#### 6.6 Imports no index.scss
+```scss
+// frontend/scss/agenda/index.scss
+@use './agenda.scss';
+@use './agenda_escuro.scss';
+@use './componente';
+@use './componente_cores';
+@use './componente_cores_escuro';
+```
+
+#### 6.7 Checklist CSS/SCSS
+- [ ] Arquivos criados na pasta do app correto?
+- [ ] 3 arquivos separados (layout, cores, cores_escuro)?
+- [ ] Usado apenas variáveis de `variables.scss`?
+- [ ] Nomenclatura BEM?
+- [ ] Imports adicionados no `index.scss` do app?
+- [ ] Evitadas classes Bootstrap de cores?
+- [ ] Testado em tema claro E escuro?
+
+### 7. **Git/Commits**
 - ✅ Mensagens de commit seguem padrão: `tipo: descrição`
   - `feat:` nova funcionalidade
   - `fix:` correção de bug
@@ -249,6 +348,12 @@ coverage run --source='.' manage.py test --keepdb
 - [ ] Aplicar migrations
 - [ ] Criar testes (mínimo 70% coverage)
 - [ ] Atualizar templates se necessário
+- [ ] Criar CSS/SCSS seguindo diretrizes (se aplicável):
+  - [ ] Arquivos na pasta do app correto
+  - [ ] 3 arquivos separados (layout, cores, cores_escuro)
+  - [ ] Usar variáveis de `variables.scss`
+  - [ ] Nomenclatura BEM
+  - [ ] Testar tema claro e escuro
 - [ ] Rodar `python manage.py check`
 - [ ] Rodar testes do app: `python manage.py test <app> --keepdb`
 - [ ] Verificar se não quebrou outros apps
