@@ -1,0 +1,383 @@
+@use '../variables' as *;
+
+// ----------------------------------------
+// SECTION CONTAINER
+// ----------------------------------------
+.bloco-lista-padrao-cursos-section {
+  margin: 4rem 0;
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+}
+
+// ----------------------------------------
+// TÍTULO DA SEÇÃO
+// ----------------------------------------
+.cursos-section-header {
+  margin-bottom: 3rem;
+  text-align: left;
+  
+  .cursos-section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $color-primary;
+    margin-bottom: 0.5rem;
+    
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+// ----------------------------------------
+// LISTA DE CARDS
+// ----------------------------------------
+.cursos-lista-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+// ----------------------------------------
+// CARD INDIVIDUAL
+// ----------------------------------------
+.curso-card-item {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  background: $color-white;
+  border: 1px solid $color-grey-200;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px $color-card-shadow-light;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  color: inherit;
+  gap: 2rem;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px $color-banner-shadow-hover;
+    border-color: $color-primary;
+    
+    .curso-card-image img {
+      transform: scale(1.05);
+    }
+    
+    .curso-card-title {
+      color: $color-primary-darker;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// Link do card
+.curso-card-link {
+  display: contents;
+  text-decoration: none;
+  color: inherit;
+}
+
+// ----------------------------------------
+// IMAGEM DO CARD
+// ----------------------------------------
+.curso-card-image-wrapper {
+  position: relative;
+  flex-shrink: 0;
+  width: 354px;
+  height: 372.9px;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 280px;
+  }
+}
+
+.curso-card-image {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  border-radius: 135.83px 0 135.83px;
+  background: linear-gradient(135deg, $color-curso-3 0%, $color-curso-4 100%);
+  
+  img {
+    position: relative;
+    width: calc(100% - var(--curso-accent-offset));
+    height: calc(100% - var(--curso-accent-offset));
+    object-fit: cover;
+    transition: transform 0.6s ease;
+    border-radius: 135.83px 0 135.83px;
+    z-index: 2;
+  }
+  
+  &.no-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &::before {
+      content: '📚';
+      font-size: 4rem;
+      opacity: 0.5;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    border-radius: 0;
+    overflow: hidden;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 0;
+    }
+  }
+}
+
+// ----------------------------------------
+// BORDA DECORATIVA (Formato L - direita + inferior em uma borda contínua)
+// ----------------------------------------
+
+.curso-image-accent {
+  position: absolute;
+  bottom: -11px;
+  right: -11px;
+  width: calc(100% + 11px);
+  height: calc(100% + 11px);
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden; // importante p/ recortar o gradiente curvado
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 135.83px 0 147.83px; // curva no canto inferior direito
+    background: conic-gradient(
+      from 270deg at 100% 100%, /* origem no canto inferior direito */
+      $color-curso 0deg,
+      $color-curso-1 90deg,
+      $color-curso-2 360deg
+    );
+    mask: linear-gradient($color-white, $color-white) content-box, linear-gradient($color-white, $color-white);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    padding: 11px;
+    animation: borderSlideIn 0.6s ease-out;
+  }
+
+  // Variante "Curso do Mês" (amarelo)
+  &.modo-curso-mes::before {
+    background: conic-gradient(
+      from 270deg at 100% 100%,
+      rgba(235, 208, 0, 0.8) 0deg,
+      rgba(235, 208, 0, 0) 90deg,
+      rgba(235, 208, 0, 0) 360deg
+    );
+  }
+
+  // Variante "Curso Destaque" (azul escuro)
+  &.modo-curso-destaque::before {
+    background: conic-gradient(
+      from 270deg at 100% 100%,
+      $color-curso 0deg,
+      $color-curso-1 90deg,
+      $color-curso-2 360deg
+    );
+  }
+
+  @media (max-width: 768px) {
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 6px;
+    border-radius: 0;
+
+    &::before {
+      border-radius: 0;
+      background: $color-curso-2;
+      padding: 0;
+      mask: none;
+      animation: none;
+    }
+
+    &.modo-curso-mes::before {
+      background: $color-warning;
+    }
+
+    &.modo-curso-destaque::before {
+      background: $color-primary-darker;
+    }
+  }
+}
+
+// Animação da borda em L
+@keyframes borderSlideIn {
+  from {
+    opacity: 0;
+    clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%, 0 100%, 0 100%);
+  }
+  to {
+    opacity: 1;
+    clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%, 0 100%, 0 100%);
+  }
+}
+
+// ----------------------------------------
+// CONTEÚDO DO CARD
+// ----------------------------------------
+.curso-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    justify-content: flex-start;
+  }
+}
+
+.curso-card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: $color-primary;
+  margin: 0;
+  transition: color 0.3s ease;
+  
+  @media (max-width: 768px) {
+    font-size: 1.125rem;
+  }
+}
+
+.curso-card-subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: $color-primary;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  &::before {
+    content: '👤';
+    font-size: 1.125rem;
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 0.95rem;
+  }
+}
+
+.curso-card-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: $color-primary;
+  margin: 0;
+  
+  @media (max-width: 768px) {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+}
+
+// ----------------------------------------
+// ESTADO VAZIO
+// ----------------------------------------
+.cursos-empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  
+  .empty-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+  
+  .empty-text {
+    font-size: 1.125rem;
+    color: $color-grey-600;
+  }
+}
+
+// ----------------------------------------
+// BOTÃO VER TODOS
+// ----------------------------------------
+.cursos-ver-todos-wrapper {
+  margin-top: 3rem;
+  text-align: center;
+  
+  .btn-ver-todos-cursos {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $color-white;
+    background: linear-gradient(135deg, $color-primary, $color-primary-darker);
+    border: none;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px $color-primary-50;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px $color-primary-70;
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+// ----------------------------------------
+// ANIMAÇÕES
+// ----------------------------------------
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.curso-card-item {
+  animation: fadeInUp 0.6s ease-out;
+  
+  &:nth-child(1) { animation-delay: 0.05s; }
+  &:nth-child(2) { animation-delay: 0.1s; }
+  &:nth-child(3) { animation-delay: 0.15s; }
+  &:nth-child(4) { animation-delay: 0.2s; }
+  &:nth-child(5) { animation-delay: 0.25s; }
+}
+
+// ----------------------------------------
+// ACESSIBILIDADE
+// ----------------------------------------
+.curso-card-item:focus {
+  outline: 3px solid $color-primary;
+  outline-offset: 4px;
+}
+  

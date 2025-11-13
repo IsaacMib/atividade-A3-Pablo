@@ -56,3 +56,7 @@
 @use './lista_eventos/index.scss' as listaEventos; // alias aqui
 
 @use './lgpd_page.scss';
+
+// Blocos de Cursos
+@use './bloco_lista_padrao_cursos.scss'; // Lista Padrão (unificado)
+@use './bloco_grid_cursos.scss'; // Grid de Cursos (cards verticais)

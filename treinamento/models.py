@@ -11,7 +11,8 @@ from blocks.models import (
     NoticiasListBlock,
     TituloBlock,
     AvisosListBlock,
-    CursosDestaquesBlock,
+    BlocoListaPadraoCursosBlock,
+    BlocoGridCursosBlock,
 )
 
 
@@ -33,7 +34,8 @@ class TreinamentoIndexPage(RoutablePageMixin, PageSitePadraoIndex):
             ("acesso_rapido", AcessosRapidosBlock()),
             ("noticias", NoticiasListBlock()),
             ("avisos", AvisosListBlock()),
-            ("cursos_destaques", CursosDestaquesBlock()),
+            ("lista_padrao_cursos", BlocoListaPadraoCursosBlock()),
+            ("grid_cursos", BlocoGridCursosBlock()),
             ("titulo", TituloBlock()),
         ],
         blank=True,
