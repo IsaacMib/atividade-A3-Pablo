@@ -7,7 +7,18 @@ Este é um **projeto Django/Wagtail CMS** para criação de portais governamenta
 - **Backend**: Django 5.1.x + Wagtail 7.x (Python)
 - **Frontend**: JavaScript/Webpack na pasta `frontend/`
 - **Banco de Dados**: PostgreSQL (produção), SQLite (testes)
-- **Ambiente**: Python virtualenv (`workon codataSite`) + Node.js v22.13.1 (`nvm use v22.13.1`)
+- **Ambiente**: Python virtualenv + Node.js
+
+> **⚠️ IMPORTANTE - Configuração Local de Ambiente:**
+> 
+> Antes de executar qualquer comando Python ou npm, **SEMPRE pergunte ao usuário**:
+> 1. "Qual comando você usa para ativar o ambiente virtual Python?" 
+>    - Exemplos: `workon <nome>`, `source venv/bin/activate`, `conda activate <nome>`, `pyenv activate <nome>`
+> 2. "Qual comando você usa para ativar a versão do Node.js (se aplicável)?"
+>    - Exemplos: `nvm use v22.13.1`, `asdf local nodejs <version>`, ou nenhum se usar versão global
+> 
+> Após obter as respostas, crie/atualize o arquivo `.github/copilot-local.md` com os comandos específicos.
+> Este arquivo está no `.gitignore` e contém configurações específicas da máquina do desenvolvedor.
 
 ## Estrutura do Projeto
 
@@ -166,10 +177,12 @@ def ensure_root_page():  # Já existe em core.utils_test!
 
 ## Comandos Úteis
 
+> **Nota**: Os comandos de ativação de ambiente estão em `.github/copilot-local.md` (específico por desenvolvedor).
+> Se o arquivo não existir, pergunte ao usuário os comandos de ativação de ambiente antes de executar.
+
 ```bash
-# Ativar ambiente
-workon codataSite
-nvm use v22.13.1
+# Ativar ambiente (veja .github/copilot-local.md)
+# Exemplo: workon codataSite && nvm use v22.13.1
 
 # Testes
 python manage.py test <app> --keepdb
@@ -248,10 +261,11 @@ coverage run --source='.' manage.py test --keepdb
 8. Usar `RenameField` para preservar dados em migrations
 9. Verificar conflitos de nomes entre classes pai/filho
 10. Perguntar sobre documentação antes de gerar
+11. **SEMPRE** perguntar sobre comandos de ambiente antes de executar pela primeira vez
 
 ## Contato e Suporte
 
 - Projeto: Site Padrão CODATA-PB
 - Stack: Django 5.1 + Wagtail 7.x + PostgreSQL
-- Node: v22.13.1
-- Python: 3.12+ (via virtualenv codataSite)
+- Python: 3.12+
+- Configurações de ambiente: veja `.github/copilot-local.md`
