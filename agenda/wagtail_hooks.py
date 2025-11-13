@@ -116,25 +116,19 @@ def do_after_agendadodia_page_create(request, page):
             if parent_page.title in page.slug and ("recorrente" in page.slug or page.date.strftime('%Y-%m-%d') in page.slug):
                 return
             
-            # Processar agendas recorrentes
+            # Processar apenas agendas recorrentes
             if page.habilitar_recorrencia and page.tipo_recorrencia != 'none':
                 # Atualizar título e slug para agenda recorrente
                 atualizar_titulo_slug_agenda_recorrente(page, parent_page, is_new=True)
-            else:
-                # Processar agendas sem recorrência (do dia)
-                page.slug = slugify(f"{parent_page.title}-{page.date.strftime('%Y-%m-%d')}")
-                data_extensa = page.date.strftime("%d de %B")
-                page.title = f"{parent_page.title} - Agenda do Dia {data_extensa}"
             
-            try:
-                new_revision = page.save_revision()
-                if page.live:
-                    # page has been created and published at the same time,
-                    # so ensure that the updated title is on the published version too
-                    new_revision.publish()
-                    
-                # Mostrar informação sobre recorrência apenas para agendas recorrentes
-                if page.habilitar_recorrencia and page.tipo_recorrencia != 'none':
+                try:
+                    new_revision = page.save_revision()
+                    if page.live:
+                        # page has been created and published at the same time,
+                        # so ensure that the updated title is on the published version too
+                        new_revision.publish()
+                        
+                    # Mostrar informação sobre recorrência
                     proximas_datas = page.get_proximas_datas_recorrencia(limite=5)
                     if len(proximas_datas) > 1:
                         messages.success(
@@ -142,19 +136,17 @@ def do_after_agendadodia_page_create(request, page):
                             f"Agenda criada com sucesso! Esta agenda se repetirá em datas próximas devido à configuração de recorrência."
                         )
                         
-            except Exception as e:
-                error_message = processar_erro_agenda(e)
+                except Exception as e:
+                    error_message = processar_erro_agenda(e)
 
-                # Remover mensagens existentes
-                list(django_messages.get_messages(request))
+                    # Remover mensagens existentes
+                    list(django_messages.get_messages(request))
 
-                # Remover a página em caso de erro
-                page.delete()
-                messages.error(request, error_message)
-                # Redirecionar para wagtailadmin_explore com parent_page_id
-                return redirect("wagtailadmin_explore", parent_page_id=parent_page.id)
-
-
+                    # Remover a página em caso de erro
+                    page.delete()
+                    messages.error(request, error_message)
+                    # Redirecionar para wagtailadmin_explore com parent_page_id
+                    return redirect("wagtailadmin_explore", parent_page_id=parent_page.id)
 @hooks.register('after_publish_page')
 def do_after_agendadodia_page_publish(request, page):
     """Hook executado após publicar/atualizar uma página de agenda existente."""
@@ -165,22 +157,17 @@ def do_after_agendadodia_page_publish(request, page):
             if parent_page.title in page.slug and ("recorrente" in page.slug or page.date.strftime('%Y-%m-%d') in page.slug):
                 return
             
-            # Processar agendas recorrentes
+            # Processar apenas agendas recorrentes
             if page.habilitar_recorrencia and page.tipo_recorrencia != 'none':
                 # Atualizar título e slug (removerá sufixos antigos se existirem)
                 atualizar_titulo_slug_agenda_recorrente(page, parent_page, is_new=False)
-            else:
-                # Processar agendas sem recorrência (do dia)
-                page.slug = slugify(f"{parent_page.title}-{page.date.strftime('%Y-%m-%d')}")
-                data_extensa = page.date.strftime("%d de %B")
-                page.title = f"{parent_page.title} - Agenda do Dia {data_extensa}"
             
-            try:
-                new_revision = page.save_revision()
-                if page.live:
-                    # Ensure that the updated title is on the published version
-                    new_revision.publish()
+                try:
+                    new_revision = page.save_revision()
+                    if page.live:
+                        # Ensure that the updated title is on the published version
+                        new_revision.publish()
                         
-            except Exception as e:
-                error_message = processar_erro_agenda(e)
-                messages.error(request, error_message)
+                except Exception as e:
+                    error_message = processar_erro_agenda(e)
+                    messages.error(request, error_message)

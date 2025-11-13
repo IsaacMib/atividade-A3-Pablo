@@ -178,8 +178,8 @@ class WagtailHooksTestCase(TestCase):
         
         do_after_agendadodia_page_publish(self.request, agenda_com_pai)
         
-        # Verifica se inclui o título da página pai
-        expected_title = f"{self.agenda_page.title} - Reunião Especial - Agenda Recorrente Semanal"
+        # Verifica se inclui o título da página pai, título original, tipo e data
+        expected_title = f"{self.agenda_page.title} - Reunião Especial - Agenda Recorrente Semanal - 15 de novembro"
         self.assertEqual(agenda_com_pai.title, expected_title)
     
     def test_slug_nao_duplica_recorrente(self):
@@ -353,8 +353,8 @@ class IntegrationTestCase(TestCase):
         # Aplica os hooks
         do_after_agendadodia_page_publish(self.request, agenda)
         
-        # Verifica se o título foi modificado corretamente
-        expected_title = f"{self.agenda_page.title} - Reunião Semanal da Equipe - Agenda Recorrente Semanal"
+        # Verifica se o título foi modificado corretamente (inclui pai, título, tipo e data)
+        expected_title = f"{self.agenda_page.title} - Reunião Semanal da Equipe - Agenda Recorrente Semanal - 11 de novembro"
         self.assertEqual(agenda.title, expected_title)
         
         # Verifica se o slug foi modificado corretamente
