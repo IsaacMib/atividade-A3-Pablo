@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function calculateNavbarPosition() {
         const mobileNavbar = document.querySelector('.site-menu-navbar-mobile');
         const navbarCollapse = document.querySelector('.site-menu-navbar-collapse');
-        const barraBrasil = document.getElementById('barra-brasil');
+        // const barraBrasil = document.getElementById('barra-brasil'); // Comentado temporariamente
 
         console.info('Calculando posição do navbar collapse');
         

@@ -42,6 +42,11 @@ test:
     - npm run build
     - echo "✅ Build do webpack executado com sucesso!"
     
+    # Executar testes JavaScript
+    - echo "=== Executando testes JavaScript ==="
+    - npm test
+    - echo "✅ Testes JavaScript executados com sucesso!"
+    
     # Aguardar PostgreSQL estar pronto
     - until /tmp/venv/bin/python -c "import psycopg; psycopg.connect(host='postgres', port=5432, user='postgres', password='postgres', dbname='test')"; do echo "Aguardando PostgreSQL..."; sleep 2; done
     

@@ -6,6 +6,10 @@ from wagtail.fields import StreamField
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.blocks import RichTextBlock
 
+from blocks.models import (
+  ListaVideosBlock,
+)
+
 # Create your models here.
 
 
@@ -75,7 +79,7 @@ class CardLinhaDoTempoPage(PageSitePadrao):
         null=True,
         verbose_name='Texto alternativo da imagem'
     )
-    descricao = StreamField(
+    descricao_linha_do_tempo = StreamField(
         [
             ("paragraph", RichTextBlock(
                 icon="pilcrow",
@@ -98,15 +102,29 @@ class CardLinhaDoTempoPage(PageSitePadrao):
         null=True,
         use_json_field=True,
     )
+    
+    lista_videos = StreamField(
+        [
+            ('lista_videos', ListaVideosBlock()),
+        ],
+        verbose_name="Lista de vídeos",
+        help_text="Adicione vídeos à página do card de linha do tempo",
+        max_num=3,
+        blank=True,
+        null=True,
+        use_json_field=True,
+    )
     data_publicacao = models.DateTimeField(
         "Data de publicação do aviso", default=datetime.now, blank=True, null=True
     )
 
-    content_panels = PageSitePadrao.content_panels + [
+    content_panels = [
+        PageSitePadrao.content_panels[0],  # Título da página
         FieldPanel("data_evento"),
         FieldPanel("imagem"),
         FieldPanel("texto_alternativo"),
-        FieldPanel("descricao"),
+        FieldPanel("descricao_linha_do_tempo"),
+        FieldPanel("lista_videos"),
         FieldPanel("data_publicacao"),
     ]
 
