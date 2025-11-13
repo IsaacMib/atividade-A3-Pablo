@@ -369,34 +369,6 @@ class ListRedeSocial(StructBlock):
         label = "Lista de Redes Sociais"
         template = "blocks/redes_sociais.html"
 
-class ListRedesSocial(StructBlock):
-
-    ICONES_REDES = [
-        ("facebook", "Facebook"),
-        ("x", "X (Twitter)"),
-        ("linkedin", "LinkedIn"),
-        ("whatsapp", "WhatsApp"),
-        ("telegram", "Telegram"),
-        ("email", "E-mail"),
-        ("sms", "SMS"),
-        ("print", "Imprimir"),
-        ("copy", "Copiar Link"),
-        ("reddit", "Reddit"),
-        ("pinterest", "Pinterest"),
-        ("messenger", "Messenger"),
-    ]
-
-    redes = ListBlock(
-        ChoiceBlock(choices=ICONES_REDES, label="Rede de compartilhamento"),
-        label="Selecionar Redes de Compartilhamento",
-        help_text="Selecione as redes sociais nas quais o conteúdo poderá ser compartilhado."
-    )
-
-    class Meta:
-        icon = "share"
-        label = "Compartilhamento em Redes Sociais"
-        template = "blocks/redes_sociais_share.html"
-
 class ItemCarrosselBannerBlock(StructBlock):
     imagem = ImageChooserBlock(required=True, label="Imagem do Banner")
     imagem_mobile = ImageChooserBlock(

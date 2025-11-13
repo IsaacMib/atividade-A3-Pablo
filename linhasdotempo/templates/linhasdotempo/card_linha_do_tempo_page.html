@@ -11,7 +11,7 @@
                     {% image page.imagem width-800 class="card-img-top" alt=page.texto_alternativo|default:page.title %}
                 </div>
             {% endif %}
-            <div class="linha-do-tempo-page__descricao">{{ page.descricao }}</div>
+            <div class="linha-do-tempo-page__descricao">{{ page.descricao_linha_do_tempo }}</div>
             <div class="linha-do-tempo-page__lista-videos">
                 {% for block in page.lista_videos %}
                     {% include_block block %}
