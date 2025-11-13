@@ -1,0 +1,47 @@
+// Agenda Recorrente - Cores (Tema Escuro)
+@import '../variables';
+
+[data-theme=dark] {
+  .agenda-recorrente {
+    &__info {
+      background-color: $color-agenda-item-bg-escuro;
+      border-color: $color-dark-theme-border;
+      color: $color-dark-theme-text;
+    }
+
+    &__title {
+      color: $color-dark-theme-text;
+    }
+
+    &__ocorrencias-title {
+      color: $color-white;
+    }
+
+    &__data-badge {
+      background-color: $color-primary-darker;
+      color: $color-on-primary;
+    }
+
+    &__mais-datas {
+      color: $color-dark-theme-border-light;
+    }
+  }
+
+  .agenda-do-dia {
+    &__compromissos-title {
+      color: $color-white;
+    }
+
+    &__detalhe-label {
+      color: $color-dark-theme-text;
+    }
+
+    &__detalhe-valor {
+      color: $color-dark-theme-text;
+    }
+  }
+
+  .compromisso-titulo {
+    color: $color-white;
+  }
+}

@@ -1,10 +1,12 @@
 class CharCountController extends window.StimulusModule.Controller {
-  static values = { 
-    // Default max length if not specified per field
-    max: { default: 255, type: Number },
-    // Format: "field1:100,field2:200" or just "field1,field2" to use default max
-    fields: { type: String, default: '' }
-  };
+  static get values() {
+    return {
+      // Default max length if not specified per field
+      max: { default: 255, type: Number },
+      // Format: "field1:100,field2:200" or just "field1,field2" to use default max
+      fields: { type: String, default: '' }
+    };
+  }
 
   connect() {
     this.setupCounters();
@@ -13,7 +15,7 @@ class CharCountController extends window.StimulusModule.Controller {
   setupCounters() {
     if (!this.fieldsValue) {
       this.addCounter(this.element, this.maxValue);
-    };
+    }
 
     // Create a map of field names to their max lengths
     const fieldConfigs = this.fieldsValue.split(',').reduce((acc, config) => {
