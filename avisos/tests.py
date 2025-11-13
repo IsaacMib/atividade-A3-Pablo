@@ -2,7 +2,7 @@ from django.test import TestCase, RequestFactory
 from django.core.exceptions import ValidationError
 from django.core.paginator import Page as PaginatorPage
 from django.contrib.messages.storage.fallback import FallbackStorage
-from wagtail.models import Page, Locale, Site
+from wagtail.models import Page, Locale, Site, Collection
 from wagtail.images.tests.utils import get_test_image_file
 from wagtail.images import get_image_model
 from taggit.models import Tag
@@ -43,6 +43,10 @@ class AvisosPageTestCase(TestCase):
             )
         else:
             cls.site = Site.objects.get(is_default_site=True)
+
+        # CRÍTICO: Criar Collection root se não existir (necessário para imagens)
+        if not Collection.objects.filter(depth=1).exists():
+            Collection.add_root(name="Root")
 
         # Criar imagem de teste
         cls.test_image = Image.objects.create(
