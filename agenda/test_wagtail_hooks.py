@@ -4,7 +4,6 @@ from unittest.mock import patch, MagicMock
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.sessions.middleware import SessionMiddleware
 
-from wagtail.coreutils import get_supported_content_language_variant
 from wagtail.models import Page, Site, Locale
 from wagtail.signals import page_published
 
@@ -13,6 +12,7 @@ from agenda.wagtail_hooks import (
     do_after_agendadodia_page_edit
 )
 from home.models import HomePage
+from core.utils_test import ensure_root_page
 from datetime import date
 
 
@@ -26,39 +26,6 @@ def setup_request_with_messages(request):
     # Configurar sistema de mensagens
     setattr(request, '_messages', FallbackStorage(request))
     return request
-
-
-def ensure_root_page(locale_code: str | None = None) -> Page:
-    if locale_code is None:
-        locale_code = settings.LANGUAGE_CODE
-
-    try:
-        normalized_code = get_supported_content_language_variant(locale_code)
-    except LookupError:
-        normalized_code = locale_code
-
-    locale, _ = Locale.objects.get_or_create(language_code=normalized_code)
-
-    root = Page.get_first_root_node()
-    if not root:
-        root = Page.add_root(title="Root", slug="root")
-
-    root.refresh_from_db()
-
-    fields_to_update: list[str] = []
-
-    if root.numchild is None:
-        root.numchild = 0
-        fields_to_update.append("numchild")
-
-    if root.locale_id != locale.id:
-        root.locale = locale
-        fields_to_update.append("locale")
-
-    if fields_to_update:
-        root.save(update_fields=fields_to_update)
-
-    return root
 
 
 class WagtailHooksTestCase(TestCase):
