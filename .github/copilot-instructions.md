@@ -179,7 +179,79 @@ frontend/scss/
 - [ ] Evitadas classes Bootstrap de cores?
 - [ ] Testado em tema claro E escuro?
 
-### 7. **Git/Commits**
+**Documentação completa**: `docs/diretrizes-css-scss.md`
+
+### 7. **Acessibilidade (A11y)**
+
+**Padrões a seguir:**
+- WCAG 2.1 Level AA: https://www.w3.org/WAI/WCAG21/quickref/
+- Axe DevTools Rules: https://dequeuniversity.com/rules/axe/4.10
+
+**Ferramentas de validação:**
+- Axe DevTools (extensão do navegador)
+- WAVE (Web Accessibility Evaluation Tool)
+- Lighthouse (Chrome DevTools)
+
+#### 7.1 HTML Semântico
+- ✅ Usar elementos HTML semânticos apropriados (WCAG 1.3.1 - Info and Relationships)
+- ❌ NUNCA usar `<strong>` ou `<b>` em parágrafos como se fossem headings
+- ✅ Usar hierarquia correta de headings (h1 → h2 → h3...) sem pular níveis
+- ✅ Usar `<dl>`, `<dt>`, `<dd>` para listas de definição/dados chave-valor
+- ✅ Usar `<button>` para ações, `<a>` para navegação
+- ✅ Elementos de formulário devem ter labels associados (`<label for="id">`)
+
+```html
+<!-- ❌ ERRADO - strong como heading -->
+<div>
+  <strong>Autoridade:</strong> Nome da autoridade
+</div>
+
+<!-- ✅ CORRETO - elementos semânticos -->
+<dl>
+  <dt>Autoridade:</dt>
+  <dd>Nome da autoridade</dd>
+</dl>
+```
+
+#### 7.2 Contraste de Cores (WCAG 1.4.3)
+- ✅ Garantir contraste mínimo WCAG AA:
+  - Texto normal: 4.5:1
+  - Texto grande (18pt+ ou 14pt+ negrito): 3:1
+- ✅ Testar em ambos os temas (claro e escuro)
+- ✅ Texto sobre fundos coloridos deve ter contraste adequado
+- ✅ Usar ferramentas como WebAIM Contrast Checker
+
+#### 7.3 Estrutura e Navegação
+- ✅ Landmarks ARIA quando apropriado (`main`, `nav`, `aside`, `header`, `footer`)
+- ✅ Labels descritivos em formulários (WCAG 3.3.2)
+- ✅ Alternativas textuais para imagens (`alt`) - WCAG 1.1.1
+- ✅ Foco visível em elementos interativos (WCAG 2.4.7)
+- ✅ Links descritivos - evitar "clique aqui" (WCAG 2.4.4)
+- ✅ Skip links para navegação rápida
+
+#### 7.4 Responsividade e Zoom (WCAG 1.4.4, 1.4.10)
+- ✅ Testar em diferentes tamanhos de tela
+- ✅ Garantir que texto possa ser ampliado até 200% sem perda de conteúdo
+- ✅ Evitar scroll horizontal em dispositivos móveis
+- ✅ Viewport não deve bloquear zoom: `<meta name="viewport" content="width=device-width, initial-scale=1">`
+
+#### 7.5 Interatividade
+- ✅ Navegação por teclado funcionando (Tab, Enter, Setas)
+- ✅ Ordem de foco lógica (WCAG 2.4.3)
+- ✅ Modais devem capturar foco (focus trap)
+- ✅ Estados de erro claramente identificados (WCAG 3.3.1)
+
+#### 7.6 Checklist de Acessibilidade
+- [ ] HTML semântico usado corretamente? (WCAG 1.3.1)
+- [ ] Hierarquia de headings lógica sem pulos? (WCAG 1.3.1)
+- [ ] Contraste de cores adequado 4.5:1? (WCAG 1.4.3)
+- [ ] Labels e textos alternativos presentes? (WCAG 1.1.1, 3.3.2)
+- [ ] Elementos interativos têm foco visível? (WCAG 2.4.7)
+- [ ] Navegação por teclado funciona? (WCAG 2.1.1)
+- [ ] Testado com Axe DevTools sem erros?
+- [ ] Testado com leitor de tela (NVDA/JAWS/VoiceOver)?
+
+### 8. **Git/Commits**
 - ✅ Mensagens de commit seguem padrão: `tipo: descrição`
   - `feat:` nova funcionalidade
   - `fix:` correção de bug
@@ -354,6 +426,13 @@ coverage run --source='.' manage.py test --keepdb
   - [ ] Usar variáveis de `variables.scss`
   - [ ] Nomenclatura BEM
   - [ ] Testar tema claro e escuro
+- [ ] Validar acessibilidade (se aplicável):
+  - [ ] HTML semântico correto (WCAG 1.3.1)
+  - [ ] Hierarquia de headings sem pulos
+  - [ ] Contraste de cores 4.5:1 (WCAG 1.4.3)
+  - [ ] Labels e alt text presentes (WCAG 1.1.1, 3.3.2)
+  - [ ] Navegação por teclado funciona
+  - [ ] Testado com Axe DevTools sem erros
 - [ ] Rodar `python manage.py check`
 - [ ] Rodar testes do app: `python manage.py test <app> --keepdb`
 - [ ] Verificar se não quebrou outros apps
