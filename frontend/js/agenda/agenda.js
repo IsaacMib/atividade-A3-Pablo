@@ -18,14 +18,118 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Monta o objeto popups a partir das datas
+    // Função para buscar datas de recorrência para um período específico
+    function fetchDatasRecorrencia(startDate, endDate) {
+        const start = formatDateToString(startDate);
+        const end = formatDateToString(endDate);
+        const url = `${baseUrl}/${pageSlug}/datas-periodo/?start=${start}&end=${end}`;
+        
+        return fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                return data.datas || [];
+            })
+            .catch(error => {
+                console.error("Erro ao buscar datas de recorrência:", error);
+                return [];
+            });
+    }
+
+    // Função auxiliar para formatar data para string YYYY-MM-DD
+    function formatDateToString(date) {
+        if (typeof date === 'string') return date;
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    }
+
+    // Cache local de popups para evitar problemas com configurações do calendário
+    let cachedPopups = {};
+
+    // Função para atualizar popups do calendário preservando estado
+    function updateCalendarPopups(datas) {
+        // Verifica se o calendário existe
+        if (!calendar) {
+            return;
+        }
+        
+        // CAPTURA O ESTADO ATUAL ANTES DE QUALQUER ATUALIZAÇÃO
+        const currentState = {
+            selectedDates: calendar.context?.selectedDates || [],
+            selectedMonth: calendar.context?.selectedMonth,
+            selectedYear: calendar.context?.selectedYear,
+            selectedHolidays: calendar.context?.selectedHolidays || [],
+            selectedTheme: calendar.context?.selectedTheme
+        };
+        
+        // Adiciona as novas datas ao cache local
+        datas.forEach(data => {
+            cachedPopups[data] = {
+                modifier: 'bg-temcompromissos',
+                html: '',
+            };
+        });
+        
+        try {
+            // Atualiza o calendário E REDEFINE O ESTADO EXPLICITAMENTE
+            calendar.set({
+                popups: { ...cachedPopups },
+                // Força a manutenção do estado atual
+                selectedDates: currentState.selectedDates,
+                selectedMonth: currentState.selectedMonth,
+                selectedYear: currentState.selectedYear,
+                selectedHolidays: currentState.selectedHolidays
+            });
+        } catch (error) {
+            console.error("Erro ao atualizar calendário:", error);
+        }
+    }
+
+    // Monta o objeto popups inicial a partir das datas e inicializa o cache
     const popups = {};
     datasAgenda.forEach(data => {
         popups[data] = {
             modifier: 'bg-temcompromissos',
             html: '',
         };
+        // Também adiciona ao cache local
+        cachedPopups[data] = {
+            modifier: 'bg-temcompromissos',
+            html: '',
+        };
     });
+
+    // Função para atualizar datas do período visível
+    let updateInProgress = false;
+    function updateDatasForVisiblePeriod(calendarInstance) {
+        if (updateInProgress) {
+            return; // Evita múltiplas chamadas simultâneas
+        }
+        
+        updateInProgress = true;
+        const { selectedYear, selectedMonth } = calendarInstance.context;
+        
+        // Calcula período base menor - o backend expandirá baseado na recorrência
+        const startDate = new Date(selectedYear, selectedMonth - 1, 1);
+        const endDate = new Date(selectedYear, selectedMonth + 2, 0);
+        
+        // Busca datas com período expandido inteligente
+        fetchDatasRecorrencia(startDate, endDate).then(novasDatas => {
+            if (novasDatas && novasDatas.length > 0) {
+                updateCalendarPopups(novasDatas);
+            }
+        }).catch(error => {
+            console.error("Erro ao atualizar datas do período:", error);
+        }).finally(() => {
+            updateInProgress = false;
+        });
+    }
 
     const options = {
         themeAttrDetect: 'html[data-theme]',
@@ -49,7 +153,24 @@ document.addEventListener("DOMContentLoaded", function() {
               const url = new URL(window.location);
               url.searchParams.set('data', selectedDate);
               window.history.pushState({}, '', url);
+              
+              // Recarrega datas quando o usuário seleciona uma nova data
+              setTimeout(() => {
+                  updateDatasForVisiblePeriod(self);
+              }, 30);
           }
+        },
+        onClickArrow(self) {
+            // Sempre atualiza datas ao navegar para garantir cobertura
+            setTimeout(() => {
+                updateDatasForVisiblePeriod(self);
+            }, 50);
+        },
+        onChangeMonth(self) {
+            // Atualiza datas quando muda mês
+            setTimeout(() => {
+                updateDatasForVisiblePeriod(self);
+            }, 50);
         },
         // onClickMonth(self) {
         //   console.log("Mês selecionado:", self.context.selectedMonth);
@@ -201,4 +322,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     calendar.init();
+    
+    // Carrega datas de recorrência para o período inicial expandido
+    setTimeout(() => {
+        updateDatasForVisiblePeriod(calendar);
+    }, 100);
   });
