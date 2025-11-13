@@ -46,17 +46,21 @@
         </div>
         {% endif %}
 
-        {% if page.nome_autoridade %}
-        <div class="mb-3">
-            <strong>Autoridade:</strong> {{ page.nome_autoridade }}
-        </div>
-        {% endif %}
+        <dl class="agenda-do-dia__detalhes">
+            {% if page.nome_autoridade %}
+            <div class="agenda-do-dia__detalhe-item">
+                <dt class="agenda-do-dia__detalhe-label">Autoridade:</dt>
+                <dd class="agenda-do-dia__detalhe-valor">{{ page.nome_autoridade }}</dd>
+            </div>
+            {% endif %}
 
-        {% if page.local_padrao %}
-        <div class="mb-3">
-            <strong>Local padrão:</strong> {{ page.local_padrao }}
-        </div>
-        {% endif %}
+            {% if page.local_padrao %}
+            <div class="agenda-do-dia__detalhe-item">
+                <dt class="agenda-do-dia__detalhe-label">Local padrão:</dt>
+                <dd class="agenda-do-dia__detalhe-valor">{{ page.local_padrao }}</dd>
+            </div>
+            {% endif %}
+        </dl>
 
         {% if page.compromissos %}
         <div class="mt-4">
