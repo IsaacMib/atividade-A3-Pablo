@@ -1081,10 +1081,136 @@ with self.assertRaises(ValidationError):
 from django.test import TestCase, RequestFactory
 from django.core.exceptions import ValidationError
 from django.contrib.messages.storage.fallback import FallbackStorage
-from wagtail.models import Page, Locale, Site
+from wagtail.models import Page, Locale, Site, Collection
 from taggit.models import Tag
 from core.utils_test import ensure_root_page
 ```
+
+### 10.2 Correção de Falhas em CI/CD - Hooks e Ambiente Limpo (Nov 2025)
+
+**Contexto**: Pipeline GitLab CI falhando com 5 testes de agenda + 2 erros em avisos/eventos
+
+**Problemas Encontrados e Soluções Aplicadas:**
+
+1. **Lógica de Detecção de Duplicação com Falsos Positivos** (5 falhas)
+   - Sintoma: Hooks modificando agendas normais quando só deveriam modificar recorrentes
+   - Testes falhando:
+     * `test_titulo_agenda_normal` - Agenda normal sendo modificada
+     * `test_fluxo_edicao_agenda_normal_para_recorrente` - Título alterado indevidamente
+     * `test_titulo_preserva_estrutura_original` - Estrutura não preservada
+     * `test_fluxo_completo_criacao_agenda_recorrente` - Data extra adicionada
+     * `test_titulo_com_parent_page_title` - Sufixo de data não esperado
+   - Causa Raiz: Verificação de duplicação executava ANTES da verificação de recorrência:
+   ```python
+   # ❌ PROBLEMÁTICO
+   if parent_page.title in page.slug and ("recorrente" in page.slug or page.date.strftime('%Y-%m-%d') in page.slug):
+       return  # Falsos positivos: data fragmentada no slug
+   
+   if page.habilitar_recorrencia and page.tipo_recorrencia != 'none':
+       # Processar...
+   ```
+   - ✅ Solução: Remover lógica de duplicação, confiar apenas na verificação condicional:
+   ```python
+   # ✅ CORRETO
+   if isinstance(page, AgendaDoDiaPage):
+       # Processar APENAS se recorrência ativada
+       if page.habilitar_recorrencia and page.tipo_recorrencia != 'none':
+           parent_page = page.get_parent()
+           if not parent_page:
+               return
+           # Atualizar título e slug...
+   ```
+   - **Lição**: Lógica de "prevenção de duplicação" pode causar mais problemas que resolver. Hooks do Wagtail já previnem execução múltipla no mesmo ciclo. Mantenha verificações simples e explícitas.
+
+2. **Collection Root Não Existe em Banco Limpo** (1 erro em CI)
+   - Sintoma: `AttributeError: 'NoneType' object has no attribute 'id'`
+   - Stacktrace: `Collection.get_first_root_node().id` retorna None
+   - Causa Raiz: `Image.objects.create()` tenta obter collection padrão, mas banco limpo não tem Collection root
+   - ❌ Código Problemático:
+   ```python
+   @classmethod
+   def setUpTestData(cls):
+       cls.root_page = ensure_root_page()
+       # ...
+       cls.test_image = Image.objects.create(  # FALHA aqui
+           title="Test Image",
+           file=get_test_image_file(),
+       )
+   ```
+   - ✅ Solução: Criar Collection root antes de criar imagens:
+   ```python
+   from wagtail.models import Collection
+   
+   @classmethod
+   def setUpTestData(cls):
+       cls.root_page = ensure_root_page()
+       
+       # CRÍTICO: Criar Collection root se não existir
+       if not Collection.objects.filter(depth=1).exists():
+           Collection.add_root(name="Root")
+       
+       # Agora pode criar imagens
+       cls.test_image = Image.objects.create(
+           title="Test Image",
+           file=get_test_image_file(),
+       )
+   ```
+   - **Lição**: Wagtail requer Collection root para mídia (Image, Document). Em ambiente com `--keepdb`, a Collection persiste. Em CI/CD com banco limpo, SEMPRE criar Collection root no `setUpTestData`.
+
+3. **StaticFiles Manifest Não Existe em Testes** (2 erros em CI)
+   - Sintoma: `ValueError: Missing staticfiles manifest entry for 'img/favicon/favicon.ico'`
+   - Stacktrace: `ManifestStaticFilesStorage.stored_name()` falhando
+   - Causa Raiz: `ManifestStaticFilesStorage` requer `collectstatic` antes de usar, mas testes não executam collectstatic
+   - Contexto: Templates renderizam `{% load static %}` → `{% static 'img/favicon/favicon.ico' %}`
+   - ❌ Configuração Problemática (herdada do base.py):
+   ```python
+   # sitepadrao/settings/base.py
+   STORAGES = {
+       "staticfiles": {
+           "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
+       },
+   }
+   ```
+   - ✅ Solução: Override em `testing.py` para usar storage simples:
+   ```python
+   # sitepadrao/settings/testing.py
+   # CRÍTICO: Usar StaticFilesStorage simples em testes
+   # ManifestStaticFilesStorage requer collectstatic
+   STORAGES = {
+       "default": {
+           "BACKEND": "django.core.files.storage.FileSystemStorage",
+       },
+       "staticfiles": {
+           "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+       },
+   }
+   ```
+   - **Lição**: Ambiente de testes não deve depender de artefatos de build (`collectstatic`, `npm build`, etc). Use backends simples que funcionam sem pré-processamento.
+
+4. **Diferenças entre Ambiente Local (--keepdb) e CI**
+   - **Local com `--keepdb`**: Collection persiste entre runs, testes passam
+   - **CI com banco limpo**: Collection não existe, testes falham
+   - **Detecção**: Sempre deletar `db.sqlite3` e rodar sem `--keepdb` antes de push
+   - **Validação**: Simular CI localmente:
+   ```bash
+   rm -f db.sqlite3
+   export DJANGO_SETTINGS_MODULE=sitepadrao.settings.testing
+   python manage.py migrate --run-syncdb
+   python manage.py test --verbosity=2
+   ```
+   - **Lição**: `--keepdb` é ótimo para velocidade em desenvolvimento, mas SEMPRE validar com banco limpo antes de push para CI.
+
+**Progressão de Debug:**
+- Commit 1: Fix hooks de agenda (5 falhas) → 14 testes passando ✓
+- Commit 2: Fix Collection + StaticFiles (2 erros CI) → Todos testes passando ✓
+
+**Checklist para Evitar Falhas de CI:**
+- [ ] Testar sem `--keepdb` localmente antes de push
+- [ ] Criar Collection root se usar Image/Document em testes
+- [ ] Verificar se `testing.py` usa backends simples para static/media
+- [ ] Validar que hooks têm verificações condicionais explícitas
+- [ ] Não assumir que dados persistem entre runs de teste
+- [ ] Simular ambiente CI com `DJANGO_SETTINGS_MODULE=sitepadrao.settings.testing`
 
 ## 11. Observações Importantes
 
@@ -1101,6 +1227,10 @@ from core.utils_test import ensure_root_page
 11. **SEMPRE** perguntar sobre comandos de ambiente antes de executar pela primeira vez
 12. **CRÍTICO**: Re-publicar páginas após adicionar tags/relacionamentos para queries `.live()`
 13. **CRÍTICO**: Criar `Site` no `setUpTestData` quando testes renderizam templates
+14. **CRÍTICO**: Criar `Collection.add_root()` no `setUpTestData` quando testes usam Image/Document
+15. **CRÍTICO**: Testar sem `--keepdb` antes de push para CI/CD (simular banco limpo)
+16. **CRÍTICO**: Settings de teste devem usar backends simples (não ManifestStaticFilesStorage)
+17. **Hooks do Wagtail**: Manter verificações condicionais simples e explícitas, evitar lógica complexa de "prevenção"
 
 ## 12. Contato e Suporte
 
