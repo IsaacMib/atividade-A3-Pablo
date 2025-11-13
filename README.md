@@ -26,6 +26,7 @@ This demo is aimed primarily at developers wanting to learn more about the inter
 **Document contents**
 
 - [Installation](#installation)
+- [GitHub Copilot Configuration](#github-copilot-configuration)
 - [Next steps](#next-steps)
 - [Contributing](#contributing)
 - [Other notes](#other-notes)
@@ -171,6 +172,74 @@ npm run watch
 ```
 
 Log into the admin with the credentials `admin / changeme`.
+
+# GitHub Copilot Configuration
+
+Este projeto está configurado para funcionar com GitHub Copilot e outras ferramentas de IA. As configurações estão em `.github/copilot-instructions.md` e incluem:
+
+- Padrões de código DRY (Don't Repeat Yourself)
+- Boas práticas de testes
+- Padrões Wagtail específicos
+- Problemas comuns e soluções
+- Fluxo de trabalho recomendado
+
+## Configuração de Ambiente Local
+
+Como cada desenvolvedor pode usar diferentes ferramentas de ambiente virtual (virtualenv, conda, pyenv, etc.), o projeto suporta configurações locais personalizadas.
+
+### Criando o arquivo de configuração local
+
+Crie o arquivo `.github/copilot-local.md` (que já está no `.gitignore`) com seus comandos de ambiente:
+
+```markdown
+# Configurações Locais do Ambiente de Desenvolvimento
+
+## Comandos de Ambiente
+
+### Ativar Ambiente Virtual Python
+\`\`\`bash
+workon sitepadrao
+# ou: source venv/bin/activate
+# ou: conda activate sitepadrao
+# ou: pyenv activate sitepadrao
+\`\`\`
+
+### Ativar Versão do Node.js
+\`\`\`bash
+nvm use v22.13.1
+# ou: asdf local nodejs 22.13.1
+# ou: deixe em branco se usar versão global
+\`\`\`
+
+## Comando Completo para Ativar Ambiente
+\`\`\`bash
+workon sitepadrao && nvm use v22.13.1
+\`\`\`
+```
+
+### Exemplo de uso
+
+Quando a IA precisar executar comandos Python ou npm, ela irá:
+
+1. Verificar se `.github/copilot-local.md` existe
+2. Se existir, usar os comandos configurados
+3. Se não existir, perguntar seus comandos de ambiente e criar o arquivo automaticamente
+
+Isso garante que o projeto funcione em qualquer máquina sem hardcoded de comandos específicos.
+
+### Configurações principais
+
+O arquivo `.github/copilot-instructions.md` configura a IA para:
+
+- ✅ Sempre verificar código duplicado antes de criar funções
+- ✅ Criar testes para todas as novas funcionalidades
+- ✅ Usar `core.utils_test.ensure_root_page()` em testes
+- ✅ Seguir padrões de migrations do Wagtail
+- ✅ Perguntar antes de gerar documentação
+- ✅ Normalizar locales em testes (pt-br → pt)
+- ✅ Usar padrão de commits semântico (feat:, fix:, refactor:, etc.)
+
+Para mais detalhes, consulte o arquivo `.github/copilot-instructions.md`.
 
 # Next steps
 
