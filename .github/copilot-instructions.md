@@ -58,6 +58,19 @@ site-padrao/
 - ✅ Normalizar locales nos testes: usar `get_supported_content_language_variant('pt-br')` retorna `'pt'`
 - ✅ Inicializar `root.numchild = 0` em testes do Wagtail
 - ✅ Sempre usar `root.refresh_from_db()` após operações de página
+- ⚠️ **IMPORTANTE**: Ao modificar funcionalidades existentes, ATUALIZAR os testes para refletir o novo comportamento
+- ❌ NUNCA alterar o código de produção para fazer os testes passarem - ajuste os testes para validar o comportamento correto
+- ✅ Testes devem validar o comportamento atual do código, não o comportamento antigo
+- ✅ Quando hooks/signals alteram dados automaticamente, os testes devem verificar os dados APÓS o processamento
+- ✅ Usar métodos de teste apropriados:
+  - `assertEqual()` para valores exatos
+  - `assertIn()` para verificar se substring existe
+  - `assertTrue()/assertFalse()` para condições booleanas
+  - `assertRaises()` para verificar exceções
+- ✅ Nomenclatura de testes: `test_<funcionalidade>_<cenario>` (ex: `test_titulo_agenda_recorrente_com_data`)
+- ✅ Cobertura mínima: 70% de code coverage
+- ✅ Testes de integração para fluxos completos (create → publish → verify)
+- ✅ Testes unitários para funções helper isoladas
 
 ### 3. **Wagtail - Boas Práticas**
 - ✅ Herdar de `PageSitePadrao` para páginas customizadas (já tem SEO, imagem destaque, descrição)
@@ -438,6 +451,357 @@ coverage run --source='.' manage.py test --keepdb
 - [ ] Verificar se não quebrou outros apps
 - [ ] Criar commit descritivo
 - [ ] **Perguntar antes de gerar documentação**
+
+## Estrutura e Boas Práticas de Testes
+
+### 8.1 Quando Criar Testes
+- ✅ **SEMPRE** criar testes para:
+  - Novas funcionalidades (models, views, hooks, templatetags)
+  - Correções de bugs (teste deve falhar sem o fix, passar com o fix)
+  - Modificações em hooks do Wagtail (after_create_page, after_publish_page, etc.)
+  - Alterações em lógica de negócio (recorrência, agendamento, permissões)
+  - Novos métodos em models (get_*, save, clean, etc.)
+  - APIs e serializers
+  - Utilitários e helpers
+
+### 8.2 Estrutura de Arquivos de Teste
+```
+app/
+├── tests.py              # Testes gerais (se único arquivo)
+├── test_models.py        # Testes de models
+├── test_views.py         # Testes de views
+├── test_wagtail_hooks.py # Testes de hooks do Wagtail
+├── test_templatetags.py  # Testes de templatetags
+└── test_utils.py         # Testes de utilitários
+```
+
+### 8.3 Nomenclatura de Testes
+- Padrão: `test_<funcionalidade>_<cenario>_<resultado_esperado>`
+- Exemplos:
+  - `test_titulo_agenda_recorrente_com_data`
+  - `test_slug_agenda_normal_nao_modificado`
+  - `test_hook_publish_apenas_agenda_recorrente`
+  - `test_validacao_data_fim_maior_que_inicio`
+
+### 8.4 Estrutura de Classe de Teste
+
+```python
+from django.test import TestCase, RequestFactory
+from django.contrib.messages.storage.fallback import FallbackStorage
+from wagtail.models import Locale
+from core.utils_test import ensure_root_page
+from .models import MeuModel
+
+class MeuModelTestCase(TestCase):
+    """Testes para MeuModel."""
+    
+    @classmethod
+    def setUpTestData(cls):
+        """Setup executado uma vez para toda a classe."""
+        # Setup de dados compartilhados
+        cls.root_page = ensure_root_page()
+        cls.root_page.numchild = 0  # Wagtail treebeard
+        cls.root_page.save()
+        cls.root_page.refresh_from_db()
+        
+        cls.locale = Locale.get_default()
+    
+    def setUp(self):
+        """Setup executado antes de cada teste."""
+        # Setup específico por teste
+        self.factory = RequestFactory()
+        self.root_page.refresh_from_db()
+    
+    def test_funcionalidade_basica(self):
+        """Testa comportamento básico."""
+        # Arrange (preparar)
+        obj = MeuModel.objects.create(titulo="Teste")
+        
+        # Act (executar)
+        resultado = obj.get_titulo_formatado()
+        
+        # Assert (verificar)
+        self.assertEqual(resultado, "TESTE")
+```
+
+### 8.5 Testes de Hooks do Wagtail
+
+```python
+from django.test import TestCase, RequestFactory
+from django.contrib.messages.storage.fallback import FallbackStorage
+from wagtail.models import Page
+from core.utils_test import ensure_root_page
+from .wagtail_hooks import (
+    do_after_minha_page_create,
+    do_after_minha_page_publish,
+    atualizar_minha_funcionalidade,
+)
+from .models import MinhaPage
+
+class WagtailHooksTestCase(TestCase):
+    """Testes para hooks do Wagtail."""
+    
+    @classmethod
+    def setUpTestData(cls):
+        cls.root_page = ensure_root_page()
+        cls.root_page.numchild = 0
+        cls.root_page.save()
+        cls.root_page.refresh_from_db()
+        
+        cls.factory = RequestFactory()
+    
+    def setUp(self):
+        self.root_page.refresh_from_db()
+    
+    def _create_request_with_messages(self):
+        """Helper para criar request com sistema de mensagens."""
+        request = self.factory.post('/')
+        setattr(request, 'session', {})
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+        return request
+    
+    def test_hook_create_modifica_titulo(self):
+        """Hook after_create deve modificar título automaticamente."""
+        # Arrange
+        request = self._create_request_with_messages()
+        page = MinhaPage(
+            title="Título Original",
+            slug="titulo-original",
+        )
+        self.root_page.add_child(instance=page)
+        page.save()
+        
+        # Act
+        do_after_minha_page_create(request, page)
+        page.refresh_from_db()
+        
+        # Assert
+        self.assertIn("Título Original", page.title)
+        # Verificar modificação específica do hook
+        self.assertTrue(page.title.endswith("- Modificado"))
+    
+    def test_hook_publish_apenas_quando_condicao_ativada(self):
+        """Hook after_publish deve processar apenas quando condição ativa."""
+        # Arrange
+        request = self._create_request_with_messages()
+        page = MinhaPage(
+            title="Teste",
+            condicao_ativada=False,  # Condição desativada
+        )
+        self.root_page.add_child(instance=page)
+        titulo_original = page.title
+        
+        # Act
+        do_after_minha_page_publish(request, page)
+        page.refresh_from_db()
+        
+        # Assert - título NÃO deve mudar
+        self.assertEqual(page.title, titulo_original)
+```
+
+### 8.6 Asserções Comuns
+
+```python
+# Igualdade exata
+self.assertEqual(valor, esperado)
+self.assertNotEqual(valor, nao_esperado)
+
+# Substring/Contém
+self.assertIn("substring", string_completa)
+self.assertNotIn("ausente", string_completa)
+
+# Booleanos
+self.assertTrue(condicao)
+self.assertFalse(condicao)
+self.assertIsNone(valor)
+self.assertIsNotNone(valor)
+
+# Exceções
+with self.assertRaises(ValueError):
+    funcao_que_deve_falhar()
+
+# Querysets/Listas
+self.assertEqual(len(lista), 3)
+self.assertQuerySetEqual(qs, esperado, transform=str)
+
+# HTTP Responses
+self.assertEqual(response.status_code, 200)
+self.assertContains(response, "texto esperado")
+self.assertTemplateUsed(response, "template.html")
+```
+
+### 8.7 Boas Práticas
+
+**✅ FAZER:**
+- Usar `setUpTestData` para dados compartilhados (mais rápido)
+- Usar `setUp` para estado que muda entre testes
+- Um teste deve testar UMA funcionalidade
+- Testes devem ser independentes (ordem não importa)
+- Usar `--keepdb` para testes mais rápidos durante desenvolvimento
+- Nomear testes descritivamente (nome deve explicar o que testa)
+- Sempre fazer `page.refresh_from_db()` após hooks/signals modificarem dados
+- Testar casos de sucesso E casos de erro
+- Validar mensagens de erro/sucesso quando aplicável
+
+**❌ EVITAR:**
+- Testes que dependem de ordem de execução
+- Testes que modificam dados de `setUpTestData`
+- Múltiplas asserções não relacionadas no mesmo teste
+- Alterar código de produção para fazer teste passar (ajustar o teste!)
+- Ignorar warnings e skipped tests sem investigar
+- Duplicar código de setup entre arquivos de teste (usar `core.utils_test`)
+
+### 8.8 Coverage e Qualidade
+
+```bash
+# Rodar testes com coverage
+coverage run --source='.' manage.py test --keepdb
+
+# Ver relatório no terminal
+coverage report
+
+# Gerar relatório HTML detalhado
+coverage html
+# Abrir htmlcov/index.html no navegador
+
+# Rodar testes de um app específico
+python manage.py test agenda --keepdb
+
+# Rodar uma classe de teste específica
+python manage.py test agenda.test_wagtail_hooks.WagtailHooksTestCase --keepdb
+
+# Rodar um teste específico
+python manage.py test agenda.test_wagtail_hooks.WagtailHooksTestCase.test_titulo_com_data --keepdb
+```
+
+**Metas de Coverage:**
+- Mínimo aceitável: 70%
+- Recomendado: 80%+
+- Crítico (hooks, APIs, lógica negócio): 90%+
+
+### 8.9 Testes de Integração vs Unitários
+
+**Testes Unitários:**
+- Testam uma função/método isoladamente
+- Rápidos e focados
+- Usam mocks para dependências externas
+- Exemplo: testar função `get_titulo_formatado()`
+
+**Testes de Integração:**
+- Testam fluxo completo (create → publish → verify)
+- Incluem interação entre components
+- Verificam comportamento end-to-end
+- Exemplo: criar página → hook modifica → publicar → verificar resultado
+
+**Ambos são importantes!** Use testes unitários para helpers e testes de integração para fluxos de usuário.
+
+### 8.10 Exemplo Completo
+
+```python
+from django.test import TestCase, RequestFactory
+from django.contrib.messages.storage.fallback import FallbackStorage
+from wagtail.models import Locale
+from core.utils_test import ensure_root_page
+from agenda.models import AgendaDoDiaPage, AgendaPage
+from agenda.wagtail_hooks import do_after_agendadodia_page_publish
+
+class AgendaRecorrenteTestCase(TestCase):
+    """Testes para agenda com recorrência."""
+    
+    @classmethod
+    def setUpTestData(cls):
+        """Setup de dados compartilhados."""
+        cls.root_page = ensure_root_page()
+        cls.root_page.numchild = 0
+        cls.root_page.save()
+        cls.root_page.refresh_from_db()
+        
+        cls.factory = RequestFactory()
+        
+        # Parent page
+        cls.agenda_parent = AgendaPage(
+            title="Agenda Hooks Test",
+            slug="agenda-hooks",
+        )
+        cls.root_page.add_child(instance=cls.agenda_parent)
+        cls.agenda_parent.save_revision().publish()
+    
+    def setUp(self):
+        """Setup por teste."""
+        self.root_page.refresh_from_db()
+        self.agenda_parent.refresh_from_db()
+    
+    def _create_request(self):
+        """Helper: criar request com mensagens."""
+        request = self.factory.post('/')
+        setattr(request, 'session', {})
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+        return request
+    
+    def test_fluxo_completo_agenda_recorrente_semanal(self):
+        """Teste de integração: criar → publicar → verificar título/slug."""
+        # Arrange
+        request = self._create_request()
+        agenda = AgendaDoDiaPage(
+            title="Reunião Especial",
+            slug="reuniao-especial",
+            data_inicio="2024-11-11",
+            habilitar_recorrencia=True,
+            tipo_recorrencia="semanal",
+        )
+        self.agenda_parent.add_child(instance=agenda)
+        
+        # Act
+        do_after_agendadodia_page_publish(request, agenda)
+        agenda.refresh_from_db()
+        
+        # Assert
+        self.assertIn("Agenda Hooks Test", agenda.title)
+        self.assertIn("Reunião Especial", agenda.title)
+        self.assertIn("Agenda Recorrente Semanal", agenda.title)
+        self.assertIn("11 de novembro", agenda.title)  # Data no título
+        
+        self.assertIn("recorrente", agenda.slug)
+        self.assertIn("semanal", agenda.slug)
+        self.assertIn("2024-11-11", agenda.slug)
+    
+    def test_agenda_normal_nao_modificada(self):
+        """Agenda sem recorrência deve manter título/slug originais."""
+        # Arrange
+        request = self._create_request()
+        agenda = AgendaDoDiaPage(
+            title="Evento Normal",
+            slug="evento-normal",
+            data_inicio="2024-11-15",
+            habilitar_recorrencia=False,  # SEM recorrência
+        )
+        self.agenda_parent.add_child(instance=agenda)
+        titulo_original = agenda.title
+        slug_original = agenda.slug
+        
+        # Act
+        do_after_agendadodia_page_publish(request, agenda)
+        agenda.refresh_from_db()
+        
+        # Assert - NÃO deve modificar
+        self.assertEqual(agenda.title, titulo_original)
+        self.assertEqual(agenda.slug, slug_original)
+```
+
+### 8.11 Checklist de Teste para Nova Feature
+
+- [ ] Testado cenário de sucesso principal
+- [ ] Testado casos de erro/exceção
+- [ ] Testado condições de contorno (None, vazio, valores extremos)
+- [ ] Testado com diferentes locales se aplicável
+- [ ] Hooks testados em create E publish
+- [ ] Verificado comportamento quando condição desativada
+- [ ] Usado `refresh_from_db()` após modificações de hook
+- [ ] Mensagens de erro/sucesso validadas
+- [ ] Coverage mínimo 70% atingido
+- [ ] Todos os testes passando: `python manage.py test <app> --keepdb`
 
 ## Observações Importantes
 
