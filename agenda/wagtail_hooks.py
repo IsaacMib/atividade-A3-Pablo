@@ -110,15 +110,13 @@ def processar_erro_agenda(e):
 def do_after_agendadodia_page_create(request, page):
     """Hook executado após criar uma nova página de agenda."""
     if isinstance(page, AgendaDoDiaPage):
-        parent_page = page.get_parent()
-        if parent_page:
-            # Verificar se já foi processado para evitar duplicação
-            if parent_page.title in page.slug and ("recorrente" in page.slug or page.date.strftime('%Y-%m-%d') in page.slug):
+        # Processar apenas agendas recorrentes
+        if page.habilitar_recorrencia and page.tipo_recorrencia != 'none':
+            parent_page = page.get_parent()
+            if not parent_page:
                 return
             
-            # Processar apenas agendas recorrentes
-            if page.habilitar_recorrencia and page.tipo_recorrencia != 'none':
-                # Atualizar título e slug para agenda recorrente
+            # Atualizar título e slug para agenda recorrente
                 atualizar_titulo_slug_agenda_recorrente(page, parent_page, is_new=True)
             
                 try:
@@ -151,23 +149,21 @@ def do_after_agendadodia_page_create(request, page):
 def do_after_agendadodia_page_publish(request, page):
     """Hook executado após publicar/atualizar uma página de agenda existente."""
     if isinstance(page, AgendaDoDiaPage):
-        parent_page = page.get_parent()
-        if parent_page:
-            # Verificar se já foi processado para evitar duplicação
-            if parent_page.title in page.slug and ("recorrente" in page.slug or page.date.strftime('%Y-%m-%d') in page.slug):
+        # Processar apenas agendas recorrentes
+        if page.habilitar_recorrencia and page.tipo_recorrencia != 'none':
+            parent_page = page.get_parent()
+            if not parent_page:
                 return
             
-            # Processar apenas agendas recorrentes
-            if page.habilitar_recorrencia and page.tipo_recorrencia != 'none':
-                # Atualizar título e slug (removerá sufixos antigos se existirem)
-                atualizar_titulo_slug_agenda_recorrente(page, parent_page, is_new=False)
+            # Atualizar título e slug (removerá sufixos antigos se existirem)
+            atualizar_titulo_slug_agenda_recorrente(page, parent_page, is_new=False)
             
-                try:
-                    new_revision = page.save_revision()
-                    if page.live:
-                        # Ensure that the updated title is on the published version
-                        new_revision.publish()
-                        
-                except Exception as e:
-                    error_message = processar_erro_agenda(e)
-                    messages.error(request, error_message)
+            try:
+                new_revision = page.save_revision()
+                if page.live:
+                    # Ensure that the updated title is on the published version
+                    new_revision.publish()
+                    
+            except Exception as e:
+                error_message = processar_erro_agenda(e)
+                messages.error(request, error_message)
