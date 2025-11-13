@@ -29,5 +29,9 @@ frontend/sprite/sprite.png
 frontend/css/sprite.scss
 media/
 
+# Diretórios criados por testes
+test-media/
+test-static/
+
 # Configurações locais do desenvolvedor
 .github/copilot-local.md
