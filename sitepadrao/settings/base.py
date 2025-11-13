@@ -54,7 +54,6 @@ INTERNAL_IPS = [
 
 INSTALLED_APPS = [
     "paginas",
-    "paginas_codata",
 
     "home",
     "search",
