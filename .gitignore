@@ -28,7 +28,6 @@ theme/static/
 frontend/sprite/sprite.png
 frontend/css/sprite.scss
 media/
-.tool-versions
 
 # Configurações locais do desenvolvedor
 .github/copilot-local.md

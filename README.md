@@ -1,177 +1,362 @@
 [Figma](https://www.figma.com/design/vn4GGPjxav6O2EymXV1GLf/Portal-Edu?node-id=14-2&t=JLNz6Ic3FyZ1IXyQ-1)
 
-# Wagtail demo project
+# Site Padrão CODATA-PB
 
-This is a demonstration project for the amazing [Wagtail CMS](https://github.com/wagtail/wagtail).
+Sistema de gerenciamento de conteúdo (CMS) baseado em [Wagtail](https://github.com/wagtail/wagtail) para criação de portais governamentais padronizados.
 
-The demo site is designed to provide examples of common features and recipes to introduce you to Wagtail development. Beyond the code, it will also let you explore the admin / editorial interface of the CMS.
+## Sobre o Projeto
 
-Note we do _not_ recommend using this project to start your own site - the demo is intended to be a springboard to get you started. Feel free to copy code from the demo into your own project.
+Este projeto foi desenvolvido para facilitar a criação e manutenção de portais institucionais do governo da Paraíba, oferecendo:
 
-### Wagtail Features Demonstrated in This Demo
+- **Backend**: Django 5.1.x + Wagtail 7.x (Python 3.12+)
+- **Frontend**: JavaScript/Webpack (ES6+, Babel, Jest)
+- **Banco de Dados**: PostgreSQL (produção), SQLite (desenvolvimento/testes)
+- **Apps principais**:
+  - `agenda/` - Agendas e eventos com suporte a recorrência
+  - `noticias/` - Notícias com categorias, tags e slideshow
+  - `institucional/` - Páginas institucionais
+  - `blocks/` - Blocos Wagtail reutilizáveis
+  - `core/` - Configurações centrais e utilitários
 
-This demo is aimed primarily at developers wanting to learn more about the internals of Wagtail, and assumes you'll be reading its source code. After browsing the features, pay special attention to code we've used for:
+**Índice**
 
-- Dividing a project up into multiple apps
-- Custom content models and "contexts" in the "breads" and "locations" apps
-- A typical weblog in the "blog" app
-- Example of using a "base" app to contain misc additional functionality (e.g. Contact Form, About, etc.)
-- "StandardPage" model using mixins borrowed from other apps
-- Example of customizing the Wagtail Admin via _wagtail_hooks_
-- Example of using the Wagtail "snippets" system to represent bread categories, countries and ingredients
-- Example of a custom "Galleries" feature that pulls in images used in other content types in the system
-- Example of creating ManyToMany relationships via the Ingredients feature on BreadPage
-- Lots more
+- [Instalação](#instalação)
+  - [Setup com Docker](#setup-com-docker)
+  - [Setup com Virtualenv](#setup-com-virtualenv)
+    - [Gerenciamento de versões com asdf](#alternativa-recomendada-asdf-gerenciador-universal-de-versões)
+    - [Gerenciamento de versões com NVM](#gerenciamento-de-versão-do-nodejs)
+- [Configuração do GitHub Copilot](#configuração-do-github-copilot)
+- [Desenvolvimento](#desenvolvimento)
+- [Testes](#testes)
+- [Contribuindo](#contribuindo)
 
-**Document contents**
+# Instalação
 
-- [Installation](#installation)
-- [GitHub Copilot Configuration](#github-copilot-configuration)
-- [Next steps](#next-steps)
-- [Contributing](#contributing)
-- [Other notes](#other-notes)
+Escolha o método de instalação que preferir:
 
-# Installation
+- [Setup com Docker](#setup-com-docker) - Recomendado para começar rapidamente
+- [Setup com Virtualenv](#setup-com-virtualenv) - Para desenvolvimento local tradicional
 
-- [Gitpod](#setup-with-gitpod)
-- [Vagrant](#setup-with-vagrant)
-- [Docker](#setup-with-docker)
-- [Virtualenv](#setup-with-virtualenv)
+## Setup com Docker
 
-If you want to see what Wagtail is all about, we suggest trying it out through [Gitpod](#setup-with-gitpod).
-If you want to set up Wagtail locally instead, and you're new to Python and/or Django, we suggest you run this project on a Virtual Machine using [Vagrant](#setup-with-vagrant) or [Docker](#setup-with-docker) (whichever you're most comfortable with). Both Vagrant and Docker will help resolve common software dependency issues.
-Developers more familiar with virtualenv and traditional Django app setup instructions should skip to [Setup with virtualenv](#setup-with-virtualenv).
-
-## Setup with Gitpod
-
-Set up a development environment and run this demo website with a single click (requires a Github account):
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/wagtail/sitepadrao/)
-
-Once Gitpod has fully started, and a preview of the bakery website has appeared in the "Simple Browser" panel, click the arrow button to the right of the URL bar to open the website in a new tab.
-Go to `/admin/` and login with `admin / changeme`.
-
-## Setup with Vagrant
-
-#### Dependencies
-
-- [Vagrant](https://www.vagrantup.com/)
-- [Virtualbox](https://www.virtualbox.org/)
-
-#### Installation
-
-Once you've installed the necessary dependencies run the following commands:
-
-```bash
-git clone https://github.com/wagtail/sitepadrao.git
-cd sitepadrao
-vagrant up
-vagrant ssh
-# then, within the SSH session:
-./manage.py runserver 0.0.0.0:8000
-```
-
-The demo site will now be accessible at [http://localhost:8000/](http://localhost:8000/) and the Wagtail admin
-interface at [http://localhost:8000/admin/](http://localhost:8000/admin/).
-
-Log into the admin with the credentials `admin / changeme`.
-
-Use `Ctrl+c` to stop the local server. To stop the Vagrant environment, run `exit` then `vagrant halt`.
-
-## Setup with Docker
-
-#### Dependencies
+### Dependências
 
 - [Docker](https://docs.docker.com/engine/installation/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
-### Installation
+### Instalação
 
-Run the following commands:
+Execute os seguintes comandos:
 
 ```bash
-git clone https://github.com/wagtail/bakerydemo.git --config core.autocrlf=input
-cd bakerydemo
+git clone <url-do-repositorio>
+cd site-padrao
 docker compose up --build -d
 ```
 
-After this command completes and returns to the command prompt, wait 10 more seconds for the database setup to complete. Then run:
+Após o comando completar, aguarde cerca de 10 segundos para o setup do banco de dados. Então execute:
 
 ```bash
 docker compose run app /venv/bin/python manage.py migrate
-docker compose run app /venv/bin/python manage.py load_initial_data
+docker compose run app /venv/bin/python manage.py createsuperuser
 ```
-If this fails with a database error, wait 10 more seconds and re-try. Finally, run:
+
+Se falhar com erro de banco de dados, aguarde mais 10 segundos e tente novamente. Finalmente, execute:
 
 ```bash
 docker compose up
 ```
 
-The demo site will now be accessible at [http://localhost:8000/](http://localhost:8000/) and the Wagtail admin
-interface at [http://localhost:8000/admin/](http://localhost:8000/admin/).
+O site estará acessível em [http://localhost:8000/](http://localhost:8000/) e a interface admin do Wagtail em [http://localhost:8000/admin/](http://localhost:8000/admin/).
 
-Log into the admin with the credentials `admin / changeme`.
-
-**Important:** This `docker-compose.yml` is configured for local testing only, and is _not_ intended for production use.
+**Importante:** Este `docker-compose.yml` é configurado para testes locais apenas, e _não_ é destinado para uso em produção.
 
 ### Debugging
 
-To tail the logs from the Docker containers in realtime, run:
+Para acompanhar os logs dos containers Docker em tempo real, execute:
 
 ```bash
 docker compose logs -f
 ```
 
-## Setup with Virtualenv
+## Setup com Virtualenv
 
-You can run the Wagtail demo locally without setting up Vagrant or Docker and simply use Virtualenv, which is the [recommended installation approach](https://docs.djangoproject.com/en/3.2/topics/install/#install-the-django-code) for Django itself.
+Você pode executar o projeto localmente sem Docker usando Virtualenv, que é a [abordagem de instalação recomendada](https://docs.djangoproject.com/en/stable/topics/install/#install-the-django-code) para o próprio Django.
 
-#### Dependencies
+### Dependências
 
-- Python 3.10, 3.11, 3.12 or 3.13
+- Python 3.12+
+- Node.js v22.13.1+
+- PostgreSQL (produção) ou SQLite (desenvolvimento)
 - [Virtualenv](https://virtualenv.pypa.io/en/stable/installation.html)
-- [VirtualenvWrapper](https://virtualenvwrapper.readthedocs.io/en/latest/install.html) (optional)
+- [VirtualenvWrapper](https://virtualenvwrapper.readthedocs.io/en/latest/install.html) (opcional)
 
-### Installation
+#### Gerenciamento de Ambiente Python
 
-With [PIP](https://github.com/pypa/pip) and [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/)
-installed, run:
+Você pode usar diferentes ferramentas para gerenciar ambientes Python:
+- [Virtualenv](https://virtualenv.pypa.io/en/stable/installation.html) + [VirtualenvWrapper](https://virtualenvwrapper.readthedocs.io/en/latest/install.html) (recomendado)
+- [Conda](https://docs.conda.io/en/latest/)
+- [Pyenv](https://github.com/pyenv/pyenv) com [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv)
+- [Poetry](https://python-poetry.org/)
+
+#### Instalação do Node.js
+
+O Node.js é necessário para compilar e executar o código frontend do projeto (JavaScript, CSS, etc.).
+
+**Opção 1: Instalação Direta**
+
+A forma mais simples é baixar e instalar diretamente do site oficial:
+
+**Linux (Ubuntu/Debian):**
 ```bash
-mkvirtualenv wagtailbakerydemo
+# Usando NodeSource para versão específica
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Verifique a instalação
+node --version
+npm --version
+```
+
+**macOS:**
+```bash
+# Usando Homebrew
+brew install node@22
+
+# Ou baixe o instalador do site oficial
+# https://nodejs.org/
+```
+
+**Windows:**
+- Baixe o instalador (.msi) do [site oficial do Node.js](https://nodejs.org/)
+- Execute o instalador e siga as instruções
+- Reinicie o terminal após a instalação
+
+**Verificação da instalação:**
+```bash
+node --version  # Deve mostrar v22.x.x
+npm --version   # Deve mostrar 10.x.x ou superior
+```
+
+**⚠️ Limitação:** A instalação direta instala apenas uma versão do Node.js. Se você precisa trabalhar com múltiplos projetos que usam versões diferentes, use um gerenciador de versões (veja abaixo).
+
+#### Gerenciamento de Versão do Node.js
+
+Se você trabalha com múltiplos projetos ou precisa de flexibilidade para trocar entre versões do Node.js, use um gerenciador de versões:
+
+**Recomendado: NVM (Node Version Manager)**
+
+O NVM permite instalar e alternar entre diferentes versões do Node.js facilmente.
+
+**Instalação do NVM (Linux/macOS):**
+
+```bash
+# Instale o NVM
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+
+# Recarregue o shell
+source ~/.bashrc  # ou ~/.zshrc se usar zsh
+
+# Verifique a instalação
+nvm --version
+```
+
+**Instalação do Node.js com NVM:**
+
+```bash
+# Instale a versão específica do projeto
+nvm install 22.13.1
+
+# Use a versão instalada
+nvm use 22.13.1
+
+# Defina como versão padrão (opcional)
+nvm alias default 22.13.1
+
+# Verifique a versão ativa
+node --version  # Deve mostrar v22.13.1
+npm --version
+```
+
+**Dica:** O projeto contém um arquivo `.nvmrc` na raiz. Ao entrar na pasta do projeto, você pode simplesmente executar:
+
+```bash
+cd site-padrao
+nvm use
+```
+
+E o NVM automaticamente usará a versão correta do Node.js especificada no arquivo.
+
+**Alternativa Recomendada: asdf (Gerenciador Universal de Versões)**
+
+O [asdf](https://asdf-vm.com/) é um gerenciador de versões universal que permite gerenciar Python, Node.js e outras linguagens com uma única ferramenta.
+
+**Instalação do asdf (Linux/macOS):**
+
+```bash
+# Clone o repositório do asdf
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
+
+# Adicione ao seu shell (escolha um)
+# Para bash:
+echo '. "$HOME/.asdf/asdf.sh"' >> ~/.bashrc
+echo '. "$HOME/.asdf/completions/asdf.bash"' >> ~/.bashrc
+# Para zsh:
+echo '. "$HOME/.asdf/asdf.sh"' >> ~/.zshrc
+echo 'fpath=(${ASDF_DIR}/completions $fpath)' >> ~/.zshrc
+echo 'autoload -Uz compinit && compinit' >> ~/.zshrc
+
+# Recarregue o shell
+source ~/.bashrc  # ou ~/.zshrc
+
+# Verifique a instalação
+asdf --version
+```
+
+**Instalação dos plugins e versões:**
+
+```bash
+# Adicione os plugins necessários
+asdf plugin add python
+asdf plugin add nodejs
+
+# Instale as versões específicas do projeto
+asdf install python 3.12.0
+asdf install nodejs 22.13.1
+
+# Defina as versões globalmente (opcional)
+asdf global python 3.12.0
+asdf global nodejs 22.13.1
+
+# Ou use as versões definidas no arquivo .tool-versions do projeto
+cd site-padrao
+asdf install  # Instala todas as versões do .tool-versions
+
+# Verifique as versões ativas
 python --version
+node --version
 ```
 
-Confirm that this is showing a compatible version of Python 3.x. If not, and you have multiple versions of Python installed on your system, you may need to specify the appropriate version when creating the virtualenv:
-```bash
-deactivate
-rmvirtualenv wagtailbakerydemo
-mkvirtualenv wagtailbakerydemo --python=python3.12
-python --version
-```
+**Dica:** O projeto contém um arquivo `.tool-versions` na raiz. Ao entrar na pasta do projeto após instalar o asdf, as versões corretas serão automaticamente ativadas!
 
-Now we're ready to set up the bakery demo project itself:
-```bash
-cd ~/dev [or your preferred dev directory]
-git clone https://github.com/wagtail/bakerydemo.git
-cd bakerydemo
-pip install -r requirements/development.txt
-```
+**Outras Alternativas:**
 
-Next, we need to create the files `.env` and `bakerydemo/settings/local.py`, which provide a place for local configuration settings that need to be kept outside of version control. No such settings are required for a standard installation, but warnings will be displayed if these files are not present:
+- **Instalação direta do Node.js:** Baixe do [site oficial](https://nodejs.org/) (menos flexível para múltiplas versões)
+- **n (Node version manager):** Alternativa mais simples ao NVM
+  ```bash
+  npm install -g n
+  n 22.13.1
+  ```
+
+### Instalação
+
+#### Opção 1: Usando asdf (Recomendado para gerenciar Python + Node.js)
+
 ```bash
-cp bakerydemo/settings/local.py.example bakerydemo/settings/local.py
+# Clone o repositório
+git clone <url-do-repositorio>
+cd site-padrao
+
+# O asdf lerá o arquivo .tool-versions e ativará as versões corretas automaticamente
+# Se ainda não instalou as versões, execute:
+asdf install
+
+# Verifique as versões
+python --version  # Deve ser 3.12.0
+node --version    # Deve ser v22.13.1
+
+# Instale as dependências backend
+pip install -r requirements.txt
+
+# Instale as dependências frontend
+npm install
+
+# Configure o arquivo de ambiente (se necessário)
 cp .env.example .env
-# `cp` is used for bash. Windows Command Prompt uses `copy`
+# Edite .env com suas configurações
+
+# Execute as migrations
+python manage.py migrate
+
+# Crie um superusuário
+python manage.py createsuperuser
+
+# Build do frontend
+npm run build
+
+# Inicie o servidor de desenvolvimento
+python manage.py runserver
 ```
 
-To set up your database and load initial data, run the following commands:
+#### Opção 2: Usando Virtualenv + NVM (Tradicional)
+
 ```bash
-./manage.py migrate
-npm run watch
-./manage.py runserver
+# Clone o repositório
+git clone <url-do-repositorio>
+cd site-padrao
+
+# Configure o ambiente Python (escolha uma opção)
+# Opção A: virtualenvwrapper
+mkvirtualenv sitepadrao
+# Opção B: venv nativo
+python -m venv venv && source venv/bin/activate
+# Opção C: conda
+conda create -n sitepadrao python=3.12 && conda activate sitepadrao
+# Opção D: pyenv
+pyenv virtualenv 3.12.0 sitepadrao && pyenv activate sitepadrao
+
+# Verifique a versão do Python
+python --version  # Deve ser 3.12+
+
+# Configure Node.js (escolha uma opção)
+# Opção A: NVM (usa a versão do .nvmrc automaticamente)
+nvm use
+# Opção B: NVM com versão específica
+nvm use 22.13.1
+# Opção C: Se instalou Node.js globalmente
+node --version  # Verifique se é 22.x
+
+# Instale as dependências backend
+pip install -r requirements.txt
+
+# Instale as dependências frontend
+npm install
+
+# Configure o arquivo de ambiente (se necessário)
+cp .env.example .env
+# Edite .env com suas configurações
+
+# Execute as migrations
+python manage.py migrate
+
+# Crie um superusuário
+python manage.py createsuperuser
+
+# Build do frontend
+npm run build
+
+# Inicie o servidor de desenvolvimento
+python manage.py runserver
 ```
 
-Log into the admin with the credentials `admin / changeme`.
+O site estará acessível em [http://localhost:8000/](http://localhost:8000/) e a interface admin em [http://localhost:8000/admin/](http://localhost:8000/admin/).
+
+### 7. Compile os assets do frontend
+
+```bash
+npm run build
+```
+
+### 8. Execute o servidor de desenvolvimento
+
+```bash
+python manage.py runserver
+```
+
+Acesse:
+- Site: [http://localhost:8000/](http://localhost:8000/)
+- Admin: [http://localhost:8000/admin/](http://localhost:8000/admin/)
+
 
 # GitHub Copilot Configuration
 
@@ -241,101 +426,141 @@ O arquivo `.github/copilot-instructions.md` configura a IA para:
 
 Para mais detalhes, consulte o arquivo `.github/copilot-instructions.md`.
 
-# Next steps
+# Desenvolvimento
 
-Hopefully after you've experimented with the demo you'll want to create your own site. To do that you'll want to run the `wagtail start` command in your environment of choice. You can find more information in the [getting started Wagtail CMS docs](https://docs.wagtail.org/en/stable/getting_started/index.html).
+## Estrutura do Projeto
 
-# Contributing
-
-If you're a Python or Django developer, fork the repo and get stuck in! If you'd like to get involved you may find our [contributing guidelines](https://github.com/wagtail/bakerydemo/blob/master/contributing.md) a useful read.
-
-### Preparing this archive for distribution
-
-If you change content or images in this repo and need to prepare a new fixture file for export, do the following on a branch:
-
-```bash
-./manage.py dumpdata --natural-foreign --indent 2 -e auth.permission -e contenttypes -e wagtailcore.GroupCollectionPermission -e wagtailimages.rendition -e sessions -e wagtailsearch.indexentry -e wagtailsearch.sqliteftsindexentry -e wagtailcore.referenceindex -e wagtailcore.pagesubscription > bakerydemo/base/fixtures/bakerydemo.json
-prettier --write bakerydemo/base/fixtures/bakerydemo.json
+```
+site-padrao/
+├── frontend/              # JavaScript/CSS (Webpack, Babel, Jest)
+├── agenda/                # Agendas e eventos recorrentes
+├── noticias/              # Notícias, categorias e tags
+├── blocks/                # Blocos Wagtail reutilizáveis
+├── core/                  # Configurações e utilitários
+│   ├── utils.py          # Utilitários de produção
+│   └── utils_test.py     # Utilitários para testes
+├── home/                  # Página inicial
+├── institucional/         # Páginas institucionais
+└── sitepadrao/            # Configurações Django
 ```
 
-Please optimize any included images to 1200px wide with JPEG compression at 60%. Note that `media/images` is ignored in the repo by `.gitignore` but `media/original_images` is not. Wagtail's local image "renditions" are excluded in the fixture recipe above.
+## Comandos Úteis
 
-Make a pull request to https://github.com/wagtail/bakerydemo
+```bash
+# Desenvolvimento
+python manage.py runserver          # Servidor de desenvolvimento
+python manage.py makemigrations     # Criar migrations
+python manage.py migrate            # Aplicar migrations
+python manage.py createsuperuser    # Criar usuário admin
 
-# Other notes
+# Frontend
+npm run build                       # Build de produção
+npm run watch                       # Watch mode para desenvolvimento
+npm test                           # Executar testes Jest
 
-### Local configuration files
+# Validação
+python manage.py check             # Verificar configuração
+```
 
-The `bakerydemo/settings/local.py` file can be used to store local Django settings such as database connection details that need to be kept outside of version control.
+# Testes
 
-Additionally, various settings can be controlled through environment variables. The [django-dotenv](https://github.com/jpadilla/django-dotenv) package is used to load these variables from a `.env` file in the project root.
+## Executando Testes
 
-### Note on demo search
+```bash
+# Todos os testes
+python manage.py test --keepdb
 
-Because we can't (easily) use ElasticSearch for this demo, we use wagtail's native DB search.
-However, native DB search can't search specific fields in our models on a generalized `Page` query.
-So for demo purposes ONLY, we hard-code the model names we want to search into `search.views`, which is
-not ideal. In production, use ElasticSearch and a simplified search query, per
-[https://docs.wagtail.org/en/stable/topics/search/searching.html](https://docs.wagtail.org/en/stable/topics/search/searching.html).
+# Testes de um app específico
+python manage.py test agenda --keepdb
+python manage.py test noticias --keepdb
 
-### Sending email from the contact form
+# Com coverage
+coverage run --source='.' manage.py test --keepdb
+coverage report
+coverage html  # Gera relatório HTML
+```
 
-The following setting in `base.py` and `production.py` ensures that live email is not sent by the demo contact form.
+## Boas Práticas de Testes
 
-`EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'`
+- Usar `ensure_root_page()` de `core.utils_test` para setup
+- Normalizar locale: `pt-br` → `pt`
+- Inicializar `root.numchild = 0`
+- Sempre usar `root.refresh_from_db()` após operações
 
-In production on your own site, you'll need to change this to:
+Veja `.github/copilot-instructions.md` para mais detalhes.
 
-`EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'`
+# Contribuindo
 
-and configure [SMTP settings](https://docs.djangoproject.com/en/3.2/topics/email/#smtp-backend) appropriate for your email provider.
+## Padrão de Commits
 
-### Testing Content-Security-Policy compliance in Wagtail
+Este projeto segue o padrão de commits semântico:
 
-Bakerydemo is set up in such a way that it can be used to test [Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) compatibility in Wagtail. It uses [django-csp](https://django-csp.readthedocs.io/en/latest/index.html) to generate the appropriate [CSP HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy).
+- `feat:` nova funcionalidade
+- `fix:` correção de bug
+- `refactor:` refatoração de código
+- `test:` adição/modificação de testes
+- `docs:` documentação
+- `style:` formatação, ponto e vírgula, etc
+- `chore:` atualização de dependências, configurações
 
-By default, `django-csp` is not enabled since Wagtail isn't fully compatible yet. Set the `CSP_DEFAULT_SRC` environment variable in your `.env` file to set the default policy. An example can be found in `.env.example`.
+Exemplo:
+```bash
+git commit -m "feat: adiciona campo de recorrência em AgendaDoDiaPage
 
-### Testing against different versions of Wagtail
+- Adiciona campos habilitar_recorrencia e tipo_recorrencia
+- Cria método data_aplica_na_recorrencia()
+- Adiciona testes de recorrência
+- Atualiza template para exibir eventos recorrentes"
+```
 
-The `main` branch of this demo is designed to work with both the latest stable release and the latest `main` branch (development version) of Wagtail. To run the demo against a specific version of Wagtail, we have created [git tags](https://github.com/wagtail/bakerydemo/tags) for the latest commits that work with each feature release.
+## Checklist para Pull Requests
 
-- [`v6.2`](https://github.com/wagtail/bakerydemo/releases/tag/v6.2)
-- [`v6.1`](https://github.com/wagtail/bakerydemo/releases/tag/v6.1)
-- [`v6.0`](https://github.com/wagtail/bakerydemo/releases/tag/v6.0)
-- [`v5.2`](https://github.com/wagtail/bakerydemo/releases/tag/v5.2)
+- [ ] Código segue princípios DRY
+- [ ] Testes criados e passando
+- [ ] Migrations criadas e aplicadas
+- [ ] `python manage.py check` sem erros
+- [ ] Coverage mínimo de 70%
+- [ ] Commits seguem padrão semântico
+- [ ] Documentação atualizada se necessário
 
-<details>
+# Configurações
 
-<summary>Older tags</summary>
+## Variáveis de Ambiente
 
-- [`v5.1`](https://github.com/wagtail/bakerydemo/releases/tag/v5.1)
-- [`v5.0`](https://github.com/wagtail/bakerydemo/releases/tag/v5.0)
-- [`v4.2`](https://github.com/wagtail/bakerydemo/releases/tag/v4.2)
-- [`v4.1`](https://github.com/wagtail/bakerydemo/releases/tag/v4.1)
-- [`v4.0`](https://github.com/wagtail/bakerydemo/releases/tag/v4.0)
-- [`v3.0`](https://github.com/wagtail/bakerydemo/releases/tag/v3.0)
-- [`v2.16`](https://github.com/wagtail/bakerydemo/releases/tag/v2.16)
+Copie `.env.example` para `.env` e configure:
 
-</details>
+```bash
+# Django
+SECRET_KEY=your-secret-key
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
 
-The tags point to the last commit just before the requirements were updated to the next Wagtail version. For example, the `v4.2` tag points to the commit just before the bakerydemo was updated to use Wagtail 5.0. This ensures that the tagged demo code contains the latest updates possible for the supported version.
+# Database
+DATABASE_URL=postgresql://user:password@localhost/dbname
+# ou use SQLite para desenvolvimento:
+# DATABASE_URL=sqlite:///db.sqlite3
 
-There were no updates to the demo between Wagtail 4.1 and 4.2, so the `v4.1` and `v4.2` tags point to the same commit.
+# Email (opcional)
+EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+```
 
-### Users included in demo data
+## Configurações de Testes
 
-The demo data includes users with different roles and preferences. You can use these users to quickly test the permission system in Wagtail or how localization is handled in the admin interface.
+Os testes usam configurações específicas em `sitepadrao/settings/testing.py`:
 
-| Username    | Password   | Superuser | Groups     | Preferred language | Timezone      | Active |
-| ----------- | ---------- | --------- | ---------- | ------------------ | ------------- | ------ |
-| `admin`     | `changeme` | Yes       | None       | undefined          | undefined     | Yes    |
-| `editor`    | `changeme` | No        | Editors    | undefined          | undefined     | Yes    |
-| `moderator` | `changeme` | No        | Moderators | undefined          | undefined     | Yes    |
-| `inactive`  | `changeme` | yes       | None       | undefined          | undefined     | No     |
-| `german`    | `changeme` | yes       | None       | German             | Europe/Berlin | Yes    |
-| `arabic`    | `changeme` | yes       | None       | Arabic             | Asia/Beirut   | Yes    |
+- Banco de dados: SQLite in-memory
+- Email: Console backend
+- Debug: False
+- Locale padrão: pt (normalizado de pt-br)
 
-### Ownership of demo content
+# Recursos
 
-All content in the demo is public domain. Textual content in this project is either sourced from Wikimedia (Wikipedia for blog posts, [Wikibooks for recipes](https://en.wikibooks.org/wiki/Cookbook:Table_of_Contents)) or is lorem ipsum. All images are from either Wikimedia Commons or other copyright-free sources.
+## Documentação
+
+- [Documentação oficial do Wagtail](https://docs.wagtail.org/)
+- [Documentação do Django](https://docs.djangoproject.com/)
+- [Configuração do GitHub Copilot](.github/copilot-instructions.md)
+
+## Licença
+
+Este projeto é desenvolvido pela CODATA-PB para uso em portais governamentais da Paraíba.

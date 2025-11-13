@@ -7,15 +7,20 @@ Este é um **projeto Django/Wagtail CMS** para criação de portais governamenta
 - **Backend**: Django 5.1.x + Wagtail 7.x (Python)
 - **Frontend**: JavaScript/Webpack na pasta `frontend/`
 - **Banco de Dados**: PostgreSQL (produção), SQLite (testes)
-- **Ambiente**: Python virtualenv + Node.js
+- **Ambiente**: Python 3.12+ e Node.js v22.13.1+
+- **Gerenciamento de Versões**: asdf (recomendado), NVM, virtualenv, conda, pyenv
 
 > **⚠️ IMPORTANTE - Configuração Local de Ambiente:**
 > 
 > Antes de executar qualquer comando Python ou npm, **SEMPRE pergunte ao usuário**:
 > 1. "Qual comando você usa para ativar o ambiente virtual Python?" 
->    - Exemplos: `workon <nome>`, `source venv/bin/activate`, `conda activate <nome>`, `pyenv activate <nome>`
+>    - Exemplos: `asdf install` (lê `.tool-versions`), `workon <nome>`, `source venv/bin/activate`, `conda activate <nome>`, `pyenv activate <nome>`
 > 2. "Qual comando você usa para ativar a versão do Node.js (se aplicável)?"
->    - Exemplos: `nvm use v22.13.1`, `asdf local nodejs <version>`, ou nenhum se usar versão global
+>    - Exemplos: `asdf install` (gerencia Python + Node.js), `nvm use` (lê `.nvmrc`), `nvm use v22.13.1`, ou nenhum se usar versão global
+> 
+> **Arquivos de Configuração de Versão:**
+> - `.tool-versions` - Configuração do asdf (Python 3.12.0 + Node.js 22.13.1)
+> - `.nvmrc` - Configuração do NVM (Node.js 22)
 > 
 > Após obter as respostas, crie/atualize o arquivo `.github/copilot-local.md` com os comandos específicos.
 > Este arquivo está no `.gitignore` e contém configurações específicas da máquina do desenvolvedor.
@@ -182,7 +187,8 @@ def ensure_root_page():  # Já existe em core.utils_test!
 
 ```bash
 # Ativar ambiente (veja .github/copilot-local.md)
-# Exemplo: workon codataSite && nvm use v22.13.1
+# Exemplo com asdf: asdf install (lê .tool-versions automaticamente)
+# Exemplo com virtualenv + nvm: workon codataSite && nvm use
 
 # Testes
 python manage.py test <app> --keepdb
