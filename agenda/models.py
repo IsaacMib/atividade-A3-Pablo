@@ -23,11 +23,6 @@ class AgendaPage(RoutablePageMixin, PageSitePadrao):
     """
     Página que representa uma agenda.
     """
-    descricao = models.TextField(
-        verbose_name="Descrição",
-        blank=True,
-        default=""
-    )
     orgao = models.CharField(
         verbose_name="Órgão",
         max_length=255,
@@ -55,25 +50,22 @@ class AgendaPage(RoutablePageMixin, PageSitePadrao):
         null=True,
         default=""
     )
-    imagem_destaque = models.ForeignKey(
-        'wagtailimages.Image',
-        verbose_name="Imagem destaque",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
 
     parent_page_types = ['agenda.AgendaIndexPage']
     subpage_types = ['agenda.AgendaDoDiaPage']
 
     content_panels = PageSitePadrao.content_panels + [
-        FieldPanel("descricao"),
         FieldPanel("orgao"),
         FieldPanel("nome_autoridade"),
         FieldPanel("brasao"),
         FieldPanel("local_padrao"),
         FieldPanel("imagem_destaque"),
+    ]
+
+    # Remove imagem_destaque do promote_panels (já está no content_panels)
+    promote_panels = [
+        panel for panel in PageSitePadrao.promote_panels 
+        if not (hasattr(panel, 'field_name') and panel.field_name == 'imagem_destaque')
     ]
 
     @route(r'^dia/(?P<data>[\w-]+)/$')
