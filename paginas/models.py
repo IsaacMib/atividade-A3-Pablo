@@ -14,7 +14,7 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import Tag, TaggedItemBase
 
 from core.models import PageSitePadrao, PageSitePadraoIndex
-from blocks.models import BaseStreamBlock, BaseStreamCorpoTecnicoBlock, EspecificDocumentChooserBlock
+from blocks.models import BaseStreamBlock, BaseStreamCorpoTecnicoBlock, EspecificDocumentChooserBlock, BaseRichTextStreamBlock
 from core.utils import (
     get_file_type,
     get_fontawesome_file_icon,
@@ -268,18 +268,17 @@ class CorpoTecnicoPage(PageSitePadrao):
 
 # Página genérica para uso em qualquer lugar do site
 class RichTextPage(PageSitePadrao):
+        
+
     """
     Página que permite a criação de conteúdo rico usando StreamField.
     Herda de PageSitePadrao para manter a consistência com o restante do site.
     """
     template = 'paginas/rich_text_page.html'
     
-    # Defina os tipos de páginas que podem ser pais desta página
-    parent_page_types = ['home.HomePage']  # Ajuste conforme necessário para sua estrutura
-    
     # Campos do modelo
     body = StreamField(
-        BaseStreamBlock(),  # Usa o BaseStreamBlock que já existe no seu projeto
+        BaseRichTextStreamBlock(),  # Usa o BaseRichTextStreamBlock que já existe no seu projeto
         verbose_name="Conteúdo",
         use_json_field=True,
         blank=True,
@@ -294,6 +293,7 @@ class RichTextPage(PageSitePadrao):
     
     # Configurações adicionais, os nomes que aparecerão no admin
     class Meta:
+        abstract = True
         verbose_name = "Página de Texto Rico"
         verbose_name_plural = "Páginas de Texto Rico"
 
