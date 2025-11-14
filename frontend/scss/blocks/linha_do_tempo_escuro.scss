@@ -19,6 +19,19 @@
     color: variables.$color-text-body-dark !important;
   }
 
+  .card-linha-do-tempo__actions {
+    .btn,
+    span.btn {
+      color: variables.$color-dark-theme-border !important; // Cinza escuro
+      border-color: variables.$color-dark-theme-border-light !important; // Cinza claro
+      background-color: variables.$color-dark-theme-border-light !important; // Cinza claro
+      
+      i {
+        color: variables.$color-dark-theme-border !important; // Cinza escuro
+      }
+    }
+  }
+
   .card-linha-do-tempo {
     @include card-aspect-ratio;
     --card-max-height: 360px;
@@ -34,6 +47,29 @@
     background-color: variables.$color-white;
 
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
+    
+    // Card clicável no modo dark
+    &.card-linha-do-tempo--clickable {
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(variables.$color-white, 0.3);
+        
+        .card-linha-do-tempo__title {
+          color: variables.$color-text-body-dark !important;
+        }
+        
+        .btn,
+        span.btn {
+          background-color: variables.$color-dark-theme-border !important; // Cinza escuro quase preto
+          color: variables.$color-dark-theme-border-light !important; // Cinza claro
+          border-color: variables.$color-black-80 !important; // Cinza escuro quase preto
+          
+          i {
+            color:variables.$color-dark-theme-border-light!important; // Cinza claro
+          }
+        }
+      }
+    }
   }
 
   .animate {

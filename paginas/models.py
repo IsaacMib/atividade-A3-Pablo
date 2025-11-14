@@ -14,6 +14,11 @@ from blocks.models import BaseStreamBlock
 from wagtail import blocks
 from wagtail.fields import RichTextField
 
+from wagtail.blocks import (
+    StructBlock,
+    CharBlock,
+    RichTextBlock,
+)
 
 # Create your models here.
 
@@ -162,3 +167,48 @@ class RichTextPage(PageSitePadrao):
     class Meta:
         verbose_name = "Página de Texto Rico"
         verbose_name_plural = "Páginas de Texto Rico"
+
+class PaginaComBannerPage(PageSitePadrao):
+
+    subtitle = models.CharField(
+        verbose_name="Subtítulo",
+        blank=True,
+        max_length=255
+    )   
+
+    banner = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name="Banner da página"
+    )
+
+    introducao = models.TextField(
+        verbose_name="Introdução",
+        blank=True,
+        help_text="Texto introdutório"
+    )
+
+    corpo = StreamField([
+        ('titulo_texto', StructBlock([
+            ('titulo', CharBlock(required=True, label="Título")),
+            ('texto', RichTextBlock(required=True, label="Texto")),
+        ], label="Título e Texto")),
+    ], verbose_name="Conteúdo da página", blank=True, null=True, use_json_field=True)
+
+    content_panels = PageSitePadrao.content_panels + [
+        FieldPanel("subtitle"),        
+        FieldPanel("banner"),  
+        FieldPanel("introducao"),
+        FieldPanel("corpo"),
+    ]
+
+    parent_page_types = ["home.HomePage"] 
+    subpage_types = [] 
+
+    class Meta:
+        abstract = True
+        verbose_name = "Pagina com Banner"
+        verbose_name_plural = "Paginas com Banner"
