@@ -1,0 +1,24 @@
+<div class="agenda-do-dia-block mb-5">
+    <div class="agenda-header mb-3">
+        <h3 class="agenda-data">
+            <i class="fas fa-calendar-day text-primary"></i>
+            Agenda de {{ value.date|date:"d/m/Y" }} ({{ value.date|date:"l" }})
+        </h3>
+    </div>
+    
+    {% if value.compromissos %}
+    <div class="compromissos-lista">
+        {% for compromisso in value.compromissos %}
+            {% include_block compromisso %}
+        {% empty %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> Nenhum compromisso agendado para esta data.
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> Nenhum compromisso agendado para esta data.
+    </div>
+    {% endif %}
+</div>

@@ -1,0 +1,23 @@
+// Agenda Recorrente - Cores (Tema Claro)
+@import '../variables';
+
+.agenda-recorrente {
+  &__info {
+    background-color: $color-primary-06;
+    border-color: $color-primary-12;
+    color: $color-primary-darker;
+  }
+
+  &__title {
+    color: $color-primary-darker;
+  }
+
+  &__data-badge {
+    background-color: $color-primary;
+    color: $color-on-primary;
+  }
+
+  &__mais-datas {
+    color: $color-grey-600;
+  }
+}

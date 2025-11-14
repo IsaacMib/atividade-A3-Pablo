@@ -6,7 +6,7 @@
 @use './banner_escuro.scss';
 
 @use './lista_noticias/index.scss' as listaNoticias;
-@use './lista_avisos/index.scss';
+@use './lista_eventos/index.scss' as listaEventos;
 
 
 
@@ -52,7 +52,5 @@
 
 @use './table.scss';
 @use './table_escuro.scss';
-
-@use './lista_eventos/index.scss' as listaEventos; // alias aqui
 
 @use './lgpd_page.scss';

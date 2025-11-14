@@ -1,0 +1,20 @@
+{
+  "testEnvironment": "jsdom",
+  "collectCoverageFrom": [
+    "frontend/js/**/*.js",
+    "!frontend/js/**/*.test.js",
+    "!frontend/js/**/node_modules/**"
+  ],
+  "testMatch": [
+    "**/frontend/js/**/*.test.js"
+  ],
+  "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
+  "moduleFileExtensions": ["js", "json"],
+  "transform": {
+    "^.+\\.js$": "babel-jest"
+  },
+  "globals": {
+    "VanillaCalendar": "readonly",
+    "fetch": "readonly"
+  }
+}
