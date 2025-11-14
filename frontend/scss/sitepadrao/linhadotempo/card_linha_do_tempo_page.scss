@@ -23,6 +23,7 @@
       margin: 0 15px;
       color: variables.$primary-color;
     }
+
     .banner-container {
       margin: auto 0 !important;
       padding: 20px 0 !important;
@@ -33,6 +34,34 @@
         object-fit: fill !important;
       }
     }
+
+    .swiper-wrapper {
+      display: flex;
+      align-items: center; // Centraliza verticalmente
+    }
+
+    .swiper-slide {
+      display: flex;
+      align-items: center;
+      justify-content: center; // Centraliza horizontalmente
+      align-self: center;
+      width: 100%;
+      aspect-ratio: 26 / 9 !important;
+      overflow-y: hidden !important;
+      padding: 0 auto;
+
+      .carrossel-banners--img {
+        width: 100%;
+        max-width: 1200px; // Ajuste conforme necessário
+        object-fit: cover !important;
+        margin: 0 auto;
+        display: block;
+        height: clamp(400px, auto, 600px);
+        background-repeat: repeat;
+        overflow-y: hidden !important;
+      }
+    }
+
     .linha-do-tempo-page__data {
       color: variables.$color-grey-500;
       font-size: 1rem;
@@ -46,8 +75,8 @@
       margin-bottom: 60px;
     }
   }
-  .linha-do-tempo-page__lista-videos {
 
+  .linha-do-tempo-page__lista-videos {
     .videos-wrapper {
       margin: 0 15px 60px;
 

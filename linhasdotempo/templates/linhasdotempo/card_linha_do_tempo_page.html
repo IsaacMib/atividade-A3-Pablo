@@ -12,7 +12,7 @@
                     <div class="swiper-wrapper">
                     {% for imagem in page.imagens %}
                         <div class="swiper-slide swiper-slide-noticias">
-                            {% image imagem.value.image original loading="lazy" class="image-noticia-carrossel" alt=imagem.value.alt_text|default:imagem.value.image.title %}
+                            {% image imagem.value.image original loading="lazy" class="carrossel-banners--img" alt=imagem.value.alt_text|default:imagem.value.image.title %}
                         </div>
                     {% endfor %}
                     </div>
@@ -25,9 +25,9 @@
                     {% for imagem in page.imagens %}
                         <div
                             class="swiper-slide swiper-slide-noticias"
-                            style="width: 100%; height: auto; object-fit: contain; cursor: pointer;"
+                            style="cursor: pointer;"
                         >
-                            {% image imagem.value.image original loading="lazy" class="image-noticia-carrossel" alt=imagem.value.alt_text|default:imagem.value.image.title %}
+                            {% image imagem.value.image original loading="lazy" class="carrossel-banners--img" alt=imagem.value.alt_text|default:imagem.value.image.title %}
                         </div>
                     {% endfor %}
                     </div>
