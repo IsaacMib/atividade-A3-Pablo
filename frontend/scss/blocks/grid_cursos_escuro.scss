@@ -1,0 +1,59 @@
+@use '../variables' as *;
+
+[data-theme='dark'] {
+
+    a, .uk-link {
+        background: linear-gradient(135deg, $color-dark-bg 0%, $color-black 100%);
+
+        &:hover {
+            color: $color-dark-bg;
+        }
+    }
+
+  .grid-cursos-section-header {
+    .grid-cursos-section-title {
+      color: $color-dark-theme-text;
+    }
+  }
+
+  .curso-grid-card {
+    background: $color-dark-bg-alt;
+    border-color: $color-dark-theme-border;
+    box-shadow: 0 2px 12px rgba($color-black, 0.3);
+
+    &:hover {
+      border-color: $color-primary-12;
+      box-shadow: 0 12px 28px rgba($color-black, 0.5);
+
+      .curso-grid-title {
+        color: $color-primary-12;
+      }
+    }
+  }
+
+  .curso-grid-image-accent {
+    background: linear-gradient(135deg, $color-white, $color-grey-200);
+  }
+
+  .curso-grid-image {
+    background: linear-gradient(135deg, $color-dark-bg 0%, $color-black 100%);
+  }
+
+  .curso-grid-title {
+    color: $color-dark-theme-text;
+  }
+
+  .curso-grid-subtitle {
+    color: $color-dark-theme-border-light;
+  }
+
+  .curso-grid-description {
+    color: $color-white;
+  }
+
+  .grid-cursos-ver-todos-wrapper .btn-ver-todos-grid-cursos {
+    background: linear-gradient(135deg, $color-primary-12, $color-primary-06);
+    color: $color-text-body-dark;
+    box-shadow: 0 4px 12px rgba($color-primary-12, 0.2);
+  }
+}

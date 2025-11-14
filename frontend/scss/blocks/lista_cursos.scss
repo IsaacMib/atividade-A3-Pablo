@@ -1,8 +1,5 @@
 @use '../variables' as *;
 
-// ----------------------------------------
-// SECTION CONTAINER
-// ----------------------------------------
 .bloco-lista-padrao-cursos-section {
   margin: 4rem 0;
   
@@ -13,9 +10,6 @@
   }
 }
 
-// ----------------------------------------
-// TÍTULO DA SEÇÃO
-// ----------------------------------------
 .cursos-section-header {
   margin-bottom: 3rem;
   text-align: left;
@@ -32,18 +26,12 @@
   }
 }
 
-// ----------------------------------------
-// LISTA DE CARDS
-// ----------------------------------------
 .cursos-lista-vertical {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-// ----------------------------------------
-// CARD INDIVIDUAL
-// ----------------------------------------
 .curso-card-item {
   display: flex;
   flex-direction: row;
@@ -84,16 +72,12 @@
   }
 }
 
-// Link do card
 .curso-card-link {
   display: contents;
   text-decoration: none;
   color: inherit;
 }
 
-// ----------------------------------------
-// IMAGEM DO CARD
-// ----------------------------------------
 .curso-card-image-wrapper {
   position: relative;
   flex-shrink: 0;
@@ -148,10 +132,6 @@
   }
 }
 
-// ----------------------------------------
-// BORDA DECORATIVA (Formato L - direita + inferior em uma borda contínua)
-// ----------------------------------------
-
 .curso-image-accent {
   position: absolute;
   bottom: -11px;
@@ -160,15 +140,15 @@
   height: calc(100% + 11px);
   pointer-events: none;
   z-index: -1;
-  overflow: hidden; // importante p/ recortar o gradiente curvado
+  overflow: hidden;
 
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: 135.83px 0 147.83px; // curva no canto inferior direito
+    border-radius: 135.83px 0 147.83px;
     background: conic-gradient(
-      from 270deg at 100% 100%, /* origem no canto inferior direito */
+      from 270deg at 100% 100%,
       $color-curso 0deg,
       $color-curso-1 90deg,
       $color-curso-2 360deg
@@ -180,17 +160,14 @@
     animation: borderSlideIn 0.6s ease-out;
   }
 
-  // Variante "Curso do Mês" (amarelo)
   &.modo-curso-mes::before {
     background: conic-gradient(
       from 270deg at 100% 100%,
-      rgba(235, 208, 0, 0.8) 0deg,
-      rgba(235, 208, 0, 0) 90deg,
-      rgba(235, 208, 0, 0) 360deg
+      $color-warning 0deg,
+      $global-link-color 360deg
     );
   }
 
-  // Variante "Curso Destaque" (azul escuro)
   &.modo-curso-destaque::before {
     background: conic-gradient(
       from 270deg at 100% 100%,
@@ -225,7 +202,6 @@
   }
 }
 
-// Animação da borda em L
 @keyframes borderSlideIn {
   from {
     opacity: 0;
@@ -237,9 +213,6 @@
   }
 }
 
-// ----------------------------------------
-// CONTEÚDO DO CARD
-// ----------------------------------------
 .curso-card-content {
   flex: 1;
   display: flex;
@@ -297,9 +270,6 @@
   }
 }
 
-// ----------------------------------------
-// ESTADO VAZIO
-// ----------------------------------------
 .cursos-empty-state {
   text-align: center;
   padding: 4rem 2rem;
@@ -316,9 +286,6 @@
   }
 }
 
-// ----------------------------------------
-// BOTÃO VER TODOS
-// ----------------------------------------
 .cursos-ver-todos-wrapper {
   margin-top: 3rem;
   text-align: center;
@@ -349,9 +316,6 @@
   }
 }
 
-// ----------------------------------------
-// ANIMAÇÕES
-// ----------------------------------------
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -373,9 +337,6 @@
   &:nth-child(5) { animation-delay: 0.25s; }
 }
 
-// ----------------------------------------
-// ACESSIBILIDADE
-// ----------------------------------------
 .curso-card-item:focus {
   outline: 3px solid $color-primary;
   outline-offset: 4px;
