@@ -2,3 +2,7 @@ node_modules
 venv
 .venv
 /static
+frontend/bundles/
+webpack.config.js
+webpack-stats.json
+frontend/js/barraidentidadepb/

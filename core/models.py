@@ -24,7 +24,7 @@ class PageSitePadrao(Page):
     descricao = models.TextField(
         verbose_name="Descrição",
         blank=True,
-        help_text="Descrição da página para SEO e redes sociais"
+        help_text="Descrição da página, utilizada em SEO e redes sociais"
     )
 
 

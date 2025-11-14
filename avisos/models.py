@@ -7,7 +7,6 @@ from django.core.exceptions import ValidationError
 from django.contrib import messages
 from django.shortcuts import redirect, render
 
-from wagtail.models import Page
 from wagtail.fields import StreamField
 from wagtail.search import index
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
@@ -15,22 +14,17 @@ from wagtail.admin.panels import (
     ObjectList, FieldPanel, MultiFieldPanel, TabbedInterface
 )
 from wagtail.images.blocks import ImageChooserBlock
-from wagtail.contrib.settings.models import BaseSiteSetting
 
 from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import Tag, TaggedItemBase
 
-from core.models import PageSitePadrao, PageSitePadraoIndex, SiteSettings
-from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
+from core.models import PageSitePadraoIndex
+from paginas.models import AvisosDefaultPage
 from core.utils import (
-    get_file_type,
-    get_fontawesome_file_icon,
     get_page_title_with_counter,
     get_widget_input_with_counter
 )
-from django.core.exceptions import ValidationError
-from wagtail.images.blocks import ImageChooserBlock
 
 MAX_AVISOS_DESTAQUE = 6
 
@@ -49,20 +43,7 @@ class AvisosPageTag(TaggedItemBase):
 #                       MODELO DE AVISO
 # ============================================================
 
-class AvisosPage(PageSitePadrao):
-    descricao = models.TextField(
-        "Descrição",
-        help_text="Breve descrição do conteúdo da página.",
-        max_length=255
-    )
-
-    data_publicacao = models.DateTimeField(
-        "Data de publicação do aviso",
-        default=datetime.now,
-        blank=True,
-        null=True
-    )
-
+class AvisosPage(AvisosDefaultPage):
     resumo = models.TextField(
         "Resumo automático",
         blank=True,
@@ -70,36 +51,6 @@ class AvisosPage(PageSitePadrao):
     )
 
     tags = ClusterTaggableManager(through=AvisosPageTag, blank=True)
-
-    body = StreamField(
-        BaseStreamBlock(),
-        verbose_name="Corpo da página",
-        blank=True,
-        null=True,
-        use_json_field=True
-    )
-
-    body_migrated = models.TextField(
-        "Conteúdo migrado do Plone",
-        help_text="Usado apenas para conteúdo do antigo site Plone.",
-        blank=True,
-        null=True
-    )
-
-    plone_node_id = models.TextField(
-        "ID Plone",
-        blank=True,
-        null=True,
-        db_index=True,
-        unique=True,
-        help_text="ID do nó no Plone, usado para identificar a página migrada."
-    )
-
-    sensivel_periodo_eleitoral = models.BooleanField(
-        "Aviso sensível ao período eleitoral",
-        default=False,
-        help_text="Marque se este aviso deve ser ocultado durante o período eleitoral."
-    )
 
     images = StreamField(
         [("imagem", ImageChooserBlock(required=True, label="Imagem do aviso"))],
@@ -113,20 +64,6 @@ class AvisosPage(PageSitePadrao):
         "Ativar slideshow de imagens",
         default=False,
         help_text="Exibir as imagens como slideshow na página do aviso.",
-    )
-
-    arquivos = StreamField(
-        [("arquivo", EspecificDocumentChooserBlock(required=True, label="Arquivos"))],
-        verbose_name="Arquivos do aviso",
-        blank=True,
-        null=True,
-        use_json_field=True,
-    )
-
-    nao_exibir_lista_de_arquivos = models.BooleanField(
-        "Não exibir lista de arquivos",
-        default=False,
-        help_text="Marque para ocultar a lista de arquivos.",
     )
 
     destaque = models.BooleanField(
@@ -154,11 +91,9 @@ class AvisosPage(PageSitePadrao):
         FieldPanel("tags"),
     ]
 
-    promote_panels = PageSitePadrao.promote_panels
+    promote_panels = AvisosDefaultPage.promote_panels
 
-    settings_panels = PageSitePadrao.settings_panels + [
-        FieldPanel("sensivel_periodo_eleitoral"),
-    ]
+    settings_panels = AvisosDefaultPage.settings_panels
 
     migracao_panels = [FieldPanel("body_migrated")]
 
@@ -172,20 +107,14 @@ class AvisosPage(PageSitePadrao):
     parent_page_types = ["AvisosIndexPage"]
     subpage_types = []
 
+    template = "paginas/avisos_default_page.html"
+
     def clean(self):
         """Validação de limite de destaques."""
         super().clean()
-        parent = self.get_parent()
-        parent_path = parent.path if parent else ''
         if len(self.title) > 100:
             raise ValidationError(
                 {"title": "O título não pode ter mais que 100 caracteres."})
-
-    @staticmethod
-    def get_arquivo_icon(arquivo):
-        """Retorna o ícone correspondente ao tipo de arquivo."""
-        file_info = get_file_type(arquivo)
-        return get_fontawesome_file_icon(file_info)
 
     @property
     def get_tags(self):
@@ -214,27 +143,10 @@ class AvisosPage(PageSitePadrao):
         return destaques + list(restantes)
 
     def get_context(self, request):
-        """Adiciona avisos recentes e redes sociais ao contexto."""
+        """Adiciona avisos recentes ao contexto."""
         context = super().get_context(request)
         context["ultimos_avisos"] = self.get_ultimos_avisos()
-
-        # Prepara uma lista de arquivos com seus ícones para o template
-        arquivos_com_icone = []
-        if self.arquivos:
-            for block in self.arquivos:
-                doc = block.value
-                if doc:
-                    arquivos_com_icone.append({
-                        'documento': doc,
-                        'icon_class': self.get_arquivo_icon(doc)
-                    })
-        context['arquivos_com_icone'] = arquivos_com_icone
         return context
-
-    @staticmethod
-    def get_arquivo_icon(arquivo):
-        file_info = get_file_type(arquivo)
-        return get_fontawesome_file_icon(file_info)
     
     def get_admin_display_title(self):
         """Exibe ícone ★ ao lado do título se o aviso for destaque."""
@@ -249,10 +161,7 @@ class AvisosPage(PageSitePadrao):
 
     icon = "warning"
 
-    search_fields = PageSitePadrao.search_fields + [
-        index.SearchField('body'),
-        index.SearchField('descricao'),
-    ]
+    search_fields = AvisosDefaultPage.search_fields
 
 
 # ============================================================
@@ -273,6 +182,8 @@ class AvisosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
     parent_page_types = ["home.HomePage", "intranet.IntranetHomePage"]
     subpage_types = ["AvisosPage"]
     icon = "list-ul"
+
+    template = "paginas/avisos_default_index_page.html"
 
     def children(self):
         return self.get_children().specific().live()
@@ -307,7 +218,7 @@ class AvisosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
             return redirect(self.url)
 
         posts = self.get_posts(tag=tag_obj)
-        return render(request, "avisos/avisos_index_pages.html", {
+        return render(request, "paginas/avisos_default_index_page.html", {
             "self": self,
             "tag": tag_obj,
             "posts": posts,

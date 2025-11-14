@@ -1,0 +1,95 @@
+@use '../variables.scss';
+
+[data-theme="dark"] {
+  .avisos-page-container,
+  .eventos-page-container {
+    background-color: variables.$color-black;
+    color: variables.$color-white;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    // Título principal
+    .aviso-page--title,
+    .evento-page--title {
+      color: variables.$color-white;
+      transition: color 0.3s ease;
+    }
+
+    // Barra de publicação
+    .aviso-barra-publicacao,
+    .evento-barra-publicacao {
+      background-color: transparent;
+    }
+
+    // Data de publicação
+    .aviso-page-publicacao,
+    .evento-page-publicacao {
+      color: variables.$color-grey-300;
+      transition: color 0.3s ease;
+    }
+
+    // Descrição
+    .aviso-page-descricao,
+    .evento-page-descricao {
+      color: variables.$color-grey-100;
+      transition: color 0.3s ease;
+    }
+
+    // Texto e corpo
+    .aviso-page-content,
+    .evento-page-content {
+      color: variables.$color-grey-100;
+      transition: color 0.3s ease;
+
+      a {
+        color: variables.$color-primary;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.2s ease, text-shadow 0.2s ease;
+
+        &:hover {
+          color: variables.$color-primary-light;
+          text-shadow: 0 0 5px rgba(variables.$color-primary-light, 0.4);
+        }
+      }
+    }
+
+    // Seção de compartilhamento
+    .aviso-social,
+    .social-sharing {
+      ul.social,
+      .social-links {
+        li,
+        a {
+          a,
+          & {
+            background-color: rgba(variables.$color-white, 0.08);
+            color: variables.$color-primary;
+
+            &:hover {
+              background-color: variables.$color-primary;
+              color: variables.$color-on-primary;
+              box-shadow: 0 0 10px rgba(variables.$color-primary, 0.6);
+            }
+          }
+        }
+      }
+    }
+
+    // Transições suaves entre temas
+    * {
+      transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    }
+  }
+  .evento-page--title {
+    color: variables.$color-white !important;
+  }
+  .evento-page-publicacao {
+    color: variables.$color-white !important;
+  }
+  .evento-page-descricao {
+    color: variables.$color-white !important;
+  }
+  .evento-page-content {
+    color: variables.$color-white !important;
+  }
+}

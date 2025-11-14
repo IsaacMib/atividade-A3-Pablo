@@ -5,6 +5,73 @@
     <div class="container">
         <h1 class="agenda-do-dia--title">{{ page.title }}</h1>
         <p class="agenda-do-dia--description">Você está visualizando esse conteúdo porque tem permissão de editar.</p>
+        
+        {% if page.habilitar_recorrencia and page.tipo_recorrencia != 'none' %}
+        <div class="agenda-recorrente__info">
+            <h5 class="agenda-recorrente__title"><i class="fas fa-repeat"></i> Compromisso Recorrente</h5>
+            <ul class="agenda-recorrente__list">
+                <li><strong>Tipo:</strong> {{ page.get_tipo_recorrencia_display }}</li>
+                <li><strong>Intervalo:</strong> 
+                    {% if page.tipo_recorrencia == 'days' %}
+                        A cada {{ page.intervalo_recorrencia }} dia{{ page.intervalo_recorrencia|pluralize }}
+                    {% elif page.tipo_recorrencia == 'months' %}
+                        A cada {{ page.intervalo_recorrencia }} mês{{ page.intervalo_recorrencia|pluralize:"es" }}
+                    {% elif page.tipo_recorrencia == 'years' %}
+                        A cada {{ page.intervalo_recorrencia }} ano{{ page.intervalo_recorrencia|pluralize }}
+                    {% endif %}
+                </li>
+                <li><strong>Data inicial:</strong> {{ page.date|date:"d/m/Y" }}</li>
+                {% if page.data_final_recorrencia %}
+                <li><strong>Data final:</strong> {{ page.data_final_recorrencia|date:"d/m/Y" }}</li>
+                {% else %}
+                <li><strong>Data final:</strong> Indefinida</li>
+                {% endif %}
+            </ul>
+            
+            <div class="agenda-recorrente__ocorrencias">
+                <h6 class="agenda-recorrente__ocorrencias-title">Próximas ocorrências:</h6>
+                <div class="agenda-recorrente__ocorrencias-grid">
+                    {% for data in page.get_proximas_datas_recorrencia %}
+                        {% if forloop.counter <= 10 %}
+                            <span class="agenda-recorrente__data-badge">{{ data|date:"d/m/Y" }}</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% if page.get_proximas_datas_recorrencia|length > 10 %}
+                <div class="agenda-recorrente__mais-datas">
+                    ... e outras datas
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <dl class="agenda-do-dia__detalhes">
+            {% if page.nome_autoridade %}
+            <div class="agenda-do-dia__detalhe-item">
+                <dt class="agenda-do-dia__detalhe-label">Autoridade:</dt>
+                <dd class="agenda-do-dia__detalhe-valor">{{ page.nome_autoridade }}</dd>
+            </div>
+            {% endif %}
+
+            {% if page.local_padrao %}
+            <div class="agenda-do-dia__detalhe-item">
+                <dt class="agenda-do-dia__detalhe-label">Local padrão:</dt>
+                <dd class="agenda-do-dia__detalhe-valor">{{ page.local_padrao }}</dd>
+            </div>
+            {% endif %}
+        </dl>
+
+        {% if page.compromissos %}
+        <div class="mt-4">
+            <h3 class="agenda-do-dia__compromissos-title">Compromissos do Dia</h3>
+            <div class="compromissos-list">
+                {% for block in page.compromissos %}
+                    {% include_block block %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
