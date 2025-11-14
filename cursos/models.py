@@ -120,6 +120,8 @@ class CursosPage(PageSitePadrao):
     parent_page_types = ["CursosIndexPage"]
     subpage_types = []
 
+    template = "paginas/avisos_default_page.html"
+
     def clean(self):
         super().clean()
         parent = self.get_parent()
@@ -194,6 +196,8 @@ class CursosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
 
     parent_page_types = ["treinamento.TreinamentoIndexPage"]
     subpage_types = ["CursosPage"]
+
+    template = "paginas/avisos_default_index_page.html"
 
     def get_context(self, request):
         context = super(CursosIndexPage, self).get_context(request)
