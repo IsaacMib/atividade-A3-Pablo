@@ -121,16 +121,22 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
   aspect-ratio: var(--card-aspect-ratio);
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'lg')) {
-    max-height: map-get($card-height-per-breakpoint, 'lg');
+    // --card-max-height: map-get($card-height-per-breakpoint, 'lg');
+    height: map-get($card-height-per-breakpoint, 'lg');
     padding: calc(map-get($card-height-per-breakpoint, 'lg') * 0.08);
     --card-aspect-ratio: 1.1;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
+    min-width: var(--card-width) !important;
+    max-width: var(--card-width) !important;
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'md')) {
-    max-height: map-get($card-height-per-breakpoint, 'md');
+    --card-max-height: map-get($card-height-per-breakpoint, 'md');
+    height: map-get($card-height-per-breakpoint, 'md');
     padding: calc(map-get($card-height-per-breakpoint, 'md') * 0.08);
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
+    min-width: var(--card-width) !important;
+    max-width: var(--card-width) !important;
     h3 {
       font-size: 1.1rem;
     }
@@ -138,27 +144,39 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'sm')) {
-    max-height: map-get($card-height-per-breakpoint, 'sm');
+    --card-max-height: map-get($card-height-per-breakpoint, 'sm');
+    height: map-get($card-height-per-breakpoint, 'sm');
     padding: calc(map-get($card-height-per-breakpoint, 'sm') * 0.08);
     --card-aspect-ratio: 1.0;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
+    min-width: var(--card-width) !important;
+    max-width: var(--card-width) !important;
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'xs')) {
-    max-height: map-get($card-height-per-breakpoint, 'xs');
+    --card-max-height: map-get($card-height-per-breakpoint, 'xs');
+    height: map-get($card-height-per-breakpoint, 'xs');
     padding: calc(map-get($card-height-per-breakpoint, 'xs') * 0.08);
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
+    min-width: var(--card-width) !important;
+    max-width: var(--card-width) !important;
   }
 
   @media (max-width: map-get($linha-do-tempo-breakpoints, 'xxs')) {
-    max-height: map-get($card-height-per-breakpoint, 'xxs');
+    --card-max-height: map-get($card-height-per-breakpoint, 'xxs');
+    height: map-get($card-height-per-breakpoint, 'xxs');
     padding: calc(map-get($card-height-per-breakpoint, 'xxs') * 0.08);
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
+    min-width: var(--card-width) !important;
+    max-width: var(--card-width) !important;
   }
 
   @media (max-width: $layout-change-breakpoint-max) {
     max-height: 65dvw;
+    height: 65dvw;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
+    min-width: var(--card-width) !important;
+    max-width: var(--card-width) !important;
   }
 }
 

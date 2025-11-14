@@ -65,6 +65,29 @@
   background-color: variables.$color-white;
 
   --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
+  min-width: var(--card-width);
+
+
+  .card-linha-do-tempo__image {
+    display: flex;
+    align-items: center;
+    justify-content: center; // Centraliza horizontalmente
+    align-self: center;
+    width: 100%;
+    aspect-ratio: 26 / 10 !important;
+    overflow-y: hidden !important;
+    padding: 0 auto;
+
+    img {
+      width: 100%;
+      object-fit: cover !important;
+      margin: 0 auto;
+      display: block;
+      // height: clamp(400px, auto, 600px);
+      background-repeat: repeat;
+      overflow-y: hidden !important;
+    }
+  }
   
   // Card clicável (quando usa onClick)
   &.mouse-pointer {
