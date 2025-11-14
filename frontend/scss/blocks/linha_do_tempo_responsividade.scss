@@ -248,84 +248,184 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
 
 .card-linha-do-tempo__title {
   display: -webkit-box !important;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: clip;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: break-word;
+  line-height: 1.15 !important;
+  max-height: 2.3em !important;
+  margin: 0.2rem 0 0.1rem 0 !important;
+  padding: 0 !important;
+  
+  // Ajustes responsivos para o título
+  @media (max-width: 1200px) and (min-width: 901px) {
+    font-size: 0.98rem;
+    max-height: 2.254em !important;
+    margin: 0.18rem 0 0.1rem 0 !important;
+  }
+  
+  @media (max-width: 900px) and (min-width: 810px) {
+    font-size: 0.92rem;
+    max-height: 2.116em !important;
+    margin: 0.15rem 0 0.1rem 0 !important;
+  }
+  
+  @media (max-width: 810px) and (min-width: 772px) {
+    font-size: 0.88rem;
+    max-height: 2.024em !important;
+    margin: 0.15rem 0 0.08rem 0 !important;
+  }
+  
+  @media (max-width: 772px) and (min-width: 592px) {
+    font-size: 0.85rem;
+    max-height: 1.955em !important;
+    margin: 0.12rem 0 0.08rem 0 !important;
+  }
+  
+  @media (max-width: 591px) {
+    font-size: 0.95rem;
+    line-height: 1.2 !important;
+    max-height: 2.28em !important;
+    margin: 0.2rem 0 0.1rem 0 !important;
+  }
 }
 
 .card-linha-do-tempo__description {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   display: -webkit-box !important;
-  -webkit-line-clamp: 5;
-  line-clamp: 5;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  -webkit-line-clamp: 6 !important;
+  line-clamp: 6 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
   word-break: break-word;
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
-  text-overflow: clip;
+  text-overflow: ellipsis !important;
+  margin: 0.15rem 0 0 0 !important;
+  padding: 0 !important;
+  line-height: 1.42 !important;
 
-  @media (max-width: map-get($linha-do-tempo-breakpoints, 'sm')) {
-    font-size: 0.75rem;
+  // Desktop grande: mais linhas disponíveis
+  @media (min-width: 1200px) {
+    font-size: 0.92rem;
+    -webkit-line-clamp: 7 !important;
+    line-clamp: 7 !important;
+    line-height: 1.45 !important;
   }
 
-  @media (max-width: map-get($linha-do-tempo-breakpoints, 'xs')) {
-    font-size: 0.65rem;
-    -webkit-line-clamp: 5;
-    line-clamp: 5;
+  // 993px - 1200px: ajuste intermediário
+  @media (max-width: 1200px) and (min-width: 993px) {
+    font-size: 0.88rem;
+    -webkit-line-clamp: 6 !important;
+    line-clamp: 6 !important;
+    line-height: 1.42 !important;
   }
 
-  @media (max-width: 715px) {
-    font-size: 0.63rem;
+  // 900px - 992px
+  @media (max-width: 992px) and (min-width: 900px) {
+    font-size: 0.85rem;
+    -webkit-line-clamp: 6 !important;
+    line-clamp: 6 !important;
+    line-height: 1.4 !important;
   }
 
-  @media (max-width: 670px) {
-    font-size: 0.61rem;
+  // 810px - 900px: crítico - reduzir para evitar cortes
+  @media (max-width: 900px) and (min-width: 810px) {
+    font-size: 0.82rem;
+    -webkit-line-clamp: 5 !important;
+    line-clamp: 5 !important;
+    line-height: 1.38 !important;
   }
 
-  @media (max-width: $layout-change-breakpoint-max) {
+  // 772px - 810px: mais crítico ainda
+  @media (max-width: 810px) and (min-width: 772px) {
     font-size: 0.8rem;
-    --max-lines: 7;
-    -webkit-line-clamp: var(--max-lines);
-    line-clamp: var(--max-lines);
+    -webkit-line-clamp: 5 !important;
+    line-clamp: 5 !important;
+    line-height: 1.38 !important;
+  }
 
-    @media (max-width: 400px) {  //Iphonme 12/13 
-      font-size: 0.65rem;
+  // 670px - 772px
+  @media (max-width: 772px) and (min-width: 670px) {
+    font-size: 0.78rem;
+    -webkit-line-clamp: 5 !important;
+    line-clamp: 5 !important;
+    line-height: 1.38 !important;
+  }
+
+  // 592px - 670px (antes do mobile): ZONA CRÍTICA - esconder se não couber
+  @media (max-width: 670px) and (min-width: 592px) {
+    font-size: 0.76rem;
+    -webkit-line-clamp: 4 !important;
+    line-clamp: 4 !important;
+    line-height: 1.38 !important;
+  }
+
+  // Mobile: 450px - 591px: APROVEITAR ESPAÇO VAZIO
+  @media (max-width: 591px) and (min-width: 450px) {
+    font-size: 0.9rem !important;
+    -webkit-line-clamp: 11 !important;
+    line-clamp: 11 !important;
+    line-height: 1.5 !important;
+    margin: 0.2rem 0 0 0 !important;
+  }
+
+  // 400px - 450px
+  @media (max-width: 450px) and (min-width: 400px) {
+    font-size: 0.88rem !important;
+    -webkit-line-clamp: 10 !important;
+    line-clamp: 10 !important;
+    line-height: 1.48 !important;
+  }
+
+  // 368px - 400px
+  @media (max-width: 400px) and (min-width: 368px) {
+    font-size: 0.85rem !important;
+    -webkit-line-clamp: 9 !important;
+    line-clamp: 9 !important;
+    line-height: 1.45 !important;
+  }
+
+  // < 368px: telas muito pequenas
+  @media (max-width: 368px) {
+    font-size: 0.82rem !important;
+    -webkit-line-clamp: 8 !important;
+    line-clamp: 8 !important;
+    line-height: 1.42 !important;
+  }
+}
+
+// PROTEÇÃO: Esconder conteúdo quando altura insuficiente (evitar corte pela borda)
+@media (max-width: 670px) and (min-width: 592px) {
+  .card-linha-do-tempo {
+    // Se a altura do card for muito pequena, esconder descrição
+    @container (max-height: 280px) {
+      .card-linha-do-tempo__description {
+        display: none !important;
+      }
     }
-
-    @media (max-width: 368px) {  //Galaxy 11 
-      font-size: 0.6rem;
-      --max-lines: 8;
-      -webkit-line-clamp: var(--max-lines);
-      line-clamp: var(--max-lines);
+    
+    // Se ainda menor, esconder título também
+    @container (max-height: 220px) {
+      .card-linha-do-tempo__title {
+        display: none !important;
+      }
+    }
+    
+    // Se extremamente pequeno, só mostrar imagem
+    @container (max-height: 180px) {
+      .card-linha-do-tempo__content {
+        display: none !important;
+      }
     }
   }
+}
 
-  @media (max-width: 500px) {
-    --max-lines: 6;
-    -webkit-line-clamp: var(--max-lines);
-    line-clamp: var(--max-lines);
-  }
-
-  @media (max-width: 450px) {
-    --max-lines: 5;
-    -webkit-line-clamp: var(--max-lines);
-    line-clamp: var(--max-lines);
-  }
-
-  @media (max-width: 400px) {
-    --max-lines: 4;
-    -webkit-line-clamp: var(--max-lines);
-    line-clamp: var(--max-lines);
-  }
-
-  // @media (max-width: 352px) {
-  //   --max-lines: 3;
-  //   -webkit-line-clamp: var(--max-lines);
-  //   line-clamp: var(--max-lines);
-  // }
+// Botão "Ver mais" - SEMPRE OCULTO
+.card-linha-do-tempo__actions {
+  display: none !important;
 }

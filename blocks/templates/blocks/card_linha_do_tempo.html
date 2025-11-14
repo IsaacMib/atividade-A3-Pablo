@@ -21,46 +21,31 @@
         </svg>
         <i class="bi-calendar3 linha-do-tempo-calendar-group calendar-icon left" ></i>
             <div class="arrow left animate"></div>
-            {% if card.detail_page %}
-                <a href="{{ card.detail_page.url }}" class="card-linha-do-tempo animate card-linha-do-tempo--clickable">
-            {% else %}
-                <div class="card-linha-do-tempo animate">
-            {% endif %}
+            <div
+                {% if card.detail_page %}
+                    onClick="window.location.href = '{{ card.detail_page.url }}'"
+                    class="card-linha-do-tempo animate mouse-pointer"
+                {% else %}
+                    class="card-linha-do-tempo animate"
+                {% endif %}
+            >
                 <div class="card-linha-do-tempo__image">
-                    {% image card.imagem fill-570x380 alt=card.texto_alternativo|default:"Não especificado" %}
+                    {% image card.imagem width-400 alt=card.texto_alternativo|default:"Não especificado" %}
                 </div>
                 <div class="card-linha-do-tempo__content text-center">
-                    <h3 class="card-linha-do-tempo__title mt-3 mb-1">
+                    <h3 class="card-linha-do-tempo__title">
                         {% firstof card.titulo card.title %}
                     </h3>
                     {% comment %} <p class="card-linha-do-tempo__date">{{ card.data|date:"d/m/Y" }}</p> {% endcomment %}
-                    <span class="card-description-wrapper inline">
-                        {% comment %} Mostra descrição do card {% endcomment %}
+                    <div class="card-linha-do-tempo__description-wrapper">
                         {% with card.descricao_linha_do_tempo|default_if_none:'' as html %}
                             {% with html|striptags as plain %}
-                                <p lang="pt-BR" class="card-linha-do-tempo__description">
-                                    {% if plain|length > 180 %}
-                                        {{ plain|truncatechars:160 }}
-                                    {% else %}
-                                        {{ plain }}
-                                    {% endif %}
-                                </p>
+                                <p lang="pt-BR" class="card-linha-do-tempo__description">{{ plain }}</p>
                             {% endwith %}
                         {% endwith %}
-                    </span>
-                    {% if card.detail_page %}
-                        <div class="card-linha-do-tempo__actions mt-2">
-                            <span class="btn btn-sm btn-outline-primary">
-                                Leia mais <i class="bi bi-arrow-right"></i>
-                            </span>
-                        </div>
-                    {% endif %}
+                    </div>
                 </div>
-            {% if card.detail_page %}
-                </a>
-            {% else %}
-                </div>
-            {% endif %}
+            </div>
             <div class="arrow right animate"></div>
         <i class="bi-calendar3 linha-do-tempo-calendar-group calendar-icon right"></i>
         <svg class="linha-do-tempo-calendar-group right"

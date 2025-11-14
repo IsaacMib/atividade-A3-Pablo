@@ -15,12 +15,24 @@
   font-weight: 500;
   color: variables.$color-primary;
   transition: color 0.2s ease;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  line-height: 1.3;
+  margin: 0.5rem 0;
+  flex-shrink: 0;
+  font-size: 1.1rem;
 }
 
 .card-linha-do-tempo__actions {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 0.5rem;
   
   .btn,
   span.btn {
@@ -29,6 +41,8 @@
     align-items: center;
     gap: 0.25rem;
     transition: all 0.2s ease;
+    border-color: #30599b;
+    color: #30599b;
     
     i {
       transition: transform 0.2s ease;
@@ -46,19 +60,14 @@
   justify-content: flex-start;
   border: solid 4px variables.$color-primary;
   padding: 1.2rem;
-  overflow: hidden; // Mudado de overflow-y para overflow
+  overflow: hidden;
   z-index: 15;
   background-color: variables.$color-white;
-  height: 420px; // Altura fixa para todos os cards
-  min-height: 420px; // Garante altura mínima
-  max-height: 420px; // Garante altura máxima
 
   --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
   
-  // Card clicável (quando é link)
-  &.card-linha-do-tempo--clickable {
-    text-decoration: none;
-    color: inherit;
+  // Card clicável (quando usa onClick)
+  &.mouse-pointer {
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     
@@ -70,10 +79,14 @@
         color: color.adjust(variables.$color-primary, $lightness: -10%);
       }
       
-      .btn {
-        background-color: variables.$color-primary;
-        color: variables.$color-white;
-        border-color: variables.$color-primary;
+      // Botão muda de cor no hover do card
+      .card-linha-do-tempo__actions {
+        .btn,
+        span.btn {
+          background-color: #30599b;
+          border-color: #30599b;
+          color: variables.$color-white;
+        }
       }
     }
   }
@@ -81,20 +94,20 @@
 
 .card-linha-do-tempo__image {
   width: 100%;
-  height: 200px; // Altura fixa para todas as imagens
-  min-height: 200px;
-  max-height: 200px;
+  height: auto;
+  max-height: 150px;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-shrink: 0; // Não permite que a imagem encolha
+  flex-shrink: 0;
   
   img {
     width: 100%;
-    height: 100%;
+    height: auto;
+    max-height: 150px;
     display: block;
-    object-fit: cover; // Mantém proporção cortando se necessário
+    object-fit: contain;
   }
 }
 
@@ -102,8 +115,28 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow-y: auto; // Permite scroll se o conteúdo for muito grande
+  overflow: hidden;
   width: 100%;
+  min-height: 0;
+}
+
+.card-linha-do-tempo__description-wrapper {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.card-linha-do-tempo__description {
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 4 !important;
+  line-clamp: 4 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: break-word;
+  margin: 0.5rem 0;
 }
 
 .animate {
@@ -302,6 +335,7 @@
   padding: 5px;
   z-index: 10;
   position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &.right {
     -webkit-transform: translateX(-75%) rotate(-45deg);
@@ -311,6 +345,21 @@
   &.left {
     -webkit-transform: translateX(75%) rotate(135deg);
     transform: translateX(75%) rotate(135deg);
+  }
+}
+
+// Efeito hover sincronizado: quando hover no card, a seta também se move
+.linha-do-tempo__item:has(.card-linha-do-tempo.mouse-pointer:hover) {
+  .arrow {
+    box-shadow: 0 4px 8px variables.$color-black-80;
+    
+    &.left {
+      transform: translateX(75%) translateY(-4px) rotate(135deg);
+    }
+    
+    &.right {
+      transform: translateX(-75%) translateY(-4px) rotate(-45deg);
+    }
   }
 }
 

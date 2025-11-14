@@ -19,19 +19,6 @@
     color: variables.$color-text-body-dark !important;
   }
 
-  .card-linha-do-tempo__actions {
-    .btn,
-    span.btn {
-      color: variables.$color-dark-theme-border !important; // Cinza escuro
-      border-color: variables.$color-dark-theme-border-light !important; // Cinza claro
-      background-color: variables.$color-dark-theme-border-light !important; // Cinza claro
-      
-      i {
-        color: variables.$color-dark-theme-border !important; // Cinza escuro
-      }
-    }
-  }
-
   .card-linha-do-tempo {
     @include card-aspect-ratio;
     --card-max-height: 360px;
