@@ -192,7 +192,7 @@ class CursosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         FieldPanel("introduction"),
     ]
 
-    parent_page_types = ["home.HomePage", "treinamento.TreinamentoIndexPage"]
+    parent_page_types = ["treinamento.TreinamentoIndexPage"]
     subpage_types = ["CursosPage"]
 
     def get_context(self, request):
