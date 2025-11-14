@@ -19,6 +19,7 @@
     max-width: 900px;
     margin: 0 auto;
     align-items: center;
+
     .linha-do-tempo-page__titulo {
       margin: 0 15px;
       color: variables.$primary-color;
@@ -40,7 +41,11 @@
       align-items: center; // Centraliza verticalmente
     }
 
-    .swiper-slide {
+    .static-img-container {
+      margin-bottom: 3rem;
+    }
+
+    .swiper-slide, .static-img-container {
       display: flex;
       align-items: center;
       justify-content: center; // Centraliza horizontalmente

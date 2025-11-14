@@ -35,12 +35,11 @@
                 </div>
 
             {% elif page.imagens and page.imagens|length == 1 %}
-                <div class="d-flex justify-content-center noticias-img-destaque tw:pb-12">
+                <div class="d-flex justify-content-center pb-12 static-img-container">
                 {% with imagem=page.imagens.0 %}
-                    {% image imagem.value.image original loading="lazy" class="img-fluid" alt=imagem.value.alt_text|default:imagem.value.image.title %}
+                    {% image imagem.value.image original loading="lazy" class="carrossel-banners--img" alt=imagem.value.alt_text|default:imagem.value.image.title %}
                 {% endwith %}
                 </div>
-
             {% endif %}
             <div class="linha-do-tempo-page__descricao">{{ page.descricao_linha_do_tempo }}</div>
             <div class="linha-do-tempo-page__lista-videos">
