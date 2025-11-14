@@ -226,7 +226,7 @@ class CursosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         context = self.get_context(request)
         context["tag"] = tag_obj
         context["posts"] = posts
-        return render(request, "cursos/cursos_index_page.html", context)
+        return render(request, "paginas/avisos_default_index_page.html", context)
 
     def get_posts(self, tag=None):
         posts = CursosPage.objects.live().descendant_of(self)
