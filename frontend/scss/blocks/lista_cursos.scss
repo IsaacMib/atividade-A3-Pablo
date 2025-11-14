@@ -92,6 +92,8 @@
 
 .curso-card-image {
   position: relative;
+  top: -10px;
+  left: -10px;
   width: 100%;
   height: 100%;
   overflow: visible;
@@ -134,8 +136,8 @@
 
 .curso-image-accent {
   position: absolute;
-  bottom: -11px;
-  right: -11px;
+  bottom: -20px;
+  right: -20px;
   width: calc(100% + 11px);
   height: calc(100% + 11px);
   pointer-events: none;
@@ -145,21 +147,20 @@
   &::before {
     content: '';
     position: absolute;
+    right: 2px;
     inset: 0;
     border-radius: 135.83px 0 147.83px;
-    background: conic-gradient(
-      from 270deg at 100% 100%,
-      $color-curso 0deg,
-      $color-curso-1 90deg,
-      $color-curso-2 360deg
-    );
-    mask: linear-gradient($color-white, $color-white) content-box, linear-gradient($color-white, $color-white);
+    transform: translate(5px, -5px);
+    background: linear-gradient(157.66deg, rgba(75, 193, 219, 0) 14.56%, rgba(75, 193, 219, 0.8) 148.92%);
+
+
+    mask: linear-gradient(#fff, #fff) content-box, linear-gradient(#fff, #fff);
     -webkit-mask-composite: destination-out;
     mask-composite: exclude;
-    padding: 11px;
+    padding: 50px;
     animation: borderSlideIn 0.6s ease-out;
   }
-
+  
   &.modo-curso-mes::before {
     background: conic-gradient(
       from 270deg at 100% 100%,
