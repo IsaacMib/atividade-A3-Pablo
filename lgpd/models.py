@@ -21,10 +21,4 @@ class MissaoVisaoValores(PaginaComBannerPage):
         verbose_name_plural = "Missão, Visão e Valores"
 
 
-class ComissaoEtica(PaginaComBannerPage):
-    template = "paginas/pagina_com_banner_page.html"
-
-    class Meta:
-        verbose_name = "Comissão de Ética"
-        verbose_name_plural = "Comissões de Ética"
 
