@@ -13,7 +13,6 @@ from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import Tag, TaggedItemBase
 
-<<<<<<< HEAD
 from core.models import PageSitePadrao, PageSitePadraoIndex
 from blocks.models import BaseStreamBlock, BaseStreamCorpoTecnicoBlock, EspecificDocumentChooserBlock
 from core.utils import (
@@ -23,8 +22,6 @@ from core.utils import (
     get_widget_input_with_counter
 )
 
-=======
->>>>>>> aa46a403e7747ae361430509aa582cdabdb67cf4
 from wagtail.blocks import (
     StructBlock,
     CharBlock,
