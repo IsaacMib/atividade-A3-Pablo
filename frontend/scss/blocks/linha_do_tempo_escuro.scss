@@ -2,11 +2,6 @@
 @use './linha_do_tempo_responsividade.scss' as *;
 
 [data-theme='dark'] {
-  .card-linha-do-tempo__title {
-    font-weight: 500;
-    color: variables.$color-text-body-dark !important;
-  }
-
   .linha-do-tempo {
     display: flex;
     flex-direction: row;
