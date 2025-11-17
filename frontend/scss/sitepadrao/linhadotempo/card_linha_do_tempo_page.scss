@@ -98,13 +98,28 @@
       color: variables.$color-grey-500;
       font-size: 1rem;
       margin-left: 15px;
+
+      @media (max-width: 768px) {
+        font-size: .9rem;
+      }
+      @media (max-width: 450px) {
+        font-size: .8rem;
+      }
     }
+
     .linha-do-tempo-page__descricao {
       font-size: 1.2rem;
       margin: 0 15px;
       text-align: justify;
       text-justify: inter-word;
       margin-bottom: 60px;
+
+      @media (max-width: 768px) {
+        font-size: .9rem;
+      }
+      @media (max-width: 450px) {
+        font-size: .8rem;
+      }
     }
   }
 
