@@ -120,3 +120,14 @@ class AEmpresaPage(RichTextPage):
     class Meta:
         verbose_name = "Página A Empresa"
         verbose_name_plural = "Páginas A Empresa"
+
+
+class MissaoVisaoValores(PaginaComBannerPage):
+    template = "paginas/pagina_com_banner_page.html"
+
+    parent_page_types = [ 'institucional.InstitucionalIndexPage' ]
+    subpage_types = []
+
+    class Meta:
+        verbose_name = "Missão, Visão e Valores"
+        verbose_name_plural = "Missão, Visão e Valores"
