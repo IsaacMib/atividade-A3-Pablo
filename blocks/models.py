@@ -60,6 +60,8 @@ from .forms import (
 
 from django.core.exceptions import ValidationError
 
+from .institucional import GoogleMapsEmbedBlock
+
 mappingIconsServicos = {
     'HIBRIDO': 'icon: link; ratio: 0.75',
     'PRESENCIAL': 'icon: user; ratio: 0.75',
@@ -1524,3 +1526,58 @@ class ListaDicasPresidenteBlock(StructBlock):
         label = "Lista de Dicas do Presidente"
         icon = "grip"
         template = "blocks/lista_dicas_presidente.html"
+
+
+class BaseRichTextStreamBlock(StreamBlock):
+    """
+    Define the custom blocks that `StreamField` will utilize
+    
+    """
+    '''
+    titulo_bloco = TituloBlock(
+        label="Título",
+        description="Um título simples com opção de cor de fundo."
+    )
+    '''
+    paragraph_block = RichTextBlock(
+        icon="pilcrow",
+        label="Texto de Parágrafo",
+        template="blocks/paragraph_block.html",
+        preview_value=(
+            """
+            <h2>Our bread pledge</h2>
+            <p>As a bakery, <b>breads</b> have <i>always</i> been in our hearts.
+            <a href="https://en.wikipedia.org/wiki/Staple_food">Staple foods</a>
+            are essential for society, and – bread is the tastiest of all.
+            We love to transform batters and doughs into baked goods with a firm
+            dry crust and fluffy center.</p>
+            """
+        ),
+        description="Um parágrafo de texto rico",
+    )
+    image_block = CaptionedImageBlock(
+        label="Bloco de Imagem com Legenda",
+    )
+    '''
+    block_quote = BlockQuote(
+        label="Bloco de Citação",
+        description="Uma citação com atribuição opcional",
+    )
+    '''
+    video_block = VideoBlock(
+        label="Bloco de Vídeo",
+    )
+    
+    localizacao = GoogleMapsEmbedBlock(
+        label="Bloco de Iframe do mapa do Google Maps",
+        help_text="Adicione o código do embedd do Google Maps",
+    )
+
+    table_block = TableBlock(
+        label="Bloco de Tabela",
+        help_text="Insira os dados da tabela",
+        icon="table",
+        template="blocks/table.html",
+        # preview_template="blocks/preview/static_table_block.html",
+        description="Uma tabela de dados",
+    )

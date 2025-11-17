@@ -643,6 +643,10 @@ self.assertTemplateUsed(response, "template.html")
 - Sempre fazer `page.refresh_from_db()` após hooks/signals modificarem dados
 - Testar casos de sucesso E casos de erro
 - Validar mensagens de erro/sucesso quando aplicável
+- **CRÍTICO**: Limpar páginas filhas no `setUpTestData` para evitar conflitos de path
+- **CRÍTICO**: Criar `Site` no `setUpTestData` quando testes renderizam templates
+- **CRÍTICO**: Adicionar sistema de mensagens ao request mock quando necessário
+- **CRÍTICO**: Re-publicar páginas após adicionar tags para queries `.live()`
 
 **❌ EVITAR:**
 - Testes que dependem de ordem de execução
@@ -651,6 +655,7 @@ self.assertTemplateUsed(response, "template.html")
 - Alterar código de produção para fazer teste passar (ajustar o teste!)
 - Ignorar warnings e skipped tests sem investigar
 - Duplicar código de setup entre arquivos de teste (usar `core.utils_test`)
+- Usar `cls.root_page.numchild = 0` (não funciona com `ensure_root_page()` compartilhado)
 
 ### 8.8 Coverage e Qualidade
 
@@ -701,93 +706,130 @@ python manage.py test agenda.test_wagtail_hooks.WagtailHooksTestCase.test_titulo
 ```python
 from django.test import TestCase, RequestFactory
 from django.contrib.messages.storage.fallback import FallbackStorage
-from wagtail.models import Locale
+from django.core.exceptions import ValidationError
+from wagtail.models import Locale, Site
+from taggit.models import Tag
 from core.utils_test import ensure_root_page
-from agenda.models import AgendaDoDiaPage, AgendaPage
-from agenda.wagtail_hooks import do_after_agendadodia_page_publish
+from home.models import HomePage
+from eventos.models import EventosPage, EventosIndexPage
 
-class AgendaRecorrenteTestCase(TestCase):
+class EventosPageTestCase(TestCase):
     """Testes para agenda com recorrência."""
     
     @classmethod
     def setUpTestData(cls):
         """Setup de dados compartilhados."""
         cls.root_page = ensure_root_page()
-        cls.root_page.numchild = 0
-        cls.root_page.save()
-        cls.root_page.refresh_from_db()
         
+        # CRÍTICO: Limpar páginas filhas para evitar conflitos de path
+        for child in cls.root_page.get_children():
+            child.delete()
+        
+        cls.root_page.refresh_from_db()
+        cls.locale = Locale.get_default()
         cls.factory = RequestFactory()
         
-        # Parent page
-        cls.agenda_parent = AgendaPage(
-            title="Agenda Hooks Test",
-            slug="agenda-hooks",
+        # CRÍTICO: Criar Site para testes que renderizam templates
+        if not Site.objects.filter(is_default_site=True).exists():
+            cls.site = Site.objects.create(
+                hostname='localhost',
+                port=80,
+                root_page=cls.root_page,
+                is_default_site=True,
+                site_name='Test Site'
+            )
+        else:
+            cls.site = Site.objects.get(is_default_site=True)
+        
+        # Criar HomePage
+        cls.home_page = HomePage(
+            title="Home Test",
+            slug="home-test",
         )
-        cls.root_page.add_child(instance=cls.agenda_parent)
-        cls.agenda_parent.save_revision().publish()
+        cls.root_page.add_child(instance=cls.home_page)
+        cls.home_page.save_revision().publish()
+        
+        # Criar EventosIndexPage
+        cls.index_page = EventosIndexPage(
+            title="Eventos",
+            slug="eventos",
+        )
+        cls.home_page.add_child(instance=cls.index_page)
+        cls.index_page.save_revision().publish()
     
     def setUp(self):
         """Setup por teste."""
         self.root_page.refresh_from_db()
-        self.agenda_parent.refresh_from_db()
+        self.index_page.refresh_from_db()
     
-    def _create_request(self):
-        """Helper: criar request com mensagens."""
-        request = self.factory.post('/')
+    def test_criar_evento_com_tags(self):
+        """CRÍTICO: Republish após adicionar tags para queries .live()."""
+        tag = Tag.objects.create(name="Palestra", slug="palestra")
+        
+        evento = EventosPage(
+            title="Evento Palestra",
+            slug="evento-palestra",
+            descricao="Teste",
+        )
+        self.index_page.add_child(instance=evento)
+        evento.save()
+        
+        # CRÍTICO: Re-publicar após adicionar tags
+        evento.tags.add(tag)
+        evento.save_revision().publish()
+        
+        # Agora queries .live() funcionam corretamente
+        posts = EventosPage.objects.live().filter(tags=tag)
+        self.assertEqual(posts.count(), 1)
+    
+    def test_validacao_titulo_longo(self):
+        """Validação: add_child() chama full_clean() automaticamente."""
+        evento = EventosPage(
+            title="A" * 51,  # Maior que o limite
+            slug="evento-longo",
+            descricao="Teste",
+        )
+        
+        # CRÍTICO: assertRaises deve envolver add_child()
+        # porque Wagtail chama full_clean() no save()
+        with self.assertRaises(ValidationError) as context:
+            self.index_page.add_child(instance=evento)
+        
+        self.assertIn("title", context.exception.message_dict)
+    
+    def test_tag_archive_route(self):
+        """Teste de rota que renderiza template."""
+        tag = Tag.objects.create(name="Palestra", slug="palestra")
+        
+        evento = EventosPage(
+            title="Evento Palestra",
+            slug="evento-palestra",
+            descricao="Teste",
+        )
+        self.index_page.add_child(instance=evento)
+        evento.save()
+        evento.tags.add(tag)
+        evento.save_revision().publish()
+        
+        # CRÍTICO: Adicionar site ao request para templates
+        request = self.factory.get(f"{self.index_page.url}tags/palestra/")
+        request.site = self.site
+        
+        response = self.index_page.tag_archive(request, tag="palestra")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Evento Palestra", response.content)
+    
+    def test_tag_archive_tag_inexistente(self):
+        """Teste de rota que usa django.contrib.messages."""
+        # CRÍTICO: Adicionar sistema de mensagens ao request mock
+        request = self.factory.get(f"{self.index_page.url}tags/inexistente/")
+        request.site = self.site
         setattr(request, 'session', {})
         messages = FallbackStorage(request)
         setattr(request, '_messages', messages)
-        return request
-    
-    def test_fluxo_completo_agenda_recorrente_semanal(self):
-        """Teste de integração: criar → publicar → verificar título/slug."""
-        # Arrange
-        request = self._create_request()
-        agenda = AgendaDoDiaPage(
-            title="Reunião Especial",
-            slug="reuniao-especial",
-            data_inicio="2024-11-11",
-            habilitar_recorrencia=True,
-            tipo_recorrencia="semanal",
-        )
-        self.agenda_parent.add_child(instance=agenda)
         
-        # Act
-        do_after_agendadodia_page_publish(request, agenda)
-        agenda.refresh_from_db()
-        
-        # Assert
-        self.assertIn("Agenda Hooks Test", agenda.title)
-        self.assertIn("Reunião Especial", agenda.title)
-        self.assertIn("Agenda Recorrente Semanal", agenda.title)
-        self.assertIn("11 de novembro", agenda.title)  # Data no título
-        
-        self.assertIn("recorrente", agenda.slug)
-        self.assertIn("semanal", agenda.slug)
-        self.assertIn("2024-11-11", agenda.slug)
-    
-    def test_agenda_normal_nao_modificada(self):
-        """Agenda sem recorrência deve manter título/slug originais."""
-        # Arrange
-        request = self._create_request()
-        agenda = AgendaDoDiaPage(
-            title="Evento Normal",
-            slug="evento-normal",
-            data_inicio="2024-11-15",
-            habilitar_recorrencia=False,  # SEM recorrência
-        )
-        self.agenda_parent.add_child(instance=agenda)
-        titulo_original = agenda.title
-        slug_original = agenda.slug
-        
-        # Act
-        do_after_agendadodia_page_publish(request, agenda)
-        agenda.refresh_from_db()
-        
-        # Assert - NÃO deve modificar
-        self.assertEqual(agenda.title, titulo_original)
-        self.assertEqual(agenda.slug, slug_original)
+        response = self.index_page.tag_archive(request, tag="inexistente")
+        self.assertEqual(response.status_code, 302)  # Redirect
 ```
 
 ### 8.11 Checklist de Teste para Nova Feature
@@ -803,21 +845,394 @@ class AgendaRecorrenteTestCase(TestCase):
 - [ ] Coverage mínimo 70% atingido
 - [ ] Todos os testes passando: `python manage.py test <app> --keepdb`
 
-## Observações Importantes
+### 8.12 Problemas Comuns e Soluções em Testes
+
+**Problema 1: ValidationError: 'path': ['Página com este Path já existe']**
+- **Causa**: Múltiplas classes de teste compartilham `ensure_root_page()` e criam páginas filhas com mesmos slugs
+- **Solução**: Limpar páginas filhas no `setUpTestData`:
+```python
+@classmethod
+def setUpTestData(cls):
+    cls.root_page = ensure_root_page()
+    # CRÍTICO: Limpar filhos antes de criar novos
+    for child in cls.root_page.get_children():
+        child.delete()
+    cls.root_page.refresh_from_db()
+```
+
+**Problema 2: IntegrityError: NOT NULL constraint failed**
+- **Causa**: Modelo foi alterado mas migration não foi aplicada no banco de testes
+- **Solução**: Criar e aplicar migration:
+```bash
+python manage.py makemigrations <app>
+python manage.py migrate
+# Ou rodar testes sem --keepdb uma vez
+python manage.py test <app>
+```
+
+**Problema 3: AssertionError: 0 != 1 ao filtrar por tags**
+- **Causa**: Tags adicionadas após `publish()` não aparecem em queries `.live()`
+- **Solução**: Re-publicar após adicionar tags:
+```python
+page.save()
+page.tags.add(tag)
+page.save_revision().publish()  # CRÍTICO: Re-publicar!
+```
+
+**Problema 4: AttributeError: 'NoneType' object has no attribute 'root_page'**
+- **Causa**: Template usa `{% get_site_root %}` mas request não tem Site
+- **Solução**: Criar Site e adicionar ao request:
+```python
+@classmethod
+def setUpTestData(cls):
+    if not Site.objects.filter(is_default_site=True).exists():
+        cls.site = Site.objects.create(
+            hostname='localhost',
+            port=80,
+            root_page=cls.root_page,
+            is_default_site=True,
+            site_name='Test Site'
+        )
+    else:
+        cls.site = Site.objects.get(is_default_site=True)
+
+def test_meu_teste(self):
+    request = self.factory.get('/path/')
+    request.site = self.site  # Adicionar site
+```
+
+**Problema 5: MessageFailure: You cannot add messages without installing middleware**
+- **Causa**: View usa `messages.add_message()` mas request mock não tem sistema de mensagens
+- **Solução**: Adicionar FallbackStorage ao request:
+```python
+from django.contrib.messages.storage.fallback import FallbackStorage
+
+request = self.factory.get('/path/')
+setattr(request, 'session', {})
+messages = FallbackStorage(request)
+setattr(request, '_messages', messages)
+```
+
+**Problema 6: ValidationError não é capturado por assertRaises**
+- **Causa**: `add_child()` chama `save()` que chama `full_clean()` automaticamente
+- **Solução**: assertRaises deve envolver add_child():
+```python
+# ❌ ERRADO
+page.add_child(instance=child)
+with self.assertRaises(ValidationError):
+    child.clean()
+
+# ✅ CORRETO
+with self.assertRaises(ValidationError):
+    page.add_child(instance=child)
+```
+
+## 9. Fluxo de Trabalho
+
+### 8.11 Checklist de Teste para Nova Feature
+
+- [ ] Testado cenário de sucesso principal
+- [ ] Testado casos de erro/exceção
+- [ ] Testado condições de contorno (None, vazio, valores extremos)
+- [ ] Testado com diferentes locales se aplicável
+- [ ] Hooks testados em create E publish
+- [ ] Verificado comportamento quando condição desativada
+- [ ] Usado `refresh_from_db()` após modificações de hook
+- [ ] Mensagens de erro/sucesso validadas
+- [ ] Coverage mínimo 70% atingido
+- [ ] Todos os testes passando: `python manage.py test <app> --keepdb`
+
+## 9. Fluxo de Trabalho
+
+### Antes de Implementar
+1. Verificar se código similar já existe no projeto
+2. Buscar por funções/classes relacionadas: `grep_search` ou `semantic_search`
+3. Verificar imports existentes para evitar duplicação
+4. Planejar usando `manage_todo_list` para tarefas complexas
+
+### Durante Implementação
+1. Seguir padrões DRY - reutilizar código existente
+2. Criar testes junto com a implementação
+3. Atualizar templates e migrations conforme necessário
+4. Rodar `python manage.py check` para validar
+5. Executar testes para garantir que nada quebrou
+
+### Após Implementação
+1. Rodar testes completos do app modificado
+2. Verificar erros com `get_errors`
+3. Criar commit descritivo
+4. **DOCUMENTAÇÃO**: Perguntar ao usuário se deseja gerar documentação antes de criá-la
+
+## 10. Lições Aprendidas - Casos Reais de Debugging
+
+### 10.1 Criação de Testes para Apps com Wagtail (Nov 2025)
+
+**Contexto**: Criação de 49 testes para apps `eventos` (20 testes) e `avisos` (29 testes)
+
+**Problemas Encontrados e Soluções Aplicadas:**
+
+1. **Conflitos de Path em Testes Paralelos** (49 erros iniciais)
+   - Sintoma: `ValidationError: 'path': ['Página com este Path já existe']`
+   - Causa Raiz: `ensure_root_page()` retorna a MESMA root_page para todas as classes de teste. Quando múltiplas classes criam filhos com mesmos slugs, há conflito.
+   - ❌ Solução Tentada (Falhou): Alterar slugs para serem únicos entre classes
+   - ✅ Solução Correta: Limpar páginas filhas no `setUpTestData`:
+   ```python
+   @classmethod
+   def setUpTestData(cls):
+       cls.root_page = ensure_root_page()
+       # CRÍTICO: Limpar ANTES de criar novas
+       for child in cls.root_page.get_children():
+           child.delete()
+       cls.root_page.refresh_from_db()
+   ```
+   - **Lição**: `ensure_root_page()` é compartilhado entre TODOS os testes. Sempre limpar estado anterior.
+
+2. **Campo Removido mas Migration Não Aplicada** (18 erros)
+   - Sintoma: `IntegrityError: NOT NULL constraint failed: eventos_eventospage.subtitle`
+   - Causa Raiz: Campo `subtitle` foi removido do modelo mas migration não foi criada/aplicada
+   - ✅ Solução:
+   ```bash
+   python manage.py makemigrations eventos
+   # Criou: eventos/migrations/0005_remove_eventospage_subtitle.py
+   python manage.py migrate
+   ```
+   - **Lição**: Sempre criar migrations para alterações de modelo, MESMO em ambiente de testes.
+
+3. **Tags Adicionadas Após Publicação Não Aparecem** (4 falhas)
+   - Sintoma: `AssertionError: 0 != 1` ao filtrar por tags
+   - Causa Raiz: Wagtail `.live()` queries retornam apenas revisões publicadas. Tags adicionadas após `publish()` ficam apenas no draft.
+   - ❌ Padrão Incorreto:
+   ```python
+   page.save_revision().publish()
+   page.tags.add(tag)  # Tag vai para draft, não para live
+   posts = Page.objects.live().filter(tags=tag)  # 0 resultados
+   ```
+   - ✅ Padrão Correto:
+   ```python
+   page.save()
+   page.tags.add(tag)
+   page.save_revision().publish()  # Re-publicar após tags
+   posts = Page.objects.live().filter(tags=tag)  # Funciona!
+   ```
+   - **Lição**: Sempre re-publicar após modificar campos relacionados (tags, images, etc.) se precisar consultar via `.live()`.
+
+4. **Validações Django em Testes** (2 erros)
+   - Sintoma: `ValidationError` lançado fora do `assertRaises`
+   - Causa Raiz: Wagtail chama `full_clean()` automaticamente no `save()` dentro de `add_child()`
+   - ❌ Padrão Incorreto:
+   ```python
+   page.add_child(instance=child)  # ValidationError aqui!
+   with self.assertRaises(ValidationError):
+       child.clean()  # Nunca executado
+   ```
+   - ✅ Padrão Correto:
+   ```python
+   with self.assertRaises(ValidationError):
+       page.add_child(instance=child)  # Captura erro
+   ```
+   - **Lição**: `add_child()` → `save()` → `full_clean()` automático. Envolver a operação completa no `assertRaises`.
+
+5. **Templates Renderizados em Testes Precisam de Site** (4 erros)
+   - Sintoma: `AttributeError: 'NoneType' object has no attribute 'root_page'`
+   - Causa Raiz: Template usa `{% get_site_root %}` que precisa de `Site.find_for_request(request)`
+   - ✅ Solução:
+   ```python
+   @classmethod
+   def setUpTestData(cls):
+       # Criar Site
+       if not Site.objects.filter(is_default_site=True).exists():
+           cls.site = Site.objects.create(
+               hostname='localhost',
+               port=80,
+               root_page=cls.root_page,
+               is_default_site=True,
+               site_name='Test Site'
+           )
+   
+   def test_route(self):
+       request = self.factory.get('/url/')
+       request.site = self.site  # CRÍTICO
+       response = self.page.route_method(request)
+   ```
+   - **Lição**: Testes que renderizam templates Wagtail precisam de Site configurado no request.
+
+6. **Django Messages em Request Mock** (2 erros)
+   - Sintoma: `MessageFailure: You cannot add messages without installing middleware`
+   - Causa Raiz: View usa `messages.add_message()` mas `RequestFactory` não inclui sistema de mensagens
+   - ✅ Solução:
+   ```python
+   from django.contrib.messages.storage.fallback import FallbackStorage
+   
+   request = self.factory.get('/url/')
+   setattr(request, 'session', {})
+   messages = FallbackStorage(request)
+   setattr(request, '_messages', messages)
+   ```
+   - **Lição**: Mock de request precisa de session e messages storage para views que usam `django.contrib.messages`.
+
+**Progressão de Erros Durante Debug:**
+- Inicial: 49 erros (path conflicts)
+- Após limpeza de páginas: 18 erros (migration faltando)
+- Após migration: 4 falhas + 6 erros (tags + validações + site + messages)
+- Após fixes completos: **0 erros, 0 falhas, 49 testes passando** ✅
+
+**Imports Necessários para Testes Completos:**
+```python
+from django.test import TestCase, RequestFactory
+from django.core.exceptions import ValidationError
+from django.contrib.messages.storage.fallback import FallbackStorage
+from wagtail.models import Page, Locale, Site, Collection
+from taggit.models import Tag
+from core.utils_test import ensure_root_page
+```
+
+### 10.2 Correção de Falhas em CI/CD - Hooks e Ambiente Limpo (Nov 2025)
+
+**Contexto**: Pipeline GitLab CI falhando com 5 testes de agenda + 2 erros em avisos/eventos
+
+**Problemas Encontrados e Soluções Aplicadas:**
+
+1. **Lógica de Detecção de Duplicação com Falsos Positivos** (5 falhas)
+   - Sintoma: Hooks modificando agendas normais quando só deveriam modificar recorrentes
+   - Testes falhando:
+     * `test_titulo_agenda_normal` - Agenda normal sendo modificada
+     * `test_fluxo_edicao_agenda_normal_para_recorrente` - Título alterado indevidamente
+     * `test_titulo_preserva_estrutura_original` - Estrutura não preservada
+     * `test_fluxo_completo_criacao_agenda_recorrente` - Data extra adicionada
+     * `test_titulo_com_parent_page_title` - Sufixo de data não esperado
+   - Causa Raiz: Verificação de duplicação executava ANTES da verificação de recorrência:
+   ```python
+   # ❌ PROBLEMÁTICO
+   if parent_page.title in page.slug and ("recorrente" in page.slug or page.date.strftime('%Y-%m-%d') in page.slug):
+       return  # Falsos positivos: data fragmentada no slug
+   
+   if page.habilitar_recorrencia and page.tipo_recorrencia != 'none':
+       # Processar...
+   ```
+   - ✅ Solução: Remover lógica de duplicação, confiar apenas na verificação condicional:
+   ```python
+   # ✅ CORRETO
+   if isinstance(page, AgendaDoDiaPage):
+       # Processar APENAS se recorrência ativada
+       if page.habilitar_recorrencia and page.tipo_recorrencia != 'none':
+           parent_page = page.get_parent()
+           if not parent_page:
+               return
+           # Atualizar título e slug...
+   ```
+   - **Lição**: Lógica de "prevenção de duplicação" pode causar mais problemas que resolver. Hooks do Wagtail já previnem execução múltipla no mesmo ciclo. Mantenha verificações simples e explícitas.
+
+2. **Collection Root Não Existe em Banco Limpo** (1 erro em CI)
+   - Sintoma: `AttributeError: 'NoneType' object has no attribute 'id'`
+   - Stacktrace: `Collection.get_first_root_node().id` retorna None
+   - Causa Raiz: `Image.objects.create()` tenta obter collection padrão, mas banco limpo não tem Collection root
+   - ❌ Código Problemático:
+   ```python
+   @classmethod
+   def setUpTestData(cls):
+       cls.root_page = ensure_root_page()
+       # ...
+       cls.test_image = Image.objects.create(  # FALHA aqui
+           title="Test Image",
+           file=get_test_image_file(),
+       )
+   ```
+   - ✅ Solução: Criar Collection root antes de criar imagens:
+   ```python
+   from wagtail.models import Collection
+   
+   @classmethod
+   def setUpTestData(cls):
+       cls.root_page = ensure_root_page()
+       
+       # CRÍTICO: Criar Collection root se não existir
+       if not Collection.objects.filter(depth=1).exists():
+           Collection.add_root(name="Root")
+       
+       # Agora pode criar imagens
+       cls.test_image = Image.objects.create(
+           title="Test Image",
+           file=get_test_image_file(),
+       )
+   ```
+   - **Lição**: Wagtail requer Collection root para mídia (Image, Document). Em ambiente com `--keepdb`, a Collection persiste. Em CI/CD com banco limpo, SEMPRE criar Collection root no `setUpTestData`.
+
+3. **StaticFiles Manifest Não Existe em Testes** (2 erros em CI)
+   - Sintoma: `ValueError: Missing staticfiles manifest entry for 'img/favicon/favicon.ico'`
+   - Stacktrace: `ManifestStaticFilesStorage.stored_name()` falhando
+   - Causa Raiz: `ManifestStaticFilesStorage` requer `collectstatic` antes de usar, mas testes não executam collectstatic
+   - Contexto: Templates renderizam `{% load static %}` → `{% static 'img/favicon/favicon.ico' %}`
+   - ❌ Configuração Problemática (herdada do base.py):
+   ```python
+   # sitepadrao/settings/base.py
+   STORAGES = {
+       "staticfiles": {
+           "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
+       },
+   }
+   ```
+   - ✅ Solução: Override em `testing.py` para usar storage simples:
+   ```python
+   # sitepadrao/settings/testing.py
+   # CRÍTICO: Usar StaticFilesStorage simples em testes
+   # ManifestStaticFilesStorage requer collectstatic
+   STORAGES = {
+       "default": {
+           "BACKEND": "django.core.files.storage.FileSystemStorage",
+       },
+       "staticfiles": {
+           "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+       },
+   }
+   ```
+   - **Lição**: Ambiente de testes não deve depender de artefatos de build (`collectstatic`, `npm build`, etc). Use backends simples que funcionam sem pré-processamento.
+
+4. **Diferenças entre Ambiente Local (--keepdb) e CI**
+   - **Local com `--keepdb`**: Collection persiste entre runs, testes passam
+   - **CI com banco limpo**: Collection não existe, testes falham
+   - **Detecção**: Sempre deletar `db.sqlite3` e rodar sem `--keepdb` antes de push
+   - **Validação**: Simular CI localmente:
+   ```bash
+   rm -f db.sqlite3
+   export DJANGO_SETTINGS_MODULE=sitepadrao.settings.testing
+   python manage.py migrate --run-syncdb
+   python manage.py test --verbosity=2
+   ```
+   - **Lição**: `--keepdb` é ótimo para velocidade em desenvolvimento, mas SEMPRE validar com banco limpo antes de push para CI.
+
+**Progressão de Debug:**
+- Commit 1: Fix hooks de agenda (5 falhas) → 14 testes passando ✓
+- Commit 2: Fix Collection + StaticFiles (2 erros CI) → Todos testes passando ✓
+
+**Checklist para Evitar Falhas de CI:**
+- [ ] Testar sem `--keepdb` localmente antes de push
+- [ ] Criar Collection root se usar Image/Document em testes
+- [ ] Verificar se `testing.py` usa backends simples para static/media
+- [ ] Validar que hooks têm verificações condicionais explícitas
+- [ ] Não assumir que dados persistem entre runs de teste
+- [ ] Simular ambiente CI com `DJANGO_SETTINGS_MODULE=sitepadrao.settings.testing`
+
+## 11. Observações Importantes
 
 1. **SEMPRE** verificar duplicação de código antes de criar nova função
 2. **NUNCA** criar documentação markdown sem perguntar ao usuário
 3. **SEMPRE** criar testes para novas funcionalidades
 4. **SEMPRE** usar `ensure_root_page()` de `core.utils_test` em testes
 5. **SEMPRE** normalizar locale 'pt-br' → 'pt' em testes Wagtail
-6. **SEMPRE** inicializar `numchild = 0` em páginas raiz de testes
+6. **CRÍTICO**: Limpar páginas filhas no `setUpTestData` quando usar `ensure_root_page()`
 7. **SEMPRE** fazer `root.refresh_from_db()` após operações de página
 8. Usar `RenameField` para preservar dados em migrations
 9. Verificar conflitos de nomes entre classes pai/filho
 10. Perguntar sobre documentação antes de gerar
 11. **SEMPRE** perguntar sobre comandos de ambiente antes de executar pela primeira vez
+12. **CRÍTICO**: Re-publicar páginas após adicionar tags/relacionamentos para queries `.live()`
+13. **CRÍTICO**: Criar `Site` no `setUpTestData` quando testes renderizam templates
+14. **CRÍTICO**: Criar `Collection.add_root()` no `setUpTestData` quando testes usam Image/Document
+15. **CRÍTICO**: Testar sem `--keepdb` antes de push para CI/CD (simular banco limpo)
+16. **CRÍTICO**: Settings de teste devem usar backends simples (não ManifestStaticFilesStorage)
+17. **Hooks do Wagtail**: Manter verificações condicionais simples e explícitas, evitar lógica complexa de "prevenção"
 
-## Contato e Suporte
+## 12. Contato e Suporte
 
 - Projeto: Site Padrão CODATA-PB
 - Stack: Django 5.1 + Wagtail 7.x + PostgreSQL

@@ -6,7 +6,7 @@ from blocks.institucional import LocalizacaoBlock
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
-from paginas.models import CorpoTecnicoIndexPage, CorpoTecnicoGrupoPageIndex, CorpoTecnicoPage, PaginaComBannerPage
+from paginas.models import CorpoTecnicoIndexPage, CorpoTecnicoGrupoPageIndex, CorpoTecnicoPage, PaginaComBannerPage, RichTextPage
 from .blocks import ListGrupoSecretariadoBlock
 
 class InstitucionalIndexPage(PageSitePadraoIndex):
@@ -14,7 +14,7 @@ class InstitucionalIndexPage(PageSitePadraoIndex):
     Página de índice para o conteúdo institucional.
     """
     
-    subpage_types = ['institucional.LocalizacaoPage','institucional.SecretariadoIndex', 'institucional.ComiteDeEticaPage']
+    subpage_types = ['institucional.LocalizacaoPage','institucional.SecretariadoIndex', 'institucional.ComiteDeEticaPage', 'institucional.AEmpresaPage']
 
     parent_page_types = [ 'home.HomePage' ]
 
@@ -110,3 +110,13 @@ class ComiteDeEticaPage(PaginaComBannerPage):
     class Meta:
         verbose_name = "Comitê de Ética"
         verbose_name_plural = "Comitês de Ética"
+
+class AEmpresaPage(RichTextPage):
+    template = "paginas/rich_text_page.html"
+
+    parent_page_types = [ 'institucional.InstitucionalIndexPage' ]
+    subpage_types = []
+
+    class Meta:
+        verbose_name = "Página A Empresa"
+        verbose_name_plural = "Páginas A Empresa"
