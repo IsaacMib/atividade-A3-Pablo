@@ -7,11 +7,11 @@
             <h1 class="linha-do-tempo-page__titulo">{{ page.title }}</h1>
             <p class="linha-do-tempo-page__data">Publicado em {{ page.data_publicacao|date:"d/m/Y" }}</p>
             {% if page.imagens and page.imagens|length > 1 %}
-                <div class="noticias-img-destaque tw:pb-12">
-                <div class="swiper banner-img-swiper2">
+                <div class="card-lt-destaque tw:pb-12">
+                <div class="swiper banner-img-swiper2 d-flex align-items-center">
                     <div class="swiper-wrapper">
                     {% for imagem in page.imagens %}
-                        <div class="swiper-slide swiper-slide-noticias">
+                        <div class="swiper-slide swiper-slide-images">
                             {% image imagem.value.image original loading="lazy" class="carrossel-banners--img" alt=imagem.value.alt_text|default:imagem.value.image.title %}
                         </div>
                     {% endfor %}
@@ -24,7 +24,7 @@
                     <div class="swiper-wrapper gap-2 my-1 ms-2">
                     {% for imagem in page.imagens %}
                         <div
-                            class="swiper-slide swiper-slide-noticias"
+                            class="swiper-slide swiper-slide-images"
                             style="cursor: pointer;"
                         >
                             {% image imagem.value.image original loading="lazy" class="carrossel-banners--img" alt=imagem.value.alt_text|default:imagem.value.image.title %}
