@@ -11,3 +11,6 @@ class LGPDPage(PaginaComBannerPage):
     class Meta:
         verbose_name = "LGPD"
         verbose_name_plural = "LGPD"
+
+
+
