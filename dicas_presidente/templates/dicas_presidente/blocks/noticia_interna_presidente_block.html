@@ -1,0 +1,16 @@
+{% load wagtailcore_tags %}
+
+<div class="dica-bloco dica-bloco-noticia">
+    <div class="dica-bloco-header">
+        <i class="bi bi-newspaper"></i>
+        <h3>Notícia Interna{% if value.categoria %} - {{ value.categoria|capfirst }}{% endif %}</h3>
+    </div>
+    
+    <div class="dica-bloco-content">
+        {% if value.conteudo %}
+            <div class="noticia-conteudo">
+                {{ value.conteudo|richtext }}
+            </div>
+        {% endif %}
+    </div>
+</div>

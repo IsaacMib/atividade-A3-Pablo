@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     "lgpd",
     "cursos",
     "contatos",
+    "dicas_presidente",
 
 
     "plone_migration",

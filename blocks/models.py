@@ -1410,6 +1410,124 @@ class FormularioSubmissao(models.Model):
         ordering = ['-data_envio']
 
 
+# ============================================================
+# BLOCOS - DICAS DO PRESIDENTE
+# ============================================================
+
+class DicaPresidenteWidget(StructBlock):
+    """
+    Widget para exibir a última dica ou uma frase do presidente.
+    Pode ser inserido em sidebars ou home da intranet.
+    """
+    titulo = CharBlock(
+        required=False,
+        default="Dica do Presidente",
+        label="Título do Widget",
+        help_text="Título exibido no topo do widget"
+    )
+    
+    pagina_dicas = PageChooserBlock(
+        required=True,
+        page_type=['dicas_presidente.DicasPresidenteIndexPage'],
+        label="Página de Dicas",
+        help_text="Selecione a página de onde buscar as dicas (obrigatório)"
+    )
+    
+    quantidade_dicas = IntegerBlock(
+        required=False,
+        default=3,
+        min_value=1,
+        max_value=6,
+        label="Quantidade de dicas",
+        help_text="Número de dicas a exibir (1 a 6)"
+    )
+    
+    class Meta:
+        label = "Widget - Dica do Presidente"
+        icon = "snippet"
+        template = "blocks/widget_dica_presidente.html"
+
+
+class ListaDicasPresidenteBlock(StructBlock):
+    """
+    Lista de dicas do presidente para inserir em páginas.
+    Permite escolher tipo de dica, layout e quantidade.
+    """
+    titulo = CharBlock(
+        required=False,
+        default="Dicas do Presidente",
+        label="Título da Seção"
+    )
+    
+    mostrar_titulo = BooleanBlock(
+        required=False,
+        default=True,
+        label="Mostrar título e linha abaixo?"
+    )
+    
+    pagina_dicas = PageChooserBlock(
+        required=True,
+        page_type=['dicas_presidente.DicasPresidenteIndexPage'],
+        label="Página de Dicas",
+        help_text="Selecione a página de índice de Dicas do Presidente"
+    )
+    
+    quantidade = IntegerBlock(
+        required=False,
+        default=6,
+        min_value=1,
+        max_value=12,
+        label="Quantidade de dicas",
+        help_text="Número de dicas a exibir"
+    )
+    
+    texto_link = CharBlock(
+        required=False,
+        default="Ver todas as dicas",
+        label="Texto do link para todas as dicas"
+    )
+    
+    layout = ChoiceBlock(
+        choices=[
+            ('lista', 'Lista'),
+            ('grid', 'Blocos'),
+        ],
+        required=False,
+        default='lista',
+        label="Layout das dicas"
+    )
+    
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        
+        pagina_dicas = value.get('pagina_dicas')
+        quantidade = value.get('quantidade') or 6
+        texto_link = value.get('texto_link') or "Ver todas as dicas"
+        
+        dicas = []
+        pagina_dicas_url = None
+        
+        if pagina_dicas:
+            dicas = pagina_dicas.get_ultimas_dicas(quantidade=quantidade)
+            pagina_dicas_url = pagina_dicas.url
+        
+        context.update({
+            'titulo': value.get('titulo'),
+            'dicas': dicas,
+            'pagina_dicas_url': pagina_dicas_url,
+            'texto_link': texto_link,
+            'mostrar_titulo': value.get('mostrar_titulo', True),
+            'layout': value.get('layout', 'lista'),
+        })
+        
+        return context
+    
+    class Meta:
+        label = "Lista de Dicas do Presidente"
+        icon = "grip"
+        template = "blocks/lista_dicas_presidente.html"
+
+
 class BaseRichTextStreamBlock(StreamBlock):
     """
     Define the custom blocks that `StreamField` will utilize

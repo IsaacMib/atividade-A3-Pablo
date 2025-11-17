@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags sharing_tags %}
+
+{% block body_class %}template-dica-presidente-page{% endblock %}
+
+{% block content %}
+
+<div class="dica-presidente-page-container">
+    <div class="container">
+        <!-- Tipo e Data -->
+        <div class="dica-meta mb-3">
+            <span class="dica-tipo-badge">{{ page.get_tipo_dica_display_icon }} {{ page.get_tipo_dica_display }}</span>
+            {% if page.destaque %}
+            <span class="etiqueta etiqueta-importante ms-2"><i class="bi bi-star-fill"></i> Destaque</span>
+            {% endif %}
+            <span class="dica-data ms-3 texto-muted">{{ page.data_publicacao|date:"d/m/Y H:i" }}</span>
+        </div>
+        
+        <!-- Título -->
+        <h1 class="dica-titulo">{{ page.title }}</h1>
+        
+        <!-- Descrição/Resumo -->
+        {% if page.descricao %}
+        <p class="dica-descricao lead">{{ page.descricao }}</p>
+        {% endif %}
+    </div>
+    
+    <!-- Galeria de Imagens ou Imagem de Destaque -->
+    {% if page.images and page.images|length > 1 and page.slideshow_imagens %}
+        <div class="dica-presidente-imagem-destaque--wrapper">
+            <div class="swiper dicas-mySwiper2">
+                <div class="swiper-wrapper">
+                    {% for imagem in page.images %}
+                        <div class="swiper-slide swiper-slide-dicas">
+                            {% if page.is_remote %}
+                                <img src="{{ imagem.url }}" alt="{{ imagem.title }}" class="image-dica-carrossel" loading="lazy">
+                            {% else %}
+                                {% image imagem.value max-1200x500 class="image-dica-carrossel" loading="lazy" %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+
+            <div thumbsSlider="" class="swiper dicas-mySwiper">
+                <div class="swiper-wrapper">
+                    {% for imagem in page.images %}
+                        <div class="swiper-slide swiper-slide-dicas">
+                            {% if page.is_remote %}
+                                <img src="{{ imagem.url }}" alt="{{ imagem.title }}" class="image-dica-carrossel" loading="lazy">
+                            {% else %}
+                                {% image imagem.value max-200x100 class="image-dica-carrossel" loading="lazy" %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    {% elif page.get_imagem_principal %}
+        <div class="dica-presidente-imagem-destaque--wrapper">
+            <div class="dica-imagem-destaque">
+                {% if page.is_remote %}
+                    <img src="{{ page.get_imagem_principal }}" alt="{{ page.title }}" loading="lazy">
+                {% else %}
+                    {% image page.get_imagem_principal max-1200x500 loading="lazy" %}
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+    
+    <!-- Conteúdo por Tipo -->
+    <div class="container">
+        <div class="dica-conteudo mb-5">
+            
+            <!-- Renderiza todos os blocos do StreamField -->
+            {% if page.conteudo %}
+                {% for block in page.conteudo %}
+                    {% include_block block %}
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> Esta dica ainda não possui conteúdo.
+                </div>
+            {% endif %}
+            
+            <!-- Arquivos Anexos -->
+            {% if page.arquivos %}
+            <div class="arquivos-anexos mt-5 p-4 border rounded bg-light">
+                <h3 class="mb-3"><i class="bi bi-paperclip"></i> Arquivos Anexos</h3>
+                <div class="list-group">
+                    {% for block in page.arquivos %}
+                    {% with documento=block.value %}
+                    <div class="list-group-item d-flex align-items-center justify-content-between">
+            
+                        <!-- Ícone + nome do arquivo -->
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-file-earmark-pdf me-3 text-danger fs-4"></i>
+                            <span>{{ documento.title }}</span>
+                        </div>
+
+                        <!-- Ações -->
+                        <div class="acoes-documento d-flex align-items-center">
+
+                            <!-- Visualizar no modal -->
+                            <button class="icone-acao btn btn-sm btn-light me-2"
+                                onclick="showDocument(
+                                    '{% url 'core:document_serve_inline' documento.id documento.filename %}',
+                                    '{{ documento.title|escapejs }}'
+                                )"
+                                title="Visualizar">
+                                <i class="bi bi-eye"></i>
+                            </button>
+
+                            <!-- Abrir em nova aba -->
+                            <a href="{% url 'core:document_serve_inline' documento.id documento.filename %}"
+                               target="_blank"
+                               class="icone-acao btn btn-sm btn-light me-2"
+                               title="Abrir em nova aba">
+                                <i class="bi bi-box-arrow-up-right"></i>
+                            </a>
+
+                            <!-- Download -->
+                            <a href="{{ documento.url }}"
+                               class="icone-acao btn btn-sm btn-light"
+                               title="Download">
+                                <i class="bi bi-download"></i>
+                            </a>
+
+                        </div>
+                    </div>
+                    {% endwith %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            
+            <!-- Tags -->
+            {% if page.get_tags %}
+            <div class="dica-tags mt-5 p-3 border-top">
+                <strong class="me-2"><i class="bi bi-tags"></i> Tags:</strong>
+                {% for tag in page.get_tags %}
+                    <a href="{{ tag.url }}" class="badge bg-primary text-white me-2 mb-2 px-3 py-2">{{ tag.name }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% include "include/document_viewer_modal.html" %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const swiperThumbs = new Swiper(".dicas-mySwiper", {
+    loop: true,
+    spaceBetween: 0,
+    slidesPerView: 4,
+    freeMode: true,
+    watchSlidesProgress: true,
+  });
+
+  const swiperMain = new Swiper(".dicas-mySwiper2", {
+    loop: true,
+    spaceBetween: 10,
+    autoHeight: true,
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    thumbs: { swiper: swiperThumbs },
+  });
+});
+</script>
+
+{% endblock %}

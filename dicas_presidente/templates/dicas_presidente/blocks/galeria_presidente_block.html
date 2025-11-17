@@ -1,0 +1,26 @@
+{% load wagtailimages_tags %}
+
+<div class="dica-bloco dica-bloco-galeria">
+    <div class="dica-bloco-header">
+        <i class="bi bi-camera"></i>
+        <h3>Galeria de Imagens</h3>
+    </div>
+    
+    <div class="dica-bloco-content">
+        {% if value.legenda %}
+            <div class="galeria-legenda">
+                <p>{{ value.legenda }}</p>
+            </div>
+        {% endif %}
+        
+        {% if value.imagens %}
+            <div class="galeria-grid">
+                {% for imagem in value.imagens %}
+                    <div class="galeria-item">
+                        {% image imagem fill-400x300 %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
