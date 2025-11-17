@@ -900,9 +900,9 @@ class BlocoListaCursosBlock(StructBlock):
         return context
 
     class Meta:
-        template = 'blocks/cursos/bloco_lista_cursos.html'
+        template = 'blocks/bloco_lista_cursos.html'
         icon = 'list-ul'
-        label = 'Lista Padrão de Cursos'
+        label = 'Lista de Cursos'
 
 class BlocoGridCursosBlock(StructBlock):
     """Bloco Grid de Cursos - Cards verticais em grid responsivo"""
@@ -967,7 +967,7 @@ class BlocoGridCursosBlock(StructBlock):
         return context
 
     class Meta:
-        template = 'blocks/cursos/bloco_grid_cursos.html'
+        template = 'blocks/bloco_grid_cursos.html'
         icon = 'grip'
         label = 'Grid de Cursos'
 
