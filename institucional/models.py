@@ -14,7 +14,9 @@ class InstitucionalIndexPage(PageSitePadraoIndex):
     Página de índice para o conteúdo institucional.
     """
     
-    subpage_types = ['institucional.LocalizacaoPage','institucional.SecretariadoIndex', 'institucional.ComiteDeEticaPage', 'institucional.AEmpresaPage']
+    subpage_types = ['institucional.LocalizacaoPage','institucional.SecretariadoIndex', 
+                     'institucional.ComiteDeEticaPage', 'institucional.AEmpresaPage',
+                     'institucional.MissaoVisaoValores']
 
     parent_page_types = [ 'home.HomePage' ]
 
