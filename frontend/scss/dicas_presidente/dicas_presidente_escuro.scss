@@ -24,7 +24,7 @@
     border: 1px solid variables.$color-grey-800;
     
     &:hover {
-      border-color: variables.$color-grey-700;
+      border-color: variables.$color-grey-100;
     }
     
     .dica-bloco-content {
@@ -46,11 +46,10 @@
   
   // Mensagem Pessoal - Tema Escuro
   .dica-bloco-mensagem {
-    border-left-color: variables.$color-primary;
     
     .mensagem-texto {
       p:first-child {
-        color: variables.$color-primary-lighter;
+        color: variables.$color-grey-100;
       }
     }
     
@@ -306,7 +305,7 @@
       
       .swiper-slide-thumb-active img {
         opacity: 1;
-        border-color: variables.$color-primary;
+        border-color: variables.$color-white;
       }
     }
   }
@@ -451,15 +450,15 @@
   
   // Arquivos Anexos
   .arquivos-anexos {
-    background: variables.$color-grey-900;
+    background: variables.$color-black !important;
     
     h3 {
-      color: variables.$color-primary;
+      color: variables.$color-grey-100;
     }
     
     .lista-arquivos {
       li a {
-        color: variables.$color-primary;
+        color: variables.$color-grey-100;
       }
     }
   }
@@ -751,21 +750,21 @@
   // ============================================================
   
   .arquivos-anexos {
-    background: variables.$color-grey-800 !important;
-    border-color: variables.$color-grey-700 !important;
+    background: variables.$color-grey-700 !important;
+    border-color: variables.$color-grey-600 !important;
     
     h3 {
       color: variables.$color-grey-100;
     }
     
     .list-group-item {
-      background: variables.$color-grey-900;
+      background: variables.$color-grey-800;
       border-color: variables.$color-grey-700;
       color: variables.$color-grey-200;
       
       &:hover {
         background: variables.$color-grey-800;
-        border-color: variables.$color-primary;
+        border-color: variables.$color-black;
       }
       
       i {
@@ -782,11 +781,11 @@
     }
     
     .badge {
-      background: variables.$color-primary !important;
+      background: variables.$color-grey-800 !important;
       color: variables.$color-white !important;
       
       &:hover {
-        background: variables.$color-primary-hover !important;
+        background: variables.$color-grey-900 !important;
       }
     }
   }
@@ -796,7 +795,7 @@
   // ============================================================
   
   .pagination-progress-bar {
-    background: variables.$color-primary;
+    background: variables.$color-white;
     opacity: 0.3;
   }
   
@@ -805,11 +804,11 @@
       variables.$color-bloco-mensagem-1-dark 0%, 
       variables.$color-bloco-recomendacao-2-dark 20%,
       variables.$color-bloco-noticia-3-dark 40%,
-      variables.$color-primary 60%,
+      variables.$color-white 60%,
       variables.$color-bloco-galeria-4-dark 80%,
       variables.$color-bloco-frase-5-dark 100%
     );
-    box-shadow: 0 0 12px variables.$color-primary-70;
+    box-shadow: 0 0 12px variables.$color-grey-50;
     opacity: 1;
   }
 }

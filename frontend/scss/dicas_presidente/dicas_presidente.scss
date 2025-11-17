@@ -1023,31 +1023,51 @@
 }
 
 // Arquivos Anexos
-.arquivos-anexos {
-  background: variables.$color-grey-50;
-  padding: 1.5rem;
-  border-radius: variables.$border-radius-md;
-  
-  h3 {
-    color: variables.$color-primary;
-    margin-bottom: 1rem;
+.acoes-documento {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+
+  @include variables.media-breakpoint-down(md) {
+    gap: 2.5rem; // mais espaçamento no mobile
   }
-  
-  .lista-arquivos {
-    list-style: none;
-    padding: 0;
-    
-    li {
-      padding: 0.5rem 0;
-      
-      a {
-        color: variables.$color-primary;
-        text-decoration: none;
-        
-        &:hover {
-          text-decoration: underline;
-        }
+
+  .icone-acao {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.4rem 0.55rem; // tamanho confortável para clique
+    border-radius: 6px;
+    transition: background 0.2s ease;
+
+    // Ícone interno
+    i {
+      font-size: 1.5rem;
+
+      @include variables.media-breakpoint-down(md) {
+        font-size: 1.75rem;
       }
+
+      transition: opacity 0.2s, color 0.2s;
+    }
+
+    // Hover padrão
+    &:hover {
+      background: variables.$color-grey-900;
+
+      i {
+        opacity: 0.7;
+      }
+    }
+
+    // Primeiro botão → ação principal (visualizar)
+    &:first-child i {
+      color: variables.$color-primary;
+    }
+
+    // Último botão → download (cinza)
+    &:last-child i {
+      color: variables.$color-grey-600;
     }
   }
 }

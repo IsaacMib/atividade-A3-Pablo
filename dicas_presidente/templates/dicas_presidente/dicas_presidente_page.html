@@ -26,7 +26,7 @@
     </div>
     
     <!-- Galeria de Imagens ou Imagem de Destaque -->
-    {% if page.images and page.images|length > 1 %}
+    {% if page.images and page.images|length > 1 and page.slideshow_imagens %}
         <div class="dica-presidente-imagem-destaque--wrapper">
             <div class="swiper dicas-mySwiper2">
                 <div class="swiper-wrapper">
@@ -92,15 +92,51 @@
                 <h3 class="mb-3"><i class="bi bi-paperclip"></i> Arquivos Anexos</h3>
                 <div class="list-group">
                     {% for block in page.arquivos %}
-                        <a href="{{ block.value.url }}" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center">
+                    {% with documento=block.value %}
+                    <div class="list-group-item d-flex align-items-center justify-content-between">
+            
+                        <!-- Ícone + nome do arquivo -->
+                        <div class="d-flex align-items-center">
                             <i class="bi bi-file-earmark-pdf me-3 text-danger fs-4"></i>
-                            <span>{{ block.value.title }}</span>
-                            <i class="bi bi-box-arrow-up-right ms-auto"></i>
-                        </a>
+                            <span>{{ documento.title }}</span>
+                        </div>
+
+                        <!-- Ações -->
+                        <div class="acoes-documento d-flex align-items-center">
+
+                            <!-- Visualizar no modal -->
+                            <button class="icone-acao btn btn-sm btn-light me-2"
+                                onclick="showDocument(
+                                    '{% url 'core:document_serve_inline' documento.id documento.filename %}',
+                                    '{{ documento.title|escapejs }}'
+                                )"
+                                title="Visualizar">
+                                <i class="bi bi-eye"></i>
+                            </button>
+
+                            <!-- Abrir em nova aba -->
+                            <a href="{% url 'core:document_serve_inline' documento.id documento.filename %}"
+                               target="_blank"
+                               class="icone-acao btn btn-sm btn-light me-2"
+                               title="Abrir em nova aba">
+                                <i class="bi bi-box-arrow-up-right"></i>
+                            </a>
+
+                            <!-- Download -->
+                            <a href="{{ documento.url }}"
+                               class="icone-acao btn btn-sm btn-light"
+                               title="Download">
+                                <i class="bi bi-download"></i>
+                            </a>
+
+                        </div>
+                    </div>
+                    {% endwith %}
                     {% endfor %}
                 </div>
             </div>
             {% endif %}
+
             
             <!-- Tags -->
             {% if page.get_tags %}
@@ -114,6 +150,8 @@
         </div>
     </div>
 </div>
+
+{% include "include/document_viewer_modal.html" %}
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

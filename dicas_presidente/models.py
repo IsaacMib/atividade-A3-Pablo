@@ -265,9 +265,9 @@ class DicasPresidentePage(PageSitePadrao):
             heading="Imagens da Dica",
         ),
         FieldPanel("data_publicacao"),
-        FieldPanel("tags"),
         FieldPanel("conteudo"),
         FieldPanel("arquivos"),
+        FieldPanel("tags"),
     ]
     
     promote_panels = PageSitePadrao.promote_panels
@@ -474,6 +474,9 @@ class DicasPresidenteIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         verbose_name_plural = "Páginas de Índice - Dicas do Presidente"
     
     icon = "folder-open-inverse"
+
+    def children(self):
+        return self.get_children().specific().live()
     
     def get_dicas_destaque(self, quantidade=3):
         return (
@@ -502,6 +505,22 @@ class DicasPresidenteIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         """
         return self.get_todas_dicas()[:quantidade]
     
+    @route(r"^tags/$", name="tag_archive")
+    @route(r"^tags/([\w-]+)/$", name="tag_archive")
+    def tag_archive(self, request, tag=None):
+
+        try:
+            tag = Tag.objects.get(slug=tag)
+        except Tag.DoesNotExist:
+            if tag:
+                msg = 'There are no blog posts tagged with "{}"'.format(tag)
+                messages.add_message(request, messages.INFO, msg)
+            return redirect(self.url)
+
+        posts = self.get_posts(tag=tag)
+        context = {"self": self, "tag": tag, "posts": posts}
+        return render(request, "dicas_presidente/dicas_presidente_index_page.html", context)
+    
     def get_frases_aleatorias(self):
         """Retorna todas as dicas que contêm blocos de frase."""
         dicas = self.get_todas_dicas()
@@ -524,6 +543,20 @@ class DicasPresidenteIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         if frases:
             return random.choice(frases)
         return None
+    
+    def get_posts(self, tag=None):
+        posts = DicasPresidentePage.objects.live().descendant_of(self)
+        if tag:
+            posts = posts.filter(tags=tag)
+        return posts
+    
+    def get_child_tags(self):
+        tags = []
+        for post in self.get_posts():
+            # Not tags.append() because we don't want a list of lists
+            tags += post.get_tags
+        tags = sorted(set(tags))
+        return tags
     
     def get_context(self, request):
         """Adiciona dicas paginadas ao contexto."""

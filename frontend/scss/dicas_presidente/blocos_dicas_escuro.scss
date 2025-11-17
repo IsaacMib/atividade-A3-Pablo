@@ -12,7 +12,7 @@
     color: variables.$color-white;
 
     &:hover {
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 6px 20px variables.$color-black-70;
       border-left-width: 6px;
     }
 
@@ -62,7 +62,7 @@
       border-bottom-color: variables.$color-bloco-mensagem-2-dark;
 
       i {
-        color: variables.$color-bloco-mensagem-5-light;
+        color: variables.$color-bloco-mensagem-1-dark;
       }
     }
 
@@ -80,7 +80,7 @@
     }
 
     .mensagem-assinatura {
-      border-top: 2px solid variables.$color-bloco-mensagem-2-dark;
+      border-top: 2px solid variables.$color-grey-200;
       color: variables.$color-white;
     }
   }
@@ -97,7 +97,7 @@
       border-bottom-color: variables.$color-bloco-recomendacao-2-dark;
 
       i {
-        color: variables.$color-bloco-recomendacao-5-light;
+        color: variables.$color-bloco-recomendacao-1-dark;
       }
     }
 
@@ -159,6 +159,22 @@
         color: variables.$color-bloco-recomendacao-5-dark !important;
       }
     }
+
+    .recomendacao-conteudo-adicional {
+
+      color: variables.$color-white;
+
+      h2, h3, h4 {
+        color: variables.$color-bloco-recomendacao-5-dark !important;
+      }
+
+      a {
+        color: variables.$color-bloco-recomendacao-5-dark !important;
+        &:hover {
+          color: variables.$color-bloco-recomendacao-4-dark !important;
+        }
+      }
+    }
   }
 
   // ============================================================
@@ -178,14 +194,14 @@
     }
 
     .dica-bloco-content {
-      h4, h5, h6 {
-        color: variables.$color-bloco-noticia-2-dark !important;
+      h2, h3, h4 {
+        color: variables.$color-bloco-noticia-5-dark !important;
       }
 
       a {
-        color: variables.$color-bloco-noticia-2-dark !important;
+        color: variables.$color-bloco-noticia-5-dark !important;
         &:hover {
-          color: variables.$color-bloco-noticia-1-dark !important;
+          color: variables.$color-bloco-noticia-4-dark !important;
         }
       }
     }
@@ -249,12 +265,12 @@
       border-bottom-color: variables.$color-bloco-frase-3-dark;
 
       i {
-        color: variables.$color-bloco-frase-5-light;
+        color: variables.$color-bloco-frase-1-dark;
       }
     }
 
     .dica-bloco-content {
-      h4, h5, h6 {
+      h2, h3, h4 {
         color: variables.$color-bloco-frase-1-dark !important;
       }
 
