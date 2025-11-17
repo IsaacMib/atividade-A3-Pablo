@@ -22,67 +22,90 @@ def editor_js():
     )
 
 
-def atualizar_titulo_slug_agenda_recorrente(page, parent_page, is_new=False):
+def _mapear_tipo_recorrencia(tipo_recorrencia, intervalo_recorrencia):
     """
-    Atualiza o título e slug de uma agenda recorrente.
+    Mapeia o tipo de recorrência para texto descritivo.
+    
+    Args:
+        tipo_recorrencia: Tipo da recorrência ('days', 'months', 'years')
+        intervalo_recorrencia: Intervalo da recorrência
+        
+    Returns:
+        tuple: (tipo_slug, tipo_recorrencia_texto)
+    """
+    if tipo_recorrencia == 'days' and intervalo_recorrencia == 7:
+        return 'semanal', 'Semanal'
+    
+    mapeamento_slug = {
+        'days': 'diaria',
+        'months': 'mensal',  
+        'years': 'anual'
+    }
+    
+    mapeamento_texto = {
+        'days': 'Diária',
+        'months': 'Mensal',  
+        'years': 'Anual'
+    }
+    
+    tipo_slug = mapeamento_slug.get(tipo_recorrencia, tipo_recorrencia)
+    tipo_texto = mapeamento_texto.get(tipo_recorrencia, tipo_recorrencia.title())
+    
+    return tipo_slug, tipo_texto
+
+
+def atualizar_titulo_slug_agenda_recorrente(page, parent_page):
+    """
+    Atualiza o título e slug de uma agenda recorrente baseado nas configurações atuais.
+    SEMPRE reconstrói do zero usando: parent_page.title + data + tipo_recorrencia.
     
     Args:
         page: Instância de AgendaDoDiaPage
         parent_page: Página pai da agenda
-        is_new: Se True, é uma nova página. Se False, é uma atualização.
-    
-    Returns:
-        tuple: (titulo_original, slug_original) extraídos da página
     """
-    # Guardar o título e slug originais da agenda
-    titulo_original = page.title
-    slug_original = page.slug
-    
-    # Se não é nova página, remover sufixos de recorrência antigos do título
-    if not is_new:
-        for sufixo in [' - Agenda Recorrente Diária', ' - Agenda Recorrente Semanal', 
-                      ' - Agenda Recorrente Mensal', ' - Agenda Recorrente Anual']:
-            if sufixo in titulo_original:
-                titulo_original = titulo_original.replace(sufixo, '').strip()
-                # Remove também o título do pai se estiver no início
-                if titulo_original.startswith(f"{parent_page.title} - "):
-                    titulo_original = titulo_original.replace(f"{parent_page.title} - ", '', 1).strip()
-                break
-    
-    # Atualizar o slug para incluir "recorrente" e a data
     data_slug = page.date.strftime('%Y-%m-%d')
-    
-    # Mapear tipos de recorrência para texto descritivo no slug
-    if page.tipo_recorrencia == 'days' and page.intervalo_recorrencia == 7:
-        tipo_slug = 'semanal'
-    else:
-        tipo_slug = {
-            'days': 'diaria',
-            'months': 'mensal',  
-            'years': 'anual'
-        }.get(page.tipo_recorrencia, page.tipo_recorrencia)
-    
-    if "recorrente" not in slug_original:
-        page.slug = slugify(f"{slug_original}-recorrente-{tipo_slug}-{data_slug}")
-    else:
-        # Se já tem recorrente, atualiza tipo e data
-        page.slug = slugify(f"{slug_original}-{tipo_slug}-{data_slug}")
-
-    # Mapear tipos de recorrência para texto descritivo no título
-    if page.tipo_recorrencia == 'days' and page.intervalo_recorrencia == 7:
-        tipo_recorrencia_texto = 'Semanal'
-    else:
-        tipo_recorrencia_texto = {
-            'days': 'Diária',
-            'months': 'Mensal',  
-            'years': 'Anual'
-        }.get(page.tipo_recorrencia, page.tipo_recorrencia.title())
-    
-    # Atualizar o título para incluir o título do pai, título original, tipo de recorrência e data
     data_extensa = page.date.strftime("%d de %B")
-    page.title = f"{parent_page.title} - {titulo_original} - Agenda Recorrente {tipo_recorrencia_texto} - {data_extensa}"
     
-    return titulo_original, slug_original
+    tipo_slug, tipo_recorrencia_texto = _mapear_tipo_recorrencia(
+        page.tipo_recorrencia, 
+        page.intervalo_recorrencia
+    )
+    
+    page.slug = slugify(f"{parent_page.slug}-agenda-recorrente-{tipo_slug}-{data_slug}")
+    page.title = f"{parent_page.title} - Agenda Recorrente {tipo_recorrencia_texto} - {data_extensa}"
+
+
+def atualizar_titulo_slug_agenda_normal(page, parent_page):
+    """
+    Atualiza o título e slug de uma agenda normal (sem recorrência).
+    Formato: {Nome do Pai} - Agenda do Dia - {Data}
+    
+    Args:
+        page: Instância de AgendaDoDiaPage
+        parent_page: Página pai da agenda
+    """
+    data_slug = page.date.strftime('%Y-%m-%d')
+    data_extensa = page.date.strftime("%d de %B de %Y")
+    
+    page.slug = slugify(f"{parent_page.slug}-agenda-{data_slug}")
+    page.title = f"{parent_page.title} - Agenda do Dia - {data_extensa}"
+
+
+def atualizar_titulo_slug_agenda(page, parent_page):
+    """
+    Atualiza o título e slug de uma agenda (recorrente ou normal).
+    Detecta automaticamente o tipo e aplica a formatação adequada.
+    
+    Args:
+        page: Instância de AgendaDoDiaPage
+        parent_page: Página pai da agenda
+    """
+    is_recorrente = page.habilitar_recorrencia and page.tipo_recorrencia != 'none'
+    
+    if is_recorrente:
+        atualizar_titulo_slug_agenda_recorrente(page, parent_page)
+    else:
+        atualizar_titulo_slug_agenda_normal(page, parent_page)
 
 
 def processar_erro_agenda(e):
@@ -101,7 +124,7 @@ def processar_erro_agenda(e):
         if 'slug' in data:
             error_message = data['slug'][0]
     except:
-        pass  # Se não conseguir fazer parse, usa a mensagem original
+        pass
     
     return error_message
 
@@ -109,61 +132,84 @@ def processar_erro_agenda(e):
 @hooks.register('after_create_page')
 def do_after_agendadodia_page_create(request, page):
     """Hook executado após criar uma nova página de agenda."""
-    if isinstance(page, AgendaDoDiaPage):
-        # Processar apenas agendas recorrentes
-        if page.habilitar_recorrencia and page.tipo_recorrencia != 'none':
-            parent_page = page.get_parent()
-            if not parent_page:
-                return
+    if not isinstance(page, AgendaDoDiaPage):
+        return
+    
+    parent_page = page.get_parent()
+    if not parent_page:
+        return
+    
+    # Atualizar título e slug baseado no tipo (recorrente ou normal)
+    atualizar_titulo_slug_agenda(page, parent_page)
+    
+    # Verificar se é recorrente para mensagem de sucesso
+    is_recorrente = page.habilitar_recorrencia and page.tipo_recorrencia != 'none'
+    
+    try:
+        # Salvar as mudanças no modelo antes de criar revisão
+        page.save(update_fields=['title', 'slug'])
+        
+        # Criar nova revisão com as alterações
+        new_revision = page.save_revision()
+        
+        if page.live:
+            # Page has been created and published at the same time,
+            # so ensure that the updated title is on the published version too
+            new_revision.publish()
+        
+        # Mostrar informação sobre recorrência (apenas se for recorrente)
+        if is_recorrente:
+            proximas_datas = page.get_proximas_datas_recorrencia(limite=5)
+            if len(proximas_datas) > 1:
+                messages.success(
+                    request, 
+                    f"Agenda criada com sucesso! Esta agenda se repetirá em datas próximas devido à configuração de recorrência."
+                )
             
-            # Atualizar título e slug para agenda recorrente
-                atualizar_titulo_slug_agenda_recorrente(page, parent_page, is_new=True)
-            
-                try:
-                    new_revision = page.save_revision()
-                    if page.live:
-                        # page has been created and published at the same time,
-                        # so ensure that the updated title is on the published version too
-                        new_revision.publish()
-                        
-                    # Mostrar informação sobre recorrência
-                    proximas_datas = page.get_proximas_datas_recorrencia(limite=5)
-                    if len(proximas_datas) > 1:
-                        messages.success(
-                            request, 
-                            f"Agenda criada com sucesso! Esta agenda se repetirá em datas próximas devido à configuração de recorrência."
-                        )
-                        
-                except Exception as e:
-                    error_message = processar_erro_agenda(e)
+    except Exception as e:
+        error_message = processar_erro_agenda(e)
+        
+        # Remover mensagens existentes
+        list(django_messages.get_messages(request))
+        
+        # Remover a página em caso de erro
+        page.delete()
+        messages.error(request, error_message)
+        
+        # Redirecionar para wagtailadmin_explore com parent_page_id
+        return redirect("wagtailadmin_explore", parent_page_id=parent_page.id)
 
-                    # Remover mensagens existentes
-                    list(django_messages.get_messages(request))
 
-                    # Remover a página em caso de erro
-                    page.delete()
-                    messages.error(request, error_message)
-                    # Redirecionar para wagtailadmin_explore com parent_page_id
-                    return redirect("wagtailadmin_explore", parent_page_id=parent_page.id)
 @hooks.register('after_publish_page')
 def do_after_agendadodia_page_publish(request, page):
     """Hook executado após publicar/atualizar uma página de agenda existente."""
-    if isinstance(page, AgendaDoDiaPage):
-        # Processar apenas agendas recorrentes
-        if page.habilitar_recorrencia and page.tipo_recorrencia != 'none':
-            parent_page = page.get_parent()
-            if not parent_page:
-                return
+    if not isinstance(page, AgendaDoDiaPage):
+        return
+    
+    parent_page = page.get_parent()
+    if not parent_page:
+        return
+    
+    # Guardar valores atuais para comparação
+    titulo_antes = page.title
+    slug_antes = page.slug
+    
+    # Atualizar título e slug (SEMPRE reconstrói baseado nas configurações)
+    atualizar_titulo_slug_agenda(page, parent_page)
+    
+    # Só salvar se houve mudança
+    if titulo_antes != page.title or slug_antes != page.slug:
+        try:
+            # Salvar as mudanças no modelo antes de criar revisão
+            page.save(update_fields=['title', 'slug'])
             
-            # Atualizar título e slug (removerá sufixos antigos se existirem)
-            atualizar_titulo_slug_agenda_recorrente(page, parent_page, is_new=False)
+            # Criar nova revisão com as alterações
+            new_revision = page.save_revision()
             
-            try:
-                new_revision = page.save_revision()
-                if page.live:
-                    # Ensure that the updated title is on the published version
-                    new_revision.publish()
-                    
-            except Exception as e:
-                error_message = processar_erro_agenda(e)
-                messages.error(request, error_message)
+            if page.live:
+                # Ensure that the updated title is on the published version
+                new_revision.publish()
+                
+        except Exception as e:
+            error_message = processar_erro_agenda(e)
+            messages.error(request, error_message)
