@@ -6,7 +6,7 @@ $linha-do-tempo-breakpoints: (
   sm: 900px,
   xs: 810px,
   xxs: 772px,
-  brkp: 592px,
+  brkp: 680px,
 );
 
 $layout-change-breakpoint: map-get($linha-do-tempo-breakpoints, 'brkp');
@@ -189,6 +189,19 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
   }
 }
 
+.linha-do-tempo {
+  .container {
+      @media (max-width: map-get($linha-do-tempo-breakpoints, 'brkp')) {
+        max-width: 100%;
+        padding-left: 6dvw;
+        padding-right: 5dvw;
+      }
+      @media (max-width: 450px) {
+        padding-right: 2dvw;
+      }
+  }
+}
+
 @mixin linha-do-tempo-row-height-mixin {
   @each $breakpoint, $heights in $row-height-per-breakpoint {
     $height-two-items: map-get($heights, 'two-items');
@@ -266,54 +279,108 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
 
 .card-linha-do-tempo__title {
   display: -webkit-box !important;
-  -webkit-line-clamp: 2 !important;
-  line-clamp: 2 !important;
-  -webkit-box-orient: vertical !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  word-break: break-word;
-  line-height: 1.15 !important;
-  max-height: 2.3em !important;
-  margin: 0.2rem 0 0.1rem 0 !important;
-  padding: 0 !important;
-  
-  // Ajustes responsivos para o título
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: clip;
 }
 
 .card-linha-do-tempo__description {
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   display: -webkit-box !important;
-  -webkit-line-clamp: 6 !important;
-  line-clamp: 6 !important;
-  -webkit-box-orient: vertical !important;
-  overflow: hidden !important;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   word-break: break-word;
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
-  text-overflow: ellipsis !important;
-  margin: 0.15rem 0 0 0 !important;
-  padding: 0 !important;
-  line-height: 1.42 !important;
+  text-overflow: clip;
+  
+  @media screen and 
+  (max-width: map-get($linha-do-tempo-breakpoints, 'sm')) 
+  and (min-width: map-get($linha-do-tempo-breakpoints, 'brkp')) {
+    font-size: 0.75rem;
+  }
 
-}
-
-// PROTEÇÃO: Esconder conteúdo quando altura insuficiente (evitar corte pela borda)
-@media (max-width: 670px) and (min-width: 592px) {
-  .card-linha-do-tempo {
-    // Se a altura do card for muito pequena, esconder descrição
-    @container (max-height: 280px) {
-      .card-linha-do-tempo__description {
-        display: none !important;
-      }
-    }
     
-    // Se extremamente pequeno, só mostrar imagem
-    @container (max-height: 180px) {
-      .card-linha-do-tempo__content {
-        display: none !important;
-      }
+  @media (max-width: map-get($linha-do-tempo-breakpoints, 'xs')) {
+    font-size: 0.65rem !important;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+  }
+
+  @media screen and 
+  (max-width: map-get($linha-do-tempo-breakpoints, 'brkp')) 
+  and (min-width: 590px) {
+    font-size: 1.05rem !important;
+    -webkit-line-clamp: 7;
+    line-clamp: 7;
+  }
+
+  @media screen and (max-width: 590px) {
+    font-size: 1rem !important;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+  }
+
+  @media screen and (max-width: 490px) {
+    font-size: .85rem !important;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+  }
+  
+  @media screen and (max-width: 450px) {
+    font-size: .75rem !important;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+  }
+
+
+  @media screen and (max-width: $layout-change-breakpoint-max) {
+    @media (max-width: 500px) {  //Iphonme 12/13 
+      // font-size: 0.8rem !important;
+    --max-lines: 7;
+    -webkit-line-clamp: var(--max-lines);
+    line-clamp: var(--max-lines);
     }
+
+    @media (max-width: 400px) {  //Iphonme 12/13 
+      font-size: 0.65rem !important;
+    }
+
+    @media (max-width: 368px) {  //Galaxy 11 
+      font-size: 0.6rem !important;
+      --max-lines: 8;
+      -webkit-line-clamp: var(--max-lines);
+      line-clamp: var(--max-lines);
+    }
+  }
+
+  @media (max-width: 500px) {
+    --max-lines: 6;
+    -webkit-line-clamp: var(--max-lines);
+    line-clamp: var(--max-lines);
+  }
+
+  @media (max-width: 450px) {
+    --max-lines: 5;
+    -webkit-line-clamp: var(--max-lines);
+    line-clamp: var(--max-lines);
+  }
+
+  @media (max-width: 400px) {
+    --max-lines: 4;
+    -webkit-line-clamp: var(--max-lines);
+    line-clamp: var(--max-lines);
+  }
+
+  @media (max-width: 399px) {
+    --max-lines: 6;
+    -webkit-line-clamp: var(--max-lines);
+    line-clamp: var(--max-lines);
   }
 }

@@ -14,36 +14,6 @@
 .card-linha-do-tempo__title {
   font-weight: 500;
   color: variables.$color-primary;
-  transition: color 0.2s ease;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  word-break: break-word;
-}
-
-.card-linha-do-tempo__actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 0.5rem;
-  
-  .btn,
-  span.btn {
-    white-space: nowrap;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    transition: all 0.2s ease;
-    border-color: #30599b;
-    color: #30599b;
-    
-    i {
-      transition: transform 0.2s ease;
-    }
-  }
 }
 
 .card-linha-do-tempo {
@@ -56,7 +26,7 @@
   justify-content: flex-start;
   border: solid 4px variables.$color-primary;
   padding: 1.2rem;
-  overflow: hidden;
+  overflow-y: hidden;
   z-index: 15;
   background-color: variables.$color-white;
 
@@ -79,8 +49,7 @@
       object-fit: cover !important;
       margin: 0 auto;
       display: block;
-      // height: clamp(400px, auto, 600px);
-      background-repeat: repeat;
+      height: clamp(400px, auto, 600px);
       overflow-y: hidden !important;
     }
   }
@@ -109,54 +78,6 @@
       }
     }
   }
-}
-
-.card-linha-do-tempo__image {
-  width: 100%;
-  height: auto;
-  max-height: 150px;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-  
-  img {
-    width: 100%;
-    height: auto;
-    max-height: 150px;
-    display: block;
-    object-fit: contain;
-  }
-}
-
-.card-linha-do-tempo__content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  width: 100%;
-  min-height: 0;
-}
-
-.card-linha-do-tempo__description-wrapper {
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 0;
-}
-
-.card-linha-do-tempo__description {
-  display: -webkit-box !important;
-  -webkit-box-orient: vertical !important;
-  -webkit-line-clamp: 4 !important;
-  line-clamp: 4 !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  word-break: break-word;
-  margin: 0.5rem 0;
 }
 
 .animate {
@@ -201,7 +122,7 @@
     --group-x: 50%;
     // Dimensões do card usadas pelo conector
     --card-max-height: 380px;
-    --card-aspect-ratio: 1.5;
+    --card-aspect-ratio: 1.3;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
 
     @include group-icon-mixin;
@@ -288,8 +209,11 @@
 
 @media (max-width: $layout-change-breakpoint-max) {
   .linha-do-tempo {
+    margin: 0 !important;
+    padding-inline: 0 !important;
     .container {
       --bs-gutter-x: 0 !important;
+      width: 100% !important;
     }
   }
 
@@ -317,7 +241,7 @@
     content: "";
     position: absolute;
     top: 99%;
-    --secondary-color: #{variables.$color-timeline-secondary};
+    --secondary-color: #e8edf4;
     --percentageReminder: calc(var(--reveal-percentage, 0%, 0%) - var(--percentageRange, 0%));
     --percentageAtElement: calc(var(--percentageReminder, 0%) / var(--percentageCorrectionFactor, 0%));
 
