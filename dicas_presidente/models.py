@@ -466,7 +466,7 @@ class DicasPresidenteIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         ], heading="Banner do Presidente"),
     ]
     
-    parent_page_types = ["intranet.IntranetHomePage", "home.HomePage"]
+    parent_page_types = ["intranet.IntranetHomePage"]
     subpage_types = ["DicasPresidentePage"]
     
     class Meta:
