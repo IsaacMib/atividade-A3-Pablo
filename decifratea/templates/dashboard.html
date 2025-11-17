@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Store Management{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Info Cards -->
+    <div class="info-cards">
+        <div class="info-card">
+            <div class="info-card-icon">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="info-card-content">
+                <h3 class="info-card-title">Valor em estoque</h3>
+                <p class="info-card-value">R$ {{ valor_total_estoque|floatformat:2 }}</p>
+            </div>
+        </div>
+        
+        <div class="info-card">
+            <div class="info-card-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="info-card-content">
+                <h3 class="info-card-title">Mov. ult 24Hrs</h3>
+                <p class="info-card-value positive">+ {{ movimentacoes_24h }}</p>
+            </div>
+        </div>
+        
+        <div class="info-card">
+            <div class="info-card-icon alert">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="info-card-content">
+                <h3 class="info-card-title">Itens em falta</h3>
+                <p class="info-card-value alert">{{ itens_em_falta }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Section -->
+    <div class="dashboard-grid">
+        <!-- Left Column -->
+        <div class="dashboard-left">
+            <!-- Overview Card -->
+            <div class="card overview-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-eye"></i>
+                        Visão geral em tempo real
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <p class="sync-info">
+                        <i class="fas fa-sync-alt"></i>
+                        Última sincronização: <span id="lastSync">{{ ultima_sincronizacao }}</span>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Top Products Card -->
+            <div class="card products-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-star"></i>
+                        Produtos mais vendidos (7 dias)
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <ul class="products-list">
+                        {% for produto in produtos_mais_vendidos %}
+                        <li class="product-item">
+                            <span class="product-name">{{ produto.nome }}</span>
+                            <span class="product-quantity">{{ produto.total_vendido }} {{ produto.unidade_medida }}</span>
+                        </li>
+                        {% empty %}
+                        <li class="product-item">
+                            <span class="product-name">Parafuso M6</span>
+                            <span class="product-quantity">320 un.</span>
+                        </li>
+                        <li class="product-item">
+                            <span class="product-name">Álcool 70%</span>
+                            <span class="product-quantity">210 un.</span>
+                        </li>
+                        <li class="product-item">
+                            <span class="product-name">Fita isolante</span>
+                            <span class="product-quantity">180 un.</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Recent Movements Card -->
+            <div class="card movements-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-exchange-alt"></i>
+                        Últimas movimentações
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <ul class="movements-list">
+                        {% for mov in ultimas_movimentacoes %}
+                        <li class="movement-item">
+                            <div class="movement-icon">
+                                {% if mov.tipo == 'ENTRADA' %}
+                                <i class="fas fa-arrow-down entrada"></i>
+                                {% elif mov.tipo == 'SAIDA' %}
+                                <i class="fas fa-arrow-up saida"></i>
+                                {% else %}
+                                <i class="fas fa-adjust ajuste"></i>
+                                {% endif %}
+                            </div>
+                            <div class="movement-info">
+                                <h4 class="movement-product">{{ mov.produto.nome }}</h4>
+                                <p class="movement-meta">
+                                    {{ mov.data_movimentacao|date:"d/m/Y" }} • {{ mov.usuario.first_name|default:mov.usuario.username }}
+                                </p>
+                            </div>
+                            <div class="movement-quantity">
+                                {% if mov.tipo == 'ENTRADA' %}+{% elif mov.tipo == 'SAIDA' %}-{% endif %}{{ mov.quantidade }}
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li class="movement-item">
+                            <div class="movement-icon">
+                                <i class="fas fa-arrow-up saida"></i>
+                            </div>
+                            <div class="movement-info">
+                                <h4 class="movement-product">Álcool 70%</h4>
+                                <p class="movement-meta">07/10/2025 • Téo</p>
+                            </div>
+                            <div class="movement-quantity">-50</div>
+                        </li>
+                        <li class="movement-item">
+                            <div class="movement-icon">
+                                <i class="fas fa-arrow-down entrada"></i>
+                            </div>
+                            <div class="movement-info">
+                                <h4 class="movement-product">Parafuso M6</h4>
+                                <p class="movement-meta">07/10/2025 • Lucas</p>
+                            </div>
+                            <div class="movement-quantity">+100</div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column - Alerts -->
+        <div class="dashboard-right">
+            <div class="card alerts-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-bell"></i>
+                        Alertas
+                    </h2>
+                    <a href="#" class="view-all-link">Ver todos</a>
+                </div>
+                <div class="card-body">
+                    <p class="alerts-description">
+                        Produtos com estoque crítico ou válidade próx.
+                    </p>
+                    
+                    <ul class="alerts-list">
+                        {% for alerta in alertas %}
+                        <li class="alert-item">
+                            <div class="alert-status {{ alerta.tipo_alerta|lower }}">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="alert-info">
+                                <h4 class="alert-product">{{ alerta.produto.nome }}</h4>
+                                <p class="alert-badge">Estoque baixo</p>
+                                <p class="alert-details">
+                                    Qtd: {{ alerta.produto.quantidade_atual }} - Min: {{ alerta.produto.quantidade_minima }}
+                                </p>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li class="alert-item">
+                            <div class="alert-status estoque_baixo">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="alert-info">
+                                <h4 class="alert-product">Produto 1</h4>
+                                <p class="alert-badge">Estoque baixo</p>
+                                <p class="alert-details">Qtd: 30 - Min: 50</p>
+                            </div>
+                        </li>
+                        <li class="alert-item">
+                            <div class="alert-status estoque_baixo">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="alert-info">
+                                <h4 class="alert-product">Produto 2</h4>
+                                <p class="alert-badge">Estoque baixo</p>
+                                <p class="alert-details">Qtd: 30 - Min: 50</p>
+                            </div>
+                        </li>
+                        <li class="alert-item">
+                            <div class="alert-status estoque_baixo">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="alert-info">
+                                <h4 class="alert-product">Produto 3</h4>
+                                <p class="alert-badge">Estoque baixo</p>
+                                <p class="alert-details">Qtd: 30 - Min: 50</p>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-refresh dashboard data every 60 seconds
+    setInterval(() => {
+        location.reload();
+    }, 60000);
+</script>
+{% endblock %}

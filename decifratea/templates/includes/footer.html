@@ -1,0 +1,33 @@
+<footer class="bg-gray-800 text-white mt-auto py-8">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h3 class="text-lg font-bold mb-4">Gestão de Estoque</h3>
+                <p class="text-gray-400">
+                    Sistema completo para gestão de estoque e inventário.
+                </p>
+            </div>
+            
+            <div>
+                <h3 class="text-lg font-bold mb-4">Links Úteis</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-400 hover:text-white transition">Documentação</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white transition">Suporte</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white transition">Contato</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h3 class="text-lg font-bold mb-4">Informações</h3>
+                <p class="text-gray-400">
+                    Versão: {{ sistema_versao }}<br>
+                    Ambiente: {{ ambiente|upper }}
+                </p>
+            </div>
+        </div>
+        
+        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; {% now "Y" %} Gestão de Estoque. Todos os direitos reservados.</p>
+        </div>
+    </div>
+</footer>
