@@ -809,8 +809,8 @@ class AvisosListBlock(StructBlock):
         label = "Avisos"
 
 
-class BlocoListaPadraoCursosBlock(StructBlock):
-    """Bloco Lista Padrão de Cursos - Configurável por modo de filtro"""
+class BlocoListaCursosBlock(StructBlock):
+    """Bloco Lista de Cursos - Configurável por modo de filtro"""
     
     titulo = CharBlock(
         required=False,
@@ -903,14 +903,6 @@ class BlocoListaPadraoCursosBlock(StructBlock):
         template = 'blocks/cursos/bloco_lista_padrao_cursos.html'
         icon = 'list-ul'
         label = 'Lista Padrão de Cursos'
-
-
-# ============================================================
-# BLOCO: GRID DE CURSOS
-# ============================================================
-# Cards verticais em grid (2→1 colunas)
-# Design: Imagem no topo + Conteúdo embaixo
-# ============================================================
 
 class BlocoGridCursosBlock(StructBlock):
     """Bloco Grid de Cursos - Cards verticais em grid responsivo"""
