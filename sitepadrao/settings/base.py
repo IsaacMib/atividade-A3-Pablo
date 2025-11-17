@@ -70,7 +70,6 @@ INSTALLED_APPS = [
     "eventos",
     "linhasdotempo",
     "lgpd",
-    "cursos",
     "contatos",
     "treinamento",
     "dicas_presidente",

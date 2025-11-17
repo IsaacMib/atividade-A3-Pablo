@@ -820,7 +820,7 @@ class BlocoListaCursosBlock(StructBlock):
 
     cursos_index_page = PageChooserBlock(
         required=True,
-        target_model='cursos.CursosIndexPage',
+        target_model='noticias.NoticiasIndexPages',
         help_text="Selecione a página de índice de cursos"
     )
 
@@ -866,25 +866,25 @@ class BlocoListaCursosBlock(StructBlock):
         cursos_index_page_url = None
 
         if cursos_index_page:
-            from cursos.models import CursosPage
+            from noticias.models import NoticiasPage
             cursos_index_page_url = cursos_index_page.url
             
             # Lógica de filtro baseada no modo selecionado
             if modo == 'curso_mes':
                 # Curso do Mês: Cursos mais recentes (últimos promovidos/publicados)
-                cursos = CursosPage.objects.descendant_of(
+                cursos = NoticiasPage.objects.descendant_of(
                     cursos_index_page
                 ).live().order_by("-data_publicacao")[:quantidade]
                 
             elif modo == 'curso_destaque':
                 # Curso Destaque: Apenas cursos marcados como destaque
-                cursos = CursosPage.objects.descendant_of(
+                cursos = NoticiasPage.objects.descendant_of(
                     cursos_index_page
                 ).live().filter(destaque=True).order_by("-data_publicacao")[:quantidade]
                 
             else:  # modo == 'padrao'
                 # Padrão: Listagem normal de cursos
-                cursos = CursosPage.objects.descendant_of(
+                cursos = NoticiasPage.objects.descendant_of(
                     cursos_index_page
                 ).live().order_by("-data_publicacao")[:quantidade]
 
@@ -900,7 +900,7 @@ class BlocoListaCursosBlock(StructBlock):
         return context
 
     class Meta:
-        template = 'blocks/cursos/bloco_lista_padrao_cursos.html'
+        template = 'blocks/cursos/bloco_lista_cursos.html'
         icon = 'list-ul'
         label = 'Lista Padrão de Cursos'
 
@@ -915,7 +915,7 @@ class BlocoGridCursosBlock(StructBlock):
 
     cursos_index_page = PageChooserBlock(
         required=True,
-        target_model='cursos.CursosIndexPage',
+        target_model='noticias.NoticiasIndexPages', # Garante que o modelo de destino está correto
         help_text="Selecione a página de índice de cursos"
     )
 
@@ -948,11 +948,11 @@ class BlocoGridCursosBlock(StructBlock):
         cursos_index_page_url = None
 
         if cursos_index_page:
-            from cursos.models import CursosPage
+            from noticias.models import NoticiasPage
             cursos_index_page_url = cursos_index_page.url
             
             # Busca cursos ordenados por data de publicação
-            cursos = CursosPage.objects.descendant_of(
+            cursos = NoticiasPage.objects.descendant_of(
                 cursos_index_page
             ).live().order_by("-data_publicacao")[:quantidade]
 
