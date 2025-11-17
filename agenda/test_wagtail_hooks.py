@@ -88,9 +88,11 @@ class WagtailHooksTestCase(TestCase):
         # Chama a função do hook
         do_after_agendadodia_page_publish(self.request, agenda_normal)
         
-        # Verifica se o título não foi alterado
-        self.assertEqual(agenda_normal.title, "Reunião Importante")
-        self.assertEqual(agenda_normal.slug, "reuniao-importante")
+        # Verifica se o título e slug seguem o padrão de agenda normal
+        expected_title = f"{self.agenda_page.title} - Agenda do Dia - 15 de novembro de 2025"
+        expected_slug = f"{self.agenda_page.slug}-agenda-2025-11-15"
+        self.assertEqual(agenda_normal.title, expected_title)
+        self.assertEqual(agenda_normal.slug, expected_slug)
     
     def test_titulo_agenda_recorrente_diaria(self):
         """Testa geração de título para agenda recorrente diária"""
@@ -109,7 +111,8 @@ class WagtailHooksTestCase(TestCase):
         
         # Verifica se o título foi alterado corretamente
         self.assertIn("Agenda Recorrente Diária", agenda_diaria.title)
-        self.assertIn("reuniao-diaria", agenda_diaria.slug)
+        # Slug agora é baseado no slug do pai
+        self.assertIn(self.agenda_page.slug, agenda_diaria.slug)
         self.assertIn("recorrente", agenda_diaria.slug)
     
     def test_titulo_agenda_recorrente_semanal(self):
@@ -178,8 +181,8 @@ class WagtailHooksTestCase(TestCase):
         
         do_after_agendadodia_page_publish(self.request, agenda_com_pai)
         
-        # Verifica se inclui o título da página pai, título original, tipo e data
-        expected_title = f"{self.agenda_page.title} - Reunião Especial - Agenda Recorrente Semanal - 15 de novembro"
+        # Verifica se inclui o título da página pai, tipo e data
+        expected_title = f"{self.agenda_page.title} - Agenda Recorrente Semanal - 15 de novembro"
         self.assertEqual(agenda_com_pai.title, expected_title)
     
     def test_slug_nao_duplica_recorrente(self):
@@ -277,14 +280,13 @@ class WagtailHooksTestCase(TestCase):
         self.agenda_page.add_child(instance=agenda_sem_recorrencia)
         agenda_sem_recorrencia.save_revision().publish()
         
-        titulo_original = agenda_sem_recorrencia.title
-        slug_original = agenda_sem_recorrencia.slug
-        
         do_after_agendadodia_page_publish(self.request, agenda_sem_recorrencia)
         
-        # Título e slug não devem ter mudado
-        self.assertEqual(agenda_sem_recorrencia.title, titulo_original)
-        self.assertEqual(agenda_sem_recorrencia.slug, slug_original)
+        # Título e slug DEVEM seguir o padrão de agenda normal
+        expected_title = f"{self.agenda_page.title} - Agenda do Dia - 15 de novembro de 2025"
+        expected_slug = f"{self.agenda_page.slug}-agenda-2025-11-15"
+        self.assertEqual(agenda_sem_recorrencia.title, expected_title)
+        self.assertEqual(agenda_sem_recorrencia.slug, expected_slug)
     
     def test_titulo_com_caracteres_especiais(self):
         """Testa comportamento com títulos que contêm caracteres especiais"""
@@ -301,8 +303,7 @@ class WagtailHooksTestCase(TestCase):
         
         do_after_agendadodia_page_publish(self.request, agenda_especial)
         
-        # Verifica se os caracteres especiais foram preservados no título
-        self.assertIn("Reunião & Café - 100% Participação", agenda_especial.title)
+        # Verifica se o título foi padronizado corretamente
         self.assertIn("Agenda Recorrente Semanal", agenda_especial.title)
         self.assertIn("recorrente", agenda_especial.slug)
 
@@ -353,8 +354,8 @@ class IntegrationTestCase(TestCase):
         # Aplica os hooks
         do_after_agendadodia_page_publish(self.request, agenda)
         
-        # Verifica se o título foi modificado corretamente (inclui pai, título, tipo e data)
-        expected_title = f"{self.agenda_page.title} - Reunião Semanal da Equipe - Agenda Recorrente Semanal - 11 de novembro"
+        # Verifica se o título foi modificado corretamente (inclui pai, tipo e data)
+        expected_title = f"{self.agenda_page.title} - Agenda Recorrente Semanal - 11 de novembro"
         self.assertEqual(agenda.title, expected_title)
         
         # Verifica se o slug foi modificado corretamente
@@ -382,14 +383,12 @@ class IntegrationTestCase(TestCase):
         self.agenda_page.add_child(instance=agenda)
         agenda.save_revision().publish()
         
-        # Verifica estado inicial
-        titulo_inicial = agenda.title
-        slug_inicial = agenda.slug
-        
-        # Aplica hooks (não deve alterar nada)
+        # Aplica hooks (deve padronizar como agenda normal)
         do_after_agendadodia_page_publish(self.request, agenda)
-        self.assertEqual(agenda.title, titulo_inicial)
-        self.assertEqual(agenda.slug, slug_inicial)
+        expected_title_normal = f"{self.agenda_page.title} - Agenda do Dia - 15 de novembro de 2025"
+        expected_slug_normal = f"{self.agenda_page.slug}-agenda-2025-11-15"
+        self.assertEqual(agenda.title, expected_title_normal)
+        self.assertEqual(agenda.slug, expected_slug_normal)
         
         # Agora altera para recorrente
         agenda.habilitar_recorrencia = True
