@@ -23,6 +23,16 @@
     .linha-do-tempo-page__titulo {
       margin: 0 15px;
       color: variables.$primary-color;
+
+      @media (max-width: 600px) {
+        font-weight: 500;
+        font-size: 1.5rem;
+      }
+      
+      @media (max-width: 450px) {
+        font-weight: 500;
+        font-size: 1.2rem;
+      }
     }
 
     .banner-container {
