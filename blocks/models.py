@@ -951,10 +951,8 @@ class BlocoGridCursosBlock(StructBlock):
             from noticias.models import NoticiasPage
             cursos_index_page_url = cursos_index_page.url
             
-            # Busca cursos ordenados por data de publicação
-            cursos = NoticiasPage.objects.descendant_of(
-                cursos_index_page
-            ).live().order_by("-data_publicacao")[:quantidade]
+            # Busca apenas descendentes da página de índice selecionada
+            cursos = NoticiasPage.objects.live().descendant_of(cursos_index_page).order_by("-data_publicacao")[:quantidade]
 
         context.update({
             'titulo': value.get('titulo'),

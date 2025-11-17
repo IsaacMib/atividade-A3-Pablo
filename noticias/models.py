@@ -236,6 +236,7 @@ class NoticiasPage(PageSitePadrao):
         max_length=70,
         verbose_name="Título da seção de itens recentes",
         blank=True,
+        default="Últimas notícias",
         help_text=(
             "Título exibido na seção de itens recentes. "
             "Se deixado em branco, será usado o título padrão configurado."
@@ -341,11 +342,15 @@ class NoticiasPage(PageSitePadrao):
 
     def get_context(self, request):
         context = super().get_context(request)
-        noticias_index = NoticiasIndexPages.objects.live().first()
-        if noticias_index:
-            context["ultimas_noticias"] = noticias_index.get_ultimas_noticias()
+        # Busca o índice pai específico desta página para não misturar conteúdos
+        noticias_index = self.get_parent().specific
+        
+        # Garante que o pai é uma instância de NoticiasIndexPages
+        if noticias_index and isinstance(noticias_index, NoticiasIndexPages):
+            # Passa a página atual para ser excluída da lista de "últimas"
+            context["ultimas_noticias"] = noticias_index.get_ultimas_noticias(exclude_page=self)
         else:
-            context["ultimas_noticias"] = self.get_ultimas_noticias() # Fallback para o método antigo
+            context["ultimas_noticias"] = [] # Se não encontrar um pai válido, retorna lista vazia
         return context
 
     def get_imagem_destaque(self):      
@@ -584,10 +589,15 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
         tags = sorted(set(tags))
         return tags
 
-    def get_ultimas_noticias(self, quantidade=6):
+    def get_ultimas_noticias(self, quantidade=6, exclude_page=None):
         # 1. Busca as notícias locais separando destaque das demais
-        noticias_locais_destaque = list(NoticiasPage.objects.live().descendant_of(self).filter(destaque=True).order_by("-data_publicacao"))
-        noticias_locais_normais = list(NoticiasPage.objects.live().descendant_of(self).filter(destaque=False).order_by("-data_publicacao"))
+        base_query = NoticiasPage.objects.live().descendant_of(self)
+        if exclude_page:
+            base_query = base_query.not_page(exclude_page)
+
+        noticias_locais_destaque = list(base_query.filter(destaque=True).order_by("-data_publicacao"))
+        noticias_locais_normais = list(base_query.filter(destaque=False).order_by("-data_publicacao"))
+
 
         # 2. Busca notícias remotas
         noticias_remotas = self._fetch_remote_noticias()
@@ -595,6 +605,10 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
         # 3. Separa notícias remotas em destaque e normais
         noticias_remotas_destaque = [n for n in noticias_remotas if getattr(n, 'destaque', False)]
         noticias_remotas_normais = [n for n in noticias_remotas if not getattr(n, 'destaque', False)]
+
+        # Exclui a página atual se for uma notícia remota
+        if exclude_page and getattr(exclude_page, 'is_remote', False):
+            noticias_remotas_destaque = [n for n in noticias_remotas_destaque if n.id != exclude_page.id]
 
         # 4. Combina e ordena as listas: primeiro as em destaque, depois as normais
         destaques_combinados = sorted(
