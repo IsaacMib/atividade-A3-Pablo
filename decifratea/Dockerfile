@@ -39,4 +39,4 @@ COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["gunicorn", "gestaoestoque.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "decifratea.wsgi:application", "--bind", "0.0.0.0:8000"]

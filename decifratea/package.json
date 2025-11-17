@@ -1,7 +1,7 @@
 {
-  "name": "gestao-estoque",
+  "name": "decifra-tea",
   "version": "1.0.0",
-  "description": "Sistema de Gestão de Estoque",
+  "description": "Sistema de auxilio a Triagem de crianças com TEA",
   "private": true,
   "engines": {
     "node": ">=18"
