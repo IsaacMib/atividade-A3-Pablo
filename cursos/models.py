@@ -57,14 +57,6 @@ class CursosPage(PageSitePadrao):
         help_text="ID do nó no Plone, usado para identificar a página migrada."
     )
 
-    images = StreamField(
-        [("imagem", ImageChooserBlock(required=True, label="Imagem do curso"))],
-        verbose_name="Coleção de Imagens",
-        blank=True,
-        null=True,
-        use_json_field=True,
-    )
-
     arquivos = StreamField(
         [
             ('arquivo', EspecificDocumentChooserBlock(
@@ -103,7 +95,6 @@ class CursosPage(PageSitePadrao):
         FieldPanel("tags"),
     ]
 
-    # Painel de promoções
     promote_panels = PageSitePadrao.promote_panels
 
     migracao_panels = [
@@ -143,13 +134,21 @@ class CursosPage(PageSitePadrao):
         return tags
 
     def get_ultimos_cursos(self, quantidade=6):
-        return CursosPage.objects.live().order_by("-data_publicacao")[:quantidade]
+        cursos_destaque = CursosPage.objects.live().filter(
+            destaque=True
+        ).order_by("-data_publicacao")
+        
+        cursos_sem_destaque = CursosPage.objects.live().filter(
+            destaque=False
+        ).order_by("-data_publicacao")
+        
+        cursos_combinados = list(cursos_destaque) + list(cursos_sem_destaque)
+        
+        return cursos_combinados[:quantidade]
 
     def get_context(self, request):
         context = super().get_context(request)
         context["ultimos_cursos"] = self.get_ultimos_cursos()
-
-        # Prepara uma lista de arquivos com seus ícones para o template
         arquivos_com_icone = []
         if self.arquivos:
             for block in self.arquivos:
@@ -168,7 +167,7 @@ class CursosPage(PageSitePadrao):
         return get_fontawesome_file_icon(file_info)
     
     def get_admin_display_title(self):
-        """Exibe ícone ★ ao lado do título se o curso for destaque."""
+
         title = super().get_admin_display_title()
         return f"★ {title}" if self.destaque else title
 
@@ -212,8 +211,11 @@ class CursosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         except EmptyPage:
             posts = paginator.page(paginator.num_pages)
         context["posts"] = posts
-        context["tag"] = None  # Garante que a variável tag exista no contexto
+        context["tag"] = None 
         return context
+    
+    def children(self):
+        return self.get_children().specific().live()
 
     @route(r"^tags/$", name="tag_archive")
     @route(r"^tags/([\w-]+)/$", name="tag_archive")
@@ -237,9 +239,15 @@ class CursosIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         if tag:
             posts = posts.filter(tags=tag)
         return posts
+    
+    def get_child_tags(self):
+        tags = []
+        for post in self.get_posts():
+            tags += post.get_tags
+        tags = sorted(set(tags))
+        return tags
 
     def get_ultimos_cursos(self, quantidade=6):
-        """Retorna os cursos em destaque e recentes do índice."""
         destaques = list(
             CursosPage.objects.live()
             .descendant_of(self)
