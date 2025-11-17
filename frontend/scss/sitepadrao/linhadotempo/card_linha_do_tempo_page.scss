@@ -45,6 +45,33 @@
       margin-bottom: 3rem;
     }
 
+    .banner-img-swiper2 {
+      position: relative;
+      
+      [class^="swiper-button"] {
+        margin-top: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        
+        @media (max-width: 768px) {
+          max-height: 35px;
+          margin-bottom: 4px;
+        }
+        @media (max-width: 400px) {
+          max-height: 25px;
+          margin-bottom: auto !important;
+        }
+      }
+      
+      .swiper-button-prev {
+        left: 10px;
+      }
+      
+      .swiper-button-next {
+        right: 10px;
+      }
+    }
+
     .swiper-slide, .static-img-container {
       display: flex;
       align-items: center;
