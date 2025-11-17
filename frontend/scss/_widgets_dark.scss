@@ -54,9 +54,9 @@
   .widget-item-titulo {
     color: variables.$color-dark-theme-text;
 
-    // no tema escuro evitamos azul no hover
+    // no tema escuro evitamos azul no hover - mantém branco
     .widget-item:hover & {
-      color: variables.$color-white;
+      color: variables.$color-white !important;
     }
   }
 
@@ -67,9 +67,23 @@
 
   // Variações por tipo: no escuro, unificar o fundo do ícone para manter contraste consistente
   .widget-avisos,
+  .widget-dica-presidente,
   .widget-acesso-rapido {
     .widget-item-icone {
       background-color: variables.$color-grey-800;
+    }
+  }
+  
+  .widget-dica-presidente {
+    .badge-destaque {
+      background-color: variables.$color-warning;
+      color: variables.$color-black;
+    }
+    
+    // Força branco no hover de links dentro do widget
+    .widget-item:hover .widget-item-titulo,
+    .widget-item:hover a {
+      color: variables.$color-white !important;
     }
   }
 }

@@ -1,0 +1,19 @@
+{% load wagtailcore_tags %}
+
+<div class="dica-bloco dica-bloco-frase">
+    <div class="dica-bloco-header">
+        <i class="bi bi-chat-quote"></i>
+        <h3>Frase da Semana</h3>
+    </div>
+    
+    <div class="dica-bloco-content">
+        {% if value.texto_frase %}
+            <blockquote class="frase-destaque">
+                <p>{{ value.texto_frase }}</p>
+                {% if value.autor %}
+                    <footer>— {{ value.autor }}</footer>
+                {% endif %}
+            </blockquote>
+        {% endif %}
+    </div>
+</div>

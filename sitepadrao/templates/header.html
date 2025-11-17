@@ -10,7 +10,8 @@
           </a>
         {% else %}
           <a href="/" aria-label="Início" class="text-decoration-none">
-            <img class="header-logo" src="{% static 'img/logo_site.svg' %}" alt="{{ settings.core.SiteSettings.title_suffix }}">
+            <img class="header-logo header-logo-light" src="{% static 'img/logo_site.svg' %}" alt="{{ settings.core.SiteSettings.title_suffix }}">
+            <img class="header-logo header-logo-dark" src="{% static 'img/logo_site_branco.png' %}" alt="{{ settings.core.SiteSettings.title_suffix }}">
           </a>
         {% endif %}
       </div>

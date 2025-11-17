@@ -1,0 +1,1488 @@
+@use '../variables.scss';
+
+// ============================================================
+// DICAS DO PRESIDENTE - Tema Claro
+// ============================================================
+
+// Importa estilos dos blocos
+@import 'blocos_dicas';
+
+// Banner do Presidente
+.banner-presidente {
+  background: linear-gradient(135deg, variables.$color-primary 0%, variables.$color-primary-darker 100%);
+  color: variables.$color-white;
+  padding: 4rem 0;
+  margin-bottom: 3rem;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  
+  .foto-presidente {
+    border: 4px solid variables.$color-white;
+    box-shadow: 0 6px 18px variables.$color-black-40;
+    transition: transform 0.35s ease;
+    
+    &:hover {
+      transform: scale(1.04);
+    }
+  }
+  
+  .titulo-presidente {
+    color: variables.$color-white;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 6px variables.$color-black-30;
+  }
+  
+  .mensagem-presidente {
+    color: variables.$color-white !important;
+    background: linear-gradient(135deg, 
+      variables.$color-bloco-mensagem-4-dark 0%,
+      variables.$color-bloco-mensagem-5-light 100%
+    );
+    font-size: 1.1rem;
+    line-height: 1.7;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px variables.$color-black-20;
+  }
+}
+
+// Seções
+.secao-titulo {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: variables.$color-on-surface;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0;
+  border-bottom: none;
+  position: relative;
+  
+  i {
+    color: variables.$color-primary;
+    margin-right: 0.5rem;
+  }
+}
+
+// Wrapper para cards clicáveis
+.card-link-wrapper {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    text-decoration: none;
+    transform: translateY(-4px);
+    
+    .card {
+      box-shadow: 0 8px 16px variables.$color-black-80;
+    }
+  }
+  
+  .card-title {
+    color: variables.$color-on-surface;
+  }
+}
+
+// Cards de Dicas
+.dica-card,
+.dica-card-destaque {
+  border: none;
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  background: variables.$color-white;
+  box-shadow: 0 2px 8px variables.$color-card-shadow-light, 0 1px 3px variables.$color-card-shadow;
+  position: relative;
+  border: 1px solid variables.$color-grey-100;
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+      variables.$color-bloco-mensagem-4-light 0%, 
+      variables.$color-bloco-recomendacao-4-light 20%,
+      variables.$color-bloco-noticia-4-light 40%,
+      variables.$color-bloco-galeria-5-light 60%,
+      variables.$color-bloco-frase-3-light 80%,
+      variables.$color-bloco-mensagem-4-light 100%
+    );
+    opacity: 0.8;
+    transition: all 0.3s ease;
+  }
+  
+  // Variações por tipo
+  &.dica-tipo-mensagem::before {
+    background: linear-gradient(90deg, 
+      variables.$color-bloco-mensagem-1-light 0%, 
+      variables.$color-bloco-mensagem-2-light 25%,
+      variables.$color-bloco-mensagem-3-light 50%,
+      variables.$color-bloco-mensagem-4-light 75%,
+      variables.$color-bloco-mensagem-5-light 100%
+    );
+  }
+  
+  &.dica-tipo-recomendacao::before {
+    background: linear-gradient(90deg, 
+      variables.$color-bloco-recomendacao-1-light 0%, 
+      variables.$color-bloco-recomendacao-2-light 25%,
+      variables.$color-bloco-recomendacao-3-light 50%,
+      variables.$color-bloco-recomendacao-4-light 75%,
+      variables.$color-bloco-recomendacao-5-light 100%
+    );
+  }
+  
+  &.dica-tipo-noticia::before,
+  &.dica-tipo-noticia_interna::before {
+    background: linear-gradient(90deg, 
+      variables.$color-bloco-noticia-1-light 0%, 
+      variables.$color-bloco-noticia-2-light 25%,
+      variables.$color-bloco-noticia-3-light 50%,
+      variables.$color-bloco-noticia-4-light 75%,
+      variables.$color-bloco-noticia-5-light 100%
+    );
+  }
+  
+  &.dica-tipo-galeria::before {
+    background: linear-gradient(90deg, 
+      variables.$color-bloco-galeria-1-light 0%, 
+      variables.$color-bloco-galeria-2-light 25%,
+      variables.$color-bloco-galeria-3-light 50%,
+      variables.$color-bloco-galeria-4-light 75%,
+      variables.$color-bloco-galeria-5-light 100%
+    );
+  }
+  
+  &.dica-tipo-frase::before {
+    background: linear-gradient(90deg, 
+      variables.$color-bloco-frase-1-light 0%, 
+      variables.$color-bloco-frase-2-light 25%,
+      variables.$color-bloco-frase-3-light 50%,
+      variables.$color-bloco-frase-4-light 75%,
+      variables.$color-bloco-frase-5-light 100%
+    );
+  }
+  
+  &.dica-tipo-misto::before {
+    background: linear-gradient(90deg, 
+      variables.$color-bloco-mensagem-1-light 0%,   
+      variables.$color-bloco-noticia-1-light 20%,  
+      variables.$color-bloco-recomendacao-1-light 40%,
+      variables.$color-bloco-frase-1-light 65%,    
+      variables.$color-bloco-galeria-1-light 85%,     
+      variables.$color-bloco-mensagem-1-light 100%  
+    );
+  }
+  
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 20px variables.$color-banner-shadow-hover, 0 4px 8px variables.$color-card-shadow;
+    
+    &::before {
+      opacity: 1;
+      height: 5px;
+    }
+  }
+  
+  .card-img-top {
+    height: 220px;
+    width: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    background-color: variables.$color-grey-100;
+    flex-shrink: 0;
+    
+    // Imagem padrão com opacity reduzida
+    &[src*="img_noticia_default"] {
+      opacity: 0.6;
+      background: variables.$color-grey-100;
+    }
+  }
+  
+  // Imagens padrão - versão clara visível por padrão
+  .default-img-light {
+    display: block;
+  }
+  
+  // Imagens padrão - versão escura oculta por padrão
+  .default-img-dark {
+    display: none;
+  }
+  
+  &:hover .card-img-top {
+    transform: scale(1.05);
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  
+  .card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+    
+    a {
+      color: variables.$color-on-surface;
+      text-decoration: none;
+      transition: color 0.25s ease;
+      
+      &:hover {
+        color: variables.$color-primary;
+      }
+    }
+  }
+  
+  .card-text {
+    color: variables.$color-text-dark;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+}
+
+.dica-card-destaque {
+  background: linear-gradient(135deg, variables.$color-white 0%, variables.$color-primary-08 100%);
+  box-shadow: 0 4px 16px variables.$color-primary-50, 0 2px 8px variables.$color-card-shadow;
+  
+  &::before {
+    height: 5px;
+    background: linear-gradient(90deg, 
+      variables.$color-primary 0%, 
+      variables.$color-primary-hover 100%
+    );
+  }
+  
+  &:hover {
+    box-shadow: 0 16px 32px variables.$color-primary-50, 0 8px 16px variables.$color-card-shadow;
+  }
+  
+  .dica-tipo-badge {
+    color: variables.$color-primary !important;
+  }
+}
+
+// Tipo de Dica Badge
+.dica-tipo-badge,
+.dica-tipo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, variables.$color-primary-12 0%, variables.$color-primary-06 100%);
+  color: variables.$color-primary;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 2px 4px variables.$color-card-shadow-light;
+  transition: all 0.2s ease;
+  
+  i {
+    font-size: 1rem;
+  }
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px variables.$color-card-shadow;
+  }
+}
+
+// Footer do Card
+.dica-footer,
+.dica-meta-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid variables.$color-grey-200;
+  margin-top: auto;
+  
+  .texto-muted {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: variables.$color-grey-600;
+    font-size: 0.875rem;
+  }
+}
+
+.badge-destaque {
+  background: linear-gradient(135deg, variables.$color-warning 0%, variables.$global-link-color 100%);
+  color: variables.$color-on-warning;
+  padding: 0.35rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 2px 6px rgba(variables.$color-warning, 0.4);
+}
+
+// ============================================================
+// FILTROS ESPECÍFICOS PARA DICAS
+// ============================================================
+.filtros-dicas-section {
+  margin-bottom: 2rem;
+}
+
+.filtros-dicas-form {
+  background: variables.$color-surface;
+  border-radius: variables.$border-radius-lg;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px variables.$color-card-shadow;
+}
+
+.filtros-dicas-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  align-items: end;
+}
+
+.filtro-dica-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filtro-dica-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: variables.$color-on-surface;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  i {
+    color: variables.$color-primary;
+  }
+}
+
+.filtro-dica-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid variables.$color-grey-300;
+  border-radius: variables.$border-radius-md;
+  background-color: variables.$color-white;
+  color: variables.$color-on-surface;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  
+  &:hover {
+    border-color: variables.$color-primary;
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: variables.$color-primary;
+    box-shadow: 0 0 0 3px variables.$color-primary-12;
+  }
+}
+
+.filtro-dica-acoes {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.btn-filtrar-dicas {
+  padding: 0.75rem 1.5rem;
+  background-color: variables.$color-primary;
+  color: variables.$color-white;
+  border: none;
+  border-radius: variables.$border-radius-md;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  
+  &:hover {
+    background-color: variables.$color-primary-darker;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px variables.$color-banner-shadow-hover;
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  &:focus {
+    outline: 2px solid variables.$color-primary;
+    outline-offset: 2px;
+  }
+}
+
+.btn-limpar-filtros {
+  padding: 0.75rem 1.25rem;
+  background-color: variables.$color-grey-100;
+  color: variables.$color-text-secondary;
+  border: 2px solid variables.$color-grey-300;
+  border-radius: variables.$border-radius-md;
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  
+  &:hover {
+    background-color: variables.$color-error;
+    border-color: variables.$color-error;
+    color: variables.$color-white;
+    transform: translateY(-2px);
+  }
+}
+
+// Filtros Ativos (Badges)
+.filtros-ativos-info {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: variables.$color-primary-06;
+  border-radius: variables.$border-radius-md;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.filtros-ativos-texto {
+  font-weight: 600;
+  color: variables.$color-primary;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.badge-filtro-ativo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: variables.$color-primary;
+  color: variables.$color-white;
+  border-radius: 2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  
+  .remover-filtro {
+    color: variables.$color-white;
+    text-decoration: none;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1;
+    transition: transform 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.2);
+      color: variables.$color-error;
+    }
+  }
+}
+
+// Responsividade dos filtros
+@media (max-width: 768px) {
+  .filtros-dicas-wrapper {
+    grid-template-columns: 1fr;
+  }
+  
+  .filtro-dica-acoes {
+    flex-direction: column;
+    width: 100%;
+    
+    .btn-filtrar-dicas,
+    .btn-limpar-filtros {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  
+  // Cards responsivos
+  .dica-card,
+  .dica-card-destaque {
+    .card-img-top {
+      height: 180px;
+    }
+    
+    .card-title {
+      font-size: 1.1rem;
+    }
+  }
+  
+  // Banner responsivo
+  .banner-presidente {
+    padding: 2.5rem 0;
+    
+    .titulo-presidente {
+      font-size: 2rem;
+    }
+    
+    .mensagem-presidente {
+      font-size: 1rem;
+    }
+  }
+  
+  // Widget frase responsivo
+  .widget-frase-presidente {
+    padding: 1.5rem;
+    
+    &::before {
+      font-size: 100px;
+      top: -10px;
+    }
+    
+    .frase-widget {
+      .frase-icone {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+      
+      .frase-conteudo blockquote p {
+        font-size: 1.1rem;
+      }
+    }
+  }
+  
+  // Seção título responsivo
+  .secao-titulo {
+    font-size: 1.5rem;
+  }
+}
+
+// Página Individual
+.dica-presidente-page-container {
+  .dica-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .dica-titulo {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: variables.$color-primary;
+    margin: 1rem 0;
+  }
+  
+  .dica-descricao {
+    font-size: 1.25rem;
+    color: variables.$color-grey-600;
+    margin-bottom: 2rem;
+  }
+  
+  .dica-imagem-destaque img {
+    width: 100%;
+    border-radius: variables.$border-radius-md;
+  }
+}
+
+// ============================================================
+// CARROSSEL DE IMAGENS (SWIPER)
+// ============================================================
+
+.dica-presidente-imagem-destaque--wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 2rem;
+  background: variables.$color-grey-100;
+  border-radius: variables.$border-radius-md;
+  overflow: hidden;
+  
+  .dica-imagem-destaque {
+    width: 100%;
+    aspect-ratio: 16/9;
+    max-height: 500px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+  
+  .dicas-mySwiper2 {
+    --swiper-navigation-color: #{variables.$color-primary};
+    --swiper-pagination-color: #{variables.$color-white};
+    width: 100%;
+    aspect-ratio: 16/9;
+    max-height: 500px;
+    background: variables.$color-grey-900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    
+    .swiper-slide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: variables.$color-grey-100;
+      width: 100%;
+      height: 100%;
+      max-height: 500px;
+      overflow: hidden;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        max-height: 500px;
+        object-fit: cover;
+        object-position: center;
+      }
+    }
+  }
+  
+  .dicas-mySwiper {
+    height: 100px;
+    margin-top: 8px;
+    box-sizing: border-box;
+    
+    &.swiper-thumbs {
+      margin-top: 4px;
+      height: 100px;
+      
+      .swiper-slide-dicas {
+        height: 100px;
+        background: transparent;
+      }
+      
+      img {
+        box-sizing: border-box;
+        height: 100px;
+        object-fit: cover;
+      }
+    }
+  }
+  
+  .dicas-mySwiper .swiper-slide-dicas {
+    width: 25%;
+    height: 100%;
+    cursor: pointer;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  
+  .dicas-mySwiper .swiper-slide-thumb-active img {
+    border: 3px solid variables.$color-primary;
+  }
+}
+
+// Responsividade do carrossel
+@media (max-width: 768px) {
+  .dica-presidente-imagem-destaque--wrapper {
+    max-width: 100%;
+    
+    .dica-imagem-destaque {
+      aspect-ratio: 16/9;
+      max-height: 300px;
+      
+      img {
+        object-fit: cover;
+      }
+    }
+  }
+}
+
+// Mensagem Pessoal
+.mensagem-presidente {
+  background: variables.$color-grey-50;
+  border-left: 4px solid variables.$color-primary;
+  padding: 2rem;
+  border-radius: variables.$border-radius-md;
+  margin: 2rem 0;
+  
+  .assinatura-presidente {
+    text-align: right;
+    font-size: 1.1rem;
+    color: variables.$color-primary;
+    font-style: italic;
+    margin-top: 1.5rem;
+  }
+}
+
+// Recomendação
+.recomendacao-presidente {
+  .motivo-recomendacao {
+    background: variables.$color-primary-06;
+    padding: 1.5rem;
+    border-radius: variables.$border-radius-md;
+    border-left: 4px solid variables.$color-primary;
+  }
+}
+
+// Notícia Interna
+.noticia-interna-presidente {
+  .categoria-noticia-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: variables.$color-primary;
+    color: variables.$color-white;
+    border-radius: variables.$border-radius-md;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+}
+
+// Galeria
+.galeria-presidente {
+  .legenda-galeria {
+    font-size: 1.1rem;
+    color: variables.$color-grey-600;
+    font-style: italic;
+  }
+  
+  img {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+// Frase da Semana
+.frase-presidente {
+  background: linear-gradient(135deg, variables.$color-primary-06 0%, variables.$color-primary-12 100%);
+  border-radius: variables.$border-radius-lg;
+  padding: 3rem 2rem;
+  text-align: center;
+  margin: 3rem 0;
+  box-shadow: 0 2px 8px variables.$color-card-shadow-light;
+  
+  .frase-destaque {
+    margin: 0;
+    
+    .frase-texto {
+      font-size: 1.9rem;
+      font-weight: 400;
+      font-style: italic;
+      color: variables.$color-primary-darker;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      
+      &::before {
+        content: '"';
+        font-size: 3rem;
+        color: variables.$color-primary;
+        opacity: 0.3;
+      }
+    }
+    
+    .frase-autor {
+      font-size: 1.1rem;
+      color: variables.$color-primary;
+      font-weight: 500;
+    }
+  }
+}
+
+// Widget de Frase (sidebar)
+// Seções de Listagem
+.dicas-destaque,
+.dicas-listagem {
+  margin-bottom: 4rem;
+  
+  .row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 1.5rem;
+  }
+}
+
+.dicas-presidente-container {
+  min-height: 60vh;
+  
+  .container {
+    max-width: 1200px;
+  }
+}
+
+// Widget Frase (na página de listagem)
+.widget-frase-presidente {
+  background: linear-gradient(135deg, 
+    variables.$color-bloco-frase-5-light 0%,
+    variables.$color-bloco-frase-4-light 25%,
+    variables.$color-bloco-frase-3-light 50%,
+    variables.$color-bloco-frase-4-light 75%,
+    variables.$color-bloco-frase-5-light 100%
+  );
+  border: none;
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 8px 24px variables.$color-bloco-frase-3-dark;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '"';
+    position: absolute;
+    top: -20px;
+    left: 20px;
+    font-size: 150px;
+    font-weight: 700;
+    color: variables.$color-white;
+    font-family: Georgia, serif;
+    line-height: 1;
+  }
+  
+  .frase-widget {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    
+    .frase-icone {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      color: variables.$color-white;
+      opacity: 0.9;
+      
+      i {
+        filter: drop-shadow(0 2px 4px variables.$color-black-30);
+      }
+    }
+    
+    .frase-conteudo {
+      blockquote {
+        margin: 0;
+        
+        p {
+          font-size: 1.35rem;
+          font-style: italic;
+          color: variables.$color-white;
+          margin-bottom: 1rem;
+          line-height: 1.6;
+          font-weight: 500;
+          text-shadow: 0 2px 4px variables.$color-black-20;
+        }
+        
+        footer {
+          font-size: 1rem;
+          color: variables.$color-grey-100;
+          font-weight: 600;
+          text-shadow: 0 1px 2px variables.$color-black-20;
+          
+          &::before {
+            content: '— ';
+          }
+        }
+      }
+    }
+  }
+}
+
+// Widget de Dicas (sidebar)
+.widget-dica-presidente {
+  background: variables.$color-white;
+  border: 1px solid variables.$color-grey-300;
+  border-radius: variables.$border-radius-md;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  
+  .widget-titulo {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: variables.$color-primary;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid variables.$color-primary-12;
+  }
+  
+  .dica-widget-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid variables.$color-grey-200;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    .dica-widget-thumb {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: variables.$border-radius-md;
+      flex-shrink: 0;
+    }
+    
+    .dica-widget-texto {
+      flex: 1;
+      
+      .dica-tipo-mini {
+        font-size: 1.2rem;
+        margin-right: 0.5rem;
+      }
+      
+      .dica-widget-titulo {
+        font-size: 1rem;
+        margin: 0.25rem 0;
+        
+        a {
+          color: variables.$color-on-surface;
+          text-decoration: none;
+          
+          &:hover {
+            color: variables.$color-primary;
+          }
+        }
+      }
+    }
+  }
+  
+  .widget-footer {
+    margin-top: 1rem;
+    text-align: center;
+  }
+}
+
+// Lista Vertical de Dicas
+.lista-dicas-vertical {
+  .dica-lista-item {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid variables.$color-grey-300;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    .dica-titulo {
+      font-size: 1.5rem;
+      margin-top: 0.5rem;
+      
+      a {
+        color: variables.$color-on-surface;
+        text-decoration: none;
+        
+        &:hover {
+          color: variables.$color-primary;
+        }
+      }
+    }
+  }
+}
+
+// Seções
+.secao-titulo {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: variables.$color-primary;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+// Dicas Destaque Section
+.dicas-destaque {
+  margin-bottom: 3rem;
+}
+
+// Arquivos Anexos
+.acoes-documento {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+
+  @include variables.media-breakpoint-down(md) {
+    gap: 2.5rem; // mais espaçamento no mobile
+  }
+
+  .icone-acao {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.4rem 0.55rem; // tamanho confortável para clique
+    border-radius: 6px;
+    transition: background 0.2s ease;
+
+    // Ícone interno
+    i {
+      font-size: 1.5rem;
+
+      @include variables.media-breakpoint-down(md) {
+        font-size: 1.75rem;
+      }
+
+      transition: opacity 0.2s, color 0.2s;
+    }
+
+    // Hover padrão
+    &:hover {
+      background: variables.$color-grey-900;
+
+      i {
+        opacity: 0.7;
+      }
+    }
+
+    // Primeiro botão → ação principal (visualizar)
+    &:first-child i {
+      color: variables.$color-primary;
+    }
+
+    // Último botão → download (cinza)
+    &:last-child i {
+      color: variables.$color-grey-600;
+    }
+  }
+}
+
+// Tags
+.dica-tags {
+  margin-top: 2rem;
+  
+  .badge {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+// Badge Destaque
+.badge-destaque {
+  background-color: variables.$color-warning;
+  color: variables.$color-on-warning;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-weight: 500;
+}
+
+// ============================================================
+// BLOCOS DE LISTA (list_noticias e list_avisos style)
+// ============================================================
+
+.lista-dicas-presidente--wrapper {
+  padding: 2rem 0;
+  
+  // MODO LISTA
+  &.modo-lista {
+    .dica-card-lista {
+      background: variables.$color-white;
+      border: 2px solid variables.$color-grey-200;
+      border-radius: variables.$border-radius-lg;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      display: block;
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, 
+          variables.$color-bloco-mensagem-4-light 0%, 
+          variables.$color-bloco-recomendacao-4-light 20%,
+          variables.$color-bloco-noticia-4-light 40%,
+          variables.$color-bloco-galeria-5-light 60%,
+          variables.$color-bloco-frase-3-light 80%,
+          variables.$color-bloco-mensagem-4-light 100%
+        );
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+      }
+      
+      // Variações por tipo
+      &.dica-tipo-mensagem::before {
+        background: linear-gradient(180deg, 
+          variables.$color-bloco-mensagem-1-light 0%, 
+          variables.$color-bloco-mensagem-3-light 33%,
+          variables.$color-bloco-mensagem-4-light 66%,
+          variables.$color-bloco-mensagem-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-recomendacao::before {
+        background: linear-gradient(180deg, 
+          variables.$color-bloco-recomendacao-1-light 0%, 
+          variables.$color-bloco-recomendacao-3-light 33%,
+          variables.$color-bloco-recomendacao-4-light 66%,
+          variables.$color-bloco-recomendacao-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-noticia::before,
+      &.dica-tipo-noticia_interna::before {
+        background: linear-gradient(180deg, 
+          variables.$color-bloco-noticia-1-light 0%, 
+          variables.$color-bloco-noticia-3-light 33%,
+          variables.$color-bloco-noticia-4-light 66%,
+          variables.$color-bloco-noticia-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-galeria::before {
+        background: linear-gradient(180deg, 
+          variables.$color-bloco-galeria-1-light 0%, 
+          variables.$color-bloco-galeria-3-light 33%,
+          variables.$color-bloco-galeria-4-light 66%,
+          variables.$color-bloco-galeria-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-frase::before {
+        background: linear-gradient(180deg, 
+          variables.$color-bloco-frase-1-light 0%, 
+          variables.$color-bloco-frase-2-light 25%,
+          variables.$color-bloco-frase-3-light 50%,
+          variables.$color-bloco-frase-4-light 75%,
+          variables.$color-bloco-frase-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-misto::before {
+        background: linear-gradient(180deg, 
+          variables.$color-bloco-mensagem-4-light 0%, 
+          variables.$color-bloco-recomendacao-4-light 20%,
+          variables.$color-bloco-noticia-4-light 40%,
+          variables.$color-bloco-galeria-5-light 60%,
+          variables.$color-bloco-frase-3-light 80%,
+          variables.$color-bloco-mensagem-4-light 100%
+        );
+      }
+      
+      &:hover {
+        border-color: variables.$color-primary;
+        box-shadow: 0 4px 12px variables.$color-card-shadow-light;
+        transform: translateX(8px);
+        
+        &::before {
+          opacity: 1;
+          width: 5px;
+        }
+      }
+      
+      .dica-imagem-wrapper {
+        height: 100%;
+        overflow: hidden;
+        border-radius: variables.$border-radius-md;
+        
+        .dica-imagem {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+      }
+      
+      &:hover .dica-imagem {
+        transform: scale(1.05);
+      }
+      
+      .dica-conteudo {
+        padding: 0 1.5rem;
+      }
+      
+      .dica-titulo-lista {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: variables.$color-on-surface;
+        line-height: 1.3;
+        margin-bottom: 1rem;
+        transition: color 0.3s ease;
+      }
+      
+      &:hover .dica-titulo-lista {
+        color: variables.$color-primary;
+      }
+      
+      .dica-tipo-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background-color: variables.$color-primary-12;
+        color: variables.$color-primary;
+        border-radius: variables.$border-radius-md;
+        font-size: 0.875rem;
+        font-weight: 500;
+        
+        i {
+          font-size: 1rem;
+        }
+      }
+      
+      .dica-descricao {
+        color: variables.$color-grey-600;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+      
+      .dica-info {
+        color: variables.$color-grey-500;
+        font-size: 0.875rem;
+        
+        i {
+          font-size: 1.125rem;
+        }
+      }
+    }
+  }
+  
+  // MODO BLOCOS
+  &.modo-blocos {
+    .dica-card {
+      background: variables.$color-white;
+      border: 2px solid variables.$color-grey-200;
+      border-radius: variables.$border-radius-lg;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, 
+          variables.$color-bloco-mensagem-4-light 0%, 
+          variables.$color-bloco-recomendacao-4-light 20%,
+          variables.$color-bloco-noticia-4-light 40%,
+          variables.$color-bloco-galeria-5-light 60%,
+          variables.$color-bloco-frase-3-light 80%,
+          variables.$color-bloco-mensagem-4-light 100%
+        );
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+      }
+      
+      // Variações por tipo
+      &.dica-tipo-mensagem::before {
+        background: linear-gradient(90deg, 
+          variables.$color-bloco-mensagem-1-light 0%, 
+          variables.$color-bloco-mensagem-3-light 33%,
+          variables.$color-bloco-mensagem-4-light 66%,
+          variables.$color-bloco-mensagem-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-recomendacao::before {
+        background: linear-gradient(90deg, 
+          variables.$color-bloco-recomendacao-1-light 0%, 
+          variables.$color-bloco-recomendacao-3-light 33%,
+          variables.$color-bloco-recomendacao-4-light 66%,
+          variables.$color-bloco-recomendacao-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-noticia::before,
+      &.dica-tipo-noticia_interna::before {
+        background: linear-gradient(90deg, 
+          variables.$color-bloco-noticia-1-light 0%, 
+          variables.$color-bloco-noticia-3-light 33%,
+          variables.$color-bloco-noticia-4-light 66%,
+          variables.$color-bloco-noticia-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-galeria::before {
+        background: linear-gradient(90deg, 
+          variables.$color-bloco-galeria-1-light 0%, 
+          variables.$color-bloco-galeria-3-light 33%,
+          variables.$color-bloco-galeria-4-light 66%,
+          variables.$color-bloco-galeria-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-frase::before {
+        background: linear-gradient(90deg, 
+          variables.$color-bloco-frase-1-light 0%, 
+          variables.$color-bloco-frase-2-light 25%,
+          variables.$color-bloco-frase-3-light 50%,
+          variables.$color-bloco-frase-4-light 75%,
+          variables.$color-bloco-frase-5-light 100%
+        );
+      }
+      
+      &.dica-tipo-misto::before {
+        background: linear-gradient(90deg, 
+          variables.$color-bloco-mensagem-4-light 0%, 
+          variables.$color-bloco-recomendacao-4-light 20%,
+          variables.$color-bloco-noticia-4-light 40%,
+          variables.$color-bloco-galeria-5-light 60%,
+          variables.$color-bloco-frase-3-light 80%,
+          variables.$color-bloco-mensagem-4-light 100%
+        );
+      }
+      
+      &:hover {
+        border-color: variables.$color-primary;
+        box-shadow: 0 8px 20px variables.$color-card-shadow-hover;
+        transform: translateY(-4px);
+        
+        &::before {
+          opacity: 1;
+          height: 5px;
+        }
+      }
+      
+      .dica-titulo-card {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: variables.$color-on-surface;
+        line-height: 1.3;
+        transition: color 0.3s ease;
+      }
+      
+      &:hover .dica-titulo-card {
+        color: variables.$color-primary;
+      }
+      
+      .dica-tipo-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background-color: variables.$color-primary-12;
+        color: variables.$color-primary;
+        border-radius: variables.$border-radius-md;
+        font-size: 0.875rem;
+        font-weight: 500;
+        
+        i {
+          font-size: 1rem;
+        }
+      }
+      
+      .dica-descricao {
+        color: variables.$color-grey-600;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+      
+      .dica-info {
+        color: variables.$color-grey-500;
+        font-size: 0.875rem;
+        border-top: 1px solid variables.$color-grey-200;
+        
+        i {
+          font-size: 1.125rem;
+        }
+      }
+    }
+  }
+  
+  .badge-destaque {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.375rem 0.75rem;
+    background-color: variables.$color-warning;
+    color: variables.$color-black;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    
+    i {
+      font-size: 0.625rem;
+    }
+  }
+}
+
+// ============================================================
+// BARRA DE PROGRESSO DA PAGINAÇÃO
+// ============================================================
+
+.pagination-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: variables.$color-grey-600;
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
+  opacity: 0.2;
+  margin-bottom: 2rem;
+}
+
+.pagination-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, 
+    variables.$color-bloco-mensagem-light 0%, 
+    variables.$color-bloco-recomendacao-light 20%,
+    variables.$color-bloco-noticia-light 40%,
+    variables.$color-primary 60%,
+    variables.$color-bloco-galeria-light 80%,
+    variables.$color-bloco-frase-light 100%
+  );
+  border-radius: 0;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px variables.$color-primary-50;
+  position: relative;
+  opacity: 1;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(90deg, 
+      transparent 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 100%
+    );
+    animation: shimmer 2.5s infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

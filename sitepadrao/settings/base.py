@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     "cursos",
     "contatos",
     "treinamento",
+    "dicas_presidente",
 
 
     "plone_migration",
