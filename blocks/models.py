@@ -1046,8 +1046,10 @@ class CardLinhaDoTempoBlock(StructBlock):
         label = 'Card da Linha do Tempo'
         template = 'blocks/card_linha_do_tempo.html'
         form_attrs = {
-            'data-controller': 'char-count',
+            'data-controller': 'char-count card-links',
             'data-char-count-fields-value': 'titulo:50,descricao_linha_do_tempo:220',
+            'data-card-links-toggle-field-value': 'adicionarLink',
+            'data-card-links-target-fields-value': 'internal_page,external_url',
         }
 
 
