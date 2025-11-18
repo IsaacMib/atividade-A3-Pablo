@@ -59,9 +59,9 @@ class LinhaDoTempoCardTests(TestCase):
             slug="card-1",
         )
         self.timeline.add_child(instance=page)
-        page.imagens = [
-            ("imagem", {"image": self.img1, "alt_text": "Primeira"}),
-            ("imagem", {"image": self.img2, "alt_text": "Segunda"}),
+        page.images = [
+            ("imagem", self.img1),
+            ("imagem", self.img2),
         ]
         page.save()
 
@@ -75,7 +75,7 @@ class LinhaDoTempoCardTests(TestCase):
         )
         self.timeline.add_child(instance=page)
         # alt_text vazio → deve cair no fallback do título da imagem
-        page.imagens = [("imagem", {"image": self.img1, "alt_text": ""})]
+        page.images = [("imagem", self.img1)]
         page.save_revision().publish()
 
         # Renderizar um template mínimo que replica apenas a seção de imagem (1 item)
@@ -83,12 +83,12 @@ class LinhaDoTempoCardTests(TestCase):
         template = Template(
             """
             {% load wagtailimages_tags %}
-            {% if page.imagens and page.imagens|length > 1 %}
+            {% if page.images and page.images|length > 1 %}
               <!-- múltiplas imagens omitidas neste teste -->
-            {% elif page.imagens and page.imagens|length == 1 %}
-              <div class=\"d-flex justify-content-center noticias-img-destaque tw:pb-12\">
-              {% with imagem=page.imagens.0 %}
-                {% image imagem.value.image original loading=\"lazy\" class=\"img-fluid\" alt=imagem.value.alt_text|default:imagem.value.image.title %}
+            {% elif page.images and page.images|length == 1 %}
+              <div class="d-flex justify-content-center noticias-img-destaque tw:pb-12">
+              {% with imagem=page.images.0 %}
+                {% image imagem.value original loading="lazy" class="img-fluid" alt=imagem.value.title|default:"Imagem do conteúdo" %}
               {% endwith %}
               </div>
             {% endif %}
@@ -107,9 +107,9 @@ class LinhaDoTempoCardTests(TestCase):
             slug="card-multi",
         )
         self.timeline.add_child(instance=page)
-        page.imagens = [
-            ("imagem", {"image": self.img1, "alt_text": "Custom 1"}),
-            ("imagem", {"image": self.img2, "alt_text": "Custom 2"}),
+        page.images = [
+            ("imagem", self.img1),
+            ("imagem", self.img2),
         ]
         page.save_revision().publish()
 
@@ -118,11 +118,11 @@ class LinhaDoTempoCardTests(TestCase):
         template = Template(
             """
             {% load wagtailimages_tags %}
-            {% if page.imagens and page.imagens|length > 1 %}
-              <div class=\"swiper banner-img-swiper2\">
-                <div class=\"swiper-wrapper\">
-                  {% for imagem in page.imagens %}
-                    <div class=\"swiper-slide swiper-slide-noticias\">{% image imagem.value.image original loading=\"lazy\" class=\"image-noticia-carrossel\" alt=imagem.value.alt_text|default:imagem.value.image.title %}</div>
+            {% if page.images and page.images|length > 1 %}
+              <div class="swiper banner-img-swiper2">
+                <div class="swiper-wrapper">
+                  {% for imagem in page.images %}
+                    <div class="swiper-slide swiper-slide-noticias">{% image imagem.value original loading="lazy" class="image-noticia-carrossel" alt=imagem.value.title|default:"Imagem do conteúdo" %}</div>
                   {% endfor %}
                 </div>
               </div>
@@ -133,9 +133,9 @@ class LinhaDoTempoCardTests(TestCase):
         # Estrutura para múltiplas imagens usa swiper
         self.assertIn("banner-img-swiper2", html)
         self.assertIn("swiper-wrapper", html)
-        # Alts personalizados presentes
-        self.assertIn('alt="Custom 1"', html)
-        self.assertIn('alt="Custom 2"', html)
+        # Alts devem usar o título da imagem
+        self.assertIn(f'alt="{self.img1.title}"', html)
+        self.assertIn(f'alt="{self.img2.title}"', html)
 
     def test_blocks_template_alt_text_default_and_custom(self):
         """Renderiza o template do bloco de card e valida o alt."""
