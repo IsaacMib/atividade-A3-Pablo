@@ -73,8 +73,8 @@ class CardLinhaDoTempoPage(PageSitePadrao):
             ("imagem", ImageChooserBlock(required=True, label="Imagem do conteúdo")),
         ],
         verbose_name="Coleção de Imagens",
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
         use_json_field=True,
         help_text="Adicione uma ou mais imagens para esta linha do tempo."
     )
@@ -98,8 +98,8 @@ class CardLinhaDoTempoPage(PageSitePadrao):
             )),
         ],
         verbose_name="Descrição de marco da linha do tempo",
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
         use_json_field=True,
     )
 
