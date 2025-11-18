@@ -6,13 +6,13 @@
         <div class="linha-do-tempo-page__content">
             <h1 class="linha-do-tempo-page__titulo">{{ page.title }}</h1>
             <p class="linha-do-tempo-page__data">Publicado em {{ page.data_publicacao|date:"d/m/Y" }}</p>
-            {% if page.imagens and page.imagens|length > 1 %}
+            {% if page.images and page.images|length > 1 %}
                 <div class="card-lt-destaque tw:pb-12">
                 <div class="swiper banner-img-swiper2 d-flex align-items-center">
                     <div class="swiper-wrapper">
-                    {% for imagem in page.imagens %}
+                    {% for imagem in page.images %}
                         <div class="swiper-slide swiper-slide-images">
-                            {% image imagem.value.image original loading="lazy" class="carrossel-banners--img" alt=imagem.value.alt_text|default:imagem.value.image.title %}
+                            {% image imagem.value original loading="lazy" class="carrossel-banners--img" alt=imagem.value.title|default:"Imagem do conteúdo" %}
                         </div>
                     {% endfor %}
                     </div>
@@ -22,22 +22,22 @@
 
                 <div thumbsSlider="" class="swiper banner-img-swiper">
                     <div class="swiper-wrapper gap-2 my-1 ms-2">
-                    {% for imagem in page.imagens %}
+                    {% for imagem in page.images %}
                         <div
                             class="swiper-slide swiper-slide-images"
                             style="cursor: pointer;"
                         >
-                            {% image imagem.value.image original loading="lazy" class="carrossel-banners--img" alt=imagem.value.alt_text|default:imagem.value.image.title %}
+                            {% image imagem.value original loading="lazy" class="carrossel-banners--img" alt=imagem.value.title|default:"Imagem do conteúdo" %}
                         </div>
                     {% endfor %}
                     </div>
                 </div>
                 </div>
 
-            {% elif page.imagens and page.imagens|length == 1 %}
+            {% elif page.images and page.images|length == 1 %}
                 <div class="d-flex justify-content-center pb-12 static-img-container">
-                {% with imagem=page.imagens.0 %}
-                    {% image imagem.value.image original loading="lazy" class="carrossel-banners--img" alt=imagem.value.alt_text|default:imagem.value.image.title %}
+                {% with imagem=page.images.0 %}
+                    {% image imagem.value original loading="lazy" class="carrossel-banners--img" alt=imagem.value.title|default:"Imagem do conteúdo" %}
                 {% endwith %}
                 </div>
             {% endif %}

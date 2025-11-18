@@ -5,8 +5,6 @@ from core.models import PageSitePadrao, PageSitePadraoIndex
 from wagtail.fields import StreamField
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.blocks import (
-    StructBlock,
-    CharBlock,
     RichTextBlock,
 )
 
@@ -70,18 +68,9 @@ class CardLinhaDoTempoPage(PageSitePadrao):
     data_evento = models.DateField(
         "Data do evento", default=datetime.now, blank=True, null=True
     )
-    # Keeping the old field for backward compatibility, but making it optional
-    imagens = StreamField(
+    images = StreamField(
         [
-            ('imagem', StructBlock([
-                ('image', ImageChooserBlock(required=True, label="Imagem")),
-                ('alt_text', CharBlock(
-                    required=False,
-                    label="Texto alternativo",
-                    help_text="Texto descritivo para acessibilidade (será usado como alt text)",
-                    max_length=255,
-                ))
-            ], icon='image', label="Imagem"))
+            ("imagem", ImageChooserBlock(required=True, label="Imagem do conteúdo")),
         ],
         verbose_name="Coleção de Imagens",
         blank=True,
@@ -132,7 +121,7 @@ class CardLinhaDoTempoPage(PageSitePadrao):
     content_panels = [
         PageSitePadrao.content_panels[0],  # Título da página
         FieldPanel("data_evento"),
-        FieldPanel("imagens"),
+        FieldPanel("images"),
         FieldPanel("descricao_linha_do_tempo"),
         FieldPanel("lista_videos"),
         FieldPanel("data_publicacao"),
@@ -147,26 +136,14 @@ class CardLinhaDoTempoPage(PageSitePadrao):
 
     @property
     def imagem(self):
-        """Returns the first image from the imagens StreamField or None if empty."""
-        if self.imagens and len(self.imagens) > 0:
-            return self.imagens[0].value['image']
+        """Retorna a primeira imagem da StreamField 'images' ou None se estiver vazia."""
+        if self.images and len(self.images) > 0:
+            return self.images[0].value
         return None
-
-    # def descricao(self):
-    #     try:
-    #         # Join rendered strings of blocks in descricao_completa
-    #         if not self.descricao_completa:
-    #             return ""
-    #         parts = []
-    #         for block in self.descricao_completa:
-    #             parts.append(str(block))
-    #         return " ".join(parts)
-    #     except Exception:
-    #         return ""
 
     @property
     def detail_page(self):
         return self
-    
-    def get_url(self):
-        return self.url
+
+    def get_url(self, request=None, *args, **kwargs):
+        return super().get_url(request=request, *args, **kwargs)
