@@ -348,7 +348,7 @@ class NoticiasPage(PageSitePadrao):
         # Garante que o pai é uma instância de NoticiasIndexPages
         if noticias_index and isinstance(noticias_index, NoticiasIndexPages):
             # Passa a página atual para ser excluída da lista de "últimas"
-            context["ultimas_noticias"] = noticias_index.get_ultimas_noticias(exclude_page=self)
+            context["ultimas_noticias"] = noticias_index.get_ultimas_noticias()
         else:
             context["ultimas_noticias"] = [] # Se não encontrar um pai válido, retorna lista vazia
         return context
