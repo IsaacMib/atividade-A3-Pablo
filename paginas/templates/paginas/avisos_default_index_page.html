@@ -27,6 +27,13 @@
           <a href="{% pageurl aviso %}" class="text-decoration-none aviso-link d-block h-100">
             <article class="aviso-card p-4 h-100 rounded-4 shadow-sm text-start transition-all d-flex flex-column">
 
+              <!-- Imagem -->
+              {% if aviso.imagem %}
+              <div class="curso-img mb-3 text-center">
+                <img src="{{ aviso.imagem.url }}" alt="{{ aviso.title }}" class="img-fluid rounded"> </i>
+              </div>
+              {% endif %}
+
               <!-- Título -->
               <header>
                 <h3 class="aviso-title h5 mb-2">{{ aviso.title }}</h3>

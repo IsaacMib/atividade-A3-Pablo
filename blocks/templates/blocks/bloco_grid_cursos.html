@@ -1,0 +1,96 @@
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+<section class="bloco-grid-cursos-section" aria-labelledby="grid-cursos-section-title-{{ self.id }}">
+  <div class="container">
+    
+    {# Cabeçalho da Seção #}
+    {% if value.mostrar_titulo and value.titulo %}
+      <header class="grid-cursos-section-header">
+        <h2 id="grid-cursos-section-title-{{ self.id }}" class="grid-cursos-section-title">
+          {{ value.titulo }}
+        </h2>
+      </header>
+    {% endif %}
+
+    {# Grid de Cursos #}
+    {% if cursos %}
+      <div class="cursos-grid-container" role="list">
+        
+        {% for curso in cursos %}
+          <article class="curso-grid-card" role="listitem">
+            <a href="{{ curso.url }}" aria-label="Ver detalhes do curso: {{ curso.title }}">
+              
+              {# Imagem do Curso (Topo) #}
+              <div class="curso-grid-image-wrapper">
+                <div class="curso-grid-image {% if not curso.cover_image %}no-image{% endif %}">
+                  {% if curso.cover_image %}
+                    {% image curso.cover_image fill-400x300 as img %}
+                    <img 
+                      src="{{ img.url }}" 
+                      alt="{{ curso.title }}"
+                      width="400"
+                      height="300"
+                      loading="lazy"
+                    />
+                  {% endif %}
+                </div>
+                
+                {# Barra de Destaque #}
+                <div class="curso-grid-image-accent" aria-hidden="true"></div>
+              </div>
+
+              {# Conteúdo do Card #}
+              <div class="curso-grid-content">
+                
+                {# Título do Curso #}
+                <h3 class="curso-grid-title">
+                  {{ curso.title }}
+                </h3>
+
+                {# Subtítulo: Professor (se disponível) #}
+                {% if curso.professor %}
+                  <p class="curso-grid-subtitle">
+                    Professor: {{ curso.professor }}
+                  </p>
+                {% endif %}
+
+                {# Descrição do Curso #}
+                {% if curso.descricao %}
+                  <p class="curso-grid-description">
+                    {{ curso.descricao|truncatewords:20|striptags }}
+                  </p>
+                {% endif %}
+
+              </div>
+            </a>
+          </article>
+        {% endfor %}
+
+      </div>
+
+      {# Botão Ver Todos os Cursos #}
+      {% if value.cursos_index_page and value.texto_link %}
+        <div class="grid-cursos-ver-todos-wrapper">
+          <a 
+            href="{{ value.cursos_index_page.url }}" 
+            class="btn-ver-todos-grid-cursos"
+            aria-label="Ver todos os cursos disponíveis"
+          >
+            <span>{{ value.texto_link }}</span>
+            <i class="bi bi-arrow-right-circle" aria-hidden="true"></i>
+          </a>
+        </div>
+      {% endif %}
+
+    {% else %}
+      {# Estado Vazio: Nenhum curso encontrado #}
+      <div class="grid-cursos-empty-state" role="status">
+        <div class="empty-icon" aria-hidden="true">📚</div>
+        <p class="empty-text">
+          Nenhum curso disponível no momento.
+        </p>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
