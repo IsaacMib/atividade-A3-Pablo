@@ -127,8 +127,8 @@ class CategoriaNoticias(models.Model):
         return self.nome
 
     class Meta:
-        verbose_name = "Categoria de Notícia"
-        verbose_name_plural = "Categorias de Notícias"
+        verbose_name = "Categoria de Conteúdo"
+        verbose_name_plural = "Categorias de Conteúdos"
 
 
 _API_CACHE_TIMEOUT = 5 * 60  # 5 minutos
@@ -160,7 +160,7 @@ class NoticiasPage(PageSitePadrao):
         max_length=211,
     )
     data_publicacao = models.DateTimeField(
-        "Data de publicação da notícia", default=datetime.now, blank=True, null=True
+        "Data de publicação deste conteúdo", default=datetime.now, blank=True, null=True
     )
     categoria = models.ForeignKey(
         'noticias.CategoriaNoticias',
@@ -188,14 +188,14 @@ class NoticiasPage(PageSitePadrao):
         help_text="ID do nó no Plone, usado para identificar a página migrada."
     )
     sensivel_periodo_eleitoral = models.BooleanField(
-        verbose_name="Notícia sensível ao período eleitoral",
+        verbose_name="Conteúdo sensível ao período eleitoral",
         default=False,
-        help_text="Marque se esta notícia deve ser ocultada ou tratada de forma especial durante o período eleitoral."
+        help_text="Marque se este conteúdo deve ser ocultado ou tratado de forma especial durante o período eleitoral."
     )
 
     images = StreamField(
         [
-            ("imagem", ImageChooserBlock(required=True, label="Imagem da notícia")),
+            ("imagem", ImageChooserBlock(required=True, label="Imagem do conteúdo")),
         ],
         verbose_name="Coleção de Imagens",
         blank=True,
@@ -208,7 +208,7 @@ class NoticiasPage(PageSitePadrao):
             ("arquivo", EspecificDocumentChooserBlock(
                 required=True, label="Arquivos")),
         ],
-        verbose_name="Arquivos da notícia",
+        verbose_name="Arquivos relacionados",
         blank=True,
         null=True,
         use_json_field=True,
@@ -217,19 +217,30 @@ class NoticiasPage(PageSitePadrao):
     slideshow_imagens = models.BooleanField(
         verbose_name="Ativar slideshow de imagens",
         default=False,
-        help_text="Marque para exibir as imagens como slideshow na página da notícia.",
+        help_text="Marque para exibir as imagens como slideshow na página do conteúdo.",
     )
 
     nao_exibir_lista_de_arquivos = models.BooleanField(
         verbose_name="Não exibir lista de arquivos",
         default=False,
-        help_text="Marque para não exibir a lista de arquivos na página da notícia.",
+        help_text="Marque para não exibir a lista de arquivos na página do conteúdo.",
     )
 
     destaque = models.BooleanField(
-        verbose_name="Notícia em destaque",
+        verbose_name="Conteúdo em destaque",
         default=False,
-        help_text="Marque se esta notícia deve ser exibida em destaque na página inicial ou em listas de notícias. Só pode ser cadastrado 6 noticias  em destaque.",
+        help_text="Marque se este conteúdo deve ser exibido em destaque na página inicial ou em listas de conteúdos. Só pode ser cadastrado 6 conteúdos em destaque.",
+    )
+
+    titulo_ultimas = models.CharField(
+        max_length=70,
+        verbose_name="Título da seção de itens recentes",
+        blank=True,
+        default="Últimas notícias",
+        help_text=(
+            "Título exibido na seção de itens recentes. "
+            "Se deixado em branco, será usado o título padrão configurado."
+        ),
     )
 
     # Painéis padrão
@@ -244,18 +255,19 @@ class NoticiasPage(PageSitePadrao):
                 FieldPanel("slideshow_imagens"),
                 FieldPanel("images"),
             ],
-            heading="Imagens da notícia",
+            heading="Imagens do Conteúdo",
         ),
         MultiFieldPanel(
             [
                 FieldPanel("nao_exibir_lista_de_arquivos"),
                 FieldPanel("arquivos"),
             ],
-            heading="Arquivos da notícia",
+            heading="Arquivos relacionados",
         ),
         FieldPanel("body"),
         FieldPanel("data_publicacao"),
         FieldPanel("categoria"),
+        FieldPanel("titulo_ultimas"),
         FieldPanel("tags"),
     ]
 
@@ -310,8 +322,7 @@ class NoticiasPage(PageSitePadrao):
         return tags
 
     # Specifies parent to NoticiasPage as being NoticiasIndexPages
-    parent_page_types = ["NoticiasIndexPages", "intranet.IntranetHomePage"]
-
+    parent_page_types = ["NoticiasIndexPages"]
     # Specifies what content types can exist as children of NoticiasPage.
     # Empty list means that no child content types are allowed.
     subpage_types = []
@@ -331,11 +342,15 @@ class NoticiasPage(PageSitePadrao):
 
     def get_context(self, request):
         context = super().get_context(request)
-        noticias_index = NoticiasIndexPages.objects.live().first()
-        if noticias_index:
-            context["ultimas_noticias"] = noticias_index.get_ultimas_noticias()
+        # Busca o índice pai específico desta página para não misturar conteúdos
+        noticias_index = self.get_parent().specific
+        
+        # Garante que o pai é uma instância de NoticiasIndexPages
+        if noticias_index and isinstance(noticias_index, NoticiasIndexPages):
+            # Passa a página atual para ser excluída da lista de "últimas"
+            context["ultimas_noticias"] = noticias_index.get_ultimas_noticias(exclude_page=self)
         else:
-            context["ultimas_noticias"] = self.get_ultimas_noticias() # Fallback para o método antigo
+            context["ultimas_noticias"] = [] # Se não encontrar um pai válido, retorna lista vazia
         return context
 
     def get_imagem_destaque(self):      
@@ -388,31 +403,33 @@ class NoticiasPage(PageSitePadrao):
             # Contar quantas notícias estão marcadas como destaque (excluindo a atual se já existe)
             noticias_destaque = NoticiasPage.objects.filter(destaque=True).live()
             
-            # Se estamos editando uma notícia existente, excluí-la da contagem
+            # Se estamos editando um conteúdo existente, excluí-lo da contagem
             if self.pk:
                 noticias_destaque = noticias_destaque.exclude(pk=self.pk)
             
-            # Verificar se já existem 6 notícias em destaque
+            # Verificar se já existem 6 conteúdos em destaque
             if noticias_destaque.count() >= MAX_NOTICIAS_DESTAQUE:
                 raise ValidationError({
-                    'destaque': f'Só podem existir até {MAX_NOTICIAS_DESTAQUE} notícias em destaque. '
-                               'Desmarque o destaque de outra notícia antes de marcar esta.'
+                    'destaque': f'Só podem existir até {MAX_NOTICIAS_DESTAQUE} conteúdos em destaque. '
+                               'Desmarque o destaque de outro conteúdo antes de marcar este.'
                 })
 
     def get_admin_display_title(self):
         """
-        Adiciona asterisco (*) no título quando a notícia está em destaque
+        Adiciona asterisco (*) no título quando o conteúdo está em destaque
         """
         title = super().get_admin_display_title()
         if self.destaque:
             return f"★ {title}"
         return title
 
+    class Meta:
+        verbose_name = "Página de Conteúdo"
 
 class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
 
     introduction = models.TextField(
-        help_text="Texto para o topo da notícia",
+        help_text="Texto para o topo da Página de Índice.",
         blank=False,
         default="Todas as Notícias")
 
@@ -423,6 +440,7 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
     parent_page_types = [
         "intranet.IntranetHomePage",
         "home.HomePage",
+        "treinamento.TreinamentoIndexPage",
     ]
 
     # Specifies that only NoticiasPage objects can live under this index page
@@ -571,10 +589,15 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
         tags = sorted(set(tags))
         return tags
 
-    def get_ultimas_noticias(self, quantidade=6):
+    def get_ultimas_noticias(self, quantidade=6, exclude_page=None):
         # 1. Busca as notícias locais separando destaque das demais
-        noticias_locais_destaque = list(NoticiasPage.objects.live().descendant_of(self).filter(destaque=True).order_by("-data_publicacao"))
-        noticias_locais_normais = list(NoticiasPage.objects.live().descendant_of(self).filter(destaque=False).order_by("-data_publicacao"))
+        base_query = NoticiasPage.objects.live().descendant_of(self)
+        if exclude_page:
+            base_query = base_query.not_page(exclude_page)
+
+        noticias_locais_destaque = list(base_query.filter(destaque=True).order_by("-data_publicacao"))
+        noticias_locais_normais = list(base_query.filter(destaque=False).order_by("-data_publicacao"))
+
 
         # 2. Busca notícias remotas
         noticias_remotas = self._fetch_remote_noticias()
@@ -582,6 +605,10 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
         # 3. Separa notícias remotas em destaque e normais
         noticias_remotas_destaque = [n for n in noticias_remotas if getattr(n, 'destaque', False)]
         noticias_remotas_normais = [n for n in noticias_remotas if not getattr(n, 'destaque', False)]
+
+        # Exclui a página atual se for uma notícia remota
+        if exclude_page and getattr(exclude_page, 'is_remote', False):
+            noticias_remotas_destaque = [n for n in noticias_remotas_destaque if n.id != exclude_page.id]
 
         # 4. Combina e ordena as listas: primeiro as em destaque, depois as normais
         destaques_combinados = sorted(

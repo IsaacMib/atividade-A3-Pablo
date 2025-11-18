@@ -53,7 +53,7 @@ class TreinamentoIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         "intranet.IntranetHomePage",
     ]
 
-    subpage_types = ["cursos.CursosIndexPage"]
+    subpage_types = ["noticias.NoticiasIndexPages"]
 
     class Meta:
         verbose_name = "Página Índice de Treinamento"
@@ -64,8 +64,8 @@ class TreinamentoIndexPage(RoutablePageMixin, PageSitePadraoIndex):
         context = super().get_context(request)
         
         # Busca cursos de páginas CursosIndexPage filhas
-        from cursos.models import CursosPage
-        cursos = CursosPage.objects.descendant_of(self).live().order_by("-data_publicacao")
+        from noticias.models import NoticiasPage
+        cursos = NoticiasPage.objects.descendant_of(self).live().order_by("-data_publicacao")
         
         context["cursos"] = cursos
         
