@@ -22,6 +22,7 @@ from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.blocks import (
+    StructValue,
     CharBlock,
     ChoiceBlock,
     RichTextBlock,
@@ -994,6 +995,14 @@ class EspecificDocumentChooserBlock(DocumentChooserBlock):
         return value
 
 
+class CardLinhaDoTempoValue(StructValue):
+    def get_url(self):
+        internal = self.get('internal_page')
+        if internal:
+            return internal.url
+        return self.get('external_url')
+
+
 class CardLinhaDoTempoBlock(StructBlock):
     imagem = ImageChooserBlock(required=True, label="Imagem")
     texto_alternativo = CharBlock(
@@ -1027,12 +1036,12 @@ class CardLinhaDoTempoBlock(StructBlock):
                 raise ValidationError('Você deve fornecer apenas 1 link.')
         return cleaned_data
 
-    def get_url(self, value):
-        if value.get('internal_page'):
-            return value['internal_page'].url
-        return value.get('external_url')
+    def get_url(self):
+        return self.url
+
 
     class Meta:
+        value_class = CardLinhaDoTempoValue
         icon = 'title'
         label = 'Card da Linha do Tempo'
         template = 'blocks/card_linha_do_tempo.html'

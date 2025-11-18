@@ -167,3 +167,6 @@ class CardLinhaDoTempoPage(PageSitePadrao):
     @property
     def detail_page(self):
         return self
+    
+    def get_url(self):
+        return self.url
