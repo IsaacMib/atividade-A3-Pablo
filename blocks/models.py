@@ -1038,7 +1038,7 @@ class CardLinhaDoTempoBlock(StructBlock):
         template = 'blocks/card_linha_do_tempo.html'
         form_attrs = {
             'data-controller': 'char-count',
-            'data-char-count-fields-value': 'titulo:50,descricao:220',
+            'data-char-count-fields-value': 'titulo:50,descricao_linha_do_tempo:220',
         }
 
 
