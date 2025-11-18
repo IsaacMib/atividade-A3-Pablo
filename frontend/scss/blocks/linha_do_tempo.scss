@@ -40,6 +40,7 @@
     justify-content: center; // Centraliza horizontalmente
     align-self: center;
     width: 100%;
+    min-height: 45px !important;
     aspect-ratio: 26 / 10 !important;
     overflow-y: hidden !important;
     padding: 0 auto;

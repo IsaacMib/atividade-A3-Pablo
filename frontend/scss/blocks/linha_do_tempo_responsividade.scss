@@ -15,6 +15,7 @@ $layout-change-breakpoint-max: calc($layout-change-breakpoint - 1px);
 $icon-resize-breakpoint: map-get($linha-do-tempo-breakpoints, 'md');
 $icon-resize-breakpoint1: map-get($linha-do-tempo-breakpoints, 'xs');
 $icon-resize-breakpoint2: map-get($linha-do-tempo-breakpoints, 'brkp');
+$icon-resize-breakpoint3: 300px;
 
 
 $card-height-per-breakpoint: (
@@ -112,6 +113,12 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
   $icon-size: map-get($icon-size-per-breakpoint, 'brkp');
   .linha-do-tempo-calendar-group::after {
     height: calc($block-margin + $card-height - $icon-size - 1rem) !important;
+  }
+
+  @media (max-width: $icon-resize-breakpoint3) {
+    .linha-do-tempo-calendar-group::after {
+      height: calc($block-margin + $card-height - $icon-size) !important;
+    }
   }
 }
 
@@ -220,6 +227,7 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
   }
 }
 
+// Responsividade de ícones de calendário
 @mixin group-icon-mixin {
   @media (min-width: $layout-change-breakpoint) {
     @media (max-width: $icon-resize-breakpoint) {
@@ -265,16 +273,43 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
       font-size: 1.4rem;
     }
   }
-}
 
-// Limitação de texto nos cards
+  @media (max-width: $icon-resize-breakpoint3) {
+    svg {
+      width: 40px;
+      height: 40px;
+      circle {
+        r: 50px;
+      }
+    }
+    .calendar-icon {
+      width: 40px;
+      height: 40px;
+      font-size: 1rem;
+    }
+  }
+}
 
 .mouse-pointer {
   cursor: pointer !important;
 }
 
+// Limitação de texto nos cards
 .card-description-wrapper {
-  display: inline-flex !important;
+  display: flex !important;
+  margin-inline: auto;
+  vertical-align: middle;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  @media (max-width: map-get($linha-do-tempo-breakpoints, 'brkp')) {
+    height: 100%;
+  }
+
+  @media (max-width: $icon-resize-breakpoint3) {
+    height: min-content !important;
+  }
 }
 
 .card-linha-do-tempo__title {
@@ -284,6 +319,10 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: clip;
+
+  @media (max-width: $icon-resize-breakpoint2) {
+    font-size: .9rem !important;
+  }
 }
 
 .card-linha-do-tempo__description {
@@ -316,19 +355,19 @@ $connector-line-height-per-breakpoint: calculate-connector-heights(
   @media screen and 
   (max-width: map-get($linha-do-tempo-breakpoints, 'brkp')) 
   and (min-width: 590px) {
-    font-size: 1.05rem !important;
+    font-size: .97rem !important;
     -webkit-line-clamp: 7;
     line-clamp: 7;
   }
 
   @media screen and (max-width: 590px) {
-    font-size: 1rem !important;
+    font-size: .87rem !important;
     -webkit-line-clamp: 5;
     line-clamp: 5;
   }
 
   @media screen and (max-width: 490px) {
-    font-size: .85rem !important;
+    font-size: .83rem !important;
     -webkit-line-clamp: 5;
     line-clamp: 5;
   }
