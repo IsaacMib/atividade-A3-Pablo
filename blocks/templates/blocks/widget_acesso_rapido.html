@@ -3,8 +3,8 @@
     {% include 'include/titulo.html' with titulo=self.titulo bgClassExtra='titulo-pequeno-mobile' %}
 
     <div class="widget-lista">
-      {% for item in value.itens %}
-        <a href="{{ item.link }}" class="widget-item">
+      {% for item in self.itens %}
+        <a href="{{ item.link.url|default:item.link }}" class="widget-item" {% if item.link.target %}target="{{ item.link.target }}"{% endif %}>
           <div class="widget-item-barra"></div>
           <div class="widget-item-conteudo">
             <div class="widget-item-icone">

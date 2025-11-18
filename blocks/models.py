@@ -72,9 +72,65 @@ mappingIconsServicos = {
 _CACHE_TIMEOUT = 10*60  # 10 minutos em segundos
 
 
+class LinkStructValue(blocks.StructValue):
+    """StructValue helper para resolver URL final do link (interno ou externo)."""
+
+    def url(self):
+        page = self.get('internal_page')
+        if page:
+            try:
+                return page.url
+            except Exception:
+                return None
+        return self.get('external_url')
+
+    def is_external(self):
+        return bool(self.get('external_url') and not self.get('internal_page'))
+
+
+class LinkBlock(StructBlock):
+    internal_page = PageChooserBlock(
+        required=False, help_text="Link para uma página interna")
+    external_url = URLBlock(
+        required=False, help_text="Ou insira uma URL externa")
+    target = ChoiceBlock(
+        choices=[
+            ('_self', 'Mesma aba'),
+            ('_blank', 'Nova aba'),
+        ],
+        default='_self',
+        required=False,
+        label="Abrir link em",
+        help_text="Escolha se o link deve abrir na mesma aba ou em uma nova aba"
+    )
+
+    def to_python(self, value):
+        # Compatibilidade retroativa: quando era apenas URLBlock, o valor salvo pode ser string
+        if isinstance(value, str):
+            value = {
+                'internal_page': None,
+                'external_url': value,
+            }
+        return super().to_python(value)
+
+    def clean(self, value):
+        cleaned = super().clean(value)
+        has_internal = bool(cleaned.get('internal_page'))
+        has_external = bool(cleaned.get('external_url'))
+        if has_internal and has_external:
+            raise ValidationError('Você deve fornecer apenas 1 link (interno OU externo).')
+        if not has_internal and not has_external:
+            raise ValidationError('Você deve fornecer um link interno OU externo.')
+        return cleaned
+
+    class Meta:
+        icon = "link"
+        label = "Link"
+        value_class = LinkStructValue
+
 class AcessoRapidoItemBlock(StructBlock):
     titulo = CharBlock(required=True, max_length=100)
-    link = URLBlock(required=True)
+    link = LinkBlock(required=True)
     icone = ChoiceBlock(choices=ICONES_ACESSO_RAPIDO,
                         required=True, label="Ícone")
 
@@ -1398,7 +1454,7 @@ class TextoSimplesBlock(StructBlock):
         icon = "pilcrow"
         template = "blocks/texto_simples_block.html"
 
-class LinkBlock(StructBlock):
+class SimpleLinkBlock(StructBlock):
     titulo_link = CharBlock(required=True, label="Texto do Link")
     url_link = URLBlock(required=True, label="URL do Link")
 
@@ -1418,7 +1474,7 @@ class ArquivoDownloadBlock(StructBlock):
 
 class ConteudoAcordeonStreamBlock(StreamBlock):
     texto = TextoSimplesBlock()
-    link = LinkBlock()
+    link = SimpleLinkBlock()
     arquivo = ArquivoDownloadBlock()
 
     class Meta:

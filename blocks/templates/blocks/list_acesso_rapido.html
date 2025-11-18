@@ -4,9 +4,9 @@
     
     {% include 'include/titulo.html' with titulo=self.titulo bgClassExtra='titulo-pequeno-mobile' %}
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
-          {% for item in value.itens %}
+          {% for item in self.itens %}
             <div class="col">
-              <a href="{{ item.link }}">
+              <a href="{{ item.link.url|default:item.link }}" {% if item.link.target %}target="{{ item.link.target }}"{% endif %}>
                 <div class="quick-access quick-access-fullwidth d-flex flex-column align-items-center p-4 shadow rounded-4 h-100">
                   <div class="quick-access-icon-ellipse d-flex align-items-center justify-content-center mb-3 fs-1">
                     {% if item.icone %}
