@@ -108,7 +108,7 @@ class CardLinhaDoTempoPage(PageSitePadrao):
                 description="A rich text paragraph",
             )),
         ],
-        verbose_name="Descrição",
+        verbose_name="Descrição de marco da linha do tempo",
         blank=True,
         null=True,
         use_json_field=True,
