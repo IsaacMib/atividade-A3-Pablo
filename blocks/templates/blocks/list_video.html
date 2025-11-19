@@ -2,9 +2,11 @@
 <div class="videos-wrapper">
   {% include 'include/titulo.html' with titulo=self.titulo bgClass='' %}
   <div class="videos-container">
-    {% for video in self.videos %}
-      {% include_block video %}
-    {% endfor %}
+    <div class="row">
+      {% for video in self.videos %}
+        {% include_block video %}
+      {% endfor %}
+    </div>
   </div>
   {% if self.ver_todos_url %}
     {% include "include/ver_todos_btn.html" with ver_todos_url=self.ver_todos_url target='_blank' btn_class="text-center" %}
