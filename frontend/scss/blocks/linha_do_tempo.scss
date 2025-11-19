@@ -72,8 +72,8 @@
       .card-linha-do-tempo__actions {
         .btn,
         span.btn {
-          background-color: #30599b;
-          border-color: #30599b;
+          background-color: variables.$color-primary;
+          border-color: variables.$color-primary;
           color: variables.$color-white;
         }
       }
@@ -242,7 +242,7 @@
     content: "";
     position: absolute;
     top: 99%;
-    --secondary-color: #e8edf4;
+    --secondary-color: variables.$color-timeline-secondary;
     --percentageReminder: calc(var(--reveal-percentage, 0%, 0%) - var(--percentageRange, 0%));
     --percentageAtElement: calc(var(--percentageReminder, 0%) / var(--percentageCorrectionFactor, 0%));
 
