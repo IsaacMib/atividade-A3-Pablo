@@ -19,10 +19,22 @@
     max-width: 900px;
     margin: 0 auto;
     align-items: center;
+
     .linha-do-tempo-page__titulo {
       margin: 0 15px;
       color: variables.$primary-color;
+
+      @media (max-width: 600px) {
+        font-weight: 500;
+        font-size: 1.5rem;
+      }
+      
+      @media (max-width: 450px) {
+        font-weight: 500;
+        font-size: 1.2rem;
+      }
     }
+
     .banner-container {
       margin: auto 0 !important;
       padding: 20px 0 !important;
@@ -33,21 +45,95 @@
         object-fit: fill !important;
       }
     }
+
+    .swiper-wrapper {
+      display: flex;
+      align-items: center; // Centraliza verticalmente
+    }
+
+    .static-img-container {
+      margin-bottom: 3rem;
+    }
+
+    .banner-img-swiper2 {
+      position: relative;
+      
+      [class^="swiper-button"] {
+        margin-top: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        
+        @media (max-width: 768px) {
+          max-height: 35px;
+          margin-bottom: 4px;
+        }
+        @media (max-width: 450px) {
+          max-height: 25px;
+          margin-bottom: auto !important;
+        }
+      }
+      
+      .swiper-button-prev {
+        left: 10px;
+      }
+      
+      .swiper-button-next {
+        right: 10px;
+      }
+    }
+
+    .swiper-slide, .static-img-container {
+      display: flex;
+      align-items: center;
+      justify-content: center; // Centraliza horizontalmente
+      align-self: center;
+      width: 100%;
+      aspect-ratio: 26 / 9 !important;
+      overflow-y: hidden !important;
+      padding: 0 auto;
+
+      .carrossel-banners--img {
+        width: 100%;
+        max-width: 1200px; // Ajuste conforme necessário
+        object-fit: cover !important;
+        margin: 0 auto;
+        display: block;
+        height: clamp(400px, auto, 600px);
+        background-repeat: repeat;
+        overflow-y: hidden !important;
+      }
+    }
+
     .linha-do-tempo-page__data {
       color: variables.$color-grey-500;
       font-size: 1rem;
       margin-left: 15px;
+
+      @media (max-width: 768px) {
+        font-size: .9rem;
+      }
+      @media (max-width: 450px) {
+        font-size: .8rem;
+      }
     }
+
     .linha-do-tempo-page__descricao {
       font-size: 1.2rem;
       margin: 0 15px;
       text-align: justify;
       text-justify: inter-word;
       margin-bottom: 60px;
+
+      @media (max-width: 768px) {
+        font-size: .9rem;
+      }
+      @media (max-width: 450px) {
+        font-size: .8rem;
+      }
     }
   }
-  .linha-do-tempo-page__lista-videos {
 
+  .linha-do-tempo-page__lista-videos {
     .videos-wrapper {
       margin: 0 15px 60px;
 

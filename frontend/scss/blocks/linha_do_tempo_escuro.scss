@@ -1,5 +1,6 @@
 @use '../variables.scss';
 @use './linha_do_tempo_responsividade.scss' as *;
+@use 'sass:color';
 
 [data-theme='dark'] {
   .card-linha-do-tempo__title {
@@ -19,22 +20,9 @@
     color: variables.$color-text-body-dark !important;
   }
 
-  .card-linha-do-tempo__actions {
-    .btn,
-    span.btn {
-      color: variables.$color-dark-theme-border !important; // Cinza escuro
-      border-color: variables.$color-dark-theme-border-light !important; // Cinza claro
-      background-color: variables.$color-dark-theme-border-light !important; // Cinza claro
-      
-      i {
-        color: variables.$color-dark-theme-border !important; // Cinza escuro
-      }
-    }
-  }
-
   .card-linha-do-tempo {
-    @include card-aspect-ratio;
     --card-max-height: 360px;
+    @include card-aspect-ratio;
 
     display: flex;
     flex-direction: column;
@@ -47,25 +35,51 @@
     background-color: variables.$color-white;
 
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
-    
+    min-width: var(--card-width);
+
+    .card-linha-do-tempo__image {
+      display: flex;
+      align-items: center;
+      justify-content: center; // Centraliza horizontalmente
+      align-self: center;
+      width: 100%;
+      min-height: 45px !important;
+      aspect-ratio: 26 / 10 !important;
+      overflow-y: hidden !important;
+      padding: 0 auto;
+
+      img {
+        width: 100%;
+        object-fit: cover !important;
+        margin: 0 auto;
+        display: block;
+        height: clamp(400px, auto, 600px);
+        overflow-y: hidden !important;
+      }
+    }
+
     // Card clicável no modo dark
-    &.card-linha-do-tempo--clickable {
+    &.mouse-pointer {
+      cursor: pointer;
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
       &:hover {
         transform: translateY(-4px);
-        box-shadow: 0 8px 16px rgba(variables.$color-white, 0.3);
-        
+        box-shadow: 0 8px 16px variables.$color-white-80;
+
         .card-linha-do-tempo__title {
-          color: variables.$color-text-body-dark !important;
+          color: color.adjust(variables.$color-primary, $lightness: -10%);
         }
-        
-        .btn,
-        span.btn {
-          background-color: variables.$color-dark-theme-border !important; // Cinza escuro quase preto
-          color: variables.$color-dark-theme-border-light !important; // Cinza claro
-          border-color: variables.$color-black-80 !important; // Cinza escuro quase preto
-          
-          i {
-            color:variables.$color-dark-theme-border-light!important; // Cinza claro
+
+        // Botão muda de cor no hover do card
+        .card-linha-do-tempo__actions {
+          .btn,
+          span.btn {
+            background-color: variables.$color-primary;
+            border-color: variables.$color-primary;
+            color: variables.$color-white;
           }
         }
       }
@@ -227,18 +241,23 @@
   .block-linha-do-tempo:not(:last-child),
   .linha-do-tempo__item:not(:last-child) {
     .linha-do-tempo-calendar-group::after {
-      content: "";
+      content: '';
       position: absolute;
       top: 99%;
       // --secondary-color: #e8edf4;
-      --percentageReminder: calc(var(--reveal-percentage, 0%) - var(--percentageRange, 0%));
-      --percentageAtElement: calc(var(--percentageReminder, 0%) / var(--percentageCorrectionFactor, 0%));
+      --percentageReminder: calc(
+        var(--reveal-percentage, 0%) - var(--percentageRange, 0%)
+      );
+      --percentageAtElement: calc(
+        var(--percentageReminder, 0%) / var(--percentageCorrectionFactor, 0%)
+      );
 
-      background: linear-gradient(to bottom, 
-          variables.$color-white 0%,
-          variables.$color-white var(--percentageAtElement),
-          variables.$color-black var(--percentageAtElement),
-          variables.$color-black 100%
+      background: linear-gradient(
+        to bottom,
+        variables.$color-white 0%,
+        variables.$color-white var(--percentageAtElement),
+        variables.$color-black var(--percentageAtElement),
+        variables.$color-black 100%
       );
       width: 4px;
       box-shadow: 0 0 10px rgba(variables.$color-white, 0.55);

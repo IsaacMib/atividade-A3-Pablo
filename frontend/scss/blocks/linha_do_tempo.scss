@@ -14,26 +14,6 @@
 .card-linha-do-tempo__title {
   font-weight: 500;
   color: variables.$color-primary;
-  transition: color 0.2s ease;
-}
-
-.card-linha-do-tempo__actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
-  .btn,
-  span.btn {
-    white-space: nowrap;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    transition: all 0.2s ease;
-    
-    i {
-      transition: transform 0.2s ease;
-    }
-  }
 }
 
 .card-linha-do-tempo {
@@ -46,19 +26,37 @@
   justify-content: flex-start;
   border: solid 4px variables.$color-primary;
   padding: 1.2rem;
-  overflow: hidden; // Mudado de overflow-y para overflow
+  overflow: hidden;
   z-index: 15;
   background-color: variables.$color-white;
-  height: 420px; // Altura fixa para todos os cards
-  min-height: 420px; // Garante altura mínima
-  max-height: 420px; // Garante altura máxima
 
   --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
+  min-width: var(--card-width);
+
+
+  .card-linha-do-tempo__image {
+    display: flex;
+    align-items: center;
+    justify-content: center; // Centraliza horizontalmente
+    align-self: center;
+    width: 100%;
+    min-height: 45px !important;
+    aspect-ratio: 26 / 10 !important;
+    overflow-y: hidden !important;
+    padding: 0 auto;
+
+    img {
+      width: 100%;
+      object-fit: cover !important;
+      margin: 0 auto;
+      display: block;
+      height: clamp(400px, auto, 600px);
+      overflow-y: hidden !important;
+    }
+  }
   
-  // Card clicável (quando é link)
-  &.card-linha-do-tempo--clickable {
-    text-decoration: none;
-    color: inherit;
+  // Card clicável (quando usa onClick)
+  &.mouse-pointer {
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     
@@ -70,40 +68,17 @@
         color: color.adjust(variables.$color-primary, $lightness: -10%);
       }
       
-      .btn {
-        background-color: variables.$color-primary;
-        color: variables.$color-white;
-        border-color: variables.$color-primary;
+      // Botão muda de cor no hover do card
+      .card-linha-do-tempo__actions {
+        .btn,
+        span.btn {
+          background-color: variables.$color-primary;
+          border-color: variables.$color-primary;
+          color: variables.$color-white;
+        }
       }
     }
   }
-}
-
-.card-linha-do-tempo__image {
-  width: 100%;
-  height: 200px; // Altura fixa para todas as imagens
-  min-height: 200px;
-  max-height: 200px;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0; // Não permite que a imagem encolha
-  
-  img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover; // Mantém proporção cortando se necessário
-  }
-}
-
-.card-linha-do-tempo__content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto; // Permite scroll se o conteúdo for muito grande
-  width: 100%;
 }
 
 .animate {
@@ -148,7 +123,7 @@
     --group-x: 50%;
     // Dimensões do card usadas pelo conector
     --card-max-height: 380px;
-    --card-aspect-ratio: 1.5;
+    --card-aspect-ratio: 1.3;
     --card-width: calc(var(--card-max-height) * var(--card-aspect-ratio));
 
     @include group-icon-mixin;
@@ -235,8 +210,11 @@
 
 @media (max-width: $layout-change-breakpoint-max) {
   .linha-do-tempo {
+    margin: 0 !important;
+    padding-inline: 0 !important;
     .container {
-      --bs-gutter-x: 0;
+      --bs-gutter-x: 0 !important;
+      width: 100% !important;
     }
   }
 
@@ -302,6 +280,7 @@
   padding: 5px;
   z-index: 10;
   position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &.right {
     -webkit-transform: translateX(-75%) rotate(-45deg);
@@ -311,6 +290,21 @@
   &.left {
     -webkit-transform: translateX(75%) rotate(135deg);
     transform: translateX(75%) rotate(135deg);
+  }
+}
+
+// Efeito hover sincronizado: quando hover no card, a seta também se move
+.linha-do-tempo__item:has(.card-linha-do-tempo.mouse-pointer:hover) {
+  .arrow {
+    box-shadow: 0 4px 8px variables.$color-black-80;
+    
+    &.left {
+      transform: translateX(75%) translateY(-4px) rotate(135deg);
+    }
+    
+    &.right {
+      transform: translateX(-75%) translateY(-4px) rotate(-45deg);
+    }
   }
 }
 
