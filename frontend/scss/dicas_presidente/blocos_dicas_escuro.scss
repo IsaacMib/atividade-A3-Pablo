@@ -1,0 +1,295 @@
+@use '../variables';
+
+// ============================================================
+// MODO ESCURO — DICAS DO PRESIDENTE
+// ============================================================
+
+[data-theme="dark"] {
+  // Base comum para todos os blocos
+  .dica-bloco {
+    background: variables.$color-grey-900;
+    box-shadow: 0 2px 8px variables.$color-black-60;
+    color: variables.$color-white;
+
+    &:hover {
+      box-shadow: 0 6px 20px variables.$color-black-70;
+      border-left-width: 6px;
+    }
+
+    .dica-bloco-header {
+      background: variables.$color-grey-900;
+      border-bottom: 2px solid variables.$color-grey-700;
+      color: variables.$color-white;
+
+      i {
+        opacity: 0.85;
+      }
+
+      h3 {
+        color: variables.$color-white;
+      }
+    }
+
+    .dica-bloco-content {
+      color: variables.$color-white;
+
+      h4 {
+        color: variables.$color-primary;
+      }
+
+      a {
+        color: variables.$color-primary;
+        &:hover {
+          color: variables.$color-primary-dark;
+        }
+      }
+
+      p, span, li {
+        color: variables.$color-white;
+      }
+    }
+  }
+
+  // ============================================================
+  // BLOCO: MENSAGEM PESSOAL (Azul)
+  // ============================================================
+  .dica-bloco-mensagem {
+    border-left: 4px solid variables.$color-bloco-mensagem-5-dark;
+
+    .dica-bloco-header {
+      background: linear-gradient(135deg, variables.$color-bloco-mensagem-5-dark 0%, variables.$color-bloco-mensagem-5-light 100%);
+      color: variables.$color-bloco-mensagem-5-dark;
+      border-bottom-color: variables.$color-bloco-mensagem-2-dark;
+
+      i {
+        color: variables.$color-bloco-mensagem-1-dark;
+      }
+    }
+
+    .dica-bloco-content {
+      h4 {
+        color: variables.$color-bloco-mensagem-4-dark !important;
+      }
+
+      a {
+        color: variables.$color-bloco-mensagem-4-dark !important;
+        &:hover {
+          color: variables.$color-bloco-mensagem-3-dark !important;
+        }
+      }
+    }
+
+    .mensagem-assinatura {
+      border-top: 2px solid variables.$color-grey-200;
+      color: variables.$color-white;
+    }
+  }
+
+  // ============================================================
+  // BLOCO: RECOMENDAÇÃO (Laranja)
+  // ============================================================
+  .dica-bloco-recomendacao {
+    border-left: 4px solid variables.$color-bloco-recomendacao-5-dark;
+
+    .dica-bloco-header {
+      background: linear-gradient(135deg, variables.$color-bloco-recomendacao-5-dark 0%, variables.$color-bloco-recomendacao-5-light 100%);
+      color: variables.$color-bloco-recomendacao-4-dark;
+      border-bottom-color: variables.$color-bloco-recomendacao-2-dark;
+
+      i {
+        color: variables.$color-bloco-recomendacao-1-dark;
+      }
+    }
+
+    .recomendacao-link a, .botao-recomendacao {
+      background: variables.$color-bloco-recomendacao-5-light !important;
+      border: 2px solid variables.$color-bloco-recomendacao-4-dark !important;
+      color: variables.$color-black !important;
+      text-decoration: none !important;
+      
+      .recomendacao-texto {
+        color: variables.$color-black !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+
+      span {
+        color: variables.$color-black !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+
+      i {
+        color: variables.$color-black !important;
+        opacity: 1 !important;
+      }
+
+      &:hover {
+        background: variables.$color-bloco-recomendacao-4-dark !important;
+        border-color: variables.$color-bloco-recomendacao-5-dark !important;
+        color: variables.$color-black !important;
+        box-shadow: 0 4px 16px variables.$color-bloco-recomendacao-3-dark;
+        text-decoration: none !important;
+        
+        .recomendacao-texto {
+          color: variables.$color-black !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+
+        span {
+          color: variables.$color-black !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+        
+        i {
+          color: variables.$color-black !important;
+          opacity: 1 !important;
+        }
+      }
+    }
+
+    .recomendacao-motivo {
+      border-left: 3px solid variables.$color-bloco-recomendacao-4-dark;
+      background: variables.$color-bloco-recomendacao-1-dark;
+      color: variables.$color-white;
+
+      h4 {
+        color: variables.$color-bloco-recomendacao-5-dark !important;
+      }
+    }
+
+    .recomendacao-conteudo-adicional {
+
+      color: variables.$color-white;
+
+      h2, h3, h4 {
+        color: variables.$color-bloco-recomendacao-5-dark !important;
+      }
+
+      a {
+        color: variables.$color-bloco-recomendacao-5-dark !important;
+        &:hover {
+          color: variables.$color-bloco-recomendacao-4-dark !important;
+        }
+      }
+    }
+  }
+
+  // ============================================================
+  // BLOCO: NOTÍCIA (Verde)
+  // ============================================================
+  .dica-bloco-noticia {
+    border-left: 4px solid variables.$color-bloco-noticia-3-dark;
+
+    .dica-bloco-header {
+      background: linear-gradient(135deg, variables.$color-bloco-noticia-5-dark 0%, variables.$color-bloco-noticia-5-light 100%);
+      color: variables.$color-bloco-noticia-1-dark;
+      border-bottom-color: variables.$color-bloco-noticia-3-dark;
+
+      i {
+        color: variables.$color-bloco-noticia-1-dark;
+      }
+    }
+
+    .dica-bloco-content {
+      h2, h3, h4 {
+        color: variables.$color-bloco-noticia-5-dark !important;
+      }
+
+      a {
+        color: variables.$color-bloco-noticia-5-dark !important;
+        &:hover {
+          color: variables.$color-bloco-noticia-4-dark !important;
+        }
+      }
+    }
+
+    blockquote {
+      border-left: 4px solid variables.$color-bloco-noticia-2-dark;
+      background: variables.$color-bloco-noticia-5-dark;
+      color: variables.$color-white;
+    }
+  }
+
+  // ============================================================
+  // BLOCO: GALERIA (Roxo)
+  // ============================================================
+  .dica-bloco-galeria {
+    border-left: 4px solid variables.$color-bloco-galeria-3-dark;
+
+    .dica-bloco-header {
+      background: linear-gradient(135deg, variables.$color-bloco-galeria-5-dark 0%, variables.$color-bloco-galeria-5-light 100%);
+      color: variables.$color-bloco-galeria-5-dark;
+      border-bottom-color: variables.$color-bloco-galeria-3-dark;
+
+      i {
+        color: variables.$color-bloco-galeria-5-light;
+      }
+    }
+
+    .dica-bloco-content {
+      h4, h5, h6 {
+        color: variables.$color-bloco-galeria-5-dark !important;
+      }
+
+      a {
+        color: variables.$color-bloco-galeria-5-dark !important;
+        &:hover {
+          color: variables.$color-bloco-galeria-4-dark !important;
+        }
+      }
+    }
+
+    .galeria-legenda {
+      border-left: 4px solid variables.$color-bloco-galeria-3-dark;
+      background: variables.$color-bloco-galeria-1-dark;
+      color: variables.$color-white;
+    }
+
+    .galeria-item:hover {
+      box-shadow: 0 6px 20px variables.$color-bloco-galeria-5-dark;
+    }
+  }
+
+  // ============================================================
+  // BLOCO: FRASE DA SEMANA (Vermelho)
+  // ============================================================
+  .dica-bloco-frase {
+    border-left: 4px solid variables.$color-bloco-frase-2-dark;
+
+    .dica-bloco-header {
+      background: linear-gradient(135deg, variables.$color-bloco-frase-5-dark 0%, variables.$color-bloco-frase-5-light 100%);
+      color: variables.$color-bloco-frase-1-dark;
+      border-bottom-color: variables.$color-bloco-frase-3-dark;
+
+      i {
+        color: variables.$color-bloco-frase-1-dark;
+      }
+    }
+
+    .dica-bloco-content {
+      h2, h3, h4 {
+        color: variables.$color-bloco-frase-1-dark !important;
+      }
+
+      a {
+        color: variables.$color-bloco-frase-1-dark !important;
+        &:hover {
+          color: variables.$color-bloco-frase-2-dark !important;
+        }
+      }
+    }
+
+    .frase-destaque::before {
+      color: variables.$color-bloco-frase-1-dark;
+      opacity: 0.6;
+    }
+
+    footer {
+      border-top: 2px solid variables.$color-bloco-frase-3-dark;
+      color: variables.$color-white;
+    }
+  }
+}

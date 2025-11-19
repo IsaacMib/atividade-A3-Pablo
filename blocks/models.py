@@ -73,9 +73,65 @@ mappingIconsServicos = {
 _CACHE_TIMEOUT = 10*60  # 10 minutos em segundos
 
 
+class LinkStructValue(blocks.StructValue):
+    """StructValue helper para resolver URL final do link (interno ou externo)."""
+
+    def url(self):
+        page = self.get('internal_page')
+        if page:
+            try:
+                return page.url
+            except Exception:
+                return None
+        return self.get('external_url')
+
+    def is_external(self):
+        return bool(self.get('external_url') and not self.get('internal_page'))
+
+
+class LinkBlock(StructBlock):
+    internal_page = PageChooserBlock(
+        required=False, help_text="Link para uma página interna")
+    external_url = URLBlock(
+        required=False, help_text="Ou insira uma URL externa")
+    target = ChoiceBlock(
+        choices=[
+            ('_self', 'Mesma aba'),
+            ('_blank', 'Nova aba'),
+        ],
+        default='_self',
+        required=False,
+        label="Abrir link em",
+        help_text="Escolha se o link deve abrir na mesma aba ou em uma nova aba"
+    )
+
+    def to_python(self, value):
+        # Compatibilidade retroativa: quando era apenas URLBlock, o valor salvo pode ser string
+        if isinstance(value, str):
+            value = {
+                'internal_page': None,
+                'external_url': value,
+            }
+        return super().to_python(value)
+
+    def clean(self, value):
+        cleaned = super().clean(value)
+        has_internal = bool(cleaned.get('internal_page'))
+        has_external = bool(cleaned.get('external_url'))
+        if has_internal and has_external:
+            raise ValidationError('Você deve fornecer apenas 1 link (interno OU externo).')
+        if not has_internal and not has_external:
+            raise ValidationError('Você deve fornecer um link interno OU externo.')
+        return cleaned
+
+    class Meta:
+        icon = "link"
+        label = "Link"
+        value_class = LinkStructValue
+
 class AcessoRapidoItemBlock(StructBlock):
     titulo = CharBlock(required=True, max_length=100)
-    link = URLBlock(required=True)
+    link = LinkBlock(required=True)
     icone = ChoiceBlock(choices=ICONES_ACESSO_RAPIDO,
                         required=True, label="Ícone")
 
@@ -809,6 +865,168 @@ class AvisosListBlock(StructBlock):
         icon = "warning"
         label = "Avisos"
 
+
+class BlocoListaCursosBlock(StructBlock):
+    """Bloco Lista de Cursos - Configurável por modo de filtro"""
+    
+    titulo = CharBlock(
+        required=False,
+        default="Cursos Disponíveis",
+        help_text="Título exibido acima da seção"
+    )
+
+    cursos_index_page = PageChooserBlock(
+        required=True,
+        target_model='noticias.NoticiasIndexPages',
+        help_text="Selecione a página de índice de cursos"
+    )
+
+    modo = blocks.ChoiceBlock(
+        required=False,
+        default='padrao',
+        choices=[
+            ('padrao', 'Padrão'),
+            ('curso_mes', 'Curso do Mês'),
+            ('curso_destaque', 'Curso Destaque'),
+        ],
+        label="Modo de Filtro",
+        help_text="Escolha como os cursos serão filtrados"
+    )
+
+    quantidade = IntegerBlock(
+        required=False,
+        default=2,
+        min_value=1,
+        label="Quantidade de cursos",
+        help_text="Mínimo: 1 curso. Sem limite máximo."
+    )
+
+    texto_link = CharBlock(
+        required=False,
+        default="Ver todos os cursos",
+        label="Texto do botão 'Ver Todos'"
+    )
+
+    mostrar_titulo = blocks.BooleanBlock(
+        required=False,
+        default=True,
+        label="Mostrar título"
+    )
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        
+        cursos_index_page = value.get('cursos_index_page')
+        quantidade = value.get('quantidade') or 2
+        modo = value.get('modo', 'padrao')
+        cursos = []
+        cursos_index_page_url = None
+
+        if cursos_index_page:
+            from noticias.models import NoticiasPage
+            cursos_index_page_url = cursos_index_page.url
+            
+            # Lógica de filtro baseada no modo selecionado
+            if modo == 'curso_mes':
+                # Curso do Mês: Cursos mais recentes (últimos promovidos/publicados)
+                cursos = NoticiasPage.objects.descendant_of(
+                    cursos_index_page
+                ).live().order_by("-data_publicacao")[:quantidade]
+                
+            elif modo == 'curso_destaque':
+                # Curso Destaque: Apenas cursos marcados como destaque
+                cursos = NoticiasPage.objects.descendant_of(
+                    cursos_index_page
+                ).live().filter(destaque=True).order_by("-data_publicacao")[:quantidade]
+                
+            else:  # modo == 'padrao'
+                # Padrão: Listagem normal de cursos
+                cursos = NoticiasPage.objects.descendant_of(
+                    cursos_index_page
+                ).live().order_by("-data_publicacao")[:quantidade]
+
+        context.update({
+            'titulo': value.get('titulo'),
+            'cursos': cursos,
+            'cursos_index_page_url': cursos_index_page_url,
+            'texto_link': value.get('texto_link') or "Ver todos os cursos",
+            'mostrar_titulo': value.get('mostrar_titulo', True),
+            'modo': modo,
+        })
+
+        return context
+
+    class Meta:
+        template = 'blocks/bloco_lista_cursos.html'
+        icon = 'list-ul'
+        label = 'Lista de Cursos'
+
+class BlocoGridCursosBlock(StructBlock):
+    """Bloco Grid de Cursos - Cards verticais em grid responsivo"""
+    
+    titulo = CharBlock(
+        required=False,
+        default="Nossos Cursos",
+        help_text="Título exibido acima do grid"
+    )
+
+    cursos_index_page = PageChooserBlock(
+        required=True,
+        target_model='noticias.NoticiasIndexPages', # Garante que o modelo de destino está correto
+        help_text="Selecione a página de índice de cursos"
+    )
+
+    quantidade = IntegerBlock(
+        required=False,
+        default=6,
+        min_value=1,
+        label="Quantidade de cursos",
+        help_text="Quantidade de cursos a exibir no grid. Padrão: 6."
+    )
+
+    texto_link = CharBlock(
+        required=False,
+        default="Ver todos os cursos",
+        label="Texto do botão 'Ver Todos'"
+    )
+
+    mostrar_titulo = blocks.BooleanBlock(
+        required=False,
+        default=True,
+        label="Mostrar título"
+    )
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        
+        cursos_index_page = value.get('cursos_index_page')
+        quantidade = value.get('quantidade') or 6
+        cursos = []
+        cursos_index_page_url = None
+
+        if cursos_index_page:
+            from noticias.models import NoticiasPage
+            cursos_index_page_url = cursos_index_page.url
+            
+            # Busca apenas descendentes da página de índice selecionada
+            cursos = NoticiasPage.objects.live().descendant_of(cursos_index_page).order_by("-data_publicacao")[:quantidade]
+
+        context.update({
+            'titulo': value.get('titulo'),
+            'cursos': cursos,
+            'cursos_index_page_url': cursos_index_page_url,
+            'texto_link': value.get('texto_link') or "Ver todos os cursos",
+            'mostrar_titulo': value.get('mostrar_titulo', True),
+        })
+
+        return context
+
+    class Meta:
+        template = 'blocks/bloco_grid_cursos.html'
+        icon = 'grip'
+        label = 'Grid de Cursos'
+
+
 class LinkStructBlock(StructBlock):
     link_text = CharBlock(required=True, help_text="Texto")
     internal_page = PageChooserBlock(
@@ -1247,7 +1465,7 @@ class TextoSimplesBlock(StructBlock):
         icon = "pilcrow"
         template = "blocks/texto_simples_block.html"
 
-class LinkBlock(StructBlock):
+class SimpleLinkBlock(StructBlock):
     titulo_link = CharBlock(required=True, label="Texto do Link")
     url_link = URLBlock(required=True, label="URL do Link")
 
@@ -1267,7 +1485,7 @@ class ArquivoDownloadBlock(StructBlock):
 
 class ConteudoAcordeonStreamBlock(StreamBlock):
     texto = TextoSimplesBlock()
-    link = LinkBlock()
+    link = SimpleLinkBlock()
     arquivo = ArquivoDownloadBlock()
 
     class Meta:
@@ -1421,6 +1639,124 @@ class FormularioSubmissao(models.Model):
         verbose_name = "Envio do Formulário"
         verbose_name_plural = "Envios dos Formulários"
         ordering = ['-data_envio']
+
+
+# ============================================================
+# BLOCOS - DICAS DO PRESIDENTE
+# ============================================================
+
+class DicaPresidenteWidget(StructBlock):
+    """
+    Widget para exibir a última dica ou uma frase do presidente.
+    Pode ser inserido em sidebars ou home da intranet.
+    """
+    titulo = CharBlock(
+        required=False,
+        default="Dica do Presidente",
+        label="Título do Widget",
+        help_text="Título exibido no topo do widget"
+    )
+    
+    pagina_dicas = PageChooserBlock(
+        required=True,
+        page_type=['dicas_presidente.DicasPresidenteIndexPage'],
+        label="Página de Dicas",
+        help_text="Selecione a página de onde buscar as dicas (obrigatório)"
+    )
+    
+    quantidade_dicas = IntegerBlock(
+        required=False,
+        default=3,
+        min_value=1,
+        max_value=6,
+        label="Quantidade de dicas",
+        help_text="Número de dicas a exibir (1 a 6)"
+    )
+    
+    class Meta:
+        label = "Widget - Dica do Presidente"
+        icon = "snippet"
+        template = "blocks/widget_dica_presidente.html"
+
+
+class ListaDicasPresidenteBlock(StructBlock):
+    """
+    Lista de dicas do presidente para inserir em páginas.
+    Permite escolher tipo de dica, layout e quantidade.
+    """
+    titulo = CharBlock(
+        required=False,
+        default="Dicas do Presidente",
+        label="Título da Seção"
+    )
+    
+    mostrar_titulo = BooleanBlock(
+        required=False,
+        default=True,
+        label="Mostrar título e linha abaixo?"
+    )
+    
+    pagina_dicas = PageChooserBlock(
+        required=True,
+        page_type=['dicas_presidente.DicasPresidenteIndexPage'],
+        label="Página de Dicas",
+        help_text="Selecione a página de índice de Dicas do Presidente"
+    )
+    
+    quantidade = IntegerBlock(
+        required=False,
+        default=6,
+        min_value=1,
+        max_value=12,
+        label="Quantidade de dicas",
+        help_text="Número de dicas a exibir"
+    )
+    
+    texto_link = CharBlock(
+        required=False,
+        default="Ver todas as dicas",
+        label="Texto do link para todas as dicas"
+    )
+    
+    layout = ChoiceBlock(
+        choices=[
+            ('lista', 'Lista'),
+            ('grid', 'Blocos'),
+        ],
+        required=False,
+        default='lista',
+        label="Layout das dicas"
+    )
+    
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context=parent_context)
+        
+        pagina_dicas = value.get('pagina_dicas')
+        quantidade = value.get('quantidade') or 6
+        texto_link = value.get('texto_link') or "Ver todas as dicas"
+        
+        dicas = []
+        pagina_dicas_url = None
+        
+        if pagina_dicas:
+            dicas = pagina_dicas.get_ultimas_dicas(quantidade=quantidade)
+            pagina_dicas_url = pagina_dicas.url
+        
+        context.update({
+            'titulo': value.get('titulo'),
+            'dicas': dicas,
+            'pagina_dicas_url': pagina_dicas_url,
+            'texto_link': texto_link,
+            'mostrar_titulo': value.get('mostrar_titulo', True),
+            'layout': value.get('layout', 'lista'),
+        })
+        
+        return context
+    
+    class Meta:
+        label = "Lista de Dicas do Presidente"
+        icon = "grip"
+        template = "blocks/lista_dicas_presidente.html"
 
 
 class BaseRichTextStreamBlock(StreamBlock):

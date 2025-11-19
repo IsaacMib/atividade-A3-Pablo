@@ -1,10 +1,11 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags page_utils %}
 {% block content %}
 <div class="agenda-do-dia--wrapper">
     <div class="container">
         <h1 class="agenda-do-dia--title">{{ page.title }}</h1>
-        <p class="agenda-do-dia--description">Você está visualizando esse conteúdo porque tem permissão de editar.</p>
+        
+        {% aviso_administrador mensagem="Você está visualizando esse conteúdo porque tem permissão de editar." tipo="info" %}
         
         {% if page.habilitar_recorrencia and page.tipo_recorrencia != 'none' %}
         <div class="agenda-recorrente__info">

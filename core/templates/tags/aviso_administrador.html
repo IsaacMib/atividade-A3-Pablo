@@ -1,0 +1,7 @@
+{% if mostrar_aviso %}
+<div class="alert alert-{{ tipo }} alert-dismissible fade show mt-3" role="alert">
+    <strong><i class="bi bi-info-circle me-2"></i>Informação para Administradores:</strong>
+    <p class="mb-0 mt-2">{{ mensagem }}</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+</div>
+{% endif %}

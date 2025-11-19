@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+{% block body_class %}template-dicas-presidente-index{% endblock %}
+
+{% block content %}
+
+<div class="dicas-presidente-container">
+    
+    <!-- Banner do Presidente -->
+    {% if page.foto_presidente or page.mensagem_presidente %}
+    <div class="banner-presidente">
+        <div class="container">
+            <div class="row align-items-center">
+                {% if page.foto_presidente %}
+                <div class="col-md-3">
+                    {% image page.foto_presidente fill-300x300 as img %}
+                    <img src="{{ img.url }}" alt="Foto do Presidente" class="foto-presidente rounded-circle">
+                </div>
+                {% endif %}
+                
+                <div class="{% if page.foto_presidente %}col-md-9{% else %}col-12{% endif %}">
+                    <h1 class="titulo-presidente">{{ page.title }}</h1>
+                    {% if page.mensagem_presidente %}
+                    <p class="mensagem-presidente">{{ page.mensagem_presidente }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="container">
+        <h1 class="titulo-pagina">{{ page.title }}</h1>
+    </div>
+    {% endif %}
+    
+    <div class="container py-5">
+        
+        <!-- Introdução -->
+        {% if page.introduction %}
+        <p class="texto-muted mb-4">{{ page.introduction }}</p>
+        {% endif %}
+                
+        <!-- Frase Aleatória (Widget Lateral) -->
+        {% if frase_aleatoria %}
+        <aside class="widget-frase-presidente">
+            <div class="frase-widget">
+                <div class="frase-icone"><i class="bi bi-chat-quote-fill"></i></div>
+                <div class="frase-conteudo">
+                    <blockquote>
+                        <p>{{ frase_aleatoria.texto }}</p>
+                        {% if frase_aleatoria.autor %}
+                        <footer>{{ frase_aleatoria.autor }}</footer>
+                        {% endif %}
+                    </blockquote>
+                </div>
+            </div>
+        </aside>
+        {% endif %}
+        
+        <!-- Dicas em Destaque -->
+        {% if dicas_destaque %}
+        <section class="dicas-destaque mb-5">
+            <h2 class="secao-titulo"><i class="bi bi-star-fill"></i> Destaques</h2>
+            
+            <!-- Barra de Progresso da Paginação -->
+            {% if posts.paginator.num_pages > 1 %}
+            <div class="pagination-progress-bar mb-3">
+                <div class="pagination-progress-fill" 
+                     data-current-page="{{ posts.number }}" 
+                     data-total-pages="{{ posts.paginator.num_pages }}"
+                     style="width: {% widthratio posts.number posts.paginator.num_pages 100 %}%;">
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="row g-4">
+                {% for dica in dicas_destaque %}
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <a href="{% pageurl dica %}" class="card-link-wrapper">
+                        <div class="card dica-card-destaque {% if dica.get_tipos_blocos|length > 1 %}dica-tipo-misto{% else %}dica-tipo-{{ dica.get_tipo_dica_principal }}{% endif %} h-100">
+                            {% if dica.get_imagem_principal %}
+                                {% image dica.get_imagem_principal fill-400x250 as img %}
+                                <img src="{{ img.url }}" class="card-img-top" alt="{{ dica.title }}">
+                            {% else %}
+                                <img class="card-img-top default-img-light" src="{% static 'img/img_dicas_default_light.png' %}" alt="Imagem padrão">
+                                <img class="card-img-top default-img-dark" src="{% static 'img/img_dicas_default_dark.png' %}" alt="Imagem padrão">
+                            {% endif %}
+                            
+                            <div class="card-body">
+                                <div class="dica-tipo-badge mb-2">
+                                    {% if dica.get_tipos_blocos|length > 1 %}
+                                        {{ dica.get_todos_icones_tipos }} Conteúdo Misto
+                                    {% else %}
+                                        {{ dica.get_tipo_dica_display_icon }} {{ dica.get_tipo_dica_display }}
+                                    {% endif %}
+                                </div>
+                                
+                                <h3 class="card-title">{{ dica.title }}</h3>
+                                
+                                <p class="card-text">{{ dica.descricao|truncatewords:20 }}</p>
+                                
+                                <div class="dica-meta-footer">
+                                    <small class="texto-muted">{{ dica.data_publicacao|date:"d/m/Y" }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+        
+        <!-- Listagem de Dicas -->
+        <section class="dicas-listagem">
+            <h2 class="secao-titulo"><i class="bi bi-pen-fill"></i> Todas as Dicas</h2>
+            
+            <!-- Barra de Progresso da Paginação -->
+            {% if posts.paginator.num_pages > 1 %}
+            <div class="pagination-progress-bar mb-3">
+                <div class="pagination-progress-fill" 
+                     data-current-page="{{ posts.number }}" 
+                     data-total-pages="{{ posts.paginator.num_pages }}"
+                     style="width: {% widthratio posts.number posts.paginator.num_pages 100 %}%;">
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if posts %}
+            <div class="row g-4">
+                {% for dica in posts %}
+                <div class="col-md-6 col-lg-4">
+                    <a href="{% pageurl dica %}" class="card-link-wrapper">
+                        <article class="card dica-card {% if dica.get_tipos_blocos|length > 1 %}dica-tipo-misto{% else %}dica-tipo-{{ dica.get_tipo_dica_principal }}{% endif %} h-100">
+                            {% if dica.get_imagem_principal %}
+                                {% image dica.get_imagem_principal fill-400x250 as img %}
+                                <img src="{{ img.url }}" class="card-img-top" alt="{{ dica.title }}">
+                            {% else %}
+                                <img class="card-img-top default-img-light" src="{% static 'img/img_dicas_default_light.png' %}" alt="Imagem padrão">
+                                <img class="card-img-top default-img-dark" src="{% static 'img/img_dicas_default_dark.png' %}" alt="Imagem padrão">
+                            {% endif %}
+                            
+                            <div class="card-body">                                
+                                <div class="dica-tipo-badge mb-2">
+                                    {% if dica.get_tipos_blocos|length > 1 %}
+                                        {{ dica.get_todos_icones_tipos }} Conteúdo Misto
+                                    {% else %}
+                                        {{ dica.get_tipo_dica_display_icon }} {{ dica.get_tipo_dica_display }}
+                                    {% endif %}
+                                </div>
+                                
+                                <h3 class="card-title h5">{{ dica.title }}</h3>
+                                       
+                                <p class="card-text">{{ dica.descricao|truncatewords:15 }}</p>
+                                
+                                <div class="dica-footer mt-auto">
+                                    <small class="texto-muted">
+                                        <i class="bi bi-calendar3"></i> {{ dica.data_publicacao|date:"d/m/Y" }}
+                                    </small>
+                                    
+                                    {% if dica.destaque %}
+                                    <span class="badge-destaque"><i class="bi bi-star-fill"></i> Destaque</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </article>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Paginação -->
+            <div class="paginacao mt-5">
+                {% include "include/paginator.html" with posts=posts %}
+            </div>
+            
+            {% else %}
+            <p class="texto-muted texto-italico">Nenhuma dica encontrada.</p>
+            {% endif %}
+        </section>
+        
+    </div>
+</div>
+
+<script>
+// Auto-submit dos filtros
+document.addEventListener('DOMContentLoaded', function() {
+    const filtroTipo = document.getElementById('filtroTipo');
+    const filtroTag = document.getElementById('filtroTag');
+    const form = document.querySelector('.filtros-dicas-form');
+    
+    if (filtroTipo) {
+        filtroTipo.addEventListener('change', () => form.submit());
+    }
+    
+    if (filtroTag) {
+        filtroTag.addEventListener('change', () => form.submit());
+    }
+});
+</script>
+
+{% endblock %}

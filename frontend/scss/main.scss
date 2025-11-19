@@ -15,10 +15,11 @@
 @use  './agenda/index.scss' as agenda;
 @use './contatos/index.scss' as contatos;
 @use  './editais/index.scss' as editais;
-@use  './cursos/index.scss' as cursos;
 @use './documentos/index.scss' as documentos;
+@use './dicas_presidente/index.scss' as dicaspresidente;
 @use './intranet/index.scss' as intranet;
 @use './paginas/index.scss' as paginas;
+@use './treinamento/index.scss' as treinamento;
 @use './breadcrumb.scss';
 @use './breadcrumb_escuro.scss';
 @use './cookieconsent.scss';

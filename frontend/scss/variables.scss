@@ -26,6 +26,7 @@ $color-primary-active: #396BBB38;
 $color-primary-hover: #25447a;
 
 $color-primary-06: #F3F5F9;
+$color-primary-08: #E9EDF5;
 $color-primary-12: #E6EBF3;
 
 $color-primary-70: #30599bb3;
@@ -64,6 +65,14 @@ $color-on-warning: #000000;
 // Success
 $color-success: #d1e7dd;
 $color-on-success: #0f5132;
+
+// Info
+$color-curso: #b8d1e7;
+$color-curso-1: #8fbfec;
+$color-curso-2: #4BC1DB;
+$color-curso-3: #64a6e3;
+$color-curso-4: #3e8fd8;
+$color-curso-5: #0960ae;
 
 //Informações da Empresa
 $company-info-bg: linear-gradient(to right, #e3f6fa, #fdfeff);
@@ -154,9 +163,11 @@ $footer-color: $color-primary;
 $color-overlay-8: rgba(0, 0, 0, 0.08);
 $color-overlay-10: rgba(0, 0, 0, 0.1);
 $color-overlay-20: rgba(0, 0, 0, 0.2);
+$color-overlay-25: rgba(0, 0, 0, 0.25);
 $color-overlay-30: rgba(0, 0, 0, 0.3);
 $color-overlay-40: rgba(0, 0, 0, 0.4);
 $color-overlay-50: rgba(0, 0, 0, 0.5);
+$color-overlay-60: rgba(0, 0, 0, 0.6);
 
 $color-title-redes-sociais: $color-primary;
 
@@ -200,6 +211,99 @@ $color-text-secondary: #555555;
 $color-aviso-barra-border-dark: #afafaf;
 $color-aviso-barra-shadow-dark: #afafaf;
 
+// Cores dos blocos - Dicas do Presidente
+// Mensagem Pessoal (Azul)
+$color-bloco-mensagem-1-light: #e0f3fa;
+$color-bloco-mensagem-2-light: #b9e3f5;
+$color-bloco-mensagem-3-light: #8ad0ee;
+$color-bloco-mensagem-4-light: #54add8;
+$color-bloco-mensagem-5-light: #2b7fb1;
+
+$color-bloco-mensagem-1-dark: #0a142a;
+$color-bloco-mensagem-2-dark: #101d3d;
+$color-bloco-mensagem-3-dark: #162754;
+$color-bloco-mensagem-4-dark: #1d3470;
+$color-bloco-mensagem-5-dark: #27418c;
+
+
+// Recomendação (Laranja)
+$color-bloco-recomendacao-1-light: #ffe0b8;
+$color-bloco-recomendacao-2-light: #ffd199;
+$color-bloco-recomendacao-3-light: #ffb86b;
+$color-bloco-recomendacao-4-light: #ff9840;
+$color-bloco-recomendacao-5-light: #d86b1e;
+
+$color-bloco-recomendacao-1-dark: #3a1a00;
+$color-bloco-recomendacao-2-dark: #532600;
+$color-bloco-recomendacao-3-dark: #6f3400;
+$color-bloco-recomendacao-4-dark: #8f4c06;
+$color-bloco-recomendacao-5-dark: #b1681a;
+
+
+// Notícia (Verde)
+$color-bloco-noticia-1-light: #e9f8e3;
+$color-bloco-noticia-2-light: #d6f3cf;
+$color-bloco-noticia-3-light: #c1ebb8;
+$color-bloco-noticia-4-light: #a4dc98;
+$color-bloco-noticia-5-light: #7ec46b;
+
+$color-bloco-noticia-1-dark: #1a2e13;
+$color-bloco-noticia-2-dark: #20401a;
+$color-bloco-noticia-3-dark: #285626;
+$color-bloco-noticia-4-dark: #337134;
+$color-bloco-noticia-5-dark: #449b46;
+
+
+// Galeria (Rosa/Roxo)
+$color-bloco-galeria-1-light: #fbe3f5;
+$color-bloco-galeria-2-light: #f5b8e7;
+$color-bloco-galeria-3-light: #ee8fd6;
+$color-bloco-galeria-4-light: #e066c2;
+$color-bloco-galeria-5-light: #b23a99;
+
+$color-bloco-galeria-1-dark: #2e0931;
+$color-bloco-galeria-2-dark: #43154a;
+$color-bloco-galeria-3-dark: #5c1c64;
+$color-bloco-galeria-4-dark: #78207f;
+$color-bloco-galeria-5-dark: #9a25a3;
+
+
+// Frase (Vermelho)
+$color-bloco-frase-1-light: #ffd6d6;
+$color-bloco-frase-2-light: #ff9b9b;
+$color-bloco-frase-3-light: #ff6c6c;
+$color-bloco-frase-4-light: #e63a3a;
+$color-bloco-frase-5-light: #a70000;
+
+$color-bloco-frase-1-dark: #4b0a0a;
+$color-bloco-frase-2-dark: #5e0b0b;
+$color-bloco-frase-3-dark: #730d0d;
+$color-bloco-frase-4-dark: #8c1010;
+$color-bloco-frase-5-dark: #a51a1a;
+
+// Atalhos para facilitar uso (mantém compatibilidade)
+$color-bloco-mensagem-light: $color-bloco-mensagem-4-light;
+$color-bloco-mensagem-dark: $color-bloco-mensagem-5-light;
+$color-bloco-mensagem-dark-theme: $color-bloco-mensagem-4-dark;
+
+$color-bloco-recomendacao-light: $color-bloco-recomendacao-4-light;
+$color-bloco-recomendacao-dark: $color-bloco-recomendacao-5-light;
+$color-bloco-recomendacao-hover: $color-bloco-recomendacao-2-light;
+$color-bloco-recomendacao-dark-theme: $color-bloco-recomendacao-5-dark;
+
+$color-bloco-noticia-light: $color-bloco-noticia-4-light;
+$color-bloco-noticia-dark: $color-bloco-noticia-5-light;
+$color-bloco-noticia-success: $color-bloco-noticia-3-dark;
+$color-bloco-noticia-dark-theme: $color-bloco-noticia-3-dark;
+
+$color-bloco-galeria-light: $color-bloco-galeria-5-light;
+$color-bloco-galeria-dark: $color-bloco-galeria-4-light;
+$color-bloco-galeria-hover: $color-bloco-galeria-2-light;
+$color-bloco-galeria-dark-theme: $color-bloco-galeria-4-dark;
+
+$color-bloco-frase-light: $color-bloco-frase-3-light;
+$color-bloco-frase-dark: $color-bloco-frase-5-light;
+$color-bloco-frase-dark-theme: $color-bloco-frase-1-dark;
 
 $widget-icon-size: 2rem;
 $widget-icon-bg: $primary-color !default;
@@ -208,3 +312,17 @@ $widget-title-color: $color-on-surface !default;
 $widget-border-radius: 9999px;
 $card-gap: 1rem !default;
 $aviso-aspect: math.div(1, 1);
+
+@mixin media-breakpoint-down($breakpoint) {
+  @if $breakpoint == xs {
+    @media (max-width: 575.98px) { @content; }
+  } @else if $breakpoint == sm {
+    @media (max-width: 767.98px) { @content; }
+  } @else if $breakpoint == md {
+    @media (max-width: 991.98px) { @content; }
+  } @else if $breakpoint == lg {
+    @media (max-width: 1199.98px) { @content; }
+  } @else if $breakpoint == xl {
+    @media (max-width: 1399.98px) { @content; }
+  }
+}

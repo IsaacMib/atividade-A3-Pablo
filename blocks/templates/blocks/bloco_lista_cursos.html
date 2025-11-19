@@ -1,0 +1,102 @@
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+<section class="bloco-lista-padrao-cursos-section modo-{{ value.modo }}" aria-labelledby="cursos-section-title-{{ self.id }}">
+  <div class="container">
+    
+    {# Cabeçalho da Seção #}
+    {% if value.mostrar_titulo and value.titulo %}
+      <header class="cursos-section-header">
+        <h2 id="cursos-section-title-{{ self.id }}" class="cursos-section-title">
+          {{ value.titulo }}
+        </h2>
+      </header>
+    {% endif %}
+
+    {# Lista de Cursos #}
+    {% if cursos %}
+      <div class="cursos-lista-vertical" role="list">
+        
+        {% for curso in cursos %}
+          <article class="curso-card-item" role="listitem">
+            <a href="{{ curso.url }}" class="curso-card-link" aria-label="Ver detalhes do curso: {{ curso.title }}">
+              
+              {# Imagem do Curso com Cantos Assimétricos e Borda Decorativa #}
+              <div class="curso-card-image-wrapper">
+                <div class="curso-card-image {% if not curso.cover_image %}no-image{% endif %}">
+                  {% if curso.cover_image %}
+                    {% image curso.cover_image fill-354x373 as img %}
+                    <img 
+                      src="{{ img.url }}" 
+                      alt="{{ curso.title }}"
+                      width="354"
+                      height="373"
+                      loading="lazy"
+                    />
+                  {% endif %}
+                </div>
+                
+                {# Borda Decorativa (efeito Figma: Rectangle sobre Rectangle) #}
+                <div class="curso-image-accent" aria-hidden="true"></div>
+              </div>
+
+              {# Conteúdo do Card #}
+              <div class="curso-card-content">
+                
+                {# Título do Curso #}
+                <h3 class="curso-card-title">
+                  {{ curso.title }}
+                </h3>
+
+                {# Subtítulo: Professor (se disponível) #}
+                {% if curso.professor %}
+                  <p class="curso-card-subtitle">
+                    Professor: {{ curso.professor }}
+                  </p>
+                {% endif %}
+
+                {# Descrição do Curso #}
+                {% if curso.descricao %}
+                  <p class="curso-card-description">
+                    {{ curso.descricao|truncatewords:30|striptags }}
+                  </p>
+                {% endif %}
+
+              </div>
+            </a>
+          </article>
+        {% endfor %}
+
+      </div>
+
+      {# Botão Ver Todos os Cursos #}
+      {% if value.cursos_index_page and value.texto_link %}
+        <div class="cursos-ver-todos-wrapper">
+          <a 
+            href="{{ value.cursos_index_page.url }}" 
+            class="btn-ver-todos-cursos"
+            aria-label="Ver todos os cursos disponíveis"
+          >
+            <span>{{ value.texto_link }}</span>
+            <i class="bi bi-arrow-right-circle" aria-hidden="true"></i>
+          </a>
+        </div>
+      {% endif %}
+
+    {% else %}
+      {# Estado Vazio: Nenhum curso encontrado #}
+      <div class="cursos-empty-state" role="status">
+        <div class="empty-icon" aria-hidden="true">📚</div>
+        <p class="empty-text">
+          {% if value.modo == 'curso_mes' %}
+            Nenhum curso do mês disponível no momento.
+          {% elif value.modo == 'curso_destaque' %}
+            Nenhum curso em destaque no momento.
+          {% else %}
+            Nenhum curso disponível no momento.
+          {% endif %}
+        </p>
+      </div>
+    {% endif %}
+
+  </div>
+</section>

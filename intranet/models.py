@@ -27,6 +27,8 @@ from blocks.models import (
  LinhaDoTempoBlock,
  AvisosWidget,
  AcessoRapidoWidget,
+ ListaDicasPresidenteBlock,
+ DicaPresidenteWidget,
 )
 from blocks.agenda import ListAgendaBlock 
 from django.core.files.base import File 
@@ -51,6 +53,7 @@ INTRANET_HOME_BLOCKS = [
  ("formulario_customizado", CustomFormBlock()),
  ("servico_online_item", ServicoOnlineItemBlock()),
  ("linha_do_tempo", LinhaDoTempoBlock()),
+ ("lista_dicas_presidente", ListaDicasPresidenteBlock()),
 ]
 
 # Lista de blocos disponíveis para a coluna de Widgets
@@ -59,6 +62,7 @@ INTRANET_WIDGET_BLOCKS = [
     ('widget_avisos', AvisosWidget()), # Usando o novo bloco de widget
     ("acessos_rapidos", AcessoRapidoWidget()),
     ('banner_com_link', BannerComLinkBlock()),
+    ('dica_presidente', DicaPresidenteWidget()),
     # Adicione aqui outras versões de blocos otimizadas para widgets
 ]
 class IntranetHomePage(PageSitePadrao):
@@ -111,6 +115,7 @@ class IntranetHomePage(PageSitePadrao):
     'avisos.AvisosIndexPage',
     'eventos.EventosIndexPage',
     'agenda.AgendaIndexPage',
+    'dicas_presidente.DicasPresidenteIndexPage',
     ]
 
   class Meta:
