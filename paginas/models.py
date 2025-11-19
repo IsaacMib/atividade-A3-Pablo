@@ -341,3 +341,100 @@ class PaginaComBannerPage(PageSitePadrao):
         abstract = True
         verbose_name = "Pagina com Banner"
         verbose_name_plural = "Paginas com Banner"
+
+
+class RedirectPage(PageSitePadrao):
+    """
+    Página que redireciona para um link interno ou externo.
+    - Usuários não autenticados: redirecionados automaticamente
+    - Usuários autenticados: visualizam a página com informações do link
+    
+    Esta página pode ser criada em qualquer local do site (filha de qualquer Index).
+    """
+    
+    # Link interno (página do Wagtail)
+    internal_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name="Página interna",
+        help_text="Selecione uma página interna do site para redirecionar"
+    )
+    
+    # Link externo (URL)
+    external_url = models.URLField(
+        verbose_name="URL externa",
+        blank=True,
+        null=True,
+        max_length=500,
+        help_text="Ou insira uma URL externa (ex: https://exemplo.com)"
+    )
+    
+    content_panels = PageSitePadrao.content_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel("internal_page"),
+                FieldPanel("external_url"),
+            ],
+            heading="Destino do Redirect (escolha apenas um)",
+            help_text="Preencha apenas um dos campos abaixo. Se ambos forem preenchidos, a página interna terá prioridade."
+        ),
+    ]
+    
+    subpage_types = []  # Não permite páginas filhas
+    
+    class Meta:
+        verbose_name = "Página Link"
+        verbose_name_plural = "Páginas Link"
+    
+    def clean(self):
+        """Valida que apenas um tipo de link foi preenchido"""
+        super().clean()
+        
+        has_internal = bool(self.internal_page)
+        has_external = bool(self.external_url)
+        
+        if not has_internal and not has_external:
+            raise ValidationError({
+                'internal_page': 'Você deve fornecer um link interno ou externo.',
+                'external_url': 'Você deve fornecer um link interno ou externo.'
+            })
+        
+        if has_internal and has_external:
+            raise ValidationError(
+                'Você deve fornecer apenas UM link (interno OU externo), não ambos.'
+            )
+    
+    def get_redirect_url(self):
+        """Retorna a URL de redirecionamento"""
+        if self.internal_page:
+            return self.internal_page.url
+        return self.external_url
+    
+    def serve(self, request):
+        """
+        Redireciona usuários não autenticados automaticamente.
+        Usuários autenticados visualizam a página normalmente.
+        """
+        from django.shortcuts import redirect
+        
+        # Se o usuário NÃO está autenticado, redireciona
+        if not request.user.is_authenticated:
+            redirect_url = self.get_redirect_url()
+            if redirect_url:
+                return redirect(redirect_url)
+        
+        # Se está autenticado, renderiza a página normalmente
+        return super().serve(request)
+    
+    def get_context(self, request):
+        """Adiciona informações do redirect ao contexto"""
+        context = super().get_context(request)
+        context['redirect_url'] = self.get_redirect_url()
+        context['is_internal'] = bool(self.internal_page)
+        context['is_external'] = bool(self.external_url)
+        return context
+
+

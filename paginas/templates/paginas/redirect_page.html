@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags page_utils %}
+
+{% block body_class %}template-redirect-page{% endblock %}
+
+{% block content %}
+<div class="redirect-page-container">
+    <div class="container d-flex flex-column justify-content-center">
+        <h2 class="redirect-page--title">{{ page.title }}</h2>
+        
+        {% aviso_administrador mensagem="Esta página está sendo exibida porque você está autenticado no sistema. Usuários não autenticados serão redirecionados automaticamente para o destino." tipo="warning" %}
+    </div>
+    
+    <div class="container d-flex flex-column justify-content-center mt-4">
+        <div class="redirect-conteudo">
+            {% if page.descricao %}
+            <div class="redirect-page-descricao intro">
+                {{ page.descricao|richtext }}
+            </div>
+            {% endif %}
+            
+            <div class="redirect-info mt-4">
+                <h3 class="h5 mb-3">Informações do Link</h3>
+                
+                <dl class="row">
+                    <dt class="col-sm-3">Tipo:</dt>
+                    <dd class="col-sm-9">
+                        {% if is_internal %}
+                            <span class="badge bg-primary">Página Interna</span>
+                        {% elif is_external %}
+                            <span class="badge bg-success">URL Externa</span>
+                        {% endif %}
+                    </dd>
+                    
+                    <dt class="col-sm-3">Destino:</dt>
+                    <dd class="col-sm-9">
+                        <code>{{ redirect_url }}</code>
+                    </dd>
+                    
+                    {% if is_internal and page.internal_page %}
+                    <dt class="col-sm-3">Página:</dt>
+                    <dd class="col-sm-9">
+                        {{ page.internal_page.title }}
+                    </dd>
+                    {% endif %}
+                </dl>
+            </div>
+            
+            <div class="mt-4">
+                <a href="{{ redirect_url }}" class="btn btn-primary" {% if is_external %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                    Ir para o destino
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
