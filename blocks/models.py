@@ -1055,23 +1055,18 @@ class LinkStructBlock(StructBlock):
 
 class LinkWithImageStructBlock(StructBlock):
     link_text = RichTextBlock(required=True, help_text="Texto")
-    internal_page = PageChooserBlock(
-        required=False, help_text="Link para uma página interna")
-    external_url = URLBlock(
-        required=False, help_text="Ou insira uma URL externa")
+    link = LinkStructBlock(required=True)
     image = ImageChooserBlock(
         required=False, help_text="Imagem opcional para o link")
 
-    def clean(self, value):
-        cleaned_data = super().clean(value)
-        if not cleaned_data.get('internal_page') and not cleaned_data.get('external_url'):
-            raise ValidationError(
-                'Você deve fornecer um link interno ou externo.')
-        if cleaned_data.get('internal_page') and cleaned_data.get('external_url'):
-            raise ValidationError('Você deve fornecer apenas 1 link.')
-        return cleaned_data
-
     def get_url(self, value):
+        # Preferencialmente usa o novo campo 'link'
+        link = value.get('link') or {}
+        if link.get('internal_page'):
+            return link['internal_page'].url
+        if link.get('external_url'):
+            return link.get('external_url')
+        # Compatibilidade retroativa: usar campos antigos se existirem
         if value.get('internal_page'):
             return value['internal_page'].url
         return value.get('external_url')
@@ -1215,9 +1210,17 @@ class EspecificDocumentChooserBlock(DocumentChooserBlock):
 
 class CardLinhaDoTempoValue(StructValue):
     def get_url(self):
-        internal = self.get('internal_page')
-        if internal:
-            return internal.url
+        link = self.get('link')
+        if link:
+            internal = link.get('internal_page')
+            if internal:
+                return internal.url
+            if link.get('external_url'):
+                return link.get('external_url')
+        # Compatibilidade retroativa com dados antigos (campos removidos)
+        internal_legacy = self.get('internal_page')
+        if internal_legacy:
+            return internal_legacy.url
         return self.get('external_url')
 
 
@@ -1228,30 +1231,17 @@ class CardLinhaDoTempoBlock(StructBlock):
     titulo = CharBlock(required=True, label="Título")
     descricao_linha_do_tempo = TextBlock(required=True, label="Descrição")
     adicionarLink = BooleanBlock(required=False, label="Adicionar link interno ou externo para exibir mais detalhes")
-    internal_page = PageChooserBlock(
+    link = LinkStructBlock(
         required=False,
-        target_model='linhasdotempo.CardLinhaDoTempoPage',
-        label="Página interna de evento da linha do tempo.",
-        help_text="Se as informações da descrição ultrapassarem o limite de exibição estabelecido, \
-        você poderá criar uma nova página com as informações completas, a qual estará disponível\
-        no card através do link 'Ver mais' ou clicando no card."
-    )
-    external_url = URLBlock(
-        required=False,
-        label="URL externa com informações adicionais de evento da linha do tempo.",
-        help_text="Ou adicionar uma fonte externa, a qual também ficará disponível\
-        no card através do link 'Ver mais' ou clicando no card."
+        help_text="Escolha um link interno OU externo para o card quando 'Adicionar link' estiver marcado."
     )
     # data = DateBlock(required=True, label="Data")
 
     def clean(self, value):
         cleaned_data = super().clean(value)
         if cleaned_data.get('adicionarLink'):
-            if not cleaned_data.get('internal_page') and not cleaned_data.get('external_url'):
-                raise ValidationError(
-                    'Você deve fornecer um link interno ou externo.')
-            if cleaned_data.get('internal_page') and cleaned_data.get('external_url'):
-                raise ValidationError('Você deve fornecer apenas 1 link.')
+            if not cleaned_data.get('link'):
+                raise ValidationError('Você deve fornecer um link.')
         return cleaned_data
 
     def get_url(self):
@@ -1267,7 +1257,8 @@ class CardLinhaDoTempoBlock(StructBlock):
             'data-controller': 'char-count card-links',
             'data-char-count-fields-value': 'titulo:50,descricao_linha_do_tempo:220',
             'data-card-links-toggle-field-value': 'adicionarLink',
-            'data-card-links-target-fields-value': 'internal_page,external_url',
+            # Aponta para os campos internos do StructBlock 'link'
+            'data-card-links-target-fields-value': 'link-internal_page,link-external_url',
         }
 
 
