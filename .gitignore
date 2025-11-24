@@ -32,6 +32,8 @@ media/
 # Diretórios criados por testes
 test-media/
 test-static/
+htmlcov/
+.coverage
 
 # Configurações locais do desenvolvedor
 .github/copilot-local.md
