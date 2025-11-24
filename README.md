@@ -1,34 +1,239 @@
-[Figma](https://www.figma.com/design/vn4GGPjxav6O2EymXV1GLf/Portal-Edu?node-id=14-2&t=JLNz6Ic3FyZ1IXyQ-1)
+# NeuroPrev Multimodal
 
-# Site Padrão CODATA-PB
+## Sistema de Triagem Precoce de Autismo com IA Multimodal
 
-Sistema de gerenciamento de conteúdo (CMS) baseado em [Wagtail](https://github.com/wagtail/wagtail) para criação de portais governamentais padronizados.
+Plataforma completa baseada em pesquisa científica para triagem precoce de Transtorno do Espectro Autista (TEA), integrando análise multimodal (texto, imagem, vídeo, áudio) e um ecossistema de suporte para pais e profissionais.
 
-## Sobre o Projeto
+---
 
-Este projeto foi desenvolvido para facilitar a criação e manutenção de portais institucionais do governo da Paraíba, oferecendo:
+## 🎯 Sobre o Projeto
+
+O **NeuroPrev Multimodal** é um sistema desenvolvido como TCC e projeto profissional, baseado na pesquisa *"A multimodular approach to streamline autism diagnosis in young children"*. O sistema oferece:
+
+- **Triagem Multimodal de Autismo** - Análise integrada de 4 modalidades (texto, imagem, vídeo, áudio)
+- **Painel Diário para Responsáveis** - Registro completo do desenvolvimento da criança
+- **Comunidade para Pais** - Espaço seguro para compartilhamento e suporte
+- **Área para Profissionais** - Dashboard clínico e teleatendimento (futuro)
+- **CMS Educativo** - Conteúdo confiável gerenciado via Wagtail
+
+### Stack Tecnológica
 
 - **Backend**: Django 5.1.x + Wagtail 7.x (Python 3.12+)
 - **Frontend**: JavaScript/Webpack (ES6+, Babel, Jest)
+- **IA**: Modelos multimodais (em desenvolvimento)
 - **Banco de Dados**: PostgreSQL (produção), SQLite (desenvolvimento/testes)
-- **Apps principais**:
-  - `agenda/` - Agendas e eventos com suporte a recorrência
-  - `noticias/` - Notícias com categorias, tags e slideshow
-  - `institucional/` - Páginas institucionais
-  - `blocks/` - Blocos Wagtail reutilizáveis
-  - `core/` - Configurações centrais e utilitários
+- **Segurança**: LGPD-compliant, criptografia de dados sensíveis
 
-**Índice**
+### Módulos Principais
 
-- [Instalação](#instalação)
+- `triagem/` - Core da triagem multimodal com IA
+- `painel_diario/` - Registro diário de desenvolvimento
+- `comunidade/` - Rede social para pais
+- `profissionais/` - Dashboard para terapeutas
+- `conteudo_educativo/` - CMS Wagtail para artigos
+- `noticias/` - Blog e atualizações
+- `lgpd/` - Conformidade com proteção de dados
+- `api/` - REST API para integrações
+- `core/` - Configurações e utilitários centrais
+- `blocks/` - Blocos Wagtail reutilizáveis
+
+---
+
+## 📋 Índice
+
+- [Funcionalidades](#-funcionalidades-do-sistema)
+- [Arquitetura](#-arquitetura-do-sistema)
+- [Instalação](#-instalação)
   - [Setup com Docker](#setup-com-docker)
   - [Setup com Virtualenv](#setup-com-virtualenv)
-    - [Gerenciamento de versões com asdf](#alternativa-recomendada-asdf-gerenciador-universal-de-versões)
-    - [Gerenciamento de versões com NVM](#gerenciamento-de-versão-do-nodejs)
-- [Configuração do GitHub Copilot](#configuração-do-github-copilot)
-- [Desenvolvimento](#desenvolvimento)
-- [Testes](#testes)
-- [Contribuindo](#contribuindo)
+- [Desenvolvimento](#-desenvolvimento)
+- [Testes](#-testes)
+- [Roadmap](#-roadmap)
+- [Contribuindo](#-contribuindo)
+
+---
+
+## 🚀 Funcionalidades do Sistema
+
+### MÓDULO 1 — Triagem Multimodal de Autismo (Core)
+
+O coração do sistema, baseado em análise multimodal com IA.
+
+#### 1.1. Entrada de Dados
+
+**Questionários Estruturados:**
+- M-CHAT / M-CHAT-R adaptado
+- Q-CHAT
+- Perguntas de desenvolvimento (linguagem, social, motor, sensorial)
+- Histórico perinatal
+- Comportamentos observados
+
+**Relatos Livres:**
+- Texto descritivo da rotina
+- Observações detalhadas
+- Eventos incomuns
+
+**Análise de Imagem/Vídeo (IA Multimodal - Futuro):**
+- Reconhecimento de expressões faciais
+- Contato visual
+- Resposta ao nome
+- Imitabilidade
+- Seguimento de objetos com o olhar
+- Movimentos repetitivos
+
+**Análise de Áudio:**
+- Tom da voz
+- Ritmo e fluência
+- Ecolalia
+- Diferenças prosódicas
+
+#### 1.2. Análises Geradas pela IA
+
+- ✅ Detecção de sinais precoces
+- ✅ Fusão multimodal para elevar precisão
+- ✅ Risco estimado usando modelos probabilísticos
+- ✅ Recomendações personalizadas
+- ✅ Alertas para comportamentos regressivos
+- ✅ Sinais de avanço terapêutico
+- ✅ Sinais de urgência (ex.: regressão de fala)
+
+---
+
+### MÓDULO 2 — Painel Diário para Pais
+
+Sistema completo de registro usado também na análise temporal pela IA.
+
+#### 2.1. Entradas Diárias
+
+- ✅ Humor da criança
+- ✅ Qualidade do sono
+- ✅ Alimentação
+- ✅ Comportamentos repetitivos
+- ✅ Interações sociais
+- ✅ Responsividade
+- ✅ Sessões de terapia e evolução
+- ✅ Crises / gatilhos
+- ✅ Observações livres
+- ✅ Upload diário de foto/vídeo (opcional)
+- ✅ Gravação de áudio espontâneo
+
+#### 2.2. Histórico e Análises
+
+- ✅ Linha do tempo completa
+- ✅ Gráficos de evolução
+- ✅ Comparação entre semanas
+- ✅ Alertas automáticos gerados pela IA
+
+---
+
+### MÓDULO 3 — IA Multimodal
+
+#### 3.1. Modalidades Integradas
+
+1. **Texto** - Respostas de questionários e relatos
+2. **Imagem** - Análise de expressões e comportamentos visuais
+3. **Vídeo** - Detecção de padrões comportamentais
+4. **Áudio** - Análise prosódica e vocal
+5. **Temporal** - Progressão ao longo do tempo
+
+#### 3.2. Funcionalidades
+
+- ✅ Detecção de sinais precoces
+- ✅ Fusão multimodal para precisão elevada
+- ✅ Risco estimado probabilístico
+- ✅ Recomendações personalizadas
+- ✅ Alertas de regressão
+- ✅ Indicadores de progresso terapêutico
+
+---
+
+### MÓDULO 4 — Comunidade para Pais
+
+Espaço seguro e moderado para troca de experiências.
+
+#### Funcionalidades:
+
+- ✅ Perfis de pais
+- ✅ Postagens, relatos, dúvidas
+- ✅ Comentários e interações
+- ✅ Grupos fechados (por idade, terapias, regiões)
+- ✅ Compartilhamento de evolução
+- ✅ Biblioteca de conteúdos oficiais de profissionais
+
+---
+
+### MÓDULO 5 — Profissionais e Terapeutas (Futuro)
+
+Para versão comercial:
+
+- ✅ Dashboard para terapeutas
+- ✅ Compartilhamento de evolução clínica
+- ✅ Teleatendimento
+- ✅ Plano terapêutico individual (PTI)
+- ✅ Monitoramento remoto
+
+---
+
+### MÓDULO 6 — CMS Wagtail para Conteúdo Educativo
+
+Sistema de gerenciamento de conteúdo para:
+
+- ✅ Páginas de notícias e artigos
+- ✅ Avisos e atualizações
+- ✅ Páginas institucionais (Sobre, Contato, Políticas)
+- ✅ Blog com orientações profissionais
+- ✅ Gerenciamento de banners
+- ✅ Conteúdo sem dependência de código
+
+---
+
+## 🏗️ Arquitetura do Sistema
+
+```
+NeuroPrev Multimodal/
+│
+├── Backend (Django + Wagtail)
+│   ├── triagem/              # Core - Análise multimodal
+│   ├── painel_diario/         # Registro diário
+│   ├── comunidade/            # Rede social pais
+│   ├── profissionais/         # Dashboard terapeutas
+│   ├── conteudo_educativo/    # CMS Wagtail
+│   ├── noticias/              # Blog/notícias
+│   ├── lgpd/                  # Conformidade LGPD
+│   ├── api/                   # REST API
+│   ├── core/                  # Utilitários
+│   └── blocks/                # Blocos reutilizáveis
+│
+├── Frontend (Webpack + Sass + JS)
+│   ├── js/                    # JavaScript modular
+│   ├── scss/                  # Estilos SCSS
+│   └── img/                   # Imagens e assets
+│
+├── IA (Em desenvolvimento)
+│   ├── modelos/               # Modelos treinados
+│   ├── preprocessing/         # Pré-processamento
+│   └── fusion/                # Fusão multimodal
+│
+└── Infraestrutura
+    ├── PostgreSQL             # Banco de dados
+    ├── Redis                  # Cache e filas
+    └── Docker                 # Containerização
+
+```
+
+---
+
+## 🔐 Segurança e LGPD
+
+- ✅ Criptografia de dados sensíveis
+- ✅ Conformidade com LGPD
+- ✅ Autenticação segura
+- ✅ Logs de auditoria
+- ✅ Consentimento explícito
+- ✅ Direito ao esquecimento
+- ✅ Portabilidade de dados
+
+---
 
 # Instalação
 
@@ -281,12 +486,43 @@ python manage.py migrate
 # Crie um superusuário
 python manage.py createsuperuser
 
+# (OPCIONAL) Popule o site com dados de demonstração
+python manage.py populate_site
+# Para limpar dados anteriores e repopular:
+# python manage.py populate_site --clear
+
 # Build do frontend
 npm run build
 
 # Inicie o servidor de desenvolvimento
 python manage.py runserver
 ```
+
+### Dados de Demonstração
+
+O projeto inclui um comando Django para popular o site com dados de demonstração, útil para desenvolvimento e testes.
+
+**O que é criado:**
+- 2 usuários de teste (admin e editor)
+- 5 categorias de notícias
+- 5 imagens de demonstração (coloridas)
+- Estrutura de páginas (HomePage, NoticiasIndexPages)
+- 10 notícias com categorias e imagens
+
+**Comando:**
+```bash
+# Popular com dados de demonstração
+python manage.py populate_site
+
+# Limpar dados existentes e repopular
+python manage.py populate_site --clear
+```
+
+**Credenciais criadas:**
+- **Admin**: `admin` / `admin123` (superuser)
+- **Editor**: `editor` / `editor123` (staff, grupo Editores)
+
+**⚠️ Importante:** Use `--clear` com cuidado, pois remove usuários `admin` e `editor`, todas as categorias e imagens de demonstração criadas anteriormente.
 
 #### Opção 2: Usando Virtualenv + NVM (Tradicional)
 
@@ -426,22 +662,80 @@ O arquivo `.github/copilot-instructions.md` configura a IA para:
 
 Para mais detalhes, consulte o arquivo `.github/copilot-instructions.md`.
 
-# Desenvolvimento
+## 🗺️ Roadmap
+
+### Fase 1 - MVP (Em Desenvolvimento)
+- [x] Estrutura base do projeto
+- [x] Models de triagem e crianças
+- [ ] Sistema de questionários (M-CHAT, Q-CHAT)
+- [ ] Painel diário básico
+- [ ] Interface de cadastro de triagem
+- [ ] Admin Django completo
+
+### Fase 2 - IA Básica
+- [ ] Integração com modelo de análise de texto
+- [ ] Sistema de pontuação automatizado
+- [ ] Alertas básicos de risco
+- [ ] Relatórios PDF
+
+### Fase 3 - Multimodalidade
+- [ ] Upload e análise de imagens
+- [ ] Upload e análise de vídeos
+- [ ] Upload e análise de áudio
+- [ ] Fusão multimodal
+
+### Fase 4 - Comunidade
+- [ ] Sistema de posts e comentários
+- [ ] Grupos temáticos
+- [ ] Moderação de conteúdo
+- [ ] Biblioteca de recursos
+
+### Fase 5 - Profissionais
+- [ ] Dashboard para terapeutas
+- [ ] Sistema de teleatendimento
+- [ ] PTI (Plano Terapêutico Individual)
+- [ ] Compartilhamento seguro de dados
+
+### Fase 6 - Comercialização
+- [ ] Sistema de pagamentos
+- [ ] Planos de assinatura
+- [ ] API para terceiros
+- [ ] App mobile
+
+---
+
+# 💻 Desenvolvimento
 
 ## Estrutura do Projeto
 
 ```
-site-padrao/
-├── frontend/              # JavaScript/CSS (Webpack, Babel, Jest)
-├── agenda/                # Agendas e eventos recorrentes
-├── noticias/              # Notícias, categorias e tags
-├── blocks/                # Blocos Wagtail reutilizáveis
-├── core/                  # Configurações e utilitários
-│   ├── utils.py          # Utilitários de produção
-│   └── utils_test.py     # Utilitários para testes
-├── home/                  # Página inicial
-├── institucional/         # Páginas institucionais
-└── sitepadrao/            # Configurações Django
+neuroprev-multimodal/
+├── frontend/                  # JavaScript/CSS (Webpack, Babel, Jest)
+│   ├── js/                   # JavaScript ES6+
+│   ├── scss/                 # Sass/SCSS
+│   └── img/                  # Imagens e assets
+├── triagem/                  # 🧠 Core - Triagem Multimodal
+│   ├── models.py            # Criança, Triagem, Questionário, Mídia
+│   ├── views.py             # Views de triagem
+│   └── admin.py             # Admin customizado
+├── painel_diario/            # 📊 Painel Diário
+├── comunidade/               # 👥 Comunidade para Pais
+├── profissionais/            # 👨‍⚕️ Área Profissionais
+├── conteudo_educativo/       # 📚 CMS Wagtail
+├── noticias/                 # 📰 Blog/Notícias
+├── lgpd/                     # 🔒 LGPD e Privacidade
+├── api/                      # 🔌 REST API
+├── blocks/                   # 🧱 Blocos Wagtail reutilizáveis
+├── core/                     # ⚙️ Configurações e utilitários
+│   ├── utils.py             # Utilitários de produção
+│   └── utils_test.py        # Utilitários para testes
+├── home/                     # 🏠 Página inicial
+└── sitepadrao/               # 🔧 Configurações Django
+    └── settings/
+        ├── base.py
+        ├── development.py
+        ├── production.py
+        └── testing.py
 ```
 
 ## Comandos Úteis
@@ -455,29 +749,46 @@ python manage.py createsuperuser    # Criar usuário admin
 
 # Frontend
 npm run build                       # Build de produção
-npm run watch                       # Watch mode para desenvolvimento
+npm run dev                         # Servidor de desenvolvimento com hot-reload
+npm run watch                       # Watch mode
 npm test                           # Executar testes Jest
 
 # Validação
-python manage.py check             # Verificar configuração
+python manage.py check              # Verificar configuração Django
+npm run lint                        # Lint JavaScript e CSS
 ```
 
-# Testes
+---
 
-## Executando Testes
+# 🧪 Testes
+
+## Executando Testes Python/Django
 
 ```bash
 # Todos os testes
 python manage.py test --keepdb
 
 # Testes de um app específico
-python manage.py test agenda --keepdb
-python manage.py test noticias --keepdb
+python manage.py test triagem --keepdb
+python manage.py test painel_diario --keepdb
+python manage.py test comunidade --keepdb
 
 # Com coverage
 coverage run --source='.' manage.py test --keepdb
 coverage report
-coverage html  # Gera relatório HTML
+coverage html  # Gera relatório HTML em htmlcov/
+
+# Testes específicos
+python manage.py test triagem.test_models.CriancaTestCase --keepdb
+```
+
+## Executando Testes Frontend
+
+```bash
+# Testes Jest
+npm test                    # Todos os testes
+npm run test:watch          # Watch mode
+npm run test:coverage       # Com coverage
 ```
 
 ## Boas Práticas de Testes
@@ -489,7 +800,11 @@ coverage html  # Gera relatório HTML
 
 Veja `.github/copilot-instructions.md` para mais detalhes.
 
-# Contribuindo
+---
+
+# 🤝 Contribuindo
+
+Contribuições são bem-vindas! Este é um projeto de código aberto voltado para ajudar famílias e profissionais na identificação precoce de TEA.
 
 ## Padrão de Commits
 
@@ -502,26 +817,31 @@ Este projeto segue o padrão de commits semântico:
 - `docs:` documentação
 - `style:` formatação, ponto e vírgula, etc
 - `chore:` atualização de dependências, configurações
+- `ai:` melhorias nos modelos de IA
+- `security:` correções de segurança
 
 Exemplo:
 ```bash
-git commit -m "feat: adiciona campo de recorrência em AgendaDoDiaPage
+git commit -m "feat: adiciona análise multimodal de vídeo
 
-- Adiciona campos habilitar_recorrencia e tipo_recorrencia
-- Cria método data_aplica_na_recorrencia()
-- Adiciona testes de recorrência
-- Atualiza template para exibir eventos recorrentes"
+- Implementa detecção de contato visual
+- Adiciona análise de resposta ao nome
+- Integra com modelo de fusão multimodal
+- Adiciona testes unitários e de integração
+- Atualiza documentação da API"
 ```
 
 ## Checklist para Pull Requests
 
-- [ ] Código segue princípios DRY
-- [ ] Testes criados e passando
+- [ ] Código segue princípios DRY (Don't Repeat Yourself)
+- [ ] Testes criados e passando (mínimo 70% coverage)
 - [ ] Migrations criadas e aplicadas
 - [ ] `python manage.py check` sem erros
-- [ ] Coverage mínimo de 70%
+- [ ] `npm run lint` sem erros
 - [ ] Commits seguem padrão semântico
 - [ ] Documentação atualizada se necessário
+- [ ] Dados sensíveis protegidos (LGPD)
+- [ ] Acessibilidade verificada (WCAG 2.1 AA)
 
 # Configurações
 
@@ -553,14 +873,60 @@ Os testes usam configurações específicas em `sitepadrao/settings/testing.py`:
 - Debug: False
 - Locale padrão: pt (normalizado de pt-br)
 
-# Recursos
+---
 
-## Documentação
+# 📚 Recursos
+
+## Documentação Técnica
 
 - [Documentação oficial do Wagtail](https://docs.wagtail.org/)
 - [Documentação do Django](https://docs.djangoproject.com/)
 - [Configuração do GitHub Copilot](.github/copilot-instructions.md)
+- [REST Framework](https://www.django-rest-framework.org/)
 
-## Licença
+## Pesquisa e Referências
 
-Este projeto é desenvolvido pela CODATA-PB para uso em portais governamentais da Paraíba.
+- Pesquisa base: *"A multimodular approach to streamline autism diagnosis in young children"*
+- [M-CHAT - Modified Checklist for Autism in Toddlers](https://mchatscreen.com/)
+- [Q-CHAT - Quantitative Checklist for Autism in Toddlers](https://www.autismresearchcentre.com/)
+- [CDC - Autism Spectrum Disorder](https://www.cdc.gov/ncbddd/autism/index.html)
+- [LGPD - Lei Geral de Proteção de Dados](https://www.gov.br/cidadania/pt-br/acesso-a-informacao/lgpd)
+
+## Comunidade
+
+- **Issues**: Reporte bugs ou sugira funcionalidades
+- **Discussions**: Participe de discussões sobre o projeto
+- **Pull Requests**: Contribua com código
+
+---
+
+# 📄 Licença
+
+Este projeto é desenvolvido como TCC e projeto profissional, com objetivo de apoio à identificação precoce de TEA.
+
+**Importante**: Este sistema é uma ferramenta de **triagem** e **não substitui** avaliação profissional completa. Sempre consulte profissionais de saúde especializados.
+
+---
+
+# 👥 Autores e Contato
+
+- **Desenvolvedor**: [Seu Nome]
+- **TCC**: [Instituição]
+- **Orientador**: [Nome do Orientador]
+
+---
+
+# 🙏 Agradecimentos
+
+- Famílias que compartilham suas experiências
+- Profissionais de saúde especializados em TEA
+- Comunidade open-source
+- Pesquisadores da área de IA aplicada à saúde
+
+---
+
+**⚠️ Aviso Legal**: O NeuroPrev Multimodal é uma ferramenta de triagem baseada em pesquisa científica e não substitui diagnóstico médico profissional. Sempre busque avaliação de profissionais especializados em Transtorno do Espectro Autista.
+
+---
+
+**🌟 Se este projeto está ajudando você, considere dar uma estrela no repositório!**

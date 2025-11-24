@@ -38,14 +38,10 @@ urlpatterns = [
     path("acesso_negado/", sitepadrao_views.acesso_negado, name="acesso_negado"),
     path("404/", sitepadrao_views.erro_404, name="erro_404"),
 
-    path("api/v1/", include("api.urls", namespace="api")),
+    # API removida - será recriada quando necessário para o NeuroPrev
+    # path("api/v1/", include("api.urls", namespace="api")),
     path("noticias/", include("noticias.urls")),
 ]
-
-if settings.HABILITAR_SITE_INTRANET:
-    urlpatterns += [
-        path("logout/", sitepadrao_views.intranet_logout, name="intranet_logout"),
-    ]
 
 if settings.HABILITAR_SSO_LOGIN:
     urlpatterns += [
@@ -80,6 +76,6 @@ urlpatterns = urlpatterns + [
 ]
 
 def erro_500(request):
-    return render(request, "500.html", status=500)
+    return render(request, "errors/500.html", status=500)
 
 handler500 = erro_500

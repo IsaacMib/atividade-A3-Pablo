@@ -24,13 +24,13 @@ def redirect_if_in_group(request):
     return redirect('/')
 
 def acesso_negado(request):
-    return render(request, "403.html", status=403)
+    return render(request, "errors/403.html", status=403)
 
 def erro_404(request, exception):
-    return render(request, "404.html", status=404)
+    return render(request, "errors/404.html", status=404)
 
 def erro_403(request, exception):
-    return render(request, "403.html", status=403)
+    return render(request, "errors/403.html", status=403)
 
 def wagtail_logout_with_sso(request):
     """View customizada para logout do Wagtail admin que também faz logout do SSO."""
