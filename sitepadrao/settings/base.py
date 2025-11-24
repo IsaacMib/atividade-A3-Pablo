@@ -53,30 +53,19 @@ INTERNAL_IPS = [
 # Application definition
 
 INSTALLED_APPS = [
-    "paginas",
-
+    # Apps do NeuroPrev
+    "triagem_ia",          # Triagem Multimodal de Autismo (IA)
+    "painel_diario",       # Painel Diário para Responsáveis
+    "comunidade",          # Comunidade para Pais
+    "biblioteca_conteudos",# Biblioteca de Conteúdos Educativos
+    
+    # Apps base mantidos
     "home",
     "search",
     "core",
     "blocks",
-    "noticias",
-    "institucional",
-    "agenda",
-    "avisos",
-    "intranet",
-    "documentos",
-    'editais',
-    "api",
-    "eventos",
-    "linhasdotempo",
-    "lgpd",
-    "contatos",
-    "treinamento",
-    "dicas_presidente",
-
-
-    "plone_migration",
-    "auth_keycloak",
+    "noticias",            # Blog/Artigos científicos
+    "lgpd",                # ESSENCIAL para dados de saúde (LGPD)
 
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
@@ -257,7 +246,7 @@ STORAGES = {
 
 # Wagtail settings
 
-WAGTAIL_SITE_NAME = "CODATA - Companhia de Processamento de Dados da Paraíba"
+WAGTAIL_SITE_NAME = "NeuroPrev Multimodal - Sistema de Triagem de Autismo"
 
 WAGTAIL_I18N_ENABLED = True
 
@@ -324,8 +313,8 @@ if "CSP_DEFAULT_SRC" in os.environ:
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 METABASE_API_KEY = os.environ.get('METABASE_API_KEY', '')  # Busca a chave da API do Metabase via variável de ambiente
-METABASE_API_URL = os.environ.get('METABASE_API_URL', 'https://metabase.codata.pb.gov.br/api/card/')  # URL base da API do Metabase
-PORTAL_SERVICOS_API_URL = os.environ.get('PORTAL_SERVICOS_API_URL', 'https://api-portal-carta-de-servicos-gedes.rke.codataprd.pb.gov.br/')
+# Configurações de API removidas - sistema não usa mais serviços externos governamentais
+# METABASE_API_URL e PORTAL_SERVICOS_API_URL foram descontinuados
 PORTAL_SERVICOS_URL = os.environ.get('PORTAL_SERVICOS_URL', 'https://paraibadigital.pb.gov.br/')
 
 # Configurando os backends de autenticação
@@ -335,9 +324,11 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Configurações do django allauth
-ACCOUNT_ADAPTER = "auth_keycloak.adapters.KeycloakAdapter"
+# ACCOUNT_ADAPTER desabilitado - app auth_keycloak foi removido
+# Quando implementar SSO no NeuroPrev, criar novo adapter
+# ACCOUNT_ADAPTER = "auth_keycloak.adapters.KeycloakAdapter"
 
-KEYCLOAK_BASE_URL = os.getenv("KEYCLOAK_BASE_URL", "https://homolog.sso.codata.pb.gov.br/auth")
+KEYCLOAK_BASE_URL = os.getenv("KEYCLOAK_BASE_URL", "")  # SSO desativado para NeuroPrev
 KEYCLOAK_REALM = os.getenv("KEYCLOAK_REALM", "desenvolvimento")
 
 SOCIALACCOUNT_STORE_TOKENS = True
@@ -346,26 +337,29 @@ SOCIALACCOUNT_PROVIDERS = {
     "openid_connect": {
         "APPS": [
             {
-                "provider_id": os.getenv("SOCIALACCOUNT_PROVIDER_ID", "codata-sso-dev-server"),
-                "name": os.getenv("SOCIALACCOUNT_NAME", "CODATA SSO Server"),
+                "provider_id": os.getenv("SOCIALACCOUNT_PROVIDER_ID", "neuroprev-sso"),
+                "name": os.getenv("SOCIALACCOUNT_NAME", "NeuroPrev SSO"),
                 "client_id": os.getenv("KEYCLOAK_CLIENT_ID", "dev-client-secret"),
                 "secret": os.getenv("KEYCLOAK_SECRET", ""),
                 "settings": {
-                    "server_url": os.getenv("KEYCLOAK_SERVER_URL", "https://homolog.sso.codata.pb.gov.br/auth/realms/desenvolvimento/.well-known/openid-configuration"),
-                    "logout_url": os.getenv("KEYCLOAK_SERVER_URL_LOGOUT", "https://homolog.sso.codata.pb.gov.br/auth/realms/desenvolvimento/protocol/openid-connect/logout"),
+                    "server_url": os.getenv("KEYCLOAK_SERVER_URL", ""),  # Configurar quando SSO estiver disponível
+                    "logout_url": os.getenv("KEYCLOAK_SERVER_URL_LOGOUT", ""),
                 },
             },
         ]
     }
 }
 
+# User Model Customizado
+# TODO: Implementar AUTH_USER_MODEL após sistema estabilizado
+# AUTH_USER_MODEL = 'core.Usuario'
+
 HABILITAR_SSO_LOGIN = get_bool("HABILITAR_SSO_LOGIN", False)
-HABILITAR_SITE_INTRANET = get_bool("HABILITAR_SITE_INTRANET", False)
 PORTAL_PROVEDOR_CONTEUDO = get_bool("PORTAL_PROVEDOR_CONTEUDO", False)
 API_CONTEUDO_AGRUPADO = get_bool("API_CONTEUDO_AGRUPADO", False)
 
 # URL para redirecionar após login bem-sucedido
-LOGIN_REDIRECT_URL = "/admin/"
+LOGIN_REDIRECT_URL = "/painel/"  # Dashboard do usuário
 
 LOGIN_URL = '/admin/login/'
 ACCOUNT_LOGIN_URL = '/admin/login/'  # Adicionado para django-allauth

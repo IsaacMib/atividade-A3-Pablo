@@ -1,6 +1,8 @@
 from datetime import date
 from django.db import models
 from django import forms
+from django.contrib.auth.models import User
+from django.conf import settings
 
 from django.core.exceptions import ValidationError
 from django.utils.html import escape
@@ -16,6 +18,213 @@ from wagtail.models import Page
 
 from django.shortcuts import redirect
 from django.contrib import messages
+
+
+# ==================== MODELOS DE USUÁRIO E LGPD ====================
+
+class PerfilUsuario(models.Model):
+    """
+    Perfil de usuário para NeuroPrev.
+    Extensão do User padrão do Django com campos específicos do sistema.
+    
+    TODO: Migrar para AUTH_USER_MODEL customizado quando o sistema estiver estável.
+    """
+    TIPO_USUARIO_CHOICES = [
+        ('responsavel', 'Responsável/Pai/Mãe'),
+        ('profissional', 'Profissional de Saúde'),
+        ('admin', 'Administrador'),
+    ]
+    
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="Usuário",
+        related_name='perfil_neuroprev'
+    )
+    tipo_usuario = models.CharField(
+        max_length=20,
+        choices=TIPO_USUARIO_CHOICES,
+        default='responsavel',
+        verbose_name="Tipo de Usuário"
+    )
+    telefone = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name="Telefone"
+    )
+    data_nascimento = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="Data de Nascimento"
+    )
+    aceite_termos = models.BooleanField(
+        default=False,
+        verbose_name="Aceite dos Termos de Uso"
+    )
+    data_aceite_termos = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="Data do Aceite dos Termos"
+    )
+    
+    class Meta:
+        verbose_name = 'Perfil de Usuário'
+        verbose_name_plural = 'Perfis de Usuários'
+    
+    def __str__(self):
+        nome = self.user.get_full_name() or self.user.username
+        return f"{nome} ({self.get_tipo_usuario_display()})"
+
+
+class ConsentimentoLGPD(models.Model):
+    """
+    Registro de consentimento LGPD do usuário.
+    Armazena todas as permissões de uso de dados sensíveis.
+    """
+    usuario = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="Usuário",
+        related_name='consentimento_lgpd'
+    )
+    aceite_coleta_dados = models.BooleanField(
+        default=False,
+        verbose_name="Aceite de Coleta de Dados"
+    )
+    aceite_analise_ia = models.BooleanField(
+        default=False,
+        verbose_name="Aceite de Análise por IA"
+    )
+    aceite_pesquisa_anonima = models.BooleanField(
+        default=False,
+        verbose_name="Aceite de Uso em Pesquisa Anônima"
+    )
+    aceite_compartilhamento_profissionais = models.BooleanField(
+        default=False,
+        verbose_name="Aceite de Compartilhamento com Profissionais"
+    )
+    data_aceite = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Data do Aceite"
+    )
+    data_revogacao = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="Data da Revogação"
+    )
+    ip_aceite = models.GenericIPAddressField(
+        verbose_name="IP do Aceite"
+    )
+    
+    class Meta:
+        verbose_name = 'Consentimento LGPD'
+        verbose_name_plural = 'Consentimentos LGPD'
+    
+    def __str__(self):
+        return f"Consentimento de {self.usuario.username}"
+
+
+class LogAcesso(models.Model):
+    """
+    Log de acessos a dados sensíveis (auditoria LGPD).
+    Registra todas as operações em dados de saúde.
+    """
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="Usuário",
+        related_name='logs_acesso'
+    )
+    acao = models.CharField(
+        max_length=100,
+        verbose_name="Ação Realizada"
+    )
+    tabela_acessada = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name="Tabela Acessada"
+    )
+    objeto_id = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name="ID do Objeto"
+    )
+    ip = models.GenericIPAddressField(
+        verbose_name="Endereço IP"
+    )
+    user_agent = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="User Agent"
+    )
+    data_hora = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Data e Hora"
+    )
+    
+    class Meta:
+        verbose_name = 'Log de Acesso'
+        verbose_name_plural = 'Logs de Acesso'
+        ordering = ['-data_hora']
+    
+    def __str__(self):
+        return f"{self.usuario.username} - {self.acao} - {self.data_hora}"
+
+
+class SolicitacaoExclusao(models.Model):
+    """
+    Solicitações de exclusão de dados (Right to be Forgotten - LGPD).
+    """
+    STATUS_CHOICES = [
+        ('pendente', 'Pendente'),
+        ('em_processamento', 'Em Processamento'),
+        ('concluida', 'Concluída'),
+        ('cancelada', 'Cancelada'),
+    ]
+    
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="Usuário Solicitante",
+        related_name='solicitacoes_exclusao'
+    )
+    motivo = models.TextField(
+        verbose_name="Motivo da Solicitação"
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pendente',
+        verbose_name="Status"
+    )
+    data_solicitacao = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Data da Solicitação"
+    )
+    data_conclusao = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="Data da Conclusão"
+    )
+    processado_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='exclusoes_processadas',
+        verbose_name="Processado Por"
+    )
+    
+    class Meta:
+        verbose_name = 'Solicitação de Exclusão'
+        verbose_name_plural = 'Solicitações de Exclusão'
+        ordering = ['-data_solicitacao']
+    
+    def __str__(self):
+        return f"Solicitação #{self.id} - {self.usuario.username} - {self.get_status_display()}"
+
+
+# ==================== MODELOS DE PÁGINAS WAGTAIL ====================
 
 
 class PageSitePadrao(Page):
@@ -139,30 +348,8 @@ class SiteSettings(BaseSiteSetting):
     title_suffix = models.CharField(
         verbose_name="Título do Site",
         max_length=255,
-        help_text="Título do site e utilizado como sufixo na tag meta. Ex.: ' | Site Padrão'",
-        default="Site Padrão",
-    )
-
-    # --- Período Eleitoral ---
-    periodo_eleitoral_habilitado = models.BooleanField(
-        verbose_name="Habilitar Período Eleitoral",
-        default=False,
-        help_text="Ative para indicar que o site está em período eleitoral."
-    )
-    periodo_eleitoral_inicio = models.DateField(
-        verbose_name="Data de início do período eleitoral",
-        null=True,
-        blank=True
-    )
-    periodo_eleitoral_fim = models.DateField(
-        verbose_name="Data de fim do período eleitoral",
-        null=True,
-        blank=True
-    )
-    texto_informativo_periodo_eleitoral = models.TextField(
-        verbose_name="Texto informativo do período eleitoral",
-        blank=True,
-        default="Em respeito à legislação eleitoral (Lei 9.504/97), as notícias deste site/portal estão temporariamente suspensas."
+        help_text="Título do site e utilizado como sufixo na tag meta. Ex.: ' | NeuroPrev'",
+        default="NeuroPrev",
     )
 
     # --- Redes Sociais e Compartilhamento ---
@@ -290,15 +477,6 @@ class SiteSettings(BaseSiteSetting):
         FieldPanel("title_suffix"),
         MultiFieldPanel(
             [
-                FieldPanel("periodo_eleitoral_habilitado"),
-                FieldPanel("periodo_eleitoral_inicio"),
-                FieldPanel("periodo_eleitoral_fim"),
-                FieldPanel("texto_informativo_periodo_eleitoral"),
-            ],
-            heading="Período Eleitoral"
-        ),
-        MultiFieldPanel(
-            [
                 FieldPanel("redes_sociais"),
             ],
             heading="Redes Sociais"
@@ -347,21 +525,10 @@ class SiteSettings(BaseSiteSetting):
                 FieldPanel("compartilhamento_telegram"),
                 FieldPanel("compartilhamento_email"),
                 FieldPanel("compartilhamento_copiar_link"),
-            ],
-            heading="Compartilhamento de Conteúdos"
+        ],
+        heading="Compartilhamento de Conteúdos"
         ),
     ]
-
-    def is_periodo_eleitoral(self):
-        """
-        Retorna True se o período eleitoral está habilitado e a data atual está entre o início e o fim.
-        """
-        if not self.periodo_eleitoral_habilitado:
-            return False
-        hoje = date.today()
-        if self.periodo_eleitoral_inicio and self.periodo_eleitoral_fim:
-            return self.periodo_eleitoral_inicio <= hoje <= self.periodo_eleitoral_fim
-        return False
 
     # --- Validações ---
     def deve_exibir_cookies(self):
@@ -408,26 +575,7 @@ class SiteSettings(BaseSiteSetting):
                 raise ValidationError({
                     "google_analytics_tag": "A tag deve começar com 'G-', 'UA-' ou 'GT-' seguido do identificador."
                 })
-
-        if self.periodo_eleitoral_habilitado:
-            if not self.periodo_eleitoral_inicio and not self.periodo_eleitoral_fim:
-                raise ValidationError({
-                    "periodo_eleitoral_inicio": "Obrigatório quando o período eleitoral está habilitado.",
-                    "periodo_eleitoral_fim": "Obrigatório quando o período eleitoral está habilitado.",
-                })
-            if not self.periodo_eleitoral_inicio:
-                raise ValidationError({
-                    "periodo_eleitoral_inicio": "Obrigatório quando o período eleitoral está habilitado."
-                })
-            if not self.periodo_eleitoral_fim:
-                raise ValidationError({
-                    "periodo_eleitoral_fim": "Obrigatório quando o período eleitoral está habilitado."
-                })
-            if self.periodo_eleitoral_inicio > self.periodo_eleitoral_fim:
-                raise ValidationError({
-                    "periodo_eleitoral_inicio": "A data de início não pode ser posterior à data de fim.",
-                    "periodo_eleitoral_fim": "A data de fim não pode ser anterior à data de início."
-                })
+            
             if self.captcha_site_key:
                 site = self.captcha_site_key.strip()
                 if site and len(site) < 10:

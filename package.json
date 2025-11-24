@@ -1,7 +1,8 @@
 {
-  "name": "sitepadrao",
-  "version": "1.0.0",
-  "repository": "https://gitcodata.pb.gov.br/plone/wagtail-demo-site.git",
+  "name": "neuroprev-multimodal",
+  "version": "0.1.0",
+  "description": "Sistema de Triagem Precoce de Autismo com IA Multimodal",
+  "repository": "https://github.com/seu-usuario/neuroprev-multimodal.git",
   "private": true,
   "engines": {
     "node": ">=22"

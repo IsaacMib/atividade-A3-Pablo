@@ -28,10 +28,8 @@
                 <div class="row">
                     {% if posts %}
                         {% for noticias in posts %}
-                            {% if not noticias.sensivel_periodo_eleitoral or not settings.core.SiteSettings.is_periodo_eleitoral %}
-                                
-                                {# versão desktop/tablet → mostra todas #}
-                                <div class="col-lg-6 col-md-12 col-sm-12 d-none d-md-block">
+                            {# versão desktop/tablet → mostra todas #}
+                            <div class="col-lg-6 col-md-12 col-sm-12 d-none d-md-block">
                                     {% include 'blocks/noticias.html' with noticias=noticias %}
                                 </div>
 
@@ -41,8 +39,6 @@
                                     {% include 'blocks/noticias.html' with noticias=noticias %}
                                 </div>
                                 {% endif %}
-
-                            {% endif %}
                         {% endfor %}
                     {% else %}
                         <div class="col-md-12 tw:text-center">

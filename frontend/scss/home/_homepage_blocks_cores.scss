@@ -1,0 +1,62 @@
+// Home Blocks - Cores tema claro
+// Arquivo: frontend/scss/home/_homepage_blocks_cores.scss
+
+@use '../variables' as *;
+
+.hero-home {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-darker 100%);
+  color: $color-white;
+
+  &__cta {
+    &--primary {
+      background: $color-white;
+      color: $color-primary;
+    }
+
+    &--secondary {
+      background: rgba(255, 255, 255, 0.2);
+      color: $color-white;
+    }
+  }
+}
+
+.features-grid {
+  background: $color-grey-100;
+
+  &__title {
+    color: $color-grey-900;
+  }
+}
+
+.feature-card {
+  background: $color-white;
+
+  &__icon-wrapper {
+    background: linear-gradient(135deg, $color-primary 0%, $color-primary-darker 100%);
+  }
+
+  &__title {
+    color: $color-grey-900;
+  }
+
+  &__description {
+    color: $color-grey-600;
+  }
+}
+
+.cta-home {
+  background: $color-white;
+
+  &__title {
+    color: $color-grey-900;
+  }
+
+  &__description {
+    color: $color-grey-600;
+  }
+
+  &__button {
+    background: linear-gradient(135deg, $color-primary 0%, $color-primary-darker 100%);
+    color: $color-white;
+  }
+}

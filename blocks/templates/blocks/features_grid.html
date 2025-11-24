@@ -1,0 +1,19 @@
+{% load wagtailcore_tags %}
+
+<section class="features-grid">
+    <div class="features-grid__container">
+        <h2 class="features-grid__title">{{ self.titulo_secao }}</h2>
+        
+        <div class="features-grid__cards">
+            {% for card in self.funcionalidades %}
+                <div class="feature-card">
+                    <div class="feature-card__icon-wrapper">
+                        <span class="feature-card__icon">{{ card.icone }}</span>
+                    </div>
+                    <h3 class="feature-card__title">{{ card.titulo }}</h3>
+                    <p class="feature-card__description">{{ card.descricao }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

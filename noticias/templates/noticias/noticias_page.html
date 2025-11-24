@@ -4,10 +4,7 @@
 <div class="noticias-page--wrapper">
   <div class="noticias-page--content">
 
-    {% if settings.core.SiteSettings.is_periodo_eleitoral and page.sensivel_periodo_eleitoral %}
-      {% include 'include/periodo-eleitoral.html' %}
-    {% else %}
-      <div class="page-noticias-header tw:pt-12 tw:pb-12">
+    <div class="page-noticias-header tw:pt-12 tw:pb-12">
         <h1 class="index-header__title index-header__title--blog titulo-noticia tw:font-bold">
           {{ page.title }}
         </h1>
@@ -144,14 +141,11 @@
       <div class="compartilhamento-wrapper tw:mt-8 tw:pb-9 tw:flex tw:justify-end">
         {% compartilhamento_social %}
       </div>
-    {% endif %}
   </div> <!-- .noticias-page--content -->
 </div>
 
-{% if not settings.core.SiteSettings.is_periodo_eleitoral and not page.sensivel_periodo_eleitoral %}
-  {% get_noticias_index_url as noticias_index_url %}
-  {% include 'include/ultimas-noticias.html' with ultimas_noticias=ultimas_noticias url_ver_todos=noticias_index_url titulo=page.titulo_ultimas %}
-{% endif %}
+{% get_noticias_index_url as noticias_index_url %}
+{% include 'include/ultimas-noticias.html' with ultimas_noticias=ultimas_noticias url_ver_todos=noticias_index_url titulo=page.titulo_ultimas %}
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

@@ -8,7 +8,8 @@ from django.contrib.contenttypes.models import ContentType
 from wagtail.contrib.search_promotions.models import Query
 from wagtail.models import Page
 from noticias.models import NoticiasPage  # ajuste conforme o nome do seu app/modelo
-from plone_migration.models import PloneImportedFile, PloneImportedImage
+# plone_migration removido - migração concluída
+# from plone_migration.models import PloneImportedFile, PloneImportedImage
 from django.db import models
 from django.db.models import Q
 
@@ -18,11 +19,11 @@ def get_result_type(result):
 def formatar_wagtail_types(wagtail_types):
     tipos_conhecidos = {
         "noticiaspage": "Notícias",
-        "avisospage": "Avisos",
         "document": "Arquivo",
         "image": "Imagem",
-        "contatospage": "Contatos",
-        # Adicione outros tipos conhecidos aqui se desejar
+        # Apps NeuroPrev - adicionar conforme necessário
+        # "triagenspage": "Triagens",
+        # "conteudoeducativopage": "Conteúdo Educativo",
     }
     return [
         {
@@ -91,37 +92,11 @@ def search(request):
                 if r.last_published_at and r.last_published_at >= date_cutoff
             ]
         
-        # Buscar nos títulos dos arquivos com busca parcial
-        arquivos_resultados = []
-        if not selected_types or "document" in selected_types:
-            try:
-                arquivo_query = PloneImportedFile.objects.all()
-                for term in search_terms:
-                    arquivo_query = arquivo_query.filter(
-                        Q(title__icontains=term) |
-                        Q(file__icontains=term)
-                    )
-                arquivos_resultados = list(arquivo_query)
-            except Exception as e:
-                # Se houver erro com PloneImportedFile, continua sem incluir arquivos
-                arquivos_resultados = []
+        # Busca em arquivos e imagens do Plone removida (migração concluída)
+        # Use Wagtail Documents e Images ao invés de PloneImportedFile/Image
         
-        # Buscar nos títulos das imagens com busca parcial
-        imagens_resultados = []
-        if not selected_types or "image" in selected_types:
-            try:
-                imagem_query = PloneImportedImage.objects.all()
-                for term in search_terms:
-                    imagem_query = imagem_query.filter(
-                        Q(title__icontains=term)
-                    )
-                imagens_resultados = list(imagem_query)
-            except Exception as e:
-                # Se houver erro com PloneImportedImage, continua sem incluir imagens
-                imagens_resultados = []
-
         # Junta todos os resultados em uma única lista
-        all_results = search_results + arquivos_resultados + imagens_resultados
+        all_results = search_results
 
         # Paginação dos resultados combinados
         paginator = Paginator(all_results, 10)
@@ -138,10 +113,10 @@ def search(request):
         paginated_results = []
     
     # Obter todos os tipos de dados presentes no Wagtail (modelos de página)
-    # Buscar subclasses de Page ao invés de PageSitePadrao
+    # Apenas apps que existem no NeuroPrev
     wagtail_types = list(
         ContentType.objects.filter(
-            app_label__in=['noticias', 'avisos', 'eventos', 'agenda', 'editais', 'lgpd', 'paginas', 'institucional', 'home']
+            app_label__in=['noticias', 'lgpd', 'home', 'triagem', 'comunidade', 'conteudo_educativo']
         ).values_list('model', flat=True)
     )
 

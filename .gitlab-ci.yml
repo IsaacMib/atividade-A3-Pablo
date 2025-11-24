@@ -10,11 +10,11 @@ test:
       variables:
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: postgres
-        POSTGRES_DB: test
+        POSTGRES_DB: neuroprev_test
   variables:
     DATABASE_HOST: postgres
     DATABASE_PORT: 5432
-    DATABASE_NAME: test
+    DATABASE_NAME: neuroprev_test
     DATABASE_USERNAME: postgres
     DATABASE_PASSWORD: postgres
     DJANGO_SETTINGS_MODULE: sitepadrao.settings.testing

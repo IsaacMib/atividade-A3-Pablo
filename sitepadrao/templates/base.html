@@ -58,16 +58,14 @@
     <body class="tw:font-inter {% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
 
-        {% include 'barra_identidade.html' %}
-
-        {% include 'header.html' %}
+        {% include 'partials/header.html' %}
 
         <div id="site-conteudo-main">
             {% include 'include/breadcrumb.html' %}
             {% block content %}{% endblock %}
         </div>
 
-        {% include 'footer.html' %}
+        {% include 'partials/footer.html' %}
 
         {# Global javascript #}
         {% comment %} <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> {% endcomment %}
@@ -80,16 +78,12 @@
 
         {# Google Analytics - só carrega se configurado #}
         {% if settings.core.SiteSettings.tem_google_analytics %}
-            <!-- Google tag (gtag.js) -->
+            <!-- Google Analytics (gtag.js) -->
             <script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.core.SiteSettings.google_analytics_tag }}"></script>
-            <script>
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '{{ settings.core.SiteSettings.google_analytics_tag }}');
-            </script>
+            <script src="{% static 'js/analytics.js' %}" data-analytics-tag="{{ settings.core.SiteSettings.google_analytics_tag }}"></script>
         {% endif %}
 
+        <!-- VLibras Widget de Acessibilidade -->
         <div vw class="enabled">
             <div vw-access-button class="active"></div>
             <div vw-plugin-wrapper>
@@ -97,8 +91,6 @@
             </div>
         </div>
         <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-        <script>
-            new window.VLibras.Widget('https://vlibras.gov.br/app');
-        </script>
+        <script src="{% static 'js/vlibras.js' %}"></script>
     </body>
 </html>

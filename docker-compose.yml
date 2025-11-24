@@ -1,8 +1,8 @@
 services:
   db:
     environment:
-      POSTGRES_DB: app_db
-      POSTGRES_USER: app_user
+      POSTGRES_DB: neuroprev_db
+      POSTGRES_USER: neuroprev_user
       POSTGRES_PASSWORD: changeme
     restart: unless-stopped
     image: postgres:14.1
@@ -18,7 +18,7 @@ services:
   app:
     environment:
       DJANGO_SECRET_KEY: changeme
-      DATABASE_URL: postgres://app_user:changeme@db/app_db
+      DATABASE_URL: postgres://neuroprev_user:changeme@db/neuroprev_db
       REDIS_URL: redis://redis
       DJANGO_SETTINGS_MODULE: sitepadrao.settings.dev
       NPM_WATCH: 'on'

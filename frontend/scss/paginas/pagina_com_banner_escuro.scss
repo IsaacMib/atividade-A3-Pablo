@@ -1,9 +1,0 @@
-@use '../variables.scss';
-
-[data-theme="dark"] {
-  h1 {
-    &.pagina-banner-title-text {
-      color: variables.$color-white;
-    }
-  }
-}

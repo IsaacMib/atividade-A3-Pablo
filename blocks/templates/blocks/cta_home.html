@@ -1,0 +1,16 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="cta-home {% if self.imagem_fundo %}cta-home--with-bg{% endif %}">
+    {% if self.imagem_fundo %}
+        {% image self.imagem_fundo fill-1920x600 as bg_image %}
+        <div class="cta-home__bg" style="background-image: url('{{ bg_image.url }}');"></div>
+    {% endif %}
+    
+    <div class="cta-home__container">
+        <h2 class="cta-home__title">{{ self.titulo }}</h2>
+        <p class="cta-home__description">{{ self.descricao|richtext }}</p>
+        <a href="{{ self.botao_url }}" class="cta-home__button">
+            {{ self.botao_texto }}
+        </a>
+    </div>
+</section>

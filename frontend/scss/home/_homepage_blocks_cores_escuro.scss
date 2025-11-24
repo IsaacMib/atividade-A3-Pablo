@@ -1,0 +1,66 @@
+// Home Blocks - Cores tema escuro
+// Arquivo: frontend/scss/home/_homepage_blocks_cores_escuro.scss
+
+@use '../variables' as *;
+
+[data-theme="dark"] {
+  .hero-home {
+    background: linear-gradient(135deg, $color-grey-800 0%, $color-grey-900 100%);
+    color: $color-dark-theme-text;
+
+    &__cta {
+      &--primary {
+        background: $color-primary;
+        color: $color-white;
+      }
+
+      &--secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: $color-dark-theme-text;
+        border-color: $color-dark-theme-border;
+      }
+    }
+  }
+
+  .features-grid {
+    background: $color-grey-900;
+
+    &__title {
+      color: $color-dark-theme-text;
+    }
+  }
+
+  .feature-card {
+    background: $color-grey-800;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+    &__icon-wrapper {
+      background: linear-gradient(135deg, $color-primary 0%, $color-primary-darker 100%);
+    }
+
+    &__title {
+      color: $color-dark-theme-text;
+    }
+
+    &__description {
+      color: $color-dark-theme-text-secondary;
+    }
+  }
+
+  .cta-home {
+    background: $color-grey-800;
+
+    &__title {
+      color: $color-dark-theme-text;
+    }
+
+    &__description {
+      color: $color-dark-theme-text-secondary;
+    }
+
+    &__button {
+      background: linear-gradient(135deg, $color-primary 0%, $color-primary-darker 100%);
+      color: $color-white;
+    }
+  }
+}

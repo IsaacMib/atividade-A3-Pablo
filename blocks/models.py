@@ -1,14 +1,11 @@
 from blocks.utils import (
     ICONES_REDES,
-    ICONES_ACESSO_RAPIDO,
-    IDS_METABASE_CARDS,
     CLASS_TITULO_BG_COLOR_BLOCK,
     GRID_IMAGENS_TYPES,
     GRID_IMAGENS_CLASSES,
     GRID_IMAGENS_DEFAULT_TYPE,
     BANNER_MODES,
     BANNER_SIZES,
-    get_metabase_card_text_by_id,
     validate_file_size
 )
 
@@ -62,15 +59,6 @@ from .forms import (
 from django.core.exceptions import ValidationError
 
 from .institucional import GoogleMapsEmbedBlock
-
-mappingIconsServicos = {
-    'HIBRIDO': 'icon: link; ratio: 0.75',
-    'PRESENCIAL': 'icon: user; ratio: 0.75',
-    'ONLINE': 'icon: desktop; ratio: 0.75',
-    'PRESENCIAL_AGENDAMENTO': 'icon: calendar; ratio: 0.75',
-}
-
-_CACHE_TIMEOUT = 10*60  # 10 minutos em segundos
 
 
 class LinkStructValue(blocks.StructValue):
@@ -128,41 +116,6 @@ class LinkBlock(StructBlock):
         icon = "link"
         label = "Link"
         value_class = LinkStructValue
-
-class AcessoRapidoItemBlock(StructBlock):
-    titulo = CharBlock(required=True, max_length=100)
-    link = LinkBlock(required=True)
-    icone = ChoiceBlock(choices=ICONES_ACESSO_RAPIDO,
-                        required=True, label="Ícone")
-
-    class Meta:
-        icon = 'link'
-        label = "Item de Acesso Rápido"
-
-
-class AcessosRapidosBlock(StructBlock):
-    titulo = CharBlock(required=False, default="Acessos Rápidos")
-    itens = ListBlock(AcessoRapidoItemBlock(), default=[])
-
-    class Meta:
-        icon = "list-ul"
-        label = "Bloco de Acessos Rápidos"
-        template = "blocks/list_acesso_rapido.html"
-
-
-class AcessoRapidoWidget(StructBlock):
-    titulo = CharBlock(
-        required=False,
-        default="Acessos Rápidos",
-        help_text="Título exibido acima dos acessos rápidos"
-    )
-    itens = ListBlock(AcessoRapidoItemBlock(), default=[])
-
-    class Meta:
-        icon = "list-ul"
-        label = "Widget de Acessos Rápidos"
-        template = "blocks/widget_acesso_rapido.html"
-
 
 
 class ImagemConfiguracao(blocks.StructBlock):
@@ -465,142 +418,6 @@ class CarrosselBannersBlock(StructBlock):
         template = 'blocks/carrossel_banners.html'
 
 
-class ServicoOnlineItemBlock(StructBlock):
-    idServico = CharBlock(required=False, label="ID do Serviço")
-
-    def parserDadosApiServico(self, item):
-        """
-        Função para tratar/parsear um único item retornado pela API de serviços online.
-        Retorna um dicionário com os campos esperados por ServicoOnlineItemBlock.
-        O campo 'modalidades' será um array de objetos com 'iconClass' e 'nome'.
-        """
-        modalidades = []
-        for fp in item.get('formas_prestacao', []):
-            forma = fp.get('forma_prestacao')
-            if forma:
-                modalidades.append({
-                    'iconClass': self.getIconClass(forma),
-                    'nome': forma
-                })
-        return {
-            'sigla': item.get('orgao', {}).get('sigla', ''),
-            'titulo': item.get('categoria', {}),
-            'descricao': item.get('nome', ''),
-            'link': f"{settings.PORTAL_SERVICOS_URL}{item.get('id', '')}",
-            'modalidades': modalidades,
-            'observacao': item.get('o_que_e', ''),
-        }
-
-    def get_context(self, value, parent_context=None):
-        import requests
-        context = super().get_context(value, parent_context=parent_context)
-        api_url = f"{settings.PORTAL_SERVICOS_API_URL}digital/servicos/{value.get('idServico', '')}"
-        servico = []
-        try:
-            response = requests.get(api_url, timeout=5)
-            if response.ok:
-                servico = self.parserDadosApiServico(response.json())
-        except Exception:
-            servico = []
-        context['servico'] = servico
-        return context
-
-    def getIconClass(self, modalidade):
-        """
-        Retorna a string do ícone correspondente à modalidade.
-        """
-        return mappingIconsServicos.get(str(modalidade).upper(), 'icon: question; ratio: 0.75')
-
-    class Meta:
-        icon = 'form'
-        label = "Item de Serviço Online"
-        template = 'blocks/item_servico_online.html'
-
-
-class ServicosOnlineBlock(StructBlock):
-    titulo = CharBlock(
-        required=True,
-        default="Serviços Online",
-        help_text="Título que aparecerá acima da lista de serviços"
-    )
-    orgao_sigla = CharBlock(
-        required=True,
-        label="Órgão (sigla)",
-        help_text="Sigla do órgão para consulta na API.Ex.: detran,sead,codata, etc."
-    )
-    limit = IntegerBlock(
-        required=False,
-        default=12,
-        min_value=1,
-        label="Limite de serviços exibidos",
-        help_text="Número máximo de serviços a serem exibidos no carrossel. Padrão é 12."
-    )
-
-    def parserDadosApiServico(self, dados):
-        """
-        Função para tratar/parsear os dados retornados pela API de serviços online.
-        Monta um novo array de dicionários com os campos esperados por ServicoOnlineItemBlock.
-        O campo 'modalidades' será um array de objetos com 'iconClass' e 'nome'.
-        """
-        resultado = []
-        for item in dados:
-            modalidades = []
-            for fp in item.get('formas_prestacao', []):
-                forma = fp.get('forma_prestacao')
-                if forma:
-                    modalidades.append({
-                        'iconClass': self.getIconClass(forma),
-                        'nome': forma
-                    })
-            resultado.append({
-                'sigla': item.get('orgao', {}).get('sigla', ''),
-                'titulo': item.get('categoria', {}).get('nome', ''),
-                'descricao': item.get('nome', ''),
-                'link': f"{settings.PORTAL_SERVICOS_URL}{item.get('id', '')}",
-                'modalidades': modalidades,
-                'observacao': item.get('o_que_e', ''),
-            })
-        return resultado
-
-    def get_context(self, value, parent_context=None):
-        import requests
-        context = super().get_context(value, parent_context=parent_context)
-        orgao_sigla = value.get('orgao_sigla')
-        order_by = '-contador_acesso'
-        limit = value.get('limit') or 12
-        api_url = f"{settings.PORTAL_SERVICOS_API_URL}digital/servicos/orgao/"
-        servicos = []
-        linkTodos = f"{settings.PORTAL_SERVICOS_URL}"
-        if api_url and orgao_sigla:
-            params = {
-                'orgao_sigla': orgao_sigla.lower(),
-                'order_by': order_by,
-                'limit': limit
-            }
-            try:
-                response = requests.get(api_url, params=params, timeout=5)
-                if response.ok:
-                    dados = response.json()
-                    servicos = self.parserDadosApiServico(dados)
-                    linkTodos = f"{settings.PORTAL_SERVICOS_URL}todos?orgao={dados[0].get('orgao', {}).get('id', '')}&page=0"
-            except Exception:
-                servicos = []
-        context['servicos'] = servicos
-        context['linkTodos'] = linkTodos
-        return context
-
-    def getIconClass(self, modalidade):
-        """
-        Retorna a string do ícone correspondente à modalidade.
-        """
-        return mappingIconsServicos.get(str(modalidade).upper(), 'icon: question; ratio: 0.75')
-
-    class Meta:
-        icon = 'list-ul'
-        label = 'Carrossel de Serviços Online'
-        template = 'blocks/servicos_online.html'
-
-
 class TituloBlock(StructBlock):
 
     """Bloco de título com opções de estilo e visibilidade."""
@@ -625,69 +442,6 @@ class TituloBlock(StructBlock):
         template = 'blocks/titulo.html'
         icon = 'title'
         label = 'Título'
-
-
-class OdometerBlock(StructBlock):
-    odometer_value = FloatBlock(required=False, label="Valor do Dado Default",
-                                help_text="Preenchido automaticamente pela API", disabled=True)
-    id_card = ChoiceBlock(
-        required=True,
-        label="ID do Card do Metabase",
-        choices=IDS_METABASE_CARDS,
-    )
-
-    def get_context(self, value, parent_context=None):
-        context = super().get_context(value, parent_context=parent_context)
-        id_card = value['id_card']
-        id_card_text = get_metabase_card_text_by_id(id_card)
-        url = f"{settings.METABASE_API_URL}{id_card}"
-        headers = {
-            'x-api-key': settings.METABASE_API_KEY
-        }
-        cache_key = f"metabase_odometer_value_{id_card}"
-        data = cache.get(cache_key)
-        if data is None:
-            try:
-                response = requests.get(url, headers=headers)
-                if response.ok:
-                    response_json = response.json()
-                    result_metadata = response_json.get('result_metadata', [])
-                    if result_metadata:
-                        metabase_value = result_metadata[0].get('fingerprint', {}).get(
-                            'type', {}).get('type/Number', {}).get('q1', 0)
-                    else:
-                        metabase_value = value['odometer_value']
-                else:
-                    metabase_value = value['odometer_value']
-                cache.set(cache_key, metabase_value, timeout=_CACHE_TIMEOUT)
-            except Exception as e:
-                metabase_value = value['odometer_value']
-        else:
-            metabase_value = data
-        context['self'].metabase_value = metabase_value
-        context['id_card'] = id_card
-        context['id_card_text'] = id_card_text
-        context['uuid'] = str(uuid.uuid4())
-        return context
-
-    class Meta:
-        template = 'blocks/odometer.html'
-        icon = 'plus'
-        label = 'Odometer'
-
-
-class OdometerListBlock(StructBlock):
-    titulo = CharBlock(
-        required=False,
-        default="Central de Monitoramento",
-        help_text="Título que aparecerá acima da lista de odômetros"
-    )
-    odometers = ListBlock(OdometerBlock(), label="Central de Monitoramento")
-
-    class Meta:
-        template = 'blocks/central_monitoramento.html'
-        icon = 'list-ul'
-        label = 'Central de Monitoramento'
 
 
 class NoticiasListBlock(StructBlock):
@@ -759,111 +513,12 @@ class NoticiasListBlock(StructBlock):
         return context
     
     def get_btn_classes(self, value):
-        if getattr(settings, 'HABILITAR_SITE_INTRANET', False):
-            return 'text-center'
         return 'text-center btn-ver-todos-bg-cinza'
 
     class Meta:
         template = 'blocks/list_noticias.html'
         icon = 'list-ul'
         label = 'Lista de Notícias'
-
-class AvisosWidget(StructBlock):
-    titulo = CharBlock(
-        required=False,
-        default="Destaques",
-        help_text="Título exibido acima dos avisos"
-    )
-    mostrar_titulo = BooleanBlock(
-        required=False,
-        default=True,
-        help_text="Marcar para exibir o título"
-    )
-    avisos_index_page = PageChooserBlock(
-        required=True,
-        target_model='avisos.AvisosIndexPage',
-        help_text="Selecione a página de index de avisos."
-    )
-    quantidade = IntegerBlock(
-        required=False,
-        default=3,
-        min_value=1,
-        label="Quantidade de avisos em destaque"
-    )
-
-    def get_context(self, value, parent_context=None):
-        context = super().get_context(value, parent_context=parent_context)
-        avisos_index_page = value.get('avisos_index_page')
-        quantidade = value.get('quantidade') or 6
-        avisos = []
-        avisos_index_page_url = None
-
-        if avisos_index_page:
-            try:
-                avisos = avisos_index_page.get_ultimos_avisos(quantidade=quantidade)
-            except Exception:
-                avisos = []
-            avisos_index_page_url = avisos_index_page.url
-
-        context['avisos'] = avisos
-        context['avisos_index_page_url'] = avisos_index_page_url
-        return context
-
-    class Meta:
-        template = "blocks/widget_avisos.html"
-        icon = "star"
-        label = "Destaques"
-
-class AvisosListBlock(StructBlock):
-    titulo = CharBlock(
-        required=False,
-        default="Quadro de Avisos",
-        help_text="Título exibido acima dos avisos"
-    )
-    mostrar_titulo = blocks.BooleanBlock(
-        required=False,
-        default=True,
-        help_text="Marcar para exibir o título"
-    )
-    avisos_index_page = PageChooserBlock(
-        required=True,
-        target_model='avisos.AvisosIndexPage',
-        help_text="Selecione a página de index de avisos."
-    )
-    quantidade = IntegerBlock(
-        required=False,
-        default=6,
-        min_value=1,
-        label="Quantidade de avisos exibidos"
-    )
-    texto_link = CharBlock(
-        required=False,
-        default="Ver todos os avisos",
-        label="Texto do link para todos os avisos"
-    )
-
-    def get_context(self, value, parent_context=None):
-        context = super().get_context(value, parent_context=parent_context)
-        avisos_index_page = value.get('avisos_index_page')
-        quantidade = value.get('quantidade') or 6
-        texto_link = value.get('texto_link') or "Ver todos os avisos"
-        avisos = []
-        avisos_index_page_url = None
-        if avisos_index_page:
-            try:
-                avisos = avisos_index_page.get_ultimos_avisos(quantidade=quantidade)
-            except Exception:
-                avisos = []
-            avisos_index_page_url = avisos_index_page.url
-        context['avisos'] = avisos
-        context['avisos_index_page_url'] = avisos_index_page_url
-        context['texto_link'] = texto_link
-        return context
-
-    class Meta:
-        template = "blocks/list_avisos.html"
-        icon = "warning"
-        label = "Avisos"
 
 
 class BlocoListaCursosBlock(StructBlock):
@@ -1336,35 +991,6 @@ class LinhaDoTempoBlock(StructBlock):
         template = 'blocks/linha_do_tempo.html'
 
 
-class SolucaoItemBlock(StructBlock):
-    imagem = ImageChooserBlock(required=True, label="Imagem do Solução")
-    link = URLBlock(required=True, label="URL do Solução")
-    texto_alternativo = CharBlock(
-        required=False,
-        label="Texto alternativo",
-        help_text="Descrição da imagem para acessibilidade (alt text)"
-    )
-
-    class Meta:
-        icon = 'image'
-        label = "Item de Solução"
-        template = 'blocks/item_solucao.html'
-
-
-class CarrosselSolucoesBlock(StructBlock):
-    titulo = CharBlock(required=False, default="Soluções")
-    solucoes = ListBlock(
-        SolucaoItemBlock(),
-        label="Soluções",
-        help_text="Adicione as soluções para o carrossel"
-    )
-
-    class Meta:
-        icon = 'image'
-        label = "Carrossel de Soluções"
-        template = 'blocks/carrossel_solucoes.html'
-
-
 class GridImageItemBlock(StructBlock):
     titulo = CharBlock(required=True, max_length=100,
                        label="Título da Imagem")
@@ -1633,123 +1259,6 @@ class FormularioSubmissao(models.Model):
 
 
 # ============================================================
-# BLOCOS - DICAS DO PRESIDENTE
-# ============================================================
-
-class DicaPresidenteWidget(StructBlock):
-    """
-    Widget para exibir a última dica ou uma frase do presidente.
-    Pode ser inserido em sidebars ou home da intranet.
-    """
-    titulo = CharBlock(
-        required=False,
-        default="Dica do Presidente",
-        label="Título do Widget",
-        help_text="Título exibido no topo do widget"
-    )
-    
-    pagina_dicas = PageChooserBlock(
-        required=True,
-        page_type=['dicas_presidente.DicasPresidenteIndexPage'],
-        label="Página de Dicas",
-        help_text="Selecione a página de onde buscar as dicas (obrigatório)"
-    )
-    
-    quantidade_dicas = IntegerBlock(
-        required=False,
-        default=3,
-        min_value=1,
-        max_value=6,
-        label="Quantidade de dicas",
-        help_text="Número de dicas a exibir (1 a 6)"
-    )
-    
-    class Meta:
-        label = "Widget - Dica do Presidente"
-        icon = "snippet"
-        template = "blocks/widget_dica_presidente.html"
-
-
-class ListaDicasPresidenteBlock(StructBlock):
-    """
-    Lista de dicas do presidente para inserir em páginas.
-    Permite escolher tipo de dica, layout e quantidade.
-    """
-    titulo = CharBlock(
-        required=False,
-        default="Dicas do Presidente",
-        label="Título da Seção"
-    )
-    
-    mostrar_titulo = BooleanBlock(
-        required=False,
-        default=True,
-        label="Mostrar título e linha abaixo?"
-    )
-    
-    pagina_dicas = PageChooserBlock(
-        required=True,
-        page_type=['dicas_presidente.DicasPresidenteIndexPage'],
-        label="Página de Dicas",
-        help_text="Selecione a página de índice de Dicas do Presidente"
-    )
-    
-    quantidade = IntegerBlock(
-        required=False,
-        default=6,
-        min_value=1,
-        max_value=12,
-        label="Quantidade de dicas",
-        help_text="Número de dicas a exibir"
-    )
-    
-    texto_link = CharBlock(
-        required=False,
-        default="Ver todas as dicas",
-        label="Texto do link para todas as dicas"
-    )
-    
-    layout = ChoiceBlock(
-        choices=[
-            ('lista', 'Lista'),
-            ('grid', 'Blocos'),
-        ],
-        required=False,
-        default='lista',
-        label="Layout das dicas"
-    )
-    
-    def get_context(self, value, parent_context=None):
-        context = super().get_context(value, parent_context=parent_context)
-        
-        pagina_dicas = value.get('pagina_dicas')
-        quantidade = value.get('quantidade') or 6
-        texto_link = value.get('texto_link') or "Ver todas as dicas"
-        
-        dicas = []
-        pagina_dicas_url = None
-        
-        if pagina_dicas:
-            dicas = pagina_dicas.get_ultimas_dicas(quantidade=quantidade)
-            pagina_dicas_url = pagina_dicas.url
-        
-        context.update({
-            'titulo': value.get('titulo'),
-            'dicas': dicas,
-            'pagina_dicas_url': pagina_dicas_url,
-            'texto_link': texto_link,
-            'mostrar_titulo': value.get('mostrar_titulo', True),
-            'layout': value.get('layout', 'lista'),
-        })
-        
-        return context
-    
-    class Meta:
-        label = "Lista de Dicas do Presidente"
-        icon = "grip"
-        template = "blocks/lista_dicas_presidente.html"
-
-
 class BaseRichTextStreamBlock(StreamBlock):
     """
     Define the custom blocks that `StreamField` will utilize

@@ -1,8 +1,8 @@
-# Instruções do GitHub Copilot para Site Padrão CODATA
+# Instruções do GitHub Copilot para NeuroPrev Multimodal
 
 ## Visão Geral do Projeto
 
-Este é um **projeto Django/Wagtail CMS** para criação de portais governamentais padronizados. O projeto combina:
+Este é um **projeto Django/Wagtail CMS** para triagem precoce de autismo com IA multimodal. O projeto combina:
 
 - **Backend**: Django 5.1.x + Wagtail 7.x (Python)
 - **Frontend**: JavaScript/Webpack na pasta `frontend/`
@@ -372,7 +372,7 @@ def ensure_root_page():  # Já existe em core.utils_test!
 ```bash
 # Ativar ambiente (veja .github/copilot-local.md)
 # Exemplo com asdf: asdf install (lê .tool-versions automaticamente)
-# Exemplo com virtualenv + nvm: workon codataSite && nvm use
+# Exemplo com virtualenv + nvm: workon neuroprev && nvm use
 
 # Testes
 python manage.py test <app> --keepdb
@@ -1234,7 +1234,7 @@ from core.utils_test import ensure_root_page
 
 ## 12. Contato e Suporte
 
-- Projeto: Site Padrão CODATA-PB
-- Stack: Django 5.1 + Wagtail 7.x + PostgreSQL
+- Projeto: NeuroPrev Multimodal - Sistema de Triagem de Autismo
+- Stack: Django 5.1 + Wagtail 7.x + PostgreSQL + IA Multimodal
 - Python: 3.12+
 - Configurações de ambiente: veja `.github/copilot-local.md`

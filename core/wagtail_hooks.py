@@ -1,8 +1,9 @@
 from wagtail import hooks
-from agenda.models import AgendaIndexPage
+# Apps deletados - comentados temporariamente
+# from agenda.models import AgendaIndexPage
 from noticias.models import NoticiasIndexPages
-from avisos.models import AvisosIndexPage
-from contatos.models import ContatosPage
+# from avisos.models import AvisosIndexPage
+# from contatos.models import ContatosPage
 from wagtail.admin import messages
 from django.shortcuts import redirect
 from django.templatetags.static import static
@@ -11,11 +12,12 @@ from django.utils.html import format_html_join
 
 @hooks.register('before_create_page')
 def do_before_agendaindex_page_edit(request, parent_page, page_class):
+    # Apenas NoticiasIndexPages está ativo no momento
     tipos_unicos = [
-        AgendaIndexPage,
-        AvisosIndexPage,
+        # AgendaIndexPage,  # App deletado
+        # AvisosIndexPage,  # App deletado
         NoticiasIndexPages,
-        ContatosPage,
+        # ContatosPage,  # App deletado
     ]
     if page_class in tipos_unicos:
         # Verifica se já existe um filho do mesmo tipo para o parent_page

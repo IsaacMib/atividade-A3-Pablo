@@ -55,8 +55,8 @@ def get_menuitems_with_children(page, calling_page, max_levels, current_level=1,
 
 
 # Retrieves the top menu items - the immediate children of the parent page
-@register.inclusion_tag("tags/top_menu.html", takes_context=True)
-def top_menu(context, parent, calling_page=None, max_levels=None):
+@register.inclusion_tag("partials/navigation/top_menu.html", takes_context=True)
+def top_menu(context, parent, calling_page=None, max_levels=2):
     """
     Retorna os itens do menu até max_levels níveis, usando SiteSettings se não informado.
     """
@@ -72,6 +72,5 @@ def top_menu(context, parent, calling_page=None, max_levels=None):
         # required by the pageurl tag that we want to use within this template
         "request": context["request"],
         "max_levels": max_levels,
-        "HABILITAR_SITE_INTRANET": context.get("HABILITAR_SITE_INTRANET", False),
     }
 

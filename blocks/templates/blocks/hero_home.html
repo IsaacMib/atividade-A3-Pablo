@@ -1,0 +1,25 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="hero-home">
+    <div class="hero-home__container">
+        <h1 class="hero-home__title">{{ self.titulo }}</h1>
+        <p class="hero-home__subtitle">{{ self.subtitulo }}</p>
+        <p class="hero-home__description">{{ self.descricao }}</p>
+        
+        {% if self.cta_primario_texto or self.cta_secundario_texto %}
+            <div class="hero-home__ctas">
+                {% if self.cta_primario_texto and self.cta_primario_url %}
+                    <a href="{{ self.cta_primario_url }}" class="hero-home__cta hero-home__cta--primary">
+                        {{ self.cta_primario_texto }}
+                    </a>
+                {% endif %}
+                
+                {% if self.cta_secundario_texto and self.cta_secundario_url %}
+                    <a href="{{ self.cta_secundario_url }}" class="hero-home__cta hero-home__cta--secondary">
+                        {{ self.cta_secundario_texto }}
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</section>

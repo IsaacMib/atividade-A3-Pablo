@@ -187,11 +187,6 @@ class NoticiasPage(PageSitePadrao):
         unique=True,
         help_text="ID do nó no Plone, usado para identificar a página migrada."
     )
-    sensivel_periodo_eleitoral = models.BooleanField(
-        verbose_name="Conteúdo sensível ao período eleitoral",
-        default=False,
-        help_text="Marque se este conteúdo deve ser ocultado ou tratado de forma especial durante o período eleitoral."
-    )
 
     images = StreamField(
         [
@@ -279,9 +274,7 @@ class NoticiasPage(PageSitePadrao):
         FieldPanel("body_migrated"),
     ]
 
-    settings_panels = PageSitePadrao.settings_panels + [
-        FieldPanel("sensivel_periodo_eleitoral"),
-    ]
+    settings_panels = PageSitePadrao.settings_panels
 
     edit_handler = TabbedInterface(
         [
@@ -438,9 +431,10 @@ class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
     ]
 
     parent_page_types = [
-        "intranet.IntranetHomePage",
+        # Apps deletados:
+        # "intranet.IntranetHomePage",
+        # "treinamento.TreinamentoIndexPage",
         "home.HomePage",
-        "treinamento.TreinamentoIndexPage",
     ]
 
     # Specifies that only NoticiasPage objects can live under this index page

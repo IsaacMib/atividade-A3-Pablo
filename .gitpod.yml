@@ -7,6 +7,7 @@ tasks:
   - init: |
       cp sitepadrao/settings/local.py.example sitepadrao/settings/local.py
       echo "DJANGO_SETTINGS_MODULE=sitepadrao.settings.dev" > .env
+      echo "# NeuroPrev Multimodal - Sistema de Triagem de Autismo" >> .env
       python -m pip install -r requirements.txt
       python manage.py makemigrations
       python manage.py migrate

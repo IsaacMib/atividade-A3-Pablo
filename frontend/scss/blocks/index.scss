@@ -6,12 +6,6 @@
 @use './banner_escuro.scss';
 
 @use './lista_noticias/index.scss' as listaNoticias;
-@use './lista_eventos/index.scss' as listaEventos;
-
-
-
-@use './servicos_online_escuro.scss';
-@use './servicos_online.scss';
 
 @use './carrossel_banner.scss';
 @use './carrossel_banner_escuro.scss';
@@ -19,20 +13,8 @@
 @use './titulo_escuro.scss';
 @use './titulo.scss';
 
-@use './acessorapido.scss';
-@use './acessorapido_escuro.scss';
-
 @use './rede_social.scss';
 @use './rede_social_escuro.scss';
-
-@use './central_monitoramento.scss';
-@use './central_monitoramento_escuro.scss';
-
-@use './carrossel_solucao.scss';
-@use './carrossel_solucao_escuro.scss';
-
-@use './agenda.scss';
-@use './agenda_escuro.scss';
 
 @use './btn_ver_todos.scss';
 @use './btn_ver_todos_escuro.scss';
@@ -46,7 +28,6 @@
 @use './formulario.scss';
 @use './formulario_escuro.scss';
 
-@use './solucao.scss';
 @use './linha_do_tempo.scss';
 @use './linha_do_tempo_escuro.scss';
 
