@@ -98,6 +98,8 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.openid_connect",
     'rest_framework',
     'rest_framework.authtoken',
+    'django_tasks',
+    'django_tasks.backends.database',
 ]
 
 MIDDLEWARE = [
@@ -378,3 +380,11 @@ ACCOUNT_USERNAME_MIN_LENGTH = 2
 ACCOUNT_MAX_EMAIL_ADDRESSES = 1
 
 SITE_ID = 1
+
+# Django Tasks - Fix para bug do immediate backend
+# https://github.com/wagtail/django-tasks/issues/10
+TASKS = {
+    "default": {
+        "BACKEND": "django_tasks.backends.database.DatabaseBackend",
+    }
+}
