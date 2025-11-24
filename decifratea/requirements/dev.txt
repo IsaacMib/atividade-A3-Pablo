@@ -1,0 +1,20 @@
+-r base.txt
+
+# Development tools
+django-debug-toolbar>=4.2,<5
+django-browser-reload==1.17.0
+
+# Code quality
+black>=23.0.0
+ruff>=0.1.0
+flake8>=6.0.0
+isort>=5.12.0
+
+# Testing
+pytest>=7.4.0
+pytest-django>=4.5.0
+pytest-cov>=4.1.0
+factory-boy>=3.3.0
+
+# Documentation
+django-stubs>=4.2.0
