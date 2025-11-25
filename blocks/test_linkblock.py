@@ -16,7 +16,7 @@ class LinkBlockTestCase(TestCase):
             child.delete()
         cls.root_page.refresh_from_db()
 
-        # Criar Site padrão para que Page.url funcione
+        # Criar Site principal para que Page.url funcione
         if not Site.objects.filter(is_default_site=True).exists():
             Site.objects.create(
                 hostname='localhost',

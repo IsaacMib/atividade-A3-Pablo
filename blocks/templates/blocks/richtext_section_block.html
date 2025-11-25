@@ -1,0 +1,15 @@
+{% load wagtailcore_tags %}
+
+<section class="richtext-section-block">
+    <div class="container">
+        {% if value.titulo %}
+            <h2 class="section-title">{{ value.titulo }}</h2>
+        {% endif %}
+        
+        {% if value.conteudo %}
+            <div class="richtext-content">
+                {{ value.conteudo|richtext }}
+            </div>
+        {% endif %}
+    </div>
+</section>

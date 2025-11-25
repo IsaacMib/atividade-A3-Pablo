@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="modulo-video-page">
+    <header class="page-header page-header--module">
+        <div class="container">
+            <span class="module-badge module-badge--video">Módulo de Vídeo</span>
+            <h1 class="page-title">{{ page.title }}</h1>
+            
+            {% if page.descricao %}
+                <p class="page-description">{{ page.descricao }}</p>
+            {% endif %}
+        </div>
+    </header>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x600 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if page.conteudo %}
+        <section class="page-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+    
+    {# Indicadores analisados #}
+    {% if page.indicadores %}
+        <section class="module-indicators-section">
+            <div class="container">
+                <h2 class="section-title">Indicadores Analisados</h2>
+                <div class="indicators-grid">
+                    {% for indicador in page.indicadores %}
+                        <div class="indicator-card">
+                            <h3 class="indicator-card__title">{{ indicador.value.nome }}</h3>
+                            {% if indicador.value.descricao %}
+                                <p class="indicator-card__description">{{ indicador.value.descricao }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+    
+    {# Tecnologias utilizadas #}
+    <section class="module-tech-section">
+        <div class="container">
+            <h2 class="section-title">Tecnologias</h2>
+            <ul class="tech-list">
+                <li>Computer Vision (OpenCV, MediaPipe)</li>
+                <li>Deep Learning (CNNs, RNNs)</li>
+                <li>Detecção de landmarks faciais</li>
+                <li>Análise de movimento corporal</li>
+                <li>Reconhecimento de padrões comportamentais</li>
+            </ul>
+        </div>
+    </section>
+</article>
+{% endblock %}

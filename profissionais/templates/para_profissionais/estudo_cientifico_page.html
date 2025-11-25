@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="estudo-cientifico-page">
+    <header class="page-header page-header--study">
+        <div class="container">
+            <span class="study-badge">Estudo Científico</span>
+            <h1 class="page-title">{{ page.title }}</h1>
+            
+            {% if page.autores %}
+                <p class="study-authors">{{ page.autores }}</p>
+            {% endif %}
+            
+            <div class="study-meta">
+                {% if page.publicacao %}
+                    <span class="study-meta__item">
+                        <strong>Publicado em:</strong> {{ page.publicacao }}
+                    </span>
+                {% endif %}
+                
+                {% if page.ano %}
+                    <span class="study-meta__item">
+                        <strong>Ano:</strong> {{ page.ano }}
+                    </span>
+                {% endif %}
+                
+                {% if page.doi %}
+                    <span class="study-meta__item">
+                        <strong>DOI:</strong> 
+                        <a href="https://doi.org/{{ page.doi }}" target="_blank" rel="noopener">
+                            {{ page.doi }}
+                        </a>
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x600 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if page.descricao %}
+        <section class="study-abstract">
+            <div class="container">
+                <h2>Resumo</h2>
+                <div class="abstract-content">
+                    {{ page.descricao|richtext }}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+    
+    {% if page.conteudo %}
+        <section class="page-content study-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+    
+    {# Citação do estudo #}
+    <section class="study-citation">
+        <div class="container">
+            <h2>Como Citar</h2>
+            <div class="citation-box">
+                <p>{{ page.autores }}. "{{ page.title }}". <em>{{ page.publicacao }}</em>, {{ page.ano }}. 
+                {% if page.doi %}DOI: {{ page.doi }}{% endif %}</p>
+            </div>
+            <button class="btn btn-secondary" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent)">
+                Copiar Citação
+            </button>
+        </div>
+    </section>
+    
+    {# Estudos relacionados #}
+    {% with page.get_parent.specific.get_children.live.public.specific as estudos_relacionados %}
+        {% if estudos_relacionados|length > 1 %}
+            <section class="related-studies">
+                <div class="container">
+                    <h2 class="section-title">Estudos Relacionados</h2>
+                    <div class="related-studies-list">
+                        {% for estudo in estudos_relacionados|slice:":3" %}
+                            {% if estudo.id != page.id %}
+                                <article class="related-study-card">
+                                    <h3 class="related-study__title">
+                                        <a href="{% pageurl estudo %}">{{ estudo.title }}</a>
+                                    </h3>
+                                    
+                                    {% if estudo.autores %}
+                                        <p class="related-study__authors">{{ estudo.autores }}</p>
+                                    {% endif %}
+                                    
+                                    <div class="related-study__meta">
+                                        {% if estudo.publicacao %}{{ estudo.publicacao }}, {% endif %}
+                                        {% if estudo.ano %}{{ estudo.ano }}{% endif %}
+                                    </div>
+                                </article>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
+</article>
+{% endblock %}

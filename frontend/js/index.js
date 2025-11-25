@@ -5,7 +5,7 @@ import 'vanilla-calendar-pro/styles/themes/light.css'; // Light theme
 import "vanilla-cookieconsent/dist/cookieconsent.css"; // Cookieconsent
 
 import "../scss/main.scss";
-// TailwindCSS removido - não está sendo utilizado no NeuroPrev
+// TailwindCSS removido - não está sendo utilizado no NEUROATHENA
 // import "../../tw/styles.css";
 
 import * as bootstrap from 'bootstrap';

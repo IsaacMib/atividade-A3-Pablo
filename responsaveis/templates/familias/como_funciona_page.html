@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="como-funciona-page">
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">{{ page.title }}</h1>
+            
+            {% if page.descricao %}
+                <p class="page-description">{{ page.descricao }}</p>
+            {% endif %}
+        </div>
+    </header>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x600 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if page.conteudo %}
+        <section class="page-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+    
+    {# Passos do processo #}
+    {% if page.passos %}
+        <section class="process-steps-section">
+            <div class="container">
+                <h2 class="section-title">Passo a Passo</h2>
+                <div class="process-steps">
+                    {% for passo in page.passos %}
+                        <div class="process-step">
+                            <div class="process-step__number">
+                                <span>{{ forloop.counter }}</span>
+                            </div>
+                            <div class="process-step__content">
+                                {% if passo.value.titulo %}
+                                    <h3 class="process-step__title">{{ passo.value.titulo }}</h3>
+                                {% endif %}
+                                
+                                {% if passo.value.descricao %}
+                                    <div class="process-step__description">
+                                        {{ passo.value.descricao|richtext }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+</article>
+{% endblock %}

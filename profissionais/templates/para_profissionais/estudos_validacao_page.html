@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="estudos-validacao-page">
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">{{ page.title }}</h1>
+            
+            {% if page.descricao %}
+                <p class="page-description">{{ page.descricao }}</p>
+            {% endif %}
+        </div>
+    </header>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x600 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if page.conteudo %}
+        <section class="page-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+    
+    {# Listar estudos científicos #}
+    {% with page.get_children.live.public.specific as estudos %}
+        {% if estudos %}
+            <section class="scientific-studies-section">
+                <div class="container">
+                    <div class="studies-list">
+                        {% for estudo in estudos %}
+                            <article class="study-card">
+                                <div class="study-card__content">
+                                    <h3 class="study-card__title">
+                                        <a href="{% pageurl estudo %}">{{ estudo.title }}</a>
+                                    </h3>
+                                    
+                                    {% if estudo.autores %}
+                                        <p class="study-card__authors">{{ estudo.autores }}</p>
+                                    {% endif %}
+                                    
+                                    <div class="study-card__meta">
+                                        {% if estudo.publicacao %}
+                                            <span class="study-meta__publication">{{ estudo.publicacao }}</span>
+                                        {% endif %}
+                                        
+                                        {% if estudo.ano %}
+                                            <span class="study-meta__year">{{ estudo.ano }}</span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    {% if estudo.descricao %}
+                                        <p class="study-card__abstract">{{ estudo.descricao }}</p>
+                                    {% endif %}
+                                    
+                                    <div class="study-card__actions">
+                                        <a href="{% pageurl estudo %}" class="study-link">
+                                            Ler mais →
+                                        </a>
+                                        
+                                        {% if estudo.doi %}
+                                            <a href="https://doi.org/{{ estudo.doi }}" 
+                                               target="_blank" 
+                                               rel="noopener" 
+                                               class="study-link study-link--doi">
+                                                DOI →
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
+</article>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="ia-multimodal-page">
+    <header class="page-header page-header--ai">
+        <div class="container">
+            <h1 class="page-title">{{ page.title }}</h1>
+            
+            {% if page.descricao %}
+                <p class="page-description">{{ page.descricao }}</p>
+            {% endif %}
+        </div>
+    </header>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x600 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if page.conteudo %}
+        <section class="page-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+    
+    {# Módulos da IA #}
+    {% with page.get_children.live.public.specific as modulos %}
+        {% if modulos %}
+            <section class="ai-modules-section">
+                <div class="container">
+                    <h2 class="section-title">Módulos de Análise</h2>
+                    <div class="ai-modules-grid">
+                        {% for modulo in modulos %}
+                            <a href="{% pageurl modulo %}" class="ai-module-card">
+                                {% if modulo.get_imagem_destaque %}
+                                    {% image modulo.get_imagem_destaque fill-400x300 as modulo_img %}
+                                    <div class="ai-module-card__image">
+                                        <img src="{{ modulo_img.url }}" alt="{{ modulo.title }}">
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="ai-module-card__content">
+                                    <h3 class="ai-module-card__title">{{ modulo.title }}</h3>
+                                    
+                                    {% if modulo.descricao %}
+                                        <p class="ai-module-card__description">{{ modulo.descricao }}</p>
+                                    {% endif %}
+                                    
+                                    <span class="ai-module-card__link">
+                                        Saiba mais →
+                                    </span>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
+    
+    {# Diagrama da arquitetura #}
+    <section class="ai-architecture-section">
+        <div class="container">
+            <h2 class="section-title">Arquitetura Multimodal</h2>
+            <div class="architecture-diagram">
+                <div class="architecture-flow">
+                    <div class="architecture-input">
+                        <h3>Entrada de Dados</h3>
+                        <ul>
+                            <li>Vídeo (comportamento)</li>
+                            <li>Áudio (fala/sons)</li>
+                            <li>Texto (questionários)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="architecture-arrow">→</div>
+                    
+                    <div class="architecture-processing">
+                        <h3>Processamento</h3>
+                        <ul>
+                            <li>Análise de vídeo</li>
+                            <li>Análise de áudio</li>
+                            <li>Análise de texto</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="architecture-arrow">→</div>
+                    
+                    <div class="architecture-fusion">
+                        <h3>Fusão Multimodal</h3>
+                        <p>Integração dos resultados</p>
+                    </div>
+                    
+                    <div class="architecture-arrow">→</div>
+                    
+                    <div class="architecture-output">
+                        <h3>Resultado</h3>
+                        <p>Triagem e Relatório</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</article>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="image-text-block image-text-block--{{ value.alinhamento }}">
+    <div class="container">
+        <div class="image-text-grid">
+            <div class="image-text-image">
+                {% if value.imagem %}
+                    {% image value.imagem fill-800x600 as content_img %}
+                    <img src="{{ content_img.url }}" alt="{{ value.titulo|default:'Imagem' }}">
+                {% endif %}
+            </div>
+            
+            <div class="image-text-content">
+                {% if value.titulo %}
+                    <h2 class="image-text-title">{{ value.titulo }}</h2>
+                {% endif %}
+                
+                {% if value.texto %}
+                    <div class="image-text-body">
+                        {{ value.texto|richtext }}
+                    </div>
+                {% endif %}
+                
+                {% if value.link and value.texto_link %}
+                    <a href="{{ value.link }}" class="btn btn-primary">
+                        {{ value.texto_link }}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>

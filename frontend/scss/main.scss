@@ -3,10 +3,10 @@
 @use  './swiper.scss';
 @use  './classes-personalizadas.scss';
 
-@use './sitepadrao/index.scss' as sitepadrao;
+@use './neuroathena/index.scss' as neuroathena;
 @use './core/index.scss' as core;
 
-// Apps NeuroPrev (manter apenas o que existe por enquanto)
+// Apps NEUROATHENA (manter apenas o que existe por enquanto)
 @use './blocks/index.scss' as blocks;
 @use './noticias/index.scss' as noticias;
 @use './home/index.scss' as home;

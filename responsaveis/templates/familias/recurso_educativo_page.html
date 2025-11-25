@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="recurso-educativo-page">
+    <header class="page-header">
+        <div class="container">
+            <div class="resource-header">
+                {% if page.tipo_recurso %}
+                    <span class="resource-badge resource-badge--{{ page.tipo_recurso }}">
+                        {{ page.get_tipo_recurso_display }}
+                    </span>
+                {% endif %}
+                
+                <h1 class="page-title">{{ page.title }}</h1>
+                
+                <div class="resource-meta">
+                    {% if page.data_publicacao %}
+                        <time datetime="{{ page.data_publicacao|date:'Y-m-d' }}">
+                            {{ page.data_publicacao|date:"d \d\e F \d\e Y" }}
+                        </time>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x600 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if page.descricao %}
+        <section class="resource-intro">
+            <div class="container">
+                <p class="lead">{{ page.descricao }}</p>
+            </div>
+        </section>
+    {% endif %}
+    
+    {% if page.conteudo %}
+        <section class="page-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+    
+    {# Recursos relacionados #}
+    {% with page.get_parent.specific.get_children.live.public.specific as recursos_relacionados %}
+        {% if recursos_relacionados|length > 1 %}
+            <section class="related-resources">
+                <div class="container">
+                    <h2 class="section-title">Recursos Relacionados</h2>
+                    <div class="related-resources-grid">
+                        {% for recurso in recursos_relacionados %}
+                            {% if recurso.id != page.id %}
+                                <a href="{% pageurl recurso %}" class="related-resource-card">
+                                    {% if recurso.get_imagem_destaque %}
+                                        {% image recurso.get_imagem_destaque fill-300x200 as rel_img %}
+                                        <div class="related-resource-card__image">
+                                            <img src="{{ rel_img.url }}" alt="{{ recurso.title }}">
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div class="related-resource-card__content">
+                                        <span class="related-resource-card__badge">
+                                            {{ recurso.get_tipo_recurso_display }}
+                                        </span>
+                                        <h3 class="related-resource-card__title">{{ recurso.title }}</h3>
+                                    </div>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
+</article>
+{% endblock %}

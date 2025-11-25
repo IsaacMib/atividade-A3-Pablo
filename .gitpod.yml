@@ -5,14 +5,14 @@ ports:
     onOpen: open-preview
 tasks:
   - init: |
-      cp sitepadrao/settings/local.py.example sitepadrao/settings/local.py
-      echo "DJANGO_SETTINGS_MODULE=sitepadrao.settings.dev" > .env
-      echo "# NeuroPrev Multimodal - Sistema de Triagem de Autismo" >> .env
+      cp neuroathena/settings/local.py.example neuroathena/settings/local.py
+      echo "DJANGO_SETTINGS_MODULE=neuroathena.settings.dev" > .env
+      echo "# NEUROATHENA - Sistema de Triagem de TEA com IA" >> .env
       python -m pip install -r requirements.txt
       python manage.py makemigrations
       python manage.py migrate
       python manage.py load_initial_data
-      echo "CSRF_TRUSTED_ORIGINS = ['https://*.gitpod.io']" >> sitepadrao/settings/local.py
+      echo "CSRF_TRUSTED_ORIGINS = ['https://*.gitpod.io']" >> neuroathena/settings/local.py
     command: |
       python manage.py runserver 0.0.0.0:8080
 github:

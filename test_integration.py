@@ -12,7 +12,7 @@ from pathlib import Path
 # Setup Django - usar path dinâmico
 project_root = Path(__file__).parent.resolve()
 sys.path.insert(0, str(project_root))
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sitepadrao.settings.testing')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'neuroathena.settings.testing')
 django.setup()
 
 from triagem_ia.models import (
@@ -143,7 +143,7 @@ def test_create_triagem():
                 'comportamento_repetitivo': 0.6,
             },
             recomendacoes="Recomenda-se avaliação diagnóstica especializada.",
-            modelo_utilizado="NeuroPrev Multimodal v1.0",
+            modelo_utilizado="Athena Multimodal v1.0",
             versao_modelo="1.0.0",
         )
         print(f"✓ ResultadoIA criado: Probabilidade TEA {resultado.probabilidade_tea:.2%} | Confiança {resultado.confianca}")
@@ -252,7 +252,7 @@ def test_stats():
 def main():
     """Executa todos os testes"""
     print("\n" + "="*70)
-    print("🚀 TESTE DE INTEGRAÇÃO DJANGO - NeuroPrev AI")
+    print("🚀 TESTE DE INTEGRAÇÃO DJANGO - Athena AI")
     print("="*70)
     print(f"   Python: {sys.version.split()[0]}")
     print(f"   Django: {django.get_version()}")

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="historia-sucesso-page">
+    <header class="page-header">
+        <div class="container">
+            <div class="story-header">
+                <span class="story-label">História de Sucesso</span>
+                <h1 class="page-title">{{ page.title }}</h1>
+                
+                {% if page.nome_familia %}
+                    <p class="story-family-name">{{ page.nome_familia }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x600 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if page.descricao %}
+        <section class="story-intro">
+            <div class="container">
+                <p class="lead">{{ page.descricao }}</p>
+            </div>
+        </section>
+    {% endif %}
+    
+    {% if page.conteudo %}
+        <section class="page-content story-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+    
+    {# Citação destacada #}
+    {% if page.citacao %}
+        <section class="story-quote-section">
+            <div class="container">
+                <blockquote class="story-quote">
+                    <p>"{{ page.citacao }}"</p>
+                    {% if page.nome_familia %}
+                        <footer>— {{ page.nome_familia }}</footer>
+                    {% endif %}
+                </blockquote>
+            </div>
+        </section>
+    {% endif %}
+    
+    {# CTA para outras famílias #}
+    <section class="story-cta">
+        <div class="container">
+            <div class="cta-box">
+                <h2>Quer compartilhar sua história?</h2>
+                <p>Histórias como essa nos inspiram e ajudam outras famílias. Entre em contato conosco.</p>
+                <a href="/contato/" class="btn btn-primary btn-lg">
+                    Entrar em Contato
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    {# Outras histórias #}
+    {% with page.get_parent.specific.get_children.live.public.specific as outras_historias %}
+        {% if outras_historias|length > 1 %}
+            <section class="more-stories">
+                <div class="container">
+                    <h2 class="section-title">Outras Histórias</h2>
+                    <div class="stories-grid">
+                        {% for historia in outras_historias|slice:":3" %}
+                            {% if historia.id != page.id %}
+                                <a href="{% pageurl historia %}" class="story-card-mini">
+                                    {% if historia.get_imagem_destaque %}
+                                        {% image historia.get_imagem_destaque fill-300x200 as other_img %}
+                                        <div class="story-card-mini__image">
+                                            <img src="{{ other_img.url }}" alt="{{ historia.title }}">
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div class="story-card-mini__content">
+                                        <h3 class="story-card-mini__title">{{ historia.title }}</h3>
+                                        {% if historia.nome_familia %}
+                                            <p class="story-card-mini__family">{{ historia.nome_familia }}</p>
+                                        {% endif %}
+                                    </div>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
+</article>
+{% endblock %}

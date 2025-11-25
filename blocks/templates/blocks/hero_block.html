@@ -1,0 +1,38 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="hero-block">
+    <div class="hero-content">
+        {% if value.imagem %}
+            {% image value.imagem fill-1920x800 as hero_img %}
+            <div class="hero-image" style="background-image: url('{{ hero_img.url }}');">
+        {% else %}
+            <div class="hero-image hero-image--no-bg">
+        {% endif %}
+            <div class="container">
+                <div class="hero-text">
+                    {% if value.titulo %}
+                        <h1 class="hero-title">{{ value.titulo }}</h1>
+                    {% endif %}
+                    
+                    {% if value.subtitulo %}
+                        <p class="hero-subtitle">{{ value.subtitulo }}</p>
+                    {% endif %}
+                    
+                    {% if value.texto %}
+                        <div class="hero-description">
+                            {{ value.texto|richtext }}
+                        </div>
+                    {% endif %}
+                    
+                    {% if value.link_cta and value.texto_cta %}
+                        <div class="hero-cta">
+                            <a href="{{ value.link_cta }}" class="btn btn-primary btn-lg">
+                                {{ value.texto_cta }}
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

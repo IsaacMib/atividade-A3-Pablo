@@ -46,16 +46,16 @@ ENV PORT 8080
 EXPOSE 8080
 
 # Add custom environment variables needed by Django or your settings file here:
-ENV DJANGO_SETTINGS_MODULE=sitepadrao.settings.production DJANGO_DEBUG=off
+ENV DJANGO_SETTINGS_MODULE=neuroathena.settings.production DJANGO_DEBUG=off
 
 # Call collectstatic with dummy environment variables:
 RUN DATABASE_URL=postgres://none REDIS_URL=none python manage.py collectstatic --noinput
 
 # make sure static files are writable by uWSGI process
-RUN mkdir -p /wagtail/sitepadrao/media/images && mkdir -p /wagtail/sitepadrao/media/original_images && chown -R 1000:2000 /wagtail/sitepadrao/media
+RUN mkdir -p /wagtail/neuroathena/media/images && mkdir -p /wagtail/neuroathena/media/original_images && chown -R 1000:2000 /wagtail/neuroathena/media
 
 # mark the destination for images as a volume
-VOLUME ["/wagtail/sitepadrao/media/images/"]
+VOLUME ["/wagtail/neuroathena/media/images/"]
 
 # start uWSGI, using a wrapper script to allow us to easily add more commands to container startup:
 ENTRYPOINT ["/wagtail/docker-entrypoint.sh"]

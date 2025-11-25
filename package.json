@@ -1,8 +1,8 @@
 {
-  "name": "neuroprev-multimodal",
+  "name": "neuroathena",
   "version": "0.1.0",
   "description": "Sistema de Triagem Precoce de Autismo com IA Multimodal",
-  "repository": "https://github.com/seu-usuario/neuroprev-multimodal.git",
+  "repository": "https://github.com/IsaacMib/atividade-A3-Pablo.git",
   "private": true,
   "engines": {
     "node": ">=22"

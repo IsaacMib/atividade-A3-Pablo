@@ -1,4 +1,4 @@
-# Instruções do GitHub Copilot para NeuroPrev Multimodal
+# Instruções do GitHub Copilot para NEUROATHENA
 
 ## Visão Geral do Projeto
 
@@ -28,7 +28,7 @@ Este é um **projeto Django/Wagtail CMS** para triagem precoce de autismo com IA
 ## Estrutura do Projeto
 
 ```
-site-padrao/
+neuroathena/
 ├── frontend/              # Código JavaScript/CSS (Webpack, Babel, Jest)
 ├── agenda/                # App de agendas e eventos recorrentes
 ├── noticias/              # App de notícias e conteúdo
@@ -38,7 +38,7 @@ site-padrao/
 │   └── utils_test.py     # Utilitários para testes
 ├── home/                  # Página inicial
 ├── institucional/         # Páginas institucionais
-└── sitepadrao/            # Configurações Django
+└── neuroathena/          # Configurações Django
 ```
 
 ## Princípios de Desenvolvimento
@@ -73,7 +73,7 @@ site-padrao/
 - ✅ Testes unitários para funções helper isoladas
 
 ### 3. **Wagtail - Boas Práticas**
-- ✅ Herdar de `PageSitePadrao` para páginas customizadas (já tem SEO, imagem destaque, descrição)
+- ✅ Herdar de `PageNeuroAthena` para páginas customizadas (já tem SEO, imagem destaque, descrição)
 - ✅ Usar `StreamField` para conteúdo flexível, `TextField` para texto simples
 - ✅ Migrations: usar `RenameField` para preservar dados (não `RemoveField` + `AddField`)
 - ✅ Verificar conflitos de nomes de campos entre classe pai e filha
@@ -299,8 +299,8 @@ frontend/scss/
 
 ### Python/Django
 ```python
-# ✅ BOM - Herdar de PageSitePadrao
-class MinhaPage(PageSitePadrao):
+# ✅ BOM - Herdar de PageNeuroAthena
+class MinhaPage(PageNeuroAthena):
     # Já tem: descricao, imagem_destaque, get_imagem_destaque()
     conteudo = StreamField([...])
 
@@ -372,7 +372,7 @@ def ensure_root_page():  # Já existe em core.utils_test!
 ```bash
 # Ativar ambiente (veja .github/copilot-local.md)
 # Exemplo com asdf: asdf install (lê .tool-versions automaticamente)
-# Exemplo com virtualenv + nvm: workon neuroprev && nvm use
+# Exemplo com virtualenv + nvm: workon neuroathena && nvm use
 
 # Testes
 python manage.py test <app> --keepdb
@@ -399,7 +399,7 @@ coverage run --source='.' manage.py test --keepdb
 
 ## Configurações de Settings
 
-- Testes: `DJANGO_SETTINGS_MODULE=sitepadrao.settings.testing`
+- Testes: `DJANGO_SETTINGS_MODULE=neuroathena.settings.testing`
 - Desenvolvimento: settings padrão
 - Banco testes: SQLite in-memory
 - Banco produção: PostgreSQL
@@ -421,7 +421,7 @@ coverage run --source='.' manage.py test --keepdb
 - **Exemplos**: ListRedeSocial, CustomFormBlock, CarrosselBannerBlock
 
 ### core/
-- **Modelos**: `PageSitePadrao`, `SiteSettings`, `ApiSettings`
+- **Modelos**: `PageNeuroAthena`, `SiteSettings`, `ApiSettings`
 - **Utilitários**: utils.py (produção), utils_test.py (testes)
 - **Configurações**: Compartilhamento social, período eleitoral, cookies, analytics
 
@@ -1164,7 +1164,7 @@ from core.utils_test import ensure_root_page
    - Contexto: Templates renderizam `{% load static %}` → `{% static 'img/favicon/favicon.ico' %}`
    - ❌ Configuração Problemática (herdada do base.py):
    ```python
-   # sitepadrao/settings/base.py
+   # neuroathena/settings/base.py
    STORAGES = {
        "staticfiles": {
            "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
@@ -1173,7 +1173,7 @@ from core.utils_test import ensure_root_page
    ```
    - ✅ Solução: Override em `testing.py` para usar storage simples:
    ```python
-   # sitepadrao/settings/testing.py
+   # neuroathena/settings/testing.py
    # CRÍTICO: Usar StaticFilesStorage simples em testes
    # ManifestStaticFilesStorage requer collectstatic
    STORAGES = {
@@ -1194,7 +1194,7 @@ from core.utils_test import ensure_root_page
    - **Validação**: Simular CI localmente:
    ```bash
    rm -f db.sqlite3
-   export DJANGO_SETTINGS_MODULE=sitepadrao.settings.testing
+   export DJANGO_SETTINGS_MODULE=neuroathena.settings.testing
    python manage.py migrate --run-syncdb
    python manage.py test --verbosity=2
    ```
@@ -1210,7 +1210,7 @@ from core.utils_test import ensure_root_page
 - [ ] Verificar se `testing.py` usa backends simples para static/media
 - [ ] Validar que hooks têm verificações condicionais explícitas
 - [ ] Não assumir que dados persistem entre runs de teste
-- [ ] Simular ambiente CI com `DJANGO_SETTINGS_MODULE=sitepadrao.settings.testing`
+- [ ] Simular ambiente CI com `DJANGO_SETTINGS_MODULE=neuroathena.settings.testing`
 
 ## 11. Observações Importantes
 
@@ -1234,7 +1234,7 @@ from core.utils_test import ensure_root_page
 
 ## 12. Contato e Suporte
 
-- Projeto: NeuroPrev Multimodal - Sistema de Triagem de Autismo
+- Projeto: NEUROATHENA - Sistema de Triagem de TEA com IA Multimodal
 - Stack: Django 5.1 + Wagtail 7.x + PostgreSQL + IA Multimodal
 - Python: 3.12+
 - Configurações de ambiente: veja `.github/copilot-local.md`

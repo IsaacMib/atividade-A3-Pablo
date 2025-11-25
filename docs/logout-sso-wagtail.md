@@ -8,14 +8,14 @@ Esta implementação garante que quando um usuário faz logout pelo admin do Wag
 
 ### 1. Configuração condicional de URLs
 
-No arquivo `sitepadrao/urls.py`, quando `HABILITAR_SSO_LOGIN=True`:
+No arquivo `neuroathena/urls.py`, quando `HABILITAR_SSO_LOGIN=True`:
 
 - **URL padrão do Wagtail**: `/admin/manager/logout/` → redireciona para nossa view customizada `wagtail_logout_with_sso`
 - **URL do allauth**: `/admin/logout/` → continua usando o `KeycloakAdapter` existente
 
 ### 2. View customizada de logout
 
-A view `wagtail_logout_with_sso` em `sitepadrao/views.py`:
+A view `wagtail_logout_with_sso` em `neuroathena/views.py`:
 
 1. **Verifica se o SSO está habilitado** e se o usuário tem provedor SSO configurado
 2. **Faz logout do SSO** usando a mesma lógica do `KeycloakAdapter`
@@ -48,14 +48,14 @@ A implementação reutiliza as funções do `KeycloakAdapter`:
 
 ## Arquivos modificados
 
-1. **`sitepadrao/views.py`**
+1. **`neuroathena/views.py`**
    - Adicionada view `wagtail_logout_with_sso`
    - Funções auxiliares para logout do SSO
 
-2. **`sitepadrao/urls.py`**
+2. **`neuroathena/urls.py`**
    - Sobrescrita da URL `wagtailadmin_logout` quando SSO habilitado
 
-3. **`sitepadrao/tests.py`**
+3. **`neuroathena/tests.py`**
    - Testes para verificar funcionamento da implementação
 
 ## Configuração
@@ -99,7 +99,7 @@ Para testar se está funcionando:
 ### Teste automatizado
 
 ```bash
-python manage.py test sitepadrao.tests -v 2
+python manage.py test neuroathena.tests -v 2
 ```
 
 ## Troubleshooting

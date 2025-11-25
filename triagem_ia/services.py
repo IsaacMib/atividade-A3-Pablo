@@ -3,7 +3,7 @@ Serviço de Integração Django ↔ FastAPI
 
 Classe para consumir API de IA do Django e salvar resultados no banco.
 
-Autor: NeuroPrev Team
+Autor: NEUROATHENA Team
 Data: 2024-11-24
 """
 

@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="etica-privacidade-page">
+    <header class="page-header page-header--ethics">
+        <div class="container">
+            <h1 class="page-title">{{ page.title }}</h1>
+            
+            {% if page.descricao %}
+                <p class="page-description">{{ page.descricao }}</p>
+            {% endif %}
+        </div>
+    </header>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x600 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if page.conteudo %}
+        <section class="page-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+    
+    {# Princípios éticos #}
+    {% if page.principios %}
+        <section class="ethics-principles-section">
+            <div class="container">
+                <h2 class="section-title">Princípios Éticos</h2>
+                <div class="principles-grid">
+                    {% for principio in page.principios %}
+                        <div class="principle-card">
+                            <div class="principle-card__icon">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 6v6l4 2"/>
+                                </svg>
+                            </div>
+                            <h3 class="principle-card__title">{{ principio.value.titulo }}</h3>
+                            {% if principio.value.descricao %}
+                                <div class="principle-card__description">
+                                    {{ principio.value.descricao|richtext }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+    
+    {# LGPD e conformidade #}
+    <section class="compliance-section">
+        <div class="container">
+            <h2 class="section-title">Conformidade e Certificações</h2>
+            <div class="compliance-grid">
+                <div class="compliance-card">
+                    <h3>LGPD</h3>
+                    <p>Lei Geral de Proteção de Dados</p>
+                    <p>Todos os dados são processados de acordo com a LGPD brasileira.</p>
+                </div>
+                
+                <div class="compliance-card">
+                    <h3>GDPR</h3>
+                    <p>General Data Protection Regulation</p>
+                    <p>Conformidade com regulamentações europeias de privacidade.</p>
+                </div>
+                
+                <div class="compliance-card">
+                    <h3>ISO 27001</h3>
+                    <p>Segurança da Informação</p>
+                    <p>Certificação em gestão de segurança da informação.</p>
+                </div>
+                
+                <div class="compliance-card">
+                    <h3>HIPAA</h3>
+                    <p>Health Insurance Portability</p>
+                    <p>Conformidade com padrões de proteção de dados de saúde.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    {# Medidas de segurança #}
+    <section class="security-measures-section">
+        <div class="container">
+            <h2 class="section-title">Medidas de Segurança</h2>
+            <ul class="security-list">
+                <li>
+                    <strong>Criptografia end-to-end:</strong> 
+                    Todos os dados são criptografados durante transmissão e armazenamento.
+                </li>
+                <li>
+                    <strong>Anonimização:</strong> 
+                    Dados pessoais são desidentificados antes do processamento pela IA.
+                </li>
+                <li>
+                    <strong>Acesso restrito:</strong> 
+                    Apenas profissionais autorizados têm acesso aos dados clínicos.
+                </li>
+                <li>
+                    <strong>Auditoria:</strong> 
+                    Logs de acesso são mantidos para rastreabilidade e auditoria.
+                </li>
+                <li>
+                    <strong>Consentimento informado:</strong> 
+                    Pais/responsáveis autorizam explicitamente o uso dos dados.
+                </li>
+                <li>
+                    <strong>Direito ao esquecimento:</strong> 
+                    Dados podem ser deletados a qualquer momento mediante solicitação.
+                </li>
+            </ul>
+        </div>
+    </section>
+    
+    {# CTA para política de privacidade #}
+    <section class="privacy-cta-section">
+        <div class="container">
+            <div class="cta-box cta-box--privacy">
+                <h2>Política de Privacidade Completa</h2>
+                <p>Leia nossa política de privacidade detalhada para entender como protegemos seus dados.</p>
+                <a href="/politica-de-privacidade/" class="btn btn-primary btn-lg">
+                    Ler Política Completa
+                </a>
+            </div>
+        </div>
+    </section>
+</article>
+{% endblock %}

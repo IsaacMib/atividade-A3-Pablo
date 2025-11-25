@@ -1,0 +1,31 @@
+{% load wagtailcore_tags %}
+
+<section class="faq-block">
+    <div class="container">
+        {% if value.titulo %}
+            <h2 class="section-title">{{ value.titulo }}</h2>
+        {% endif %}
+        
+        {% if value.perguntas %}
+            <div class="faq-accordion">
+                {% for pergunta in value.perguntas %}
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" 
+                                aria-expanded="false" 
+                                data-toggle="collapse" 
+                                data-target="#faq-{{ forloop.counter }}">
+                            <span class="faq-question__text">{{ pergunta.pergunta }}</span>
+                            <span class="faq-question__icon">+</span>
+                        </button>
+                        
+                        <div id="faq-{{ forloop.counter }}" class="faq-answer collapse">
+                            <div class="faq-answer__content">
+                                {{ pergunta.resposta|richtext }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</section>

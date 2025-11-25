@@ -1,0 +1,48 @@
+{% load static wagtailcore_tags wagtailimages_tags wagtailsettings_tags %}
+{% include_block settings.core.SiteSettings.redes_sociais %}
+{% get_settings %}
+
+<div class="footer-wrapper">
+  <div class="container">
+    <div class="footer-layout row align-items-center mt-5 mb-4 m-md-0 py-md-5">
+      
+      <!-- Informações do Sistema -->
+      <div class="col-12 col-md-8 text-center text-md-start">
+        {% if AMBIENTE in 'tst,dev,hml' %}
+          <p class="tw:text-white small">Versão {{ SISTEMA_VERSAO }}</p>
+        {% endif %}
+        <div class="footer-info text-white">
+          <h2 class="mb-2 fw-bold">NEUROATHENA</h2>
+          <p class="mb-3">
+            Sistema de Triagem Precoce de Autismo com Inteligência Artificial
+          </p>
+          
+          {% if settings.core.SiteSettings.footer_titulo_instituicao %}
+            <p class="mb-1 small">{{ settings.core.SiteSettings.footer_titulo_instituicao }}</p>
+          {% endif %}
+          {% if settings.core.SiteSettings.footer_informacoes %}
+            <div class="mb-1 small">
+              {{ settings.core.SiteSettings.footer_informacoes|richtext }}
+            </div>
+          {% endif %}
+        </div>
+      </div>   
+      
+      <!-- Logo e Links -->
+      <div class="col-12 col-md-4 text-center text-md-end">
+        <div class="footer-logo mb-3">
+          <!-- Logo NEUROATHENA será adicionado aqui -->
+          <h3 class="text-white mb-0">🧩</h3>
+        </div>
+        
+        <!-- Links Úteis -->
+        <div class="footer-links mt-3">
+          {% if settings.core.SiteSettings.footer_links %}
+            {{ settings.core.SiteSettings.footer_links|richtext }}
+          {% endif %}
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>

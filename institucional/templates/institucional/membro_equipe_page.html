@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="membro-equipe-page">
+    <header class="page-header">
+        <div class="container">
+            <div class="member-header">
+                {% if page.foto %}
+                    {% image page.foto fill-200x200 as member_photo %}
+                    <div class="member-header__photo">
+                        <img src="{{ member_photo.url }}" alt="{{ page.nome }}">
+                    </div>
+                {% endif %}
+                
+                <div class="member-header__info">
+                    <h1 class="page-title">{{ page.nome }}</h1>
+                    
+                    {% if page.cargo %}
+                        <p class="member-role">{{ page.cargo }}</p>
+                    {% endif %}
+                    
+                    {% if page.especialidade %}
+                        <p class="member-specialty">{{ page.especialidade }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    {% if page.biografia %}
+        <section class="member-bio">
+            <div class="container">
+                <h2 class="section-title">Biografia</h2>
+                <div class="member-bio__content">
+                    {{ page.biografia|richtext }}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+    
+    {% if page.formacao %}
+        <section class="member-education">
+            <div class="container">
+                <h2 class="section-title">Formação</h2>
+                <div class="member-education__content">
+                    {{ page.formacao|richtext }}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+    
+    {% if page.conteudo %}
+        <section class="page-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+    
+    <div class="container">
+        <a href="{{ page.get_parent.url }}" class="back-link">
+            ← Voltar para equipe
+        </a>
+    </div>
+</article>
+{% endblock %}

@@ -3,7 +3,7 @@
 import os
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sitepadrao.settings.base')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'neuroathena.settings.base')
 django.setup()
 
 from home.models import HomePage
@@ -32,7 +32,7 @@ if not home_page:
     # Criar HomePage
     locale = Locale.get_default()
     home_page = HomePage(
-        title='NeuroPrev - Triagem Precoce de Autismo',
+        title='NEUROATHENA - Triagem Precoce de Autismo',
         slug='home',
         locale=locale,
     )
@@ -52,7 +52,7 @@ if not home_page:
         # Tentar criar diretamente
         print("Tentando criar HomePage diretamente...")
         home_page = HomePage.objects.create(
-            title='NeuroPrev - Triagem Precoce de Autismo',
+            title='NEUROATHENA - Triagem Precoce de Autismo',
             slug='home',
             locale=locale,
             depth=2,

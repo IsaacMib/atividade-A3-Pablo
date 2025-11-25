@@ -24,7 +24,7 @@ from django.contrib import messages
 
 class PerfilUsuario(models.Model):
     """
-    Perfil de usuário para NeuroPrev.
+    Perfil de usuário para NEUROATHENA.
     Extensão do User padrão do Django com campos específicos do sistema.
     
     TODO: Migrar para AUTH_USER_MODEL customizado quando o sistema estiver estável.
@@ -39,7 +39,7 @@ class PerfilUsuario(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         verbose_name="Usuário",
-        related_name='perfil_neuroprev'
+        related_name='perfil_neuroathena'
     )
     tipo_usuario = models.CharField(
         max_length=20,
@@ -227,7 +227,7 @@ class SolicitacaoExclusao(models.Model):
 # ==================== MODELOS DE PÁGINAS WAGTAIL ====================
 
 
-class PageSitePadrao(Page):
+class PageNeuroAthena(Page):
     """Classe base para todas as páginas do site."""
     
     descricao = models.TextField(
@@ -334,7 +334,7 @@ class PageSitePadrao(Page):
         abstract = True
 
 
-class PageSitePadraoIndex(Page):
+class PageNeuroAthenaIndex(Page):
     """Classe base para páginas de índice do site."""
 
     class Meta:
@@ -348,8 +348,8 @@ class SiteSettings(BaseSiteSetting):
     title_suffix = models.CharField(
         verbose_name="Título do Site",
         max_length=255,
-        help_text="Título do site e utilizado como sufixo na tag meta. Ex.: ' | NeuroPrev'",
-        default="NeuroPrev",
+        help_text="Título do site e utilizado como sufixo na tag meta. Ex.: ' | NEUROATHENA'",
+        default="NEUROATHENA",
     )
 
     # --- Redes Sociais e Compartilhamento ---

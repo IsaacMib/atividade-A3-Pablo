@@ -1,0 +1,29 @@
+{% load wagtailcore_tags %}
+
+<section class="statistics-block">
+    <div class="container">
+        {% if value.titulo %}
+            <h2 class="section-title">{{ value.titulo }}</h2>
+        {% endif %}
+        
+        {% if value.estatisticas %}
+            <div class="statistics-grid">
+                {% for stat in value.estatisticas %}
+                    <div class="statistic-item">
+                        {% if stat.numero %}
+                            <div class="statistic-number">{{ stat.numero }}</div>
+                        {% endif %}
+                        
+                        {% if stat.label %}
+                            <div class="statistic-label">{{ stat.label }}</div>
+                        {% endif %}
+                        
+                        {% if stat.descricao %}
+                            <p class="statistic-description">{{ stat.descricao }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</section>

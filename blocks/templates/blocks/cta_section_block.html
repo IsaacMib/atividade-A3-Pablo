@@ -1,0 +1,38 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="cta-section-block">
+    {% if value.imagem_fundo %}
+        {% image value.imagem_fundo fill-1920x600 as bg_img %}
+        <div class="cta-background" style="background-image: url('{{ bg_img.url }}');">
+    {% else %}
+        <div class="cta-background cta-background--gradient">
+    {% endif %}
+        <div class="container">
+            <div class="cta-content">
+                {% if value.titulo %}
+                    <h2 class="cta-title">{{ value.titulo }}</h2>
+                {% endif %}
+                
+                {% if value.texto %}
+                    <div class="cta-text">
+                        {{ value.texto|richtext }}
+                    </div>
+                {% endif %}
+                
+                {% if value.link_primario and value.texto_primario %}
+                    <div class="cta-buttons">
+                        <a href="{{ value.link_primario }}" class="btn btn-primary btn-lg">
+                            {{ value.texto_primario }}
+                        </a>
+                        
+                        {% if value.link_secundario and value.texto_secundario %}
+                            <a href="{{ value.link_secundario }}" class="btn btn-secondary btn-lg">
+                                {{ value.texto_secundario }}
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>

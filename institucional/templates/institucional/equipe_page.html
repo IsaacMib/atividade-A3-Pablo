@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="equipe-page">
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">{{ page.title }}</h1>
+            
+            {% if page.descricao %}
+                <p class="page-description">{{ page.descricao }}</p>
+            {% endif %}
+        </div>
+    </header>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x600 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if page.conteudo %}
+        <section class="page-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+    
+    {# Listar membros da equipe #}
+    {% with page.get_children.live.public.specific as membros %}
+        {% if membros %}
+            <section class="team-members-section">
+                <div class="container">
+                    <h2 class="section-title">Nossa Equipe</h2>
+                    <div class="team-grid">
+                        {% for membro in membros %}
+                            <article class="team-member-card">
+                                {% if membro.foto %}
+                                    {% image membro.foto fill-300x300 as member_photo %}
+                                    <div class="team-member__photo">
+                                        <img src="{{ member_photo.url }}" alt="{{ membro.nome }}">
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="team-member__content">
+                                    <h3 class="team-member__name">{{ membro.nome }}</h3>
+                                    
+                                    {% if membro.cargo %}
+                                        <p class="team-member__role">{{ membro.cargo }}</p>
+                                    {% endif %}
+                                    
+                                    {% if membro.descricao %}
+                                        <p class="team-member__description">{{ membro.descricao }}</p>
+                                    {% endif %}
+                                    
+                                    <a href="{% pageurl membro %}" class="team-member__link">
+                                        Ver perfil completo →
+                                    </a>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
+</article>
+{% endblock %}

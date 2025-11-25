@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="sobre-nos-page">
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">{{ page.title }}</h1>
+            
+            {% if page.descricao %}
+                <p class="page-description">{{ page.descricao }}</p>
+            {% endif %}
+        </div>
+    </header>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x600 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if page.conteudo %}
+        <section class="page-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+    
+    {# Listar subpáginas (Missão, Equipe, Parcerias, Localização) #}
+    {% with page.get_children.live.public.specific as subpages %}
+        {% if subpages %}
+            <section class="subpages-section">
+                <div class="container">
+                    <h2 class="section-title">Explore Mais</h2>
+                    <div class="subpages-grid">
+                        {% for subpage in subpages %}
+                            <a href="{% pageurl subpage %}" class="subpage-card">
+                                {% if subpage.get_imagem_destaque %}
+                                    {% image subpage.get_imagem_destaque fill-400x300 as sub_img %}
+                                    <div class="subpage-card__image">
+                                        <img src="{{ sub_img.url }}" alt="{{ subpage.title }}">
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="subpage-card__content">
+                                    <h3 class="subpage-card__title">{{ subpage.title }}</h3>
+                                    
+                                    {% if subpage.descricao %}
+                                        <p class="subpage-card__description">{{ subpage.descricao }}</p>
+                                    {% endif %}
+                                    
+                                    <span class="subpage-card__link">
+                                        Saiba mais →
+                                    </span>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
+</article>
+{% endblock %}

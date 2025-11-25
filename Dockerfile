@@ -63,16 +63,16 @@ RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
     && rm -rf /var/lib/apt/lists/*
 
 # Add custom environment variables needed by Django or your settings file here:
-ENV DJANGO_SETTINGS_MODULE=sitepadrao.settings.production
+ENV DJANGO_SETTINGS_MODULE=neuroathena.settings.production
 ENV DJANGO_DEBUG=off
 
 # Call collectstatic with dummy environment variables:
 RUN DATABASE_URL=postgres://none REDIS_URL=none python manage.py collectstatic --noinput
 
 # make sure static files are writable by uWSGI process
-RUN mkdir -p /wagtail/sitepadrao/media/images \
-    && mkdir -p /wagtail/sitepadrao/media/original_images \
-    && chown -R 1000:2000 /wagtail/sitepadrao/media
+RUN mkdir -p /wagtail/neuroathena/media/images \
+    && mkdir -p /wagtail/neuroathena/media/original_images \
+    && chown -R 1000:2000 /wagtail/neuroathena/media
 
 ENV DJANGO_STATIC_ROOT=/data/uploads/static
 ENV DJANGO_MEDIA_ROOT=/data/uploads/media

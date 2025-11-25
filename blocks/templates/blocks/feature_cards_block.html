@@ -1,0 +1,38 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="feature-cards-block">
+    <div class="container">
+        {% if value.titulo %}
+            <h2 class="section-title">{{ value.titulo }}</h2>
+        {% endif %}
+        
+        {% if value.cards %}
+            <div class="feature-cards-grid">
+                {% for card in value.cards %}
+                    <div class="feature-card">
+                        {% if card.icone %}
+                            {% image card.icone fill-100x100 as icon_img %}
+                            <div class="feature-card__icon">
+                                <img src="{{ icon_img.url }}" alt="{{ card.titulo }}">
+                            </div>
+                        {% endif %}
+                        
+                        {% if card.titulo %}
+                            <h3 class="feature-card__title">{{ card.titulo }}</h3>
+                        {% endif %}
+                        
+                        {% if card.descricao %}
+                            <p class="feature-card__description">{{ card.descricao }}</p>
+                        {% endif %}
+                        
+                        {% if card.link %}
+                            <a href="{{ card.link }}" class="feature-card__link">
+                                Saiba mais →
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</section>

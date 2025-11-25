@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="historias-sucesso-page">
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">{{ page.title }}</h1>
+            
+            {% if page.descricao %}
+                <p class="page-description">{{ page.descricao }}</p>
+            {% endif %}
+        </div>
+    </header>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x600 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if page.conteudo %}
+        <section class="page-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+    
+    {# Listar histórias de sucesso #}
+    {% with page.get_children.live.public.specific as historias %}
+        {% if historias %}
+            <section class="success-stories-section">
+                <div class="container">
+                    <div class="stories-grid">
+                        {% for historia in historias %}
+                            <article class="story-card">
+                                {% if historia.get_imagem_destaque %}
+                                    {% image historia.get_imagem_destaque fill-600x400 as story_img %}
+                                    <div class="story-card__image">
+                                        <img src="{{ story_img.url }}" alt="{{ historia.title }}">
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="story-card__content">
+                                    <h3 class="story-card__title">
+                                        <a href="{% pageurl historia %}">{{ historia.title }}</a>
+                                    </h3>
+                                    
+                                    {% if historia.nome_familia %}
+                                        <p class="story-card__family">{{ historia.nome_familia }}</p>
+                                    {% endif %}
+                                    
+                                    {% if historia.descricao %}
+                                        <p class="story-card__excerpt">{{ historia.descricao }}</p>
+                                    {% endif %}
+                                    
+                                    <a href="{% pageurl historia %}" class="story-card__link">
+                                        Ler história completa →
+                                    </a>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
+</article>
+{% endblock %}

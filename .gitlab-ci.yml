@@ -10,14 +10,14 @@ test:
       variables:
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: postgres
-        POSTGRES_DB: neuroprev_test
+        POSTGRES_DB: neuroathena_test
   variables:
     DATABASE_HOST: postgres
     DATABASE_PORT: 5432
-    DATABASE_NAME: neuroprev_test
+    DATABASE_NAME: neuroathena_test
     DATABASE_USERNAME: postgres
     DATABASE_PASSWORD: postgres
-    DJANGO_SETTINGS_MODULE: sitepadrao.settings.testing
+    DJANGO_SETTINGS_MODULE: neuroathena.settings.testing
   script:
     # Instalar dependências do sistema
     - echo "Instalando dependências do sistema..."

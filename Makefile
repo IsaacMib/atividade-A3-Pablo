@@ -8,7 +8,7 @@ help:
 lint-server:
 	black --target-version py38 --check --diff .
 	ruff check .
-	curlylint --parse-only sitepadrao
+	curlylint --parse-only neuroathena
 	git ls-files '*.html' | xargs djhtml --check
 
 lint-client:

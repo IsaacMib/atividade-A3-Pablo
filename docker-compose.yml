@@ -1,8 +1,8 @@
 services:
   db:
     environment:
-      POSTGRES_DB: neuroprev_db
-      POSTGRES_USER: neuroprev_user
+      POSTGRES_DB: neuroathena_db
+      POSTGRES_USER: neuroathena_user
       POSTGRES_PASSWORD: changeme
     restart: unless-stopped
     image: postgres:14.1
@@ -18,9 +18,9 @@ services:
   app:
     environment:
       DJANGO_SECRET_KEY: changeme
-      DATABASE_URL: postgres://neuroprev_user:changeme@db/neuroprev_db
+      DATABASE_URL: postgres://neuroathena_user:changeme@db/neuroathena_db
       REDIS_URL: redis://redis
-      DJANGO_SETTINGS_MODULE: sitepadrao.settings.dev
+      DJANGO_SETTINGS_MODULE: neuroathena.settings.dev
       NPM_WATCH: 'on'
       DJANGO_SETTINGS_DEBUG: 'false'
     build:

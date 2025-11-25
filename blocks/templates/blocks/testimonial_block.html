@@ -1,0 +1,40 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="testimonial-block">
+    <div class="container">
+        {% if value.titulo %}
+            <h2 class="section-title">{{ value.titulo }}</h2>
+        {% endif %}
+        
+        {% if value.depoimentos %}
+            <div class="testimonials-grid">
+                {% for depoimento in value.depoimentos %}
+                    <div class="testimonial-card">
+                        {% if depoimento.foto %}
+                            {% image depoimento.foto fill-100x100 as avatar %}
+                            <div class="testimonial-avatar">
+                                <img src="{{ avatar.url }}" alt="{{ depoimento.nome }}">
+                            </div>
+                        {% endif %}
+                        
+                        {% if depoimento.texto %}
+                            <blockquote class="testimonial-quote">
+                                "{{ depoimento.texto }}"
+                            </blockquote>
+                        {% endif %}
+                        
+                        <div class="testimonial-author">
+                            {% if depoimento.nome %}
+                                <p class="testimonial-name">{{ depoimento.nome }}</p>
+                            {% endif %}
+                            
+                            {% if depoimento.cargo %}
+                                <p class="testimonial-role">{{ depoimento.cargo }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</section>

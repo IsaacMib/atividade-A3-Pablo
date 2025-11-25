@@ -23,7 +23,7 @@ class LinkStructBlockTestCase(TestCase):
             child.delete()
         cls.root_page.refresh_from_db()
 
-        # Site padrão para que .url funcione
+        # Site principal para que .url funcione
         if not Site.objects.filter(is_default_site=True).exists():
             Site.objects.create(
                 hostname='localhost',

@@ -14,7 +14,7 @@ from wagtail.fields import StreamField
 from wagtail.search import index
 from wagtail.api import APIField
 from wagtail.models import Page, Site
-from core.models import PageSitePadrao, PageSitePadraoIndex
+from core.models import PageNeuroAthena, PageNeuroAthenaIndex
 from wagtail.snippets.models import register_snippet
 
 from blocks.models import BaseStreamBlock, EspecificDocumentChooserBlock
@@ -147,7 +147,7 @@ class NoticiasPageTag(TaggedItemBase):
     )
 
 
-class NoticiasPage(PageSitePadrao):
+class NoticiasPage(PageNeuroAthena):
     """
     Página que representa uma notícia.
     """
@@ -267,14 +267,14 @@ class NoticiasPage(PageSitePadrao):
     ]
 
     # Painel de promoções
-    promote_panels = PageSitePadrao.promote_panels
+    promote_panels = PageNeuroAthena.promote_panels
 
     # Painel para campos migrados
     migracao_panels = [
         FieldPanel("body_migrated"),
     ]
 
-    settings_panels = PageSitePadrao.settings_panels
+    settings_panels = PageNeuroAthena.settings_panels
 
     edit_handler = TabbedInterface(
         [
@@ -383,7 +383,7 @@ class NoticiasPage(PageSitePadrao):
             tabs.append(ObjectList(self.migracao_panels, heading='Migração'))
         return TabbedInterface(tabs)
 
-    search_fields = PageSitePadrao.search_fields + [
+    search_fields = PageNeuroAthena.search_fields + [
         index.SearchField('body'),
         index.SearchField('subtitle'),
         index.SearchField('descricao'),
@@ -419,14 +419,14 @@ class NoticiasPage(PageSitePadrao):
     class Meta:
         verbose_name = "Página de Conteúdo"
 
-class NoticiasIndexPages(RoutablePageMixin, PageSitePadraoIndex):
+class NoticiasIndexPages(RoutablePageMixin, PageNeuroAthenaIndex):
 
     introduction = models.TextField(
         help_text="Texto para o topo da Página de Índice.",
         blank=False,
         default="Todas as Notícias")
 
-    content_panels = PageSitePadraoIndex.content_panels + [
+    content_panels = PageNeuroAthenaIndex.content_panels + [
         FieldPanel("introduction"),
     ]
 

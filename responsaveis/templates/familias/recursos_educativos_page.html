@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="recursos-educativos-page">
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">{{ page.title }}</h1>
+            
+            {% if page.descricao %}
+                <p class="page-description">{{ page.descricao }}</p>
+            {% endif %}
+        </div>
+    </header>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x600 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if page.conteudo %}
+        <section class="page-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+    
+    {# Listar recursos educativos #}
+    {% with page.get_children.live.public.specific as recursos %}
+        {% if recursos %}
+            <section class="educational-resources-section">
+                <div class="container">
+                    {# Filtros por tipo de recurso #}
+                    <div class="resources-filters">
+                        <button class="filter-btn active" data-filter="all">Todos</button>
+                        <button class="filter-btn" data-filter="artigo">Artigos</button>
+                        <button class="filter-btn" data-filter="guia">Guias</button>
+                        <button class="filter-btn" data-filter="video">Vídeos</button>
+                        <button class="filter-btn" data-filter="infografico">Infográficos</button>
+                    </div>
+                    
+                    <div class="resources-grid">
+                        {% for recurso in recursos %}
+                            <article class="resource-item" data-tipo="{{ recurso.tipo_recurso }}">
+                                {% if recurso.get_imagem_destaque %}
+                                    {% image recurso.get_imagem_destaque fill-400x300 as recurso_img %}
+                                    <div class="resource-item__image">
+                                        <img src="{{ recurso_img.url }}" alt="{{ recurso.title }}">
+                                        <span class="resource-item__badge resource-item__badge--{{ recurso.tipo_recurso }}">
+                                            {{ recurso.get_tipo_recurso_display }}
+                                        </span>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="resource-item__content">
+                                    <h3 class="resource-item__title">
+                                        <a href="{% pageurl recurso %}">{{ recurso.title }}</a>
+                                    </h3>
+                                    
+                                    {% if recurso.descricao %}
+                                        <p class="resource-item__description">{{ recurso.descricao }}</p>
+                                    {% endif %}
+                                    
+                                    <div class="resource-item__meta">
+                                        {% if recurso.data_publicacao %}
+                                            <time datetime="{{ recurso.data_publicacao|date:'Y-m-d' }}">
+                                                {{ recurso.data_publicacao|date:"d/m/Y" }}
+                                            </time>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <a href="{% pageurl recurso %}" class="resource-item__link">
+                                        Ler mais →
+                                    </a>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
+</article>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Filtros de recursos
+document.addEventListener('DOMContentLoaded', function() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const resourceItems = document.querySelectorAll('.resource-item');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            
+            // Atualizar botões ativos
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Filtrar recursos
+            resourceItems.forEach(item => {
+                if (filter === 'all' || item.dataset.tipo === filter) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,5 +1,5 @@
 """
-Configuração global de fixtures do pytest para o projeto NeuroPrev.
+Configuração global de fixtures do pytest para o projeto NEUROATHENA.
 Este arquivo é carregado automaticamente pelo pytest.
 """
 
@@ -97,14 +97,14 @@ def root_page(db):
 
 @pytest.fixture
 def site(db, root_page):
-    """Site padrão do Wagtail."""
+    """Site principal do Wagtail."""
     site, created = Site.objects.get_or_create(
         is_default_site=True,
         defaults={
             'hostname': 'localhost',
             'port': 8000,
             'root_page': root_page,
-            'site_name': 'NeuroPrev Test Site'
+            'site_name': 'NEUROATHENA Test Site'
         }
     )
     return site

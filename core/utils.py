@@ -1,5 +1,10 @@
 import os
-import magic
+
+try:
+    import magic
+    MAGIC_AVAILABLE = True
+except ImportError:
+    MAGIC_AVAILABLE = False
 
 from wagtail.admin.panels import PanelPlaceholder
 from django.forms import TextInput, Textarea
@@ -22,22 +27,23 @@ def get_file_type(file_obj):
     elif isinstance(file_obj, str):
         ext = os.path.splitext(file_obj)[1].lower().replace('.', '')
 
-    # Tenta pegar o mimetype usando libmagic
+    # Tenta pegar o mimetype usando libmagic (se disponível)
     mimetype = None
-    try:
-        if hasattr(file_obj, 'file'):
-            mime = magic.Magic(mime=True)
-            mimetype = mime.from_buffer(file_obj.file.read(2048))
-            file_obj.file.seek(0)
-        elif hasattr(file_obj, 'read'):
-            mime = magic.Magic(mime=True)
-            mimetype = mime.from_buffer(file_obj.read(2048))
-            file_obj.seek(0)
-        elif isinstance(file_obj, str) and os.path.exists(file_obj):
-            mime = magic.Magic(mime=True)
-            mimetype = mime.from_file(file_obj)
-    except Exception:
-        mimetype = None
+    if MAGIC_AVAILABLE:
+        try:
+            if hasattr(file_obj, 'file'):
+                mime = magic.Magic(mime=True)
+                mimetype = mime.from_buffer(file_obj.file.read(2048))
+                file_obj.file.seek(0)
+            elif hasattr(file_obj, 'read'):
+                mime = magic.Magic(mime=True)
+                mimetype = mime.from_buffer(file_obj.read(2048))
+                file_obj.seek(0)
+            elif isinstance(file_obj, str) and os.path.exists(file_obj):
+                mime = magic.Magic(mime=True)
+                mimetype = mime.from_file(file_obj)
+        except Exception:
+            mimetype = None
 
     # Mapeamento simples de mimetype para tipo
     mimetype_map = {

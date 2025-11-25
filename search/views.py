@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.response import TemplateResponse
 from django.shortcuts import redirect
-from core.models import PageSitePadrao
+from core.models import PageNeuroAthena
 from django.contrib.contenttypes.models import ContentType
 from wagtail.contrib.search_promotions.models import Query
 from wagtail.models import Page
@@ -21,7 +21,7 @@ def formatar_wagtail_types(wagtail_types):
         "noticiaspage": "Notícias",
         "document": "Arquivo",
         "image": "Imagem",
-        # Apps NeuroPrev - adicionar conforme necessário
+        # Apps NEUROATHENA - adicionar conforme necessário
         # "triagenspage": "Triagens",
         # "conteudoeducativopage": "Conteúdo Educativo",
     }
@@ -113,7 +113,7 @@ def search(request):
         paginated_results = []
     
     # Obter todos os tipos de dados presentes no Wagtail (modelos de página)
-    # Apenas apps que existem no NeuroPrev
+    # Apenas apps que existem no NEUROATHENA
     wagtail_types = list(
         ContentType.objects.filter(
             app_label__in=['noticias', 'lgpd', 'home', 'triagem', 'comunidade', 'conteudo_educativo']

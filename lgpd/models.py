@@ -1,12 +1,11 @@
 from django.db import models
-from core.models import PageSitePadrao
 from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel
 from wagtail import blocks
+from paginas.models import PaginaComBannerPage
 
-# Alterado: herdar de PageSitePadrao em vez de PaginaComBannerPage (app deletado)
-class LGPDPage(PageSitePadrao):
-    template = "lgpd/lgpd_page.html"
+class LGPDPage(PaginaComBannerPage):
+    template = "paginas/pagina_com_banner_page.html"
 
     class Meta:
         verbose_name = "LGPD"

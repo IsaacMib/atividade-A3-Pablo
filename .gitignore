@@ -11,7 +11,7 @@
 /data
 .~*
 common/CACHE
-/sitepadrao/settings/local.py
+/neuroathena/settings/local.py
 db.sqlite3
 node_modules
 venv

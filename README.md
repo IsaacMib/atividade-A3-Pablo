@@ -1,55 +1,57 @@
-# NeuroPrev Multimodal
+# NEUROATHENA
 
-## Sistema de Triagem Precoce de Autismo com IA Multimodal
+## Sistema de Triagem Precoce de TEA com IA Multimodal
 
-Plataforma completa baseada em pesquisa científica para triagem precoce de Transtorno do Espectro Autista (TEA), integrando análise multimodal (texto, imagem, vídeo, áudio) e um ecossistema de suporte para pais e profissionais.
+Plataforma Django/Wagtail para triagem precoce de Transtorno do Espectro Autista (TEA), integrando análise multimodal (texto, imagem, vídeo, áudio) e ecossistema de suporte para pais e profissionais.
 
 ---
 
 ## 🎯 Sobre o Projeto
 
-O **NeuroPrev Multimodal** é um sistema desenvolvido como TCC e projeto profissional, baseado na pesquisa *"A multimodular approach to streamline autism diagnosis in young children"*. O sistema oferece:
+Sistema baseado na pesquisa *"A multimodular approach to streamline autism diagnosis in young children"*.
 
-- **Triagem Multimodal de Autismo** - Análise integrada de 4 modalidades (texto, imagem, vídeo, áudio)
-- **Painel Diário para Responsáveis** - Registro completo do desenvolvimento da criança
-- **Comunidade para Pais** - Espaço seguro para compartilhamento e suporte
-- **Área para Profissionais** - Dashboard clínico e teleatendimento (futuro)
-- **CMS Educativo** - Conteúdo confiável gerenciado via Wagtail
+### Funcionalidades Principais
+
+- ✅ **Triagem Multimodal** - Análise integrada de 4 modalidades (texto, imagem, vídeo, áudio)
+- ✅ **Painel Diário** - Registro de desenvolvimento da criança
+- 🔄 **Comunidade** - Espaço para pais (em desenvolvimento)
+- 🔄 **Dashboard Profissional** - Para terapeutas (futuro)
+- ✅ **CMS Educativo** - Conteúdo gerenciado via Wagtail
 
 ### Stack Tecnológica
 
-- **Backend**: Django 5.1.x + Wagtail 7.x (Python 3.12+)
-- **Frontend**: JavaScript/Webpack (ES6+, Babel, Jest)
-- **IA**: Modelos multimodais (em desenvolvimento)
-- **Banco de Dados**: PostgreSQL (produção), SQLite (desenvolvimento/testes)
-- **Segurança**: LGPD-compliant, criptografia de dados sensíveis
-
-### Módulos Principais
-
-- `triagem/` - Core da triagem multimodal com IA
-- `painel_diario/` - Registro diário de desenvolvimento
-- `comunidade/` - Rede social para pais
-- `profissionais/` - Dashboard para terapeutas
-- `conteudo_educativo/` - CMS Wagtail para artigos
-- `noticias/` - Blog e atualizações
-- `lgpd/` - Conformidade com proteção de dados
-- `api/` - REST API para integrações
-- `core/` - Configurações e utilitários centrais
-- `blocks/` - Blocos Wagtail reutilizáveis
+- **Backend**: Django 5.1 + Wagtail 7.x (Python 3.12+)
+- **Frontend**: JavaScript/Webpack, SCSS
+- **IA**: Athena - Modelos multimodais (vídeo, áudio, texto) - `athena-ai/`
+- **Banco**: PostgreSQL (prod), SQLite (dev/test)
+- **Segurança**: LGPD-compliant
 
 ---
 
-## 📋 Índice
+## 📋 Documentação
 
-- [Funcionalidades](#-funcionalidades-do-sistema)
-- [Arquitetura](#-arquitetura-do-sistema)
-- [Instalação](#-instalação)
-  - [Setup com Docker](#setup-com-docker)
-  - [Setup com Virtualenv](#setup-com-virtualenv)
-- [Desenvolvimento](#-desenvolvimento)
-- [Testes](#-testes)
-- [Roadmap](#-roadmap)
-- [Contribuindo](#-contribuindo)
+- **[Guia Rápido](docs/GUIA_RAPIDO.md)** - Instalação e primeiros passos
+- **[Desenvolvimento](docs/DESENVOLVIMENTO.md)** - Guia para desenvolvedores
+- **[Arquitetura](docs/ARQUITETURA.md)** - Estrutura do sistema
+- **[SSO/Logout](docs/logout-sso-wagtail.md)** - Configuração de autenticação
+
+---
+
+## 📋 Estrutura de Apps
+
+```
+neuroathena/          # Configurações Django
+core/                 # Models base, utilitários
+home/                 # Página inicial
+noticias/             # Blog/notícias
+blocks/               # Blocos Wagtail reutilizáveis
+triagem_ia/           # Sistema de triagem (core)
+painel_diario/        # Registro de desenvolvimento
+lgpd/                 # Conformidade LGPD
+search/               # Busca global
+frontend/             # JavaScript, SCSS, assets
+athena-ai/            # Athena - Modelos de IA
+```
 
 ---
 
@@ -97,105 +99,98 @@ O coração do sistema, baseado em análise multimodal com IA.
 - ✅ Sinais de avanço terapêutico
 - ✅ Sinais de urgência (ex.: regressão de fala)
 
----
+## ⚡ Início Rápido
 
-### MÓDULO 2 — Painel Diário para Pais
+```bash
+# 1. Clone o repositório
+git clone <repo-url>
+cd atividade-A3-Pablo
 
-Sistema completo de registro usado também na análise temporal pela IA.
+# 2. Crie ambiente virtual
+python -m venv venv
+venv\Scripts\activate  # Windows
+# source venv/bin/activate  # Linux/Mac
 
-#### 2.1. Entradas Diárias
+# 3. Instale dependências
+pip install -r requirements.txt
 
-- ✅ Humor da criança
-- ✅ Qualidade do sono
-- ✅ Alimentação
-- ✅ Comportamentos repetitivos
-- ✅ Interações sociais
-- ✅ Responsividade
-- ✅ Sessões de terapia e evolução
-- ✅ Crises / gatilhos
-- ✅ Observações livres
-- ✅ Upload diário de foto/vídeo (opcional)
-- ✅ Gravação de áudio espontâneo
+# 4. Configure banco
+python manage.py migrate
 
-#### 2.2. Histórico e Análises
+# 5. Crie superusuário
+python manage.py createsuperuser
 
-- ✅ Linha do tempo completa
-- ✅ Gráficos de evolução
-- ✅ Comparação entre semanas
-- ✅ Alertas automáticos gerados pela IA
-
----
-
-### MÓDULO 3 — IA Multimodal
-
-#### 3.1. Modalidades Integradas
-
-1. **Texto** - Respostas de questionários e relatos
-2. **Imagem** - Análise de expressões e comportamentos visuais
-3. **Vídeo** - Detecção de padrões comportamentais
-4. **Áudio** - Análise prosódica e vocal
-5. **Temporal** - Progressão ao longo do tempo
-
-#### 3.2. Funcionalidades
-
-- ✅ Detecção de sinais precoces
-- ✅ Fusão multimodal para precisão elevada
-- ✅ Risco estimado probabilístico
-- ✅ Recomendações personalizadas
-- ✅ Alertas de regressão
-- ✅ Indicadores de progresso terapêutico
-
----
-
-### MÓDULO 4 — Comunidade para Pais
-
-Espaço seguro e moderado para troca de experiências.
-
-#### Funcionalidades:
-
-- ✅ Perfis de pais
-- ✅ Postagens, relatos, dúvidas
-- ✅ Comentários e interações
-- ✅ Grupos fechados (por idade, terapias, regiões)
-- ✅ Compartilhamento de evolução
-- ✅ Biblioteca de conteúdos oficiais de profissionais
-
----
-
-### MÓDULO 5 — Profissionais e Terapeutas (Futuro)
-
-Para versão comercial:
-
-- ✅ Dashboard para terapeutas
-- ✅ Compartilhamento de evolução clínica
-- ✅ Teleatendimento
-- ✅ Plano terapêutico individual (PTI)
-- ✅ Monitoramento remoto
-
----
-
-### MÓDULO 6 — CMS Wagtail para Conteúdo Educativo
-
-Sistema de gerenciamento de conteúdo para:
-
-- ✅ Páginas de notícias e artigos
-- ✅ Avisos e atualizações
-- ✅ Páginas institucionais (Sobre, Contato, Políticas)
-- ✅ Blog com orientações profissionais
-- ✅ Gerenciamento de banners
-- ✅ Conteúdo sem dependência de código
-
----
-
-## 🏗️ Arquitetura do Sistema
-
+# 6. Rode servidor
+python manage.py runserver
 ```
-NeuroPrev Multimodal/
-│
-├── Backend (Django + Wagtail)
-│   ├── triagem/              # Core - Análise multimodal
-│   ├── painel_diario/         # Registro diário
-│   ├── comunidade/            # Rede social pais
+
+Acesse: http://localhost:8000  
+Admin: http://localhost:8000/admin
+
+---
+
+## 🧪 Testes
+
+```bash
+# Rodar todos os testes
+python manage.py test
+
+# Com coverage
+coverage run --source='.' manage.py test
+coverage report
+
+# Testes específicos
+python manage.py test core
+python manage.py test noticias --keepdb
+```
+
+---
+
+## 🤖 Athena - Sistema de IA (athena-ai/)
+
+**Athena** é o sistema de IA multimodal para análise de TEA - veja [athena-ai/README.md](athena-ai/README.md):
+
+- **Vídeo**: MediaPipe, InsightFace (expressões, contato visual)
+- **Áudio**: Silero VAD, Wav2Vec2 (prosódia, fluência)
+- **Texto**: BERT/BERTimbau (questionários, relatos)
+- **Fusão**: CLIP, ImageBind (integração multimodal)
+
+---
+
+## 🛠️ Desenvolvimento
+
+Veja [docs/DESENVOLVIMENTO.md](docs/DESENVOLVIMENTO.md) para:
+- Configuração do ambiente
+- Padrões de código
+- Estrutura de commits
+- Criação de apps
+- Boas práticas Django/Wagtail
+
+---
+
+## 🚀 Deploy
+
+```bash
+# Produção (PostgreSQL + Gunicorn)
+export DJANGO_SETTINGS_MODULE=neuroathena.settings.production
+python manage.py collectstatic --noinput
+gunicorn neuroathena.wsgi:application
+
+# Docker
+docker-compose up -d
+```
+
+---
+
+## 📄 Licença
+
+MIT License - Projeto acadêmico/profissional
+
+---
+
+## 👥 Autores
+
+Desenvolvido como TCC - Projeto NEUROATHENA
 │   ├── profissionais/         # Dashboard terapeutas
 │   ├── conteudo_educativo/    # CMS Wagtail
 │   ├── noticias/              # Blog/notícias
@@ -203,106 +198,7 @@ NeuroPrev Multimodal/
 │   ├── api/                   # REST API
 │   ├── core/                  # Utilitários
 │   └── blocks/                # Blocos reutilizáveis
-│
-├── Frontend (Webpack + Sass + JS)
-│   ├── js/                    # JavaScript modular
-│   ├── scss/                  # Estilos SCSS
-│   └── img/                   # Imagens e assets
-│
-├── IA (Em desenvolvimento)
-│   ├── modelos/               # Modelos treinados
-│   ├── preprocessing/         # Pré-processamento
-│   └── fusion/                # Fusão multimodal
-│
-└── Infraestrutura
-    ├── PostgreSQL             # Banco de dados
-    ├── Redis                  # Cache e filas
-    └── Docker                 # Containerização
 
-```
-
----
-
-## 🔐 Segurança e LGPD
-
-- ✅ Criptografia de dados sensíveis
-- ✅ Conformidade com LGPD
-- ✅ Autenticação segura
-- ✅ Logs de auditoria
-- ✅ Consentimento explícito
-- ✅ Direito ao esquecimento
-- ✅ Portabilidade de dados
-
----
-
-# Instalação
-
-Escolha o método de instalação que preferir:
-
-- [Setup com Docker](#setup-com-docker) - Recomendado para começar rapidamente
-- [Setup com Virtualenv](#setup-com-virtualenv) - Para desenvolvimento local tradicional
-
-## Setup com Docker
-
-### Dependências
-
-- [Docker](https://docs.docker.com/engine/installation/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
-
-### Instalação
-
-Execute os seguintes comandos:
-
-```bash
-git clone <url-do-repositorio>
-cd site-padrao
-docker compose up --build -d
-```
-
-Após o comando completar, aguarde cerca de 10 segundos para o setup do banco de dados. Então execute:
-
-```bash
-docker compose run app /venv/bin/python manage.py migrate
-docker compose run app /venv/bin/python manage.py createsuperuser
-```
-
-Se falhar com erro de banco de dados, aguarde mais 10 segundos e tente novamente. Finalmente, execute:
-
-```bash
-docker compose up
-```
-
-O site estará acessível em [http://localhost:8000/](http://localhost:8000/) e a interface admin do Wagtail em [http://localhost:8000/admin/](http://localhost:8000/admin/).
-
-**Importante:** Este `docker-compose.yml` é configurado para testes locais apenas, e _não_ é destinado para uso em produção.
-
-### Debugging
-
-Para acompanhar os logs dos containers Docker em tempo real, execute:
-
-```bash
-docker compose logs -f
-```
-
-## Setup com Virtualenv
-
-Você pode executar o projeto localmente sem Docker usando Virtualenv, que é a [abordagem de instalação recomendada](https://docs.djangoproject.com/en/stable/topics/install/#install-the-django-code) para o próprio Django.
-
-### Dependências
-
-- Python 3.12+
-- Node.js v22.13.1+
-- PostgreSQL (produção) ou SQLite (desenvolvimento)
-- [Virtualenv](https://virtualenv.pypa.io/en/stable/installation.html)
-- [VirtualenvWrapper](https://virtualenvwrapper.readthedocs.io/en/latest/install.html) (opcional)
-
-#### Gerenciamento de Ambiente Python
-
-Você pode usar diferentes ferramentas para gerenciar ambientes Python:
-- [Virtualenv](https://virtualenv.pypa.io/en/stable/installation.html) + [VirtualenvWrapper](https://virtualenvwrapper.readthedocs.io/en/latest/install.html) (recomendado)
-- [Conda](https://docs.conda.io/en/latest/)
-- [Pyenv](https://github.com/pyenv/pyenv) com [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv)
-- [Poetry](https://python-poetry.org/)
 
 #### Instalação do Node.js
 
@@ -386,7 +282,7 @@ npm --version
 **Dica:** O projeto contém um arquivo `.nvmrc` na raiz. Ao entrar na pasta do projeto, você pode simplesmente executar:
 
 ```bash
-cd site-padrao
+cd neuroathena
 nvm use
 ```
 
@@ -402,206 +298,7 @@ O [asdf](https://asdf-vm.com/) é um gerenciador de versões universal que permi
 # Clone o repositório do asdf
 git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
 
-# Adicione ao seu shell (escolha um)
-# Para bash:
-echo '. "$HOME/.asdf/asdf.sh"' >> ~/.bashrc
-echo '. "$HOME/.asdf/completions/asdf.bash"' >> ~/.bashrc
-# Para zsh:
-echo '. "$HOME/.asdf/asdf.sh"' >> ~/.zshrc
-echo 'fpath=(${ASDF_DIR}/completions $fpath)' >> ~/.zshrc
-echo 'autoload -Uz compinit && compinit' >> ~/.zshrc
 
-# Recarregue o shell
-source ~/.bashrc  # ou ~/.zshrc
-
-# Verifique a instalação
-asdf --version
-```
-
-**Instalação dos plugins e versões:**
-
-```bash
-# Adicione os plugins necessários
-asdf plugin add python
-asdf plugin add nodejs
-
-# Instale as versões específicas do projeto
-asdf install python 3.12.0
-asdf install nodejs 22.13.1
-
-# Defina as versões globalmente (opcional)
-asdf global python 3.12.0
-asdf global nodejs 22.13.1
-
-# Ou use as versões definidas no arquivo .tool-versions do projeto
-cd site-padrao
-asdf install  # Instala todas as versões do .tool-versions
-
-# Verifique as versões ativas
-python --version
-node --version
-```
-
-**Dica:** O projeto contém um arquivo `.tool-versions` na raiz. Ao entrar na pasta do projeto após instalar o asdf, as versões corretas serão automaticamente ativadas!
-
-**Outras Alternativas:**
-
-- **Instalação direta do Node.js:** Baixe do [site oficial](https://nodejs.org/) (menos flexível para múltiplas versões)
-- **n (Node version manager):** Alternativa mais simples ao NVM
-  ```bash
-  npm install -g n
-  n 22.13.1
-  ```
-
-### Instalação
-
-#### Opção 1: Usando asdf (Recomendado para gerenciar Python + Node.js)
-
-```bash
-# Clone o repositório
-git clone <url-do-repositorio>
-cd site-padrao
-
-# O asdf lerá o arquivo .tool-versions e ativará as versões corretas automaticamente
-# Se ainda não instalou as versões, execute:
-asdf install
-
-# Verifique as versões
-python --version  # Deve ser 3.12.0
-node --version    # Deve ser v22.13.1
-
-# Instale as dependências backend
-pip install -r requirements.txt
-
-# Instale as dependências frontend
-npm install
-
-# Configure o arquivo de ambiente (se necessário)
-cp .env.example .env
-# Edite .env com suas configurações
-
-# Execute as migrations
-python manage.py migrate
-
-# Crie um superusuário
-python manage.py createsuperuser
-
-# (OPCIONAL) Popule o site com dados de demonstração
-python manage.py populate_site
-# Para limpar dados anteriores e repopular:
-# python manage.py populate_site --clear
-
-# Build do frontend
-npm run build
-
-# Inicie o servidor de desenvolvimento
-python manage.py runserver
-```
-
-### Dados de Demonstração
-
-O projeto inclui um comando Django para popular o site com dados de demonstração, útil para desenvolvimento e testes.
-
-**O que é criado:**
-- 2 usuários de teste (admin e editor)
-- 5 categorias de notícias
-- 5 imagens de demonstração (coloridas)
-- Estrutura de páginas (HomePage, NoticiasIndexPages)
-- 10 notícias com categorias e imagens
-
-**Comando:**
-```bash
-# Popular com dados de demonstração
-python manage.py populate_site
-
-# Limpar dados existentes e repopular
-python manage.py populate_site --clear
-```
-
-**Credenciais criadas:**
-- **Admin**: `admin` / `admin123` (superuser)
-- **Editor**: `editor` / `editor123` (staff, grupo Editores)
-
-**⚠️ Importante:** Use `--clear` com cuidado, pois remove usuários `admin` e `editor`, todas as categorias e imagens de demonstração criadas anteriormente.
-
-#### Opção 2: Usando Virtualenv + NVM (Tradicional)
-
-```bash
-# Clone o repositório
-git clone <url-do-repositorio>
-cd site-padrao
-
-# Configure o ambiente Python (escolha uma opção)
-# Opção A: virtualenvwrapper
-mkvirtualenv sitepadrao
-# Opção B: venv nativo
-python -m venv venv && source venv/bin/activate
-# Opção C: conda
-conda create -n sitepadrao python=3.12 && conda activate sitepadrao
-# Opção D: pyenv
-pyenv virtualenv 3.12.0 sitepadrao && pyenv activate sitepadrao
-
-# Verifique a versão do Python
-python --version  # Deve ser 3.12+
-
-# Configure Node.js (escolha uma opção)
-# Opção A: NVM (usa a versão do .nvmrc automaticamente)
-nvm use
-# Opção B: NVM com versão específica
-nvm use 22.13.1
-# Opção C: Se instalou Node.js globalmente
-node --version  # Verifique se é 22.x
-
-# Instale as dependências backend
-pip install -r requirements.txt
-
-# Instale as dependências frontend
-npm install
-
-# Configure o arquivo de ambiente (se necessário)
-cp .env.example .env
-# Edite .env com suas configurações
-
-# Execute as migrations
-python manage.py migrate
-
-# Crie um superusuário
-python manage.py createsuperuser
-
-# Build do frontend
-npm run build
-
-# Inicie o servidor de desenvolvimento
-python manage.py runserver
-```
-
-O site estará acessível em [http://localhost:8000/](http://localhost:8000/) e a interface admin em [http://localhost:8000/admin/](http://localhost:8000/admin/).
-
-### 7. Compile os assets do frontend
-
-```bash
-npm run build
-```
-
-### 8. Execute o servidor de desenvolvimento
-
-```bash
-python manage.py runserver
-```
-
-Acesse:
-- Site: [http://localhost:8000/](http://localhost:8000/)
-- Admin: [http://localhost:8000/admin/](http://localhost:8000/admin/)
-
-
-# GitHub Copilot Configuration
-
-Este projeto está configurado para funcionar com GitHub Copilot e outras ferramentas de IA. As configurações estão em `.github/copilot-instructions.md` e incluem:
-
-- Padrões de código DRY (Don't Repeat Yourself)
-- Boas práticas de testes
-- Padrões Wagtail específicos
-- Problemas comuns e soluções
 - Fluxo de trabalho recomendado
 
 ## Configuração de Ambiente Local
@@ -619,10 +316,10 @@ Crie o arquivo `.github/copilot-local.md` (que já está no `.gitignore`) com se
 
 ### Ativar Ambiente Virtual Python
 \`\`\`bash
-workon sitepadrao
+workon neuroathena
 # ou: source venv/bin/activate
-# ou: conda activate sitepadrao
-# ou: pyenv activate sitepadrao
+# ou: conda activate neuroathena
+# ou: pyenv activate neuroathena
 \`\`\`
 
 ### Ativar Versão do Node.js
@@ -634,7 +331,7 @@ nvm use v22.13.1
 
 ## Comando Completo para Ativar Ambiente
 \`\`\`bash
-workon sitepadrao && nvm use v22.13.1
+workon neuroathena && nvm use v22.13.1
 \`\`\`
 ```
 
@@ -709,7 +406,7 @@ Para mais detalhes, consulte o arquivo `.github/copilot-instructions.md`.
 ## Estrutura do Projeto
 
 ```
-neuroprev-multimodal/
+neuroathena/
 ├── frontend/                  # JavaScript/CSS (Webpack, Babel, Jest)
 │   ├── js/                   # JavaScript ES6+
 │   ├── scss/                 # Sass/SCSS
@@ -730,7 +427,7 @@ neuroprev-multimodal/
 │   ├── utils.py             # Utilitários de produção
 │   └── utils_test.py        # Utilitários para testes
 ├── home/                     # 🏠 Página inicial
-└── sitepadrao/               # 🔧 Configurações Django
+└── neuroathena/             # 🔧 Configurações Django
     └── settings/
         ├── base.py
         ├── development.py
@@ -801,134 +498,24 @@ npm run test:coverage       # Com coverage
 Veja `.github/copilot-instructions.md` para mais detalhes.
 
 ---
+## 🤝 Contribuindo
 
-# 🤝 Contribuindo
-
-Contribuições são bem-vindas! Este é um projeto de código aberto voltado para ajudar famílias e profissionais na identificação precoce de TEA.
-
-## Padrão de Commits
-
-Este projeto segue o padrão de commits semântico:
-
-- `feat:` nova funcionalidade
-- `fix:` correção de bug
-- `refactor:` refatoração de código
-- `test:` adição/modificação de testes
-- `docs:` documentação
-- `style:` formatação, ponto e vírgula, etc
-- `chore:` atualização de dependências, configurações
-- `ai:` melhorias nos modelos de IA
-- `security:` correções de segurança
-
-Exemplo:
-```bash
-git commit -m "feat: adiciona análise multimodal de vídeo
-
-- Implementa detecção de contato visual
-- Adiciona análise de resposta ao nome
-- Integra com modelo de fusão multimodal
-- Adiciona testes unitários e de integração
-- Atualiza documentação da API"
-```
-
-## Checklist para Pull Requests
-
-- [ ] Código segue princípios DRY (Don't Repeat Yourself)
-- [ ] Testes criados e passando (mínimo 70% coverage)
-- [ ] Migrations criadas e aplicadas
-- [ ] `python manage.py check` sem erros
-- [ ] `npm run lint` sem erros
-- [ ] Commits seguem padrão semântico
-- [ ] Documentação atualizada se necessário
-- [ ] Dados sensíveis protegidos (LGPD)
-- [ ] Acessibilidade verificada (WCAG 2.1 AA)
-
-# Configurações
-
-## Variáveis de Ambiente
-
-Copie `.env.example` para `.env` e configure:
-
-```bash
-# Django
-SECRET_KEY=your-secret-key
-DEBUG=True
-ALLOWED_HOSTS=localhost,127.0.0.1
-
-# Database
-DATABASE_URL=postgresql://user:password@localhost/dbname
-# ou use SQLite para desenvolvimento:
-# DATABASE_URL=sqlite:///db.sqlite3
-
-# Email (opcional)
-EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
-```
-
-## Configurações de Testes
-
-Os testes usam configurações específicas em `sitepadrao/settings/testing.py`:
-
-- Banco de dados: SQLite in-memory
-- Email: Console backend
-- Debug: False
-- Locale padrão: pt (normalizado de pt-br)
+Veja [docs/DESENVOLVIMENTO.md](docs/DESENVOLVIMENTO.md) para:
+- Padrão de commits (Conventional Commits)
+- Checklist de Pull Requests
+- Boas práticas de código e testes
 
 ---
 
-# 📚 Recursos
+## ⚠️ Aviso Legal
 
-## Documentação Técnica
+Este sistema é uma ferramenta de **triagem** e **não substitui** avaliação profissional completa. Sempre consulte profissionais de saúde especializados em TEA.
 
-- [Documentação oficial do Wagtail](https://docs.wagtail.org/)
-- [Documentação do Django](https://docs.djangoproject.com/)
-- [Configuração do GitHub Copilot](.github/copilot-instructions.md)
-- [REST Framework](https://www.django-rest-framework.org/)
+---
 
-## Pesquisa e Referências
+## 📚 Referências
 
 - Pesquisa base: *"A multimodular approach to streamline autism diagnosis in young children"*
-- [M-CHAT - Modified Checklist for Autism in Toddlers](https://mchatscreen.com/)
-- [Q-CHAT - Quantitative Checklist for Autism in Toddlers](https://www.autismresearchcentre.com/)
-- [CDC - Autism Spectrum Disorder](https://www.cdc.gov/ncbddd/autism/index.html)
-- [LGPD - Lei Geral de Proteção de Dados](https://www.gov.br/cidadania/pt-br/acesso-a-informacao/lgpd)
-
-## Comunidade
-
-- **Issues**: Reporte bugs ou sugira funcionalidades
-- **Discussions**: Participe de discussões sobre o projeto
-- **Pull Requests**: Contribua com código
-
----
-
-# 📄 Licença
-
-Este projeto é desenvolvido como TCC e projeto profissional, com objetivo de apoio à identificação precoce de TEA.
-
-**Importante**: Este sistema é uma ferramenta de **triagem** e **não substitui** avaliação profissional completa. Sempre consulte profissionais de saúde especializados.
-
----
-
-# 👥 Autores e Contato
-
-- **Desenvolvedor**: [Seu Nome]
-- **TCC**: [Instituição]
-- **Orientador**: [Nome do Orientador]
-
----
-
-# 🙏 Agradecimentos
-
-- Famílias que compartilham suas experiências
-- Profissionais de saúde especializados em TEA
-- Comunidade open-source
-- Pesquisadores da área de IA aplicada à saúde
-
----
-
-**⚠️ Aviso Legal**: O NeuroPrev Multimodal é uma ferramenta de triagem baseada em pesquisa científica e não substitui diagnóstico médico profissional. Sempre busque avaliação de profissionais especializados em Transtorno do Espectro Autista.
-
----
-
-**🌟 Se este projeto está ajudando você, considere dar uma estrela no repositório!**
-
-# atividade-A3-Pablo
+- [M-CHAT](https://mchatscreen.com/) | [Q-CHAT](https://www.autismresearchcentre.com/)
+- [Wagtail Docs](https://docs.wagtail.org/) | [Django Docs](https://docs.djangoproject.com/)
+- [LGPD](https://www.gov.br/cidadania/pt-br/acesso-a-informacao/lgpd)

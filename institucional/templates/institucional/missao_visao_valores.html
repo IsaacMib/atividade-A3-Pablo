@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="missao-visao-page">
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">{{ page.title }}</h1>
+            
+            {% if page.descricao %}
+                <p class="page-description">{{ page.descricao }}</p>
+            {% endif %}
+        </div>
+    </header>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x600 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    <section class="missao-visao-content">
+        <div class="container">
+            <div class="mvv-grid">
+                {% if page.missao %}
+                    <div class="mvv-card mvv-card--missao">
+                        <div class="mvv-card__icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                        <h2 class="mvv-card__title">Missão</h2>
+                        <div class="mvv-card__content">
+                            {{ page.missao|richtext }}
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% if page.visao %}
+                    <div class="mvv-card mvv-card--visao">
+                        <div class="mvv-card__icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </div>
+                        <h2 class="mvv-card__title">Visão</h2>
+                        <div class="mvv-card__content">
+                            {{ page.visao|richtext }}
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% if page.valores %}
+                    <div class="mvv-card mvv-card--valores">
+                        <div class="mvv-card__icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                        </div>
+                        <h2 class="mvv-card__title">Valores</h2>
+                        <div class="mvv-card__content">
+                            {{ page.valores|richtext }}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    
+    {% if page.conteudo %}
+        <section class="page-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+</article>
+{% endblock %}

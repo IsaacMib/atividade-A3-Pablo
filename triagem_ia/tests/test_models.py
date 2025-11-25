@@ -286,7 +286,7 @@ class TestResultadoIA:
             score_texto=0.70,
             score_audio=0.80,
             score_video=0.75,
-            modelo_utilizado="NeuroPrevMultimodal",
+            modelo_utilizado="Athena Multimodal",
             versao_modelo="1.0.0",
             areas_risco={
                 "comunicacao": 0.8,
@@ -298,7 +298,7 @@ class TestResultadoIA:
         assert resultado.probabilidade_tea == 0.75
         assert resultado.confianca == 'alta'
         assert "comunicacao" in resultado.areas_risco
-        assert resultado.modelo_utilizado == "NeuroPrevMultimodal"
+        assert resultado.modelo_utilizado == "Athena Multimodal"
     
     def test_resultado_ia_str(self, triagem):
         """Testa representação em string."""

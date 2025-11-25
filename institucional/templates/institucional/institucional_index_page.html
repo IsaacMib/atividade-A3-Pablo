@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="institucional-index-page">
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">{{ page.title }}</h1>
+            
+            {% if page.descricao %}
+                <p class="page-description">{{ page.descricao }}</p>
+            {% endif %}
+        </div>
+    </header>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x600 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    <section class="institucional-sections">
+        <div class="container">
+            {% if posts %}
+                <div class="sections-grid">
+                    {% for page in posts %}
+                        <a href="{% pageurl page %}" class="section-card">
+                            {% if page.get_imagem_destaque %}
+                                {% image page.get_imagem_destaque fill-400x300 as section_img %}
+                                <div class="section-card__image">
+                                    <img src="{{ section_img.url }}" alt="{{ page.title }}">
+                                </div>
+                            {% endif %}
+                            
+                            <div class="section-card__content">
+                                <h2 class="section-card__title">{{ page.title }}</h2>
+                                
+                                {% if page.descricao %}
+                                    <p class="section-card__description">{{ page.descricao }}</p>
+                                {% endif %}
+                                
+                                <span class="section-card__link">
+                                    Saiba mais →
+                                </span>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <p>Em breve teremos mais conteúdo institucional.</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+    
+    {% if posts.has_other_pages %}
+        {% include "include/paginator.html" with posts=posts %}
+    {% endif %}
+</article>
+{% endblock %}

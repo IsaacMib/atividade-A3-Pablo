@@ -1,5 +1,5 @@
 """
-Blocos específicos para a HomePage do NeuroPrev.
+Blocos específicos para a HomePage do NEUROATHENA.
 """
 
 from wagtail.blocks import (
@@ -19,7 +19,7 @@ class HeroBlock(StructBlock):
     titulo = CharBlock(
         required=True,
         max_length=100,
-        help_text="Título principal do hero (ex: NeuroPrev)"
+        help_text="Título principal do hero (ex: NEUROATHENA)"
     )
     
     subtitulo = CharBlock(

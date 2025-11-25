@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="fusao-multimodal-page">
+    <header class="page-header page-header--fusion">
+        <div class="container">
+            <span class="module-badge module-badge--fusion">Fusão Multimodal</span>
+            <h1 class="page-title">{{ page.title }}</h1>
+            
+            {% if page.descricao %}
+                <p class="page-description">{{ page.descricao }}</p>
+            {% endif %}
+        </div>
+    </header>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x600 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if page.conteudo %}
+        <section class="page-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+    
+    {# Estratégias de fusão #}
+    {% if page.estrategias %}
+        <section class="fusion-strategies-section">
+            <div class="container">
+                <h2 class="section-title">Estratégias de Fusão</h2>
+                <div class="strategies-list">
+                    {% for estrategia in page.estrategias %}
+                        <div class="strategy-card">
+                            <h3 class="strategy-card__title">{{ estrategia.value.nome }}</h3>
+                            {% if estrategia.value.descricao %}
+                                <div class="strategy-card__description">
+                                    {{ estrategia.value.descricao|richtext }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+    
+    {# Diagrama de fusão #}
+    <section class="fusion-diagram-section">
+        <div class="container">
+            <h2 class="section-title">Processo de Fusão</h2>
+            <div class="fusion-process">
+                <div class="fusion-inputs">
+                    <div class="fusion-input fusion-input--video">
+                        <h4>Vídeo</h4>
+                        <p>Score: 0.85</p>
+                    </div>
+                    <div class="fusion-input fusion-input--audio">
+                        <h4>Áudio</h4>
+                        <p>Score: 0.72</p>
+                    </div>
+                    <div class="fusion-input fusion-input--text">
+                        <h4>Texto</h4>
+                        <p>Score: 0.91</p>
+                    </div>
+                </div>
+                
+                <div class="fusion-arrow-down">↓</div>
+                
+                <div class="fusion-layer">
+                    <h4>Camada de Fusão</h4>
+                    <p>Attention Mechanism + Weighted Average</p>
+                </div>
+                
+                <div class="fusion-arrow-down">↓</div>
+                
+                <div class="fusion-output">
+                    <h4>Resultado Final</h4>
+                    <p>Score Integrado: 0.83</p>
+                    <p>Confiança: 94%</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    {# Benefícios da abordagem multimodal #}
+    <section class="fusion-benefits-section">
+        <div class="container">
+            <h2 class="section-title">Vantagens da Abordagem Multimodal</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <h3>Maior Precisão</h3>
+                    <p>A combinação de múltiplas modalidades aumenta a precisão da triagem em até 25%.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>Redundância</h3>
+                    <p>Se uma modalidade falhar ou tiver qualidade ruim, as outras compensam.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>Visão Holística</h3>
+                    <p>Captura diferentes aspectos do comportamento para análise mais completa.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>Robustez</h3>
+                    <p>Menos suscetível a variações em condições de captura dos dados.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</article>
+{% endblock %}

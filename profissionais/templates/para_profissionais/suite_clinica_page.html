@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="suite-clinica-page">
+    <header class="page-header page-header--suite">
+        <div class="container">
+            <h1 class="page-title">{{ page.title }}</h1>
+            
+            {% if page.descricao %}
+                <p class="page-description">{{ page.descricao }}</p>
+            {% endif %}
+        </div>
+    </header>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x600 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if page.conteudo %}
+        <section class="page-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+    
+    {# Funcionalidades da suíte #}
+    {% if page.funcionalidades %}
+        <section class="suite-features-section">
+            <div class="container">
+                <h2 class="section-title">Funcionalidades</h2>
+                <div class="suite-features-grid">
+                    {% for funcionalidade in page.funcionalidades %}
+                        <div class="suite-feature-card">
+                            {% if funcionalidade.value.icone %}
+                                {% image funcionalidade.value.icone fill-80x80 as icon_img %}
+                                <div class="suite-feature-card__icon">
+                                    <img src="{{ icon_img.url }}" alt="{{ funcionalidade.value.titulo }}">
+                                </div>
+                            {% endif %}
+                            
+                            {% if funcionalidade.value.titulo %}
+                                <h3 class="suite-feature-card__title">{{ funcionalidade.value.titulo }}</h3>
+                            {% endif %}
+                            
+                            {% if funcionalidade.value.descricao %}
+                                <p class="suite-feature-card__description">{{ funcionalidade.value.descricao }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+    
+    {# Demo/Screenshots #}
+    <section class="suite-demo-section">
+        <div class="container">
+            <div class="demo-cta">
+                <h2>Experimente a Suíte Clínica</h2>
+                <p>Solicite uma demonstração personalizada ou inicie um período de teste gratuito.</p>
+                <div class="demo-buttons">
+                    <a href="#" class="btn btn-primary btn-lg">Solicitar Demo</a>
+                    <a href="#" class="btn btn-secondary btn-lg">Teste Gratuito</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</article>
+{% endblock %}

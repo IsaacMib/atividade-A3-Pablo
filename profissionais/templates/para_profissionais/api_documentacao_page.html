@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="api-documentacao-page">
+    <header class="page-header page-header--api">
+        <div class="container">
+            <h1 class="page-title">{{ page.title }}</h1>
+            
+            {% if page.descricao %}
+                <p class="page-description">{{ page.descricao }}</p>
+            {% endif %}
+        </div>
+    </header>
+    
+    <nav class="api-nav">
+        <div class="container">
+            <ul class="api-nav-list">
+                <li><a href="#introducao">Introdução</a></li>
+                <li><a href="#autenticacao">Autenticação</a></li>
+                <li><a href="#endpoints">Endpoints</a></li>
+                <li><a href="#exemplos">Exemplos</a></li>
+                <li><a href="#sdk">SDKs</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    {% if page.get_imagem_destaque %}
+        <div class="page-featured-image">
+            <div class="container">
+                {% image page.get_imagem_destaque fill-1200x400 as featured_img %}
+                <img src="{{ featured_img.url }}" alt="{{ page.title }}">
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if page.conteudo %}
+        <section class="page-content api-content">
+            {% for block in page.conteudo %}
+                {% include_block block %}
+            {% endfor %}
+        </section>
+    {% endif %}
+    
+    {# Endpoints da API #}
+    {% if page.endpoints %}
+        <section id="endpoints" class="api-endpoints-section">
+            <div class="container">
+                <h2 class="section-title">Endpoints Disponíveis</h2>
+                <div class="api-endpoints-list">
+                    {% for endpoint in page.endpoints %}
+                        <div class="api-endpoint-card">
+                            <div class="api-endpoint-header">
+                                <span class="api-method api-method--{{ endpoint.value.metodo|lower }}">
+                                    {{ endpoint.value.metodo }}
+                                </span>
+                                <code class="api-path">{{ endpoint.value.caminho }}</code>
+                            </div>
+                            
+                            {% if endpoint.value.descricao %}
+                                <p class="api-endpoint-description">{{ endpoint.value.descricao }}</p>
+                            {% endif %}
+                            
+                            {% if endpoint.value.exemplo %}
+                                <div class="api-endpoint-example">
+                                    <h4>Exemplo de Requisição:</h4>
+                                    <pre><code>{{ endpoint.value.exemplo }}</code></pre>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+    
+    {# Links para SDKs e bibliotecas #}
+    <section id="sdk" class="api-sdk-section">
+        <div class="container">
+            <h2 class="section-title">SDKs e Bibliotecas</h2>
+            <div class="sdk-grid">
+                <div class="sdk-card">
+                    <h3>Python SDK</h3>
+                    <p>Biblioteca oficial para Python 3.8+</p>
+                    <code>pip install neuroathena-sdk</code>
+                    <a href="#" class="sdk-link">Documentação →</a>
+                </div>
+                
+                <div class="sdk-card">
+                    <h3>JavaScript SDK</h3>
+                    <p>Biblioteca para Node.js e navegadores</p>
+                    <code>npm install @neuroathena/sdk</code>
+                    <a href="#" class="sdk-link">Documentação →</a>
+                </div>
+                
+                <div class="sdk-card">
+                    <h3>REST API</h3>
+                    <p>Acesso direto via HTTP</p>
+                    <code>curl https://api.neuroathena.com.br</code>
+                    <a href="#" class="sdk-link">Referência →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    {# CTA para chave de API #}
+    <section class="api-cta-section">
+        <div class="container">
+            <div class="cta-box cta-box--api">
+                <h2>Obtenha sua Chave de API</h2>
+                <p>Cadastre-se para receber credenciais de acesso à API do NEUROATHENA.</p>
+                <a href="#" class="btn btn-primary btn-lg">Solicitar Acesso</a>
+            </div>
+        </div>
+    </section>
+</article>
+{% endblock %}

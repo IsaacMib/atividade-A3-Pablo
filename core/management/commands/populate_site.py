@@ -89,7 +89,7 @@ class Command(BaseCommand):
         if not User.objects.filter(username='admin').exists():
             admin = User.objects.create_superuser(
                 username='admin',
-                email='admin@neuroprev.com',
+                email='admin@neuroathena.com.br',
                 password='admin123',
                 first_name='Administrador',
                 last_name='Sistema'
@@ -100,7 +100,7 @@ class Command(BaseCommand):
         if not User.objects.filter(username='editor').exists():
             editor = User.objects.create_user(
                 username='editor',
-                email='editor@neuroprev.com',
+                email='editor@neuroathena.com.br',
                 password='editor123',
                 first_name='Editor',
                 last_name='Conteúdo',
@@ -183,7 +183,7 @@ class Command(BaseCommand):
         site = Site.objects.filter(is_default_site=True).first()
         
         if not site:
-            self.stdout.write(self.style.ERROR('  ✗ Nenhum site padrão encontrado!'))
+            self.stdout.write(self.style.ERROR('  ✗ Nenhum site principal encontrado!'))
             return
         
         root_page = site.root_page
@@ -200,7 +200,7 @@ class Command(BaseCommand):
                 # Criar nova HomePage como filha
                 try:
                     home_page = HomePage(
-                        title='NeuroPrev - Triagem Precoce de Autismo',
+                        title='NEUROATHENA - Triagem Precoce de Autismo',
                         slug='home',
                         locale=locale,
                     )
@@ -247,7 +247,7 @@ class Command(BaseCommand):
         homepage_content = [
             # 1. Hero Block
             ('hero', {
-                'titulo': 'NeuroPrev',
+                'titulo': 'NEUROATHENA',
                 'subtitulo': 'Triagem Precoce de Autismo com IA Multimodal',
                 'descricao': 'Sistema inteligente que combina análise de vídeo, áudio e questionários para auxiliar na detecção precoce de sinais do Transtorno do Espectro Autista (TEA) em crianças.',
                 'cta_primario_texto': 'Começar Triagem',
@@ -258,7 +258,7 @@ class Command(BaseCommand):
             
             # 2. Features Grid
             ('features_grid', {
-                'titulo_secao': 'Como Funciona o NeuroPrev',
+                'titulo_secao': 'Como Funciona a Athena',
                 'funcionalidades': [
                     {
                         'icone': '🎥',
@@ -295,7 +295,7 @@ class Command(BaseCommand):
             
             # 3. Título - Vantagens
             ('titulo', {
-                'texto': 'Por Que Escolher o NeuroPrev?',
+                'texto': 'Por Que Escolher o NEUROATHENA?',
                 'tag': 'h2',
                 'alinhamento': 'center',
             }),
@@ -303,7 +303,7 @@ class Command(BaseCommand):
             # 4. Grid de Imagens - Vantagens
             ('programa', {
                 'titulo': 'Benefícios do Sistema',
-                'descricao': '<p>O NeuroPrev oferece uma abordagem moderna e acessível para triagem precoce de autismo.</p>',
+                'descricao': '<p>O NEUROATHENA oferece uma abordagem moderna e acessível para triagem precoce de autismo com IA.</p>',
                 'imagens': [
                     {
                         'imagem': self.demo_images[0].id if self.demo_images else None,
@@ -402,8 +402,8 @@ class Command(BaseCommand):
                 'titulo': 'Perguntas Frequentes',
                 'itens': [
                     {
-                        'titulo': 'O NeuroPrev substitui o diagnóstico profissional?',
-                        'conteudo': '<p>Não. O NeuroPrev é uma ferramenta de <strong>triagem</strong>, não de diagnóstico. Ele auxilia na identificação de sinais que podem indicar a necessidade de uma avaliação mais aprofundada por profissionais especializados.</p>',
+                        'titulo': 'O NEUROATHENA substitui o diagnóstico profissional?',
+                        'conteudo': '<p>Não. O NEUROATHENA é uma ferramenta de <strong>triagem</strong>, não de diagnóstico. Ele auxilia na identificação de sinais que podem indicar a necessidade de uma avaliação mais aprofundada por profissionais especializados.</p>',
                     },
                     {
                         'titulo': 'Qual a idade recomendada para usar o sistema?',
@@ -419,7 +419,7 @@ class Command(BaseCommand):
                     },
                     {
                         'titulo': 'O serviço é gratuito?',
-                        'conteudo': '<p>Sim! O NeuroPrev oferece triagem gratuita como parte de nosso compromisso com a democratização do acesso ao diagnóstico precoce de autismo.</p>',
+                        'conteudo': '<p>Sim! O NEUROATHENA oferece triagem gratuita como parte de nosso compromisso com a democratização do acesso ao diagnóstico precoce de autismo.</p>',
                     },
                     {
                         'titulo': 'Preciso de equipamento especial?',
@@ -453,7 +453,7 @@ class Command(BaseCommand):
         
         noticias_data = [
             {
-                'title': 'Sistema NeuroPrev alcança 95% de precisão em testes',
+                'title': 'Athena alcança 95% de precisão em testes',
                 'descricao': 'Novo sistema de IA demonstra alta eficácia na detecção precoce de sinais de autismo.',
                 'categoria': 'Tecnologia',
             },
@@ -488,7 +488,7 @@ class Command(BaseCommand):
                 'categoria': 'Diagnóstico',
             },
             {
-                'title': 'Resultados positivos em testes piloto do NeuroPrev',
+                'title': 'Resultados positivos em testes piloto do NEUROATHENA',
                 'descricao': 'Sistema foi testado com 500 famílias apresentando resultados promissores.',
                 'categoria': 'Pesquisa',
             },
@@ -499,7 +499,7 @@ class Command(BaseCommand):
             },
             {
                 'title': 'Privacidade e segurança no processamento de dados',
-                'descricao': 'Conheça as medidas de proteção de dados sensíveis no sistema NeuroPrev.',
+                'descricao': 'Conheça as medidas de proteção de dados sensíveis no sistema NEUROATHENA.',
                 'categoria': 'Tecnologia',
             },
         ]

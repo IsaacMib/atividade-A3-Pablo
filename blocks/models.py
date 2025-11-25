@@ -45,7 +45,11 @@ from django.conf import settings
 
 import uuid
 
-import magic
+try:
+    import magic
+    MAGIC_AVAILABLE = True
+except ImportError:
+    MAGIC_AVAILABLE = False
 from django.utils.html import format_html_join
 from django.db import models
 from .forms import (
@@ -852,14 +856,19 @@ class EspecificDocumentChooserBlock(DocumentChooserBlock):
                 raise ValidationError(
                     f"Apenas arquivos permitidos: {', '.join(self.allowed_extensions).upper()}."
                 )
-            # Validação por mimetype usando libmagic
-            mime = magic.Magic(mime=True)
-            mimetype = mime.from_buffer(value.file.read(2048))
-            value.file.seek(0)  # volta o ponteiro do arquivo
-            if mimetype not in self.allowed_mimetypes:
-                raise ValidationError(
-                    f"Tipo de arquivo não permitido ({mimetype}). Permitidos: {', '.join(self.allowed_extensions).upper()}."
-                )
+            # Validação por mimetype usando libmagic (se disponível)
+            if MAGIC_AVAILABLE:
+                try:
+                    mime = magic.Magic(mime=True)
+                    mimetype = mime.from_buffer(value.file.read(2048))
+                    value.file.seek(0)  # volta o ponteiro do arquivo
+                    if mimetype not in self.allowed_mimetypes:
+                        raise ValidationError(
+                            f"Tipo de arquivo não permitido ({mimetype}). Permitidos: {', '.join(self.allowed_extensions).upper()}."
+                        )
+                except Exception:
+                    # Se libmagic falhar, apenas valida por extensão
+                    value.file.seek(0)
         return value
 
 
