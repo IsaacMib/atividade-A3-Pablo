@@ -1,135 +1,94 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags %}
+{% load static wagtailcore_tags wagtailimages_tags %}
 
 {% block body_class %}template-homepage{% endblock %}
 
 {% block extra_css %}
-    {# CSS adicional pode ser incluído aqui #}
+<style>
+    /* HomePage - Padrão Wagtail com StreamField */
+    .homepage {
+        background-color: var(--color-white, #fff);
+    }
     
+    .homepage__content {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    /* Remove espaçamento extra se houver hero block */
+    .homepage__content > *:first-child {
+        margin-top: 0;
+    }
+</style>
 {% endblock extra_css %}
 
 {% block content %}
-
-    {% if page.body %}
-        {% for block in page.body %}
-            {% include_block block %}
-        {% endfor %}
-    {% else %}
-        {# Hero Section - Página inicial temporária #}
-        <section class="hero-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 80px 20px; text-align: center;">
-            <div class="container" style="max-width: 1200px; margin: 0 auto;">
-                <h1 style="font-size: 3rem; margin-bottom: 1.5rem; font-weight: 700;">
-                    NEUROATHENA
-                </h1>
-                <p style="font-size: 1.5rem; margin-bottom: 1rem; opacity: 0.95;">
-                    Sistema Multimodal de Triagem Precoce para TEA
-                </p>
-                <p style="font-size: 1.2rem; margin-bottom: 2.5rem; opacity: 0.85; max-width: 800px; margin-left: auto; margin-right: auto;">
-                    Detecção precoce de Transtorno do Espectro Autista usando Inteligência Artificial com análise de texto, áudio e vídeo
-                </p>
-                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-                    <a href="/painel/" style="background: white; color: #667eea; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.2s;">
-                        Acessar Painel
-                    </a>
-                    <a href="/cms/" style="background: rgba(255,255,255,0.2); color: white; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1.1rem; border: 2px solid white; transition: all 0.2s;">
-                        Admin Wagtail
-                    </a>
+<div class="homepage">
+    <div class="homepage__content">
+        {% if page.body %}
+            {# Renderiza os blocos do StreamField #}
+            {% for block in page.body %}
+                {% include_block block %}
+            {% endfor %}
+        {% else %}
+            {# Mensagem para configurar conteúdo via Wagtail CMS #}
+            <section class="empty-homepage">
+                <div class="container" style="max-width: 800px; margin: 80px auto; padding: 40px 20px; text-align: center;">
+                    <h1 style="font-size: 2.5rem; margin-bottom: 20px; color: #333;">
+                        Bem-vindo ao NEUROATHENA
+                    </h1>
+                    <p style="font-size: 1.2rem; color: #666; margin-bottom: 30px; line-height: 1.6;">
+                        Esta página inicial ainda não foi configurada. Adicione blocos de conteúdo para criar sua homepage personalizada.
+                    </p>
+                    <div style="background: #f8f9fa; border-radius: 10px; padding: 30px; margin-bottom: 30px;">
+                        <h3 style="font-size: 1.3rem; margin-bottom: 15px; color: #444;">
+                            📝 Blocos Disponíveis
+                        </h3>
+                        <ul style="list-style: none; padding: 0; color: #666; line-height: 2;">
+                            <li><strong>Hero</strong> - Seção principal com título, descrição e botões</li>
+                            <li><strong>Features Grid</strong> - Grade de recursos e funcionalidades</li>
+                            <li><strong>CTA</strong> - Chamada para ação</li>
+                            <li><strong>Timeline</strong> - Linha do tempo de eventos</li>
+                            <li><strong>FAQ</strong> - Perguntas frequentes</li>
+                            <li><strong>Testimonial</strong> - Depoimentos</li>
+                            <li><strong>Statistics</strong> - Estatísticas e números</li>
+                            <li><strong>Image Text</strong> - Seções com imagem e texto</li>
+                            <li><strong>Rich Text Section</strong> - Seções de texto rico</li>
+                            <li>E muito mais...</li>
+                        </ul>
+                    </div>
+                    {% if request.user.is_authenticated and request.user.is_staff %}
+                        <a href="{% pageurl page %}edit/" 
+                           style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                  color: white; 
+                                  padding: 15px 40px; 
+                                  border-radius: 50px; 
+                                  text-decoration: none; 
+                                  font-weight: 600; 
+                                  font-size: 1.1rem; 
+                                  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); 
+                                  display: inline-block;
+                                  transition: transform 0.2s;">
+                            ✏️ Editar HomePage no Wagtail
+                        </a>
+                    {% else %}
+                        <a href="/admin/" 
+                           style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                  color: white; 
+                                  padding: 15px 40px; 
+                                  border-radius: 50px; 
+                                  text-decoration: none; 
+                                  font-weight: 600; 
+                                  font-size: 1.1rem; 
+                                  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); 
+                                  display: inline-block;
+                                  transition: transform 0.2s;">
+                            🔐 Fazer Login no Wagtail
+                        </a>
+                    {% endif %}
                 </div>
-            </div>
-        </section>
-
-        {# Features Section #}
-        <section style="padding: 80px 20px; background: #f8f9fa;">
-            <div class="container" style="max-width: 1200px; margin: 0 auto;">
-                <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 60px; color: #333;">
-                    Recursos Principais
-                </h2>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
-                    
-                    {# Feature 1 #}
-                    <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center;">
-                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
-                            🧠
-                        </div>
-                        <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: #333;">Triagem Multimodal</h3>
-                        <p style="color: #666; line-height: 1.6;">
-                            Análise integrada de questionários, áudio e vídeo para detecção precoce de sinais de TEA
-                        </p>
-                    </div>
-
-                    {# Feature 2 #}
-                    <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center;">
-                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
-                            📊
-                        </div>
-                        <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: #333;">Painel Diário</h3>
-                        <p style="color: #666; line-height: 1.6;">
-                            Registro e acompanhamento do desenvolvimento da criança com gráficos e relatórios
-                        </p>
-                    </div>
-
-                    {# Feature 3 #}
-                    <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center;">
-                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
-                            👥
-                        </div>
-                        <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: #333;">Comunidade</h3>
-                        <p style="color: #666; line-height: 1.6;">
-                            Espaço para troca de experiências entre pais e profissionais de saúde
-                        </p>
-                    </div>
-
-                    {# Feature 4 #}
-                    <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center;">
-                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
-                            📚
-                        </div>
-                        <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: #333;">Biblioteca de Conteúdos</h3>
-                        <p style="color: #666; line-height: 1.6;">
-                            Material educativo sobre TEA, desenvolvimento infantil e intervenções baseadas em evidências
-                        </p>
-                    </div>
-
-                    {# Feature 5 #}
-                    <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center;">
-                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
-                            🔒
-                        </div>
-                        <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: #333;">Conformidade LGPD</h3>
-                        <p style="color: #666; line-height: 1.6;">
-                            Proteção total dos dados de saúde com consentimento explícito e direito à exclusão
-                        </p>
-                    </div>
-
-                    {# Feature 6 #}
-                    <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center;">
-                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
-                            🤖
-                        </div>
-                        <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: #333;">IA Multimodal</h3>
-                        <p style="color: #666; line-height: 1.6;">
-                            Análise por inteligência artificial de padrões comportamentais em múltiplas modalidades
-                        </p>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        {# CTA Section #}
-        <section style="padding: 80px 20px; background: white; text-align: center;">
-            <div class="container" style="max-width: 800px; margin: 0 auto;">
-                <h2 style="font-size: 2.5rem; margin-bottom: 25px; color: #333;">
-                    Configure o conteúdo pelo Wagtail CMS
-                </h2>
-                <p style="font-size: 1.2rem; color: #666; margin-bottom: 35px; line-height: 1.6;">
-                    Esta é uma página temporária. Acesse o <strong>Admin Wagtail</strong> para editar a HomePage e adicionar blocos de conteúdo personalizados.
-                </p>
-                <a href="/cms/pages/{{ page.id }}/edit/" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); display: inline-block;">
-                    Editar HomePage no Wagtail
-                </a>
-            </div>
-        </section>
-    {% endif %}
-
+            </section>
+        {% endif %}
+    </div>
+</div>
 {% endblock content %}
